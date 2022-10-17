@@ -12,6 +12,9 @@ Pipfile.lock
 abci_build/
 keys.json
 leak_report
+packages/valory/connections
+packages/valory/contracts/service_registry
+packages/valory/protocols
 packages/valory/skills/abstract_abci
 packages/valory/skills/abstract_round_abci
 packages/valory/skills/registration_abci
