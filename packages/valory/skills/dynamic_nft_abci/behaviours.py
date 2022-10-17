@@ -22,8 +22,13 @@
 from abc import abstractmethod
 from typing import Generator, Set, Type, cast
 
-from valory.skills.dynamic_nft_abci.models import Params  # type: ignore
-from valory.skills.dynamic_nft_abci.rounds import (  # type: ignore
+from packages.valory.skills.abstract_round_abci.base import AbstractRound
+from packages.valory.skills.abstract_round_abci.behaviours import (
+    AbstractRoundBehaviour,
+    BaseBehaviour,
+)
+from packages.valory.skills.dynamic_nft_abci.models import Params  # type: ignore
+from packages.valory.skills.dynamic_nft_abci.rounds import (  # type: ignore
     DBUpdateRound,
     DynamicNFTAbciApp,
     ImageCodeCalculationRound,
@@ -33,12 +38,6 @@ from valory.skills.dynamic_nft_abci.rounds import (  # type: ignore
     NewMemberUpdateRound,
     ObservationRound,
     SynchronizedData,
-)
-
-from packages.valory.skills.abstract_round_abci.base import AbstractRound
-from packages.valory.skills.abstract_round_abci.behaviours import (
-    AbstractRoundBehaviour,
-    BaseBehaviour,
 )
 
 
