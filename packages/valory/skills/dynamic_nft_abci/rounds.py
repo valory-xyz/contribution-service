@@ -60,25 +60,71 @@ class SynchronizedData(BaseSynchronizedData):
     """
 
 
-class DBUpdateRound(AbstractRound):
-    """DBUpdateRound"""
+class NewMemberListRound(AbstractRound):
+    """NewMemberListRound"""
 
     # TODO: replace AbstractRound with one of CollectDifferentUntilAllRound, CollectSameUntilAllRound, CollectSameUntilThresholdRound, CollectDifferentUntilThresholdRound, OnlyKeeperSendsRound, VotingRound
     # TODO: set the following class attributes
-    round_id: str = "db_update"
+    round_id: str = "new_member_list"
     allowed_tx_type: Optional[TransactionType]
-    payload_attribute: str = DBUpdatePayload.transaction_type
+    payload_attribute: str = NewMemberListPayload.transaction_type
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Enum]]:
         """Process the end of the block."""
         Event.NO_MAJORITY, Event.DONE, Event.ROUND_TIMEOUT
         raise NotImplementedError
 
-    def check_payload(self, payload: DBUpdatePayload) -> None:
+    def check_payload(self, payload: NewMemberListPayload) -> None:
         """Check payload."""
         raise NotImplementedError
 
-    def process_payload(self, payload: DBUpdatePayload) -> None:
+    def process_payload(self, payload: NewMemberListPayload) -> None:
+        """Process payload."""
+        raise NotImplementedError
+
+
+class NewMemberUpdateRound(AbstractRound):
+    """NewMemberUpdateRound"""
+
+    # TODO: replace AbstractRound with one of CollectDifferentUntilAllRound, CollectSameUntilAllRound, CollectSameUntilThresholdRound, CollectDifferentUntilThresholdRound, OnlyKeeperSendsRound, VotingRound
+    # TODO: set the following class attributes
+    round_id: str = "new_member_update"
+    allowed_tx_type: Optional[TransactionType]
+    payload_attribute: str = NewMemberUpdatePayload.transaction_type
+
+    def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Enum]]:
+        """Process the end of the block."""
+        Event.NO_MAJORITY, Event.DONE, Event.ROUND_TIMEOUT
+        raise NotImplementedError
+
+    def check_payload(self, payload: NewMemberUpdatePayload) -> None:
+        """Check payload."""
+        raise NotImplementedError
+
+    def process_payload(self, payload: NewMemberUpdatePayload) -> None:
+        """Process payload."""
+        raise NotImplementedError
+
+
+class ObservationRound(AbstractRound):
+    """ObservationRound"""
+
+    # TODO: replace AbstractRound with one of CollectDifferentUntilAllRound, CollectSameUntilAllRound, CollectSameUntilThresholdRound, CollectDifferentUntilThresholdRound, OnlyKeeperSendsRound, VotingRound
+    # TODO: set the following class attributes
+    round_id: str = "observation"
+    allowed_tx_type: Optional[TransactionType]
+    payload_attribute: str = ObservationPayload.transaction_type
+
+    def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Enum]]:
+        """Process the end of the block."""
+        Event.NO_MAJORITY, Event.DONE, Event.ROUND_TIMEOUT
+        raise NotImplementedError
+
+    def check_payload(self, payload: ObservationPayload) -> None:
+        """Check payload."""
+        raise NotImplementedError
+
+    def process_payload(self, payload: ObservationPayload) -> None:
         """Process payload."""
         raise NotImplementedError
 
@@ -152,71 +198,25 @@ class ImagePushRound(AbstractRound):
         raise NotImplementedError
 
 
-class NewMemberListRound(AbstractRound):
-    """NewMemberListRound"""
+class DBUpdateRound(AbstractRound):
+    """DBUpdateRound"""
 
     # TODO: replace AbstractRound with one of CollectDifferentUntilAllRound, CollectSameUntilAllRound, CollectSameUntilThresholdRound, CollectDifferentUntilThresholdRound, OnlyKeeperSendsRound, VotingRound
     # TODO: set the following class attributes
-    round_id: str = "new_member_list"
+    round_id: str = "db_update"
     allowed_tx_type: Optional[TransactionType]
-    payload_attribute: str = NewMemberListPayload.transaction_type
+    payload_attribute: str = DBUpdatePayload.transaction_type
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Enum]]:
         """Process the end of the block."""
         Event.NO_MAJORITY, Event.DONE, Event.ROUND_TIMEOUT
         raise NotImplementedError
 
-    def check_payload(self, payload: NewMemberListPayload) -> None:
+    def check_payload(self, payload: DBUpdatePayload) -> None:
         """Check payload."""
         raise NotImplementedError
 
-    def process_payload(self, payload: NewMemberListPayload) -> None:
-        """Process payload."""
-        raise NotImplementedError
-
-
-class NewMemberUpdateRound(AbstractRound):
-    """NewMemberUpdateRound"""
-
-    # TODO: replace AbstractRound with one of CollectDifferentUntilAllRound, CollectSameUntilAllRound, CollectSameUntilThresholdRound, CollectDifferentUntilThresholdRound, OnlyKeeperSendsRound, VotingRound
-    # TODO: set the following class attributes
-    round_id: str = "new_member_update"
-    allowed_tx_type: Optional[TransactionType]
-    payload_attribute: str = NewMemberUpdatePayload.transaction_type
-
-    def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Enum]]:
-        """Process the end of the block."""
-        Event.NO_MAJORITY, Event.DONE, Event.ROUND_TIMEOUT
-        raise NotImplementedError
-
-    def check_payload(self, payload: NewMemberUpdatePayload) -> None:
-        """Check payload."""
-        raise NotImplementedError
-
-    def process_payload(self, payload: NewMemberUpdatePayload) -> None:
-        """Process payload."""
-        raise NotImplementedError
-
-
-class ObservationRound(AbstractRound):
-    """ObservationRound"""
-
-    # TODO: replace AbstractRound with one of CollectDifferentUntilAllRound, CollectSameUntilAllRound, CollectSameUntilThresholdRound, CollectDifferentUntilThresholdRound, OnlyKeeperSendsRound, VotingRound
-    # TODO: set the following class attributes
-    round_id: str = "observation"
-    allowed_tx_type: Optional[TransactionType]
-    payload_attribute: str = ObservationPayload.transaction_type
-
-    def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Enum]]:
-        """Process the end of the block."""
-        Event.NO_MAJORITY, Event.DONE, Event.ROUND_TIMEOUT
-        raise NotImplementedError
-
-    def check_payload(self, payload: ObservationPayload) -> None:
-        """Check payload."""
-        raise NotImplementedError
-
-    def process_payload(self, payload: ObservationPayload) -> None:
+    def process_payload(self, payload: DBUpdatePayload) -> None:
         """Process payload."""
         raise NotImplementedError
 

@@ -55,13 +55,39 @@ class DynamicNFTBaseBehaviour(BaseBehaviour):
         return cast(Params, super().params)
 
 
-class DBUpdateBehaviour(DynamicNFTBaseBehaviour):
-    """DBUpdateBehaviour"""
+class NewMemberListBehaviour(DynamicNFTBaseBehaviour):
+    """NewMemberListBehaviour"""
 
     # TODO: set the following class attributes
     state_id: str
-    behaviour_id: str = "db_update"
-    matching_round: Type[AbstractRound] = DBUpdateRound
+    behaviour_id: str = "new_member_list"
+    matching_round: Type[AbstractRound] = NewMemberListRound
+
+    @abstractmethod
+    def async_act(self) -> Generator:
+        """Do the act, supporting asynchronous execution."""
+
+
+class NewMemberUpdateBehaviour(DynamicNFTBaseBehaviour):
+    """NewMemberUpdateBehaviour"""
+
+    # TODO: set the following class attributes
+    state_id: str
+    behaviour_id: str = "new_member_update"
+    matching_round: Type[AbstractRound] = NewMemberUpdateRound
+
+    @abstractmethod
+    def async_act(self) -> Generator:
+        """Do the act, supporting asynchronous execution."""
+
+
+class ObservationBehaviour(DynamicNFTBaseBehaviour):
+    """ObservationBehaviour"""
+
+    # TODO: set the following class attributes
+    state_id: str
+    behaviour_id: str = "observation"
+    matching_round: Type[AbstractRound] = ObservationRound
 
     @abstractmethod
     def async_act(self) -> Generator:
@@ -107,39 +133,13 @@ class ImagePushBehaviour(DynamicNFTBaseBehaviour):
         """Do the act, supporting asynchronous execution."""
 
 
-class NewMemberListBehaviour(DynamicNFTBaseBehaviour):
-    """NewMemberListBehaviour"""
+class DBUpdateBehaviour(DynamicNFTBaseBehaviour):
+    """DBUpdateBehaviour"""
 
     # TODO: set the following class attributes
     state_id: str
-    behaviour_id: str = "new_member_list"
-    matching_round: Type[AbstractRound] = NewMemberListRound
-
-    @abstractmethod
-    def async_act(self) -> Generator:
-        """Do the act, supporting asynchronous execution."""
-
-
-class NewMemberUpdateBehaviour(DynamicNFTBaseBehaviour):
-    """NewMemberUpdateBehaviour"""
-
-    # TODO: set the following class attributes
-    state_id: str
-    behaviour_id: str = "new_member_update"
-    matching_round: Type[AbstractRound] = NewMemberUpdateRound
-
-    @abstractmethod
-    def async_act(self) -> Generator:
-        """Do the act, supporting asynchronous execution."""
-
-
-class ObservationBehaviour(DynamicNFTBaseBehaviour):
-    """ObservationBehaviour"""
-
-    # TODO: set the following class attributes
-    state_id: str
-    behaviour_id: str = "observation"
-    matching_round: Type[AbstractRound] = ObservationRound
+    behaviour_id: str = "db_update"
+    matching_round: Type[AbstractRound] = DBUpdateRound
 
     @abstractmethod
     def async_act(self) -> Generator:
@@ -152,11 +152,11 @@ class DynamicNFTRoundBehaviour(AbstractRoundBehaviour):
     initial_behaviour_cls = NewMemberListBehaviour
     abci_app_cls = DynamicNFTAbciApp
     behaviours: Set[Type[BaseBehaviour]] = [
-        DBUpdateBehaviour,
-        ImageCodeCalculationBehaviour,
-        ImageGenerationBehaviour,
-        ImagePushBehaviour,
         NewMemberListBehaviour,
         NewMemberUpdateBehaviour,
         ObservationBehaviour,
+        ImageCodeCalculationBehaviour,
+        ImageGenerationBehaviour,
+        ImagePushBehaviour,
+        DBUpdateBehaviour,
     ]
