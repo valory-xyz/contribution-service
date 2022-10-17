@@ -1,8 +1,8 @@
 alphabet_in:
 - DONE
 - NO_MAJORITY
-- ROUND_TIMEOUT
 - NO_NEW_IMAGES
+- ROUND_TIMEOUT
 default_start_state: NewMemberListRound
 final_states:
 - FinishedDBUpdateRound
@@ -10,15 +10,28 @@ label: packages.valory.skills.dynamic_nft_abci.rounds.DynamicNFTAbciApp
 start_states:
 - NewMemberListRound
 states:
-- NewMemberListRound
-- NewMemberUpdateRound
-- ObservationRound
+- DBUpdateRound
+- FinishedDBUpdateRound
 - ImageCodeCalculationRound
 - ImageGenerationRound
 - ImagePushRound
-- DBUpdateRound
-- FinishedDBUpdateRound
+- NewMemberListRound
+- NewMemberUpdateRound
+- ObservationRound
 transition_func:
+    (DBUpdateRound, DONE): FinishedDBUpdateRound
+    (DBUpdateRound, NO_MAJORITY): ObservationRound
+    (DBUpdateRound, ROUND_TIMEOUT): ObservationRound
+    (ImageCodeCalculationRound, DONE): ImageGenerationRound
+    (ImageCodeCalculationRound, NO_MAJORITY): ObservationRound
+    (ImageCodeCalculationRound, ROUND_TIMEOUT): ObservationRound
+    (ImageGenerationRound, DONE): ImagePushRound
+    (ImageGenerationRound, NO_MAJORITY): ObservationRound
+    (ImageGenerationRound, NO_NEW_IMAGES): DBUpdateRound
+    (ImageGenerationRound, ROUND_TIMEOUT): ObservationRound
+    (ImagePushRound, DONE): DBUpdateRound
+    (ImagePushRound, NO_MAJORITY): ObservationRound
+    (ImagePushRound, ROUND_TIMEOUT): ObservationRound
     (NewMemberListRound, DONE): NewMemberUpdateRound
     (NewMemberListRound, NO_MAJORITY): NewMemberListRound
     (NewMemberListRound, ROUND_TIMEOUT): NewMemberListRound
@@ -28,16 +41,3 @@ transition_func:
     (ObservationRound, DONE): ImageCodeCalculationRound
     (ObservationRound, NO_MAJORITY): ObservationRound
     (ObservationRound, ROUND_TIMEOUT): ObservationRound
-    (ImageCodeCalculationRound, DONE): ImageGenerationRound
-    (ImageCodeCalculationRound, NO_MAJORITY): ObservationRound
-    (ImageCodeCalculationRound, ROUND_TIMEOUT): ObservationRound
-    (ImageGenerationRound, DONE): ImagePushRound
-    (ImageGenerationRound, NO_MAJORITY): ObservationRound
-    (ImageGenerationRound, ROUND_TIMEOUT): ObservationRound
-    (ImageGenerationRound, NO_NEW_IMAGES): DBUpdateRound
-    (ImagePushRound, DONE): DBUpdateRound
-    (ImagePushRound, NO_MAJORITY): ObservationRound
-    (ImagePushRound, ROUND_TIMEOUT): ObservationRound
-    (DBUpdateRound, DONE): FinishedDBUpdateRound
-    (DBUpdateRound, NO_MAJORITY): ObservationRound
-    (DBUpdateRound, ROUND_TIMEOUT): ObservationRound
