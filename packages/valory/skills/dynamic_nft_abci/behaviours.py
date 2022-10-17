@@ -151,8 +151,8 @@ class DynamicNFTRoundBehaviour(AbstractRoundBehaviour):
     """DynamicNFTRoundBehaviour"""
 
     initial_behaviour_cls = NewMemberListBehaviour
-    abci_app_cls = DynamicNFTAbciApp  # type: ignore
-    behaviours: Set[Type[BaseBehaviour]] = [
+    abci_app_cls = DynamicNFTAbciApp
+    behaviours: Set[Type[BaseBehaviour]] = [  # type: ignore
         DBUpdateBehaviour,
         ImageCodeCalculationBehaviour,
         ImageGenerationBehaviour,

@@ -64,7 +64,7 @@ class BaseDynamicNFTRoundTestClass(BaseRoundTestClass):
     _synchronized_data_class = SynchronizedData
     _event_class = Event
 
-    def run_test(self, test_case: RoundTestCase, **kwargs) -> None:
+    def run_test(self, test_case: RoundTestCase, **kwargs: Any) -> None:
         """Run the test"""
 
         self.synchronized_data.update(**test_case.initial_data)

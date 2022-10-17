@@ -91,7 +91,9 @@ class TestDBUpdateBehaviour(BaseDynamicNFTTest):
 
     # TODO: set next_behaviour_class
     behaviour_class: Type[BaseBehaviour] = DBUpdateBehaviour
-    next_behaviour_class: Type[BaseBehaviour] = ...
+    next_behaviour_class: Type[
+        BaseBehaviour
+    ] = BaseBehaviour  # TODO: set the correct value
 
     # TODO: provide test cases
     @pytest.mark.parametrize("test_case, kwargs", [])
@@ -109,7 +111,9 @@ class TestImageCodeCalculationBehaviour(BaseDynamicNFTTest):
 
     # TODO: set next_behaviour_class
     behaviour_class: Type[BaseBehaviour] = ImageCodeCalculationBehaviour
-    next_behaviour_class: Type[BaseBehaviour] = ...
+    next_behaviour_class: Type[
+        BaseBehaviour
+    ] = BaseBehaviour  # TODO: set the correct value
 
     # TODO: provide test cases
     @pytest.mark.parametrize("test_case, kwargs", [])
@@ -127,7 +131,9 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
 
     # TODO: set next_behaviour_class
     behaviour_class: Type[BaseBehaviour] = ImageGenerationBehaviour
-    next_behaviour_class: Type[BaseBehaviour] = ...
+    next_behaviour_class: Type[
+        BaseBehaviour
+    ] = BaseBehaviour  # TODO: set the correct value
 
     # TODO: provide test cases
     @pytest.mark.parametrize("test_case, kwargs", [])
@@ -145,7 +151,9 @@ class TestImagePushBehaviour(BaseDynamicNFTTest):
 
     # TODO: set next_behaviour_class
     behaviour_class: Type[BaseBehaviour] = ImagePushBehaviour
-    next_behaviour_class: Type[BaseBehaviour] = ...
+    next_behaviour_class: Type[
+        BaseBehaviour
+    ] = BaseBehaviour  # TODO: set the correct value
 
     # TODO: provide test cases
     @pytest.mark.parametrize("test_case, kwargs", [])
@@ -163,7 +171,9 @@ class TestNewMemberListBehaviour(BaseDynamicNFTTest):
 
     # TODO: set next_behaviour_class
     behaviour_class: Type[BaseBehaviour] = NewMemberListBehaviour
-    next_behaviour_class: Type[BaseBehaviour] = ...
+    next_behaviour_class: Type[
+        BaseBehaviour
+    ] = BaseBehaviour  # TODO: set the correct value
 
     # TODO: provide test cases
     @pytest.mark.parametrize("test_case, kwargs", [])
@@ -181,7 +191,9 @@ class TestNewMemberUpdateBehaviour(BaseDynamicNFTTest):
 
     # TODO: set next_behaviour_class
     behaviour_class: Type[BaseBehaviour] = NewMemberUpdateBehaviour
-    next_behaviour_class: Type[BaseBehaviour] = ...
+    next_behaviour_class: Type[
+        BaseBehaviour
+    ] = BaseBehaviour  # TODO: set the correct value
 
     # TODO: provide test cases
     @pytest.mark.parametrize("test_case, kwargs", [])
@@ -199,7 +211,9 @@ class TestObservationBehaviour(BaseDynamicNFTTest):
 
     # TODO: set next_behaviour_class
     behaviour_class: Type[BaseBehaviour] = ObservationBehaviour
-    next_behaviour_class: Type[BaseBehaviour] = ...
+    next_behaviour_class: Type[
+        BaseBehaviour
+    ] = BaseBehaviour  # TODO: set the correct value
 
     # TODO: provide test cases
     @pytest.mark.parametrize("test_case, kwargs", [])
