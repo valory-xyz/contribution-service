@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 #
@@ -18,8 +17,4 @@
 #
 # ------------------------------------------------------------------------------
 
-from setuptools import find_packages, setup
-
-
-if __name__ == "__main__":
-    setup(packages=[])
+"""Packages authored by 'valory'."""
