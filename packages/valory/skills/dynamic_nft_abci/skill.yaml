@@ -14,6 +14,7 @@ fingerprint:
   models.py: bafybeie35mmifl7ssr6hosxplwsjnwy5i4fexd27l5bxdphudwmfcnikue
   payloads.py: bafybeicvlntkoksa6yxwctwctrojrmuywgrt5wbevael4kx26dqt52itmi
   rounds.py: bafybeib52kjmttynqqjvriv4q6cntehdoyebyqrutjbiovynoxasbpmt5y
+  tests/test_dummy.py: bafybeia2dlrdwvzzigcnbu4rzgydiwdwygxus3y5j6ne743o2qohspehty
 fingerprint_ignore_patterns: []
 connections: []
 contracts: []
