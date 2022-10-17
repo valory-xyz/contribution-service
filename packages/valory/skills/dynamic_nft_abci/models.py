@@ -21,7 +21,7 @@
 
 from typing import Any
 
-from valory.skills.dynamic_nft_abci.rounds import DynamicNFTAbciApp
+from valory.skills.dynamic_nft_abci.rounds import DynamicNFTAbciApp  # type: ignore
 
 from packages.valory.skills.abstract_round_abci.models import BaseParams
 from packages.valory.skills.abstract_round_abci.models import Requests as BaseRequests

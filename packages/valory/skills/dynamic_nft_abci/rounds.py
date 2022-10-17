@@ -71,6 +71,7 @@ class DBUpdateRound(AbstractRound):
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Enum]]:
         """Process the end of the block."""
+        Event.NO_MAJORITY, Event.DONE, Event.ROUND_TIMEOUT
         raise NotImplementedError
 
     def check_payload(self, payload: DBUpdatePayload) -> None:
@@ -93,6 +94,7 @@ class ImageCodeCalculationRound(AbstractRound):
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Enum]]:
         """Process the end of the block."""
+        Event.NO_MAJORITY, Event.DONE, Event.ROUND_TIMEOUT
         raise NotImplementedError
 
     def check_payload(self, payload: ImageCodeCalculationPayload) -> None:
@@ -115,6 +117,7 @@ class ImageGenerationRound(AbstractRound):
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Enum]]:
         """Process the end of the block."""
+        Event.NO_MAJORITY, Event.NO_NEW_IMAGES, Event.DONE, Event.ROUND_TIMEOUT
         raise NotImplementedError
 
     def check_payload(self, payload: ImageGenerationPayload) -> None:
@@ -137,6 +140,7 @@ class ImagePushRound(AbstractRound):
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Enum]]:
         """Process the end of the block."""
+        Event.NO_MAJORITY, Event.DONE, Event.ROUND_TIMEOUT
         raise NotImplementedError
 
     def check_payload(self, payload: ImagePushPayload) -> None:
@@ -159,6 +163,7 @@ class NewMemberListRound(AbstractRound):
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Enum]]:
         """Process the end of the block."""
+        Event.NO_MAJORITY, Event.DONE, Event.ROUND_TIMEOUT
         raise NotImplementedError
 
     def check_payload(self, payload: NewMemberListPayload) -> None:
@@ -181,6 +186,7 @@ class NewMemberUpdateRound(AbstractRound):
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Enum]]:
         """Process the end of the block."""
+        Event.NO_MAJORITY, Event.DONE, Event.ROUND_TIMEOUT
         raise NotImplementedError
 
     def check_payload(self, payload: NewMemberUpdatePayload) -> None:
@@ -203,6 +209,7 @@ class ObservationRound(AbstractRound):
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Enum]]:
         """Process the end of the block."""
+        Event.NO_MAJORITY, Event.DONE, Event.ROUND_TIMEOUT
         raise NotImplementedError
 
     def check_payload(self, payload: ObservationPayload) -> None:

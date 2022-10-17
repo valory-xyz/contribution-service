@@ -23,15 +23,8 @@ from dataclasses import dataclass
 from typing import Hashable
 
 import pytest
-from valory.skills.dynamic_nft_abci.payloads import (
+from valory.skills.dynamic_nft_abci.payloads import (  # type: ignore
     BaseDynamicNFTPayload,
-    DBUpdatePayload,
-    ImageCodeCalculationPayload,
-    ImageGenerationPayload,
-    ImagePushPayload,
-    NewMemberListPayload,
-    NewMemberUpdatePayload,
-    ObservationPayload,
     TransactionType,
 )
 

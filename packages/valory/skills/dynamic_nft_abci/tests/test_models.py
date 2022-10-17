@@ -19,7 +19,7 @@
 
 """Test the models.py module of the DynamicNFT."""
 
-from valory.skills.dynamic_nft_abci.models import SharedState
+from valory.skills.dynamic_nft_abci.models import SharedState  # type: ignore
 
 from packages.valory.skills.abstract_round_abci.test_tools.base import DummyContext
 

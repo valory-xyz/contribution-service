@@ -24,7 +24,7 @@ from pathlib import Path
 from typing import Any, Dict, Hashable, Optional, Type
 
 import pytest
-from valory.skills.dynamic_nft_abci.behaviours import (
+from valory.skills.dynamic_nft_abci.behaviours import (  # type: ignore
     DBUpdateBehaviour,
     DynamicNFTBaseBehaviour,
     ImageCodeCalculationBehaviour,
@@ -34,27 +34,13 @@ from valory.skills.dynamic_nft_abci.behaviours import (
     NewMemberUpdateBehaviour,
     ObservationBehaviour,
 )
-from valory.skills.dynamic_nft_abci.rounds import (
-    DBUpdateRound,
-    DegenerateRound,
-    DynamicNFTAbciApp,
+from valory.skills.dynamic_nft_abci.rounds import (  # type: ignore
     Event,
-    FinishedDBUpdateRound,
-    ImageCodeCalculationRound,
-    ImageGenerationRound,
-    ImagePushRound,
-    NewMemberListRound,
-    NewMemberUpdateRound,
-    ObservationRound,
     SynchronizedData,
 )
 
 from packages.valory.skills.abstract_round_abci.base import AbciAppDB
-from packages.valory.skills.abstract_round_abci.behaviours import (
-    AbstractRoundBehaviour,
-    BaseBehaviour,
-    make_degenerate_behaviour,
-)
+from packages.valory.skills.abstract_round_abci.behaviours import BaseBehaviour
 from packages.valory.skills.abstract_round_abci.test_tools.base import (
     FSMBehaviourBaseCase,
 )

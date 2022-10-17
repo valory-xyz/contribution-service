@@ -7,26 +7,26 @@ license: Apache-2.0
 aea_version: '>=1.0.0, <2.0.0'
 fingerprint:
   __init__.py: bafybeif56b2yk2pzo6njoexydkvwkl5tiaj7p76542ljnrijm3urhtnsxq
-  behaviours.py: bafybeib4lxagqgus2zntu65mgf2z7v2vl3475sp4rlone3vleieczbsd2y
+  behaviours.py: bafybeibsehyps5fl2byvgbyfnrqprolmgbnfzdu5xc3nwb5fb5grxkeyzi
   dialogues.py: bafybeib4c6vt73zxobz2frfvoh5uc7eckqztpdfb77yr3zgroyonpddiie
   fsm_specification.yaml: bafybeigtz2xluqzlexm42essvku6plmyw6gbby27yrxgmezhnusvxauiqu
   handlers.py: bafybeidus4ztb2rxaocmi67iwuhg6s4hmafuelsa5u5xnqqk6p7hgmo7da
-  models.py: bafybeic4vjn2kcbvqdstn3lwjc2mpnpxohcxmgnlrx3besbmbeupep2uye
-  payloads.py: bafybeib572twu62mjfb2ogrclpxxrtuk66k4ngst3cbo7isgpl5pg3qctm
-  rounds.py: bafybeiewyuj2tf5e3vtgsvfg4i2ia64zbktfrr35bacbwgi437hlmqztdi
-  tests/__init__.py: bafybeib42wqezi4kgsi742sh4zcmtlmx5kez2wduunroxschy444b7r6ci
-  tests/test_behaviours.py: bafybeifpocyv4umhj7tjwyayhmahqv7lwhluyybfolr7wmprik5dz3grc4
+  models.py: bafybeiaz56yfhucfszfor3oqpvyqesep6j7r2o5bzjnt7yivqkqx44ouqq
+  payloads.py: bafybeicvlntkoksa6yxwctwctrojrmuywgrt5wbevael4kx26dqt52itmi
+  rounds.py: bafybeib52kjmttynqqjvriv4q6cntehdoyebyqrutjbiovynoxasbpmt5y
+  tests/__init__.py: bafybeiddloa46b4m6juh5qouxcns2rbcuxw5vsyplpipr6owibxypdhblm
+  tests/test_behaviours.py: bafybeidjpyovrzc3ep5jo4iyicjpimjcrigeguusxjv5d5inn5wpsutili
   tests/test_dialogues.py: bafybeie4nyxj3otjo3472u3xdyr4w64fyp36hx3xphh6esfa3fir4wk2dq
   tests/test_handlers.py: bafybeieovr5wx7zpycuyxudlar2l6chmawyx3wla6w2m2lyvc3ehj77ley
-  tests/test_models.py: bafybeib3x3htwtml2xy2e2xqiltushi3ftd4avzkjt5deyq7bbjyonivse
-  tests/test_payloads.py: bafybeig4gdwdhxrzhi3f7pda2efdjfoln5zip6iupb2peruvfpi3kil244
-  tests/tests_rounds.py: bafybeihovsiqkj5gwwpru64mktdmyt7x5qylktwyegneavn3vpgbtlsx6y
+  tests/test_models.py: bafybeiazqalg66kbzssrmctnodenqwnysm5h4ac56grywefh2aojinpup4
+  tests/test_payloads.py: bafybeicpzxt5rst72vuv4jbzzs55fcbrvlox7idpfx5uhsna2dyuzhxx74
+  tests/tests_rounds.py: bafybeieoepcubfkcskroru4a7vaicaglh7eog3brmj3znzt5dklas4a7hu
 fingerprint_ignore_patterns: []
 connections: []
 contracts: []
 protocols: []
 skills:
-- valory/abstract_round_abci:0.1.0:bafybeidsb5fu3aqqfjpl7lpb5yu2cb7rbfacojncc6jx7fkth6gphar6kq
+- valory/abstract_round_abci:0.1.0:bafybeifkc35pnjj3jjtpyi44xkdm43upvejqo6gpwir3ftf6cnoxxbwl7i
 behaviours:
   main:
     args: {}

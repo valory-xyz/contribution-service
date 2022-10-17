@@ -22,8 +22,8 @@
 from abc import abstractmethod
 from typing import Generator, Set, Type, cast
 
-from valory.skills.dynamic_nft_abci.models import Params
-from valory.skills.dynamic_nft_abci.rounds import (
+from valory.skills.dynamic_nft_abci.models import Params  # type: ignore
+from valory.skills.dynamic_nft_abci.rounds import (  # type: ignore
     DBUpdateRound,
     DynamicNFTAbciApp,
     ImageCodeCalculationRound,

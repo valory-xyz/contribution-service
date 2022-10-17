@@ -25,8 +25,7 @@ from typing import Any, Callable, Dict, Hashable, List
 import pytest
 
 # TODO: define and import specific payloads explicitly by name
-from valory.skills.dynamic_nft_abci.payloads import *
-from valory.skills.dynamic_nft_abci.rounds import (
+from valory.skills.dynamic_nft_abci.rounds import (  # type: ignore
     DBUpdateRound,
     Event,
     ImageCodeCalculationRound,
@@ -40,9 +39,6 @@ from valory.skills.dynamic_nft_abci.rounds import (
 
 from packages.valory.skills.abstract_round_abci.base import BaseTxPayload
 from packages.valory.skills.abstract_round_abci.test_tools.rounds import (
-    BaseCollectDifferentUntilThresholdRoundTest,
-    BaseCollectSameUntilThresholdRoundTest,
-    BaseOnlyKeeperSendsRoundTest,
     BaseRoundTestClass,
 )
 
