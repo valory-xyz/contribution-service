@@ -1,0 +1,58 @@
+name: dynamic_nft_abci
+author: valory
+version: 0.1.0
+type: skill
+description: This skill implements the dynamic NFT feature.
+license: Apache-2.0
+aea_version: '>=1.0.0, <2.0.0'
+fingerprint:
+  __init__.py: bafybeif56b2yk2pzo6njoexydkvwkl5tiaj7p76542ljnrijm3urhtnsxq
+  behaviours.py: bafybeigjiturdu7j4w265hxtm52jaqgf5htlbc44usl4bjz44bup6dvxfe
+  dialogues.py: bafybeib4c6vt73zxobz2frfvoh5uc7eckqztpdfb77yr3zgroyonpddiie
+  fsm_specification.yaml: bafybeigtz2xluqzlexm42essvku6plmyw6gbby27yrxgmezhnusvxauiqu
+  handlers.py: bafybeidus4ztb2rxaocmi67iwuhg6s4hmafuelsa5u5xnqqk6p7hgmo7da
+  models.py: bafybeialzk5llbuata4bke5qdjke5iozty6tbr5annlgahjl5o5robvv2q
+  payloads.py: bafybeicvlntkoksa6yxwctwctrojrmuywgrt5wbevael4kx26dqt52itmi
+  rounds.py: bafybeib5xjo4es4i6zxwayuyl3alf3n26syd577tukuweq3hu44eimcd4q
+  tests/test_dummy.py: bafybeia2dlrdwvzzigcnbu4rzgydiwdwygxus3y5j6ne743o2qohspehty
+fingerprint_ignore_patterns: []
+connections: []
+contracts: []
+protocols: []
+skills:
+- valory/abstract_round_abci:0.1.0:bafybeiegpewio6lkpikfnohjqmlwkqtxdmjbky4dphof4jvrixlvkiqixi
+behaviours:
+  main:
+    args: {}
+    class_name: DynamicNFTAbciApp
+handlers:
+  abci:
+    args: {}
+    class_name: ABCIRoundHandler
+  contract_api:
+    args: {}
+    class_name: ContractApiHandler
+  http:
+    args: {}
+    class_name: HttpHandler
+  ledger_api:
+    args: {}
+    class_name: LedgerApiHandler
+  signing:
+    args: {}
+    class_name: SigningHandler
+  tendermint:
+    args: {}
+    class_name: TendermintHandler
+models:
+  params:
+    args: {}
+    class_name: Params
+  requests:
+    args: {}
+    class_name: Requests
+  state:
+    args: {}
+    class_name: SharedState
+dependencies: {}
+is_abstract: false
