@@ -19,13 +19,11 @@
 
 """This package contains payload tests for the DynamicNFTAbciApp."""
 
-from typing import Hashable
 from dataclasses import dataclass
+from typing import Hashable
 
 import pytest
-
 from valory.skills.dynamic_nft_abci.payloads import (
-    TransactionType,
     BaseDynamicNFTPayload,
     DBUpdatePayload,
     ImageCodeCalculationPayload,
@@ -34,6 +32,7 @@ from valory.skills.dynamic_nft_abci.payloads import (
     NewMemberListPayload,
     NewMemberUpdatePayload,
     ObservationPayload,
+    TransactionType,
 )
 
 
@@ -56,4 +55,3 @@ def test_payloads(test_case: PayloadTestCase) -> None:
     assert getattr(payload, f"{payload.transaction_type}") == test_case.content
     assert payload.transaction_type == test_case.transaction_type
     assert payload.from_json(payload.json) == payload
-

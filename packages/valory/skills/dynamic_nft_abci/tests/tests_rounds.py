@@ -19,33 +19,32 @@
 
 """This package contains the tests for rounds of DynamicNFTAbciApp."""
 
-from typing import Any, Dict, List, Callable, Hashable
 from dataclasses import dataclass, field
+from typing import Any, Callable, Dict, Hashable, List
 
 import pytest
 
 # TODO: define and import specific payloads explicitly by name
 from valory.skills.dynamic_nft_abci.payloads import *
 from valory.skills.dynamic_nft_abci.rounds import (
-    Event,
-    SynchronizedData,
     DBUpdateRound,
+    Event,
     ImageCodeCalculationRound,
     ImageGenerationRound,
     ImagePushRound,
     NewMemberListRound,
     NewMemberUpdateRound,
     ObservationRound,
+    SynchronizedData,
 )
-from packages.valory.skills.abstract_round_abci.base import (
-    BaseTxPayload,
-)
+
+from packages.valory.skills.abstract_round_abci.base import BaseTxPayload
 from packages.valory.skills.abstract_round_abci.test_tools.rounds import (
-    BaseRoundTestClass,
-    BaseOnlyKeeperSendsRoundTest,
     BaseCollectDifferentUntilThresholdRoundTest,
     BaseCollectSameUntilThresholdRoundTest,
- )
+    BaseOnlyKeeperSendsRoundTest,
+    BaseRoundTestClass,
+)
 
 
 @dataclass
@@ -83,7 +82,9 @@ class BaseDynamicNFTRoundTestClass(BaseRoundTestClass):
             self._test_round(
                 test_round=test_round,
                 round_payloads=test_case.payloads,
-                synchronized_data_update_fn=lambda sync_data, _: sync_data.update(**test_case.final_data),
+                synchronized_data_update_fn=lambda sync_data, _: sync_data.update(
+                    **test_case.final_data
+                ),
                 synchronized_data_attr_checks=test_case.synchronized_data_attr_checks,
                 exit_event=test_case.event,
                 **kwargs,  # varies per BaseRoundTestClass child
@@ -180,4 +181,3 @@ class TestImagePushRound(BaseDynamicNFTRoundTestClass):
         """Run tests."""
 
         self.run_test(test_case, **kwargs)
-

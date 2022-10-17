@@ -30,10 +30,9 @@ from packages.valory.skills.abstract_round_abci.base import (
     BaseSynchronizedData,
     DegenerateRound,
     EventToTimeout,
-    TransactionType
+    TransactionType,
 )
-
-from valory.skills.dynamic_nft_abci.payloads import (
+from packages.valory.skills.dynamic_nft_abci.payloads import (
     DBUpdatePayload,
     ImageCodeCalculationPayload,
     ImageGenerationPayload,
@@ -66,7 +65,7 @@ class DBUpdateRound(AbstractRound):
 
     # TODO: replace AbstractRound with one of CollectDifferentUntilAllRound, CollectSameUntilAllRound, CollectSameUntilThresholdRound, CollectDifferentUntilThresholdRound, OnlyKeeperSendsRound, VotingRound
     # TODO: set the following class attributes
-    round_id: str = "d_b_update"
+    round_id: str = "db_update"
     allowed_tx_type: Optional[TransactionType]
     payload_attribute: str = DBUpdatePayload.transaction_type
 
@@ -218,7 +217,7 @@ class ObservationRound(AbstractRound):
 class FinishedDBUpdateRound(DegenerateRound):
     """FinishedDBUpdateRound"""
 
-    round_id: str = "finished_d_b_update"
+    round_id: str = "finished_db_update"
 
 
 class DynamicNFTAbciApp(AbciApp[Event]):
@@ -226,7 +225,45 @@ class DynamicNFTAbciApp(AbciApp[Event]):
 
     initial_round_cls: AppState = NewMemberListRound
     initial_states: Set[AppState] = {NewMemberListRound}
-    transition_function: AbciAppTransitionFunction = {NewMemberListRound: {Event.DONE: NewMemberUpdateRound, Event.NO_MAJORITY: NewMemberListRound, Event.ROUND_TIMEOUT: NewMemberListRound}, NewMemberUpdateRound: {Event.DONE: ObservationRound, Event.NO_MAJORITY: NewMemberListRound, Event.ROUND_TIMEOUT: NewMemberListRound}, ObservationRound: {Event.DONE: ImageCodeCalculationRound, Event.NO_MAJORITY: ObservationRound, Event.ROUND_TIMEOUT: ObservationRound}, ImageCodeCalculationRound: {Event.DONE: ImageGenerationRound, Event.NO_MAJORITY: ObservationRound, Event.ROUND_TIMEOUT: ObservationRound}, ImageGenerationRound: {Event.DONE: ImagePushRound, Event.NO_MAJORITY: ObservationRound, Event.ROUND_TIMEOUT: ObservationRound, Event.NO_NEW_IMAGES: DBUpdateRound}, ImagePushRound: {Event.DONE: DBUpdateRound, Event.NO_MAJORITY: ObservationRound, Event.ROUND_TIMEOUT: ObservationRound}, DBUpdateRound: {Event.DONE: FinishedDBUpdateRound, Event.NO_MAJORITY: ObservationRound, Event.ROUND_TIMEOUT: ObservationRound}, FinishedDBUpdateRound: {}}
+    transition_function: AbciAppTransitionFunction = {
+        NewMemberListRound: {
+            Event.DONE: NewMemberUpdateRound,
+            Event.NO_MAJORITY: NewMemberListRound,
+            Event.ROUND_TIMEOUT: NewMemberListRound,
+        },
+        NewMemberUpdateRound: {
+            Event.DONE: ObservationRound,
+            Event.NO_MAJORITY: NewMemberListRound,
+            Event.ROUND_TIMEOUT: NewMemberListRound,
+        },
+        ObservationRound: {
+            Event.DONE: ImageCodeCalculationRound,
+            Event.NO_MAJORITY: ObservationRound,
+            Event.ROUND_TIMEOUT: ObservationRound,
+        },
+        ImageCodeCalculationRound: {
+            Event.DONE: ImageGenerationRound,
+            Event.NO_MAJORITY: ObservationRound,
+            Event.ROUND_TIMEOUT: ObservationRound,
+        },
+        ImageGenerationRound: {
+            Event.DONE: ImagePushRound,
+            Event.NO_MAJORITY: ObservationRound,
+            Event.ROUND_TIMEOUT: ObservationRound,
+            Event.NO_NEW_IMAGES: DBUpdateRound,
+        },
+        ImagePushRound: {
+            Event.DONE: DBUpdateRound,
+            Event.NO_MAJORITY: ObservationRound,
+            Event.ROUND_TIMEOUT: ObservationRound,
+        },
+        DBUpdateRound: {
+            Event.DONE: FinishedDBUpdateRound,
+            Event.NO_MAJORITY: ObservationRound,
+            Event.ROUND_TIMEOUT: ObservationRound,
+        },
+        FinishedDBUpdateRound: {},
+    }
     final_states: Set[AppState] = {FinishedDBUpdateRound}
     event_to_timeout: EventToTimeout = {}
     cross_period_persisted_keys: List[str] = []

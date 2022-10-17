@@ -24,4 +24,3 @@ import packages.valory.skills.dynamic_nft_abci.handlers  # noqa
 
 def test_import() -> None:
     """Test that the 'handlers.py' of the DynamicNFT can be imported."""
-

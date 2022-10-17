@@ -107,4 +107,3 @@ class ObservationPayload(BaseDynamicNFTPayload):
 
     # TODO: specify the transaction type
     transaction_type = TransactionType.OBSERVATION
-

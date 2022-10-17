@@ -22,23 +22,23 @@
 from abc import abstractmethod
 from typing import Generator, Set, Type, cast
 
-from packages.valory.skills.abstract_round_abci.base import AbstractRound
-from packages.valory.skills.abstract_round_abci.behaviours import (
-    AbstractRoundBehaviour,
-    BaseBehaviour,
-)
-
 from valory.skills.dynamic_nft_abci.models import Params
 from valory.skills.dynamic_nft_abci.rounds import (
-    SynchronizedData,
-    DynamicNFTAbciApp,
     DBUpdateRound,
+    DynamicNFTAbciApp,
     ImageCodeCalculationRound,
     ImageGenerationRound,
     ImagePushRound,
     NewMemberListRound,
     NewMemberUpdateRound,
     ObservationRound,
+    SynchronizedData,
+)
+
+from packages.valory.skills.abstract_round_abci.base import AbstractRound
+from packages.valory.skills.abstract_round_abci.behaviours import (
+    AbstractRoundBehaviour,
+    BaseBehaviour,
 )
 
 
@@ -61,7 +61,7 @@ class DBUpdateBehaviour(DynamicNFTBaseBehaviour):
 
     # TODO: set the following class attributes
     state_id: str
-    behaviour_id: str = "d_b_update"
+    behaviour_id: str = "db_update"
     matching_round: Type[AbstractRound] = DBUpdateRound
 
     @abstractmethod
@@ -152,4 +152,12 @@ class DynamicNFTRoundBehaviour(AbstractRoundBehaviour):
 
     initial_behaviour_cls = NewMemberListBehaviour
     abci_app_cls = DynamicNFTAbciApp  # type: ignore
-    behaviours: Set[Type[BaseBehaviour]] = [DBUpdateBehaviour, ImageCodeCalculationBehaviour, ImageGenerationBehaviour, ImagePushBehaviour, NewMemberListBehaviour, NewMemberUpdateBehaviour, ObservationBehaviour]
+    behaviours: Set[Type[BaseBehaviour]] = [
+        DBUpdateBehaviour,
+        ImageCodeCalculationBehaviour,
+        ImageGenerationBehaviour,
+        ImagePushBehaviour,
+        NewMemberListBehaviour,
+        NewMemberUpdateBehaviour,
+        ObservationBehaviour,
+    ]

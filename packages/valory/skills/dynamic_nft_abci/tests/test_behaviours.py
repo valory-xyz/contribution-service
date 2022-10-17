@@ -19,21 +19,14 @@
 
 """This package contains round behaviours of DynamicNFTAbciApp."""
 
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Hashable, Optional, Type
-from dataclasses import dataclass
 
 import pytest
-
-from packages.valory.skills.abstract_round_abci.base import AbciAppDB
-from packages.valory.skills.abstract_round_abci.behaviours import (
-    AbstractRoundBehaviour,
-    BaseBehaviour,
-    make_degenerate_behaviour,
-)
 from valory.skills.dynamic_nft_abci.behaviours import (
-    DynamicNFTBaseBehaviour,
     DBUpdateBehaviour,
+    DynamicNFTBaseBehaviour,
     ImageCodeCalculationBehaviour,
     ImageGenerationBehaviour,
     ImagePushBehaviour,
@@ -42,11 +35,10 @@ from valory.skills.dynamic_nft_abci.behaviours import (
     ObservationBehaviour,
 )
 from valory.skills.dynamic_nft_abci.rounds import (
-    SynchronizedData,
-    DegenerateRound,
-    Event,
-    DynamicNFTAbciApp,
     DBUpdateRound,
+    DegenerateRound,
+    DynamicNFTAbciApp,
+    Event,
     FinishedDBUpdateRound,
     ImageCodeCalculationRound,
     ImageGenerationRound,
@@ -54,8 +46,15 @@ from valory.skills.dynamic_nft_abci.rounds import (
     NewMemberListRound,
     NewMemberUpdateRound,
     ObservationRound,
+    SynchronizedData,
 )
 
+from packages.valory.skills.abstract_round_abci.base import AbciAppDB
+from packages.valory.skills.abstract_round_abci.behaviours import (
+    AbstractRoundBehaviour,
+    BaseBehaviour,
+    make_degenerate_behaviour,
+)
 from packages.valory.skills.abstract_round_abci.test_tools.base import (
     FSMBehaviourBaseCase,
 )
@@ -225,4 +224,3 @@ class TestObservationBehaviour(BaseDynamicNFTTest):
         # TODO: mock the necessary calls
         # self.mock_ ...
         self.complete(test_case.event)
-
