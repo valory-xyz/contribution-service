@@ -27,8 +27,8 @@ from packages.valory.skills.abstract_round_abci.behaviours import (
     AbstractRoundBehaviour,
     BaseBehaviour,
 )
-from packages.valory.skills.dynamic_nft_abci.models import Params  # type: ignore
-from packages.valory.skills.dynamic_nft_abci.rounds import (  # type: ignore
+from packages.valory.skills.dynamic_nft_abci.models import Params
+from packages.valory.skills.dynamic_nft_abci.rounds import (
     DBUpdateRound,
     DynamicNFTAbciApp,
     ImageCodeCalculationRound,
@@ -151,7 +151,7 @@ class DynamicNFTRoundBehaviour(AbstractRoundBehaviour):
 
     initial_behaviour_cls = NewMemberListBehaviour
     abci_app_cls = DynamicNFTAbciApp
-    behaviours: Set[Type[BaseBehaviour]] = [  # type: ignore
+    behaviours: Set[Type[BaseBehaviour]] = [
         DBUpdateBehaviour,
         ImageCodeCalculationBehaviour,
         ImageGenerationBehaviour,
