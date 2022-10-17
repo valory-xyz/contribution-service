@@ -1,1 +1,15 @@
-{}
+{
+    "protocol/valory/abci/0.1.0": "bafybeiaw3tzlg3rkvnn5fcufblktmfwngmxugn4yo7pyjp76zz6aqtqcay",
+    "connection/valory/http_client/0.23.0": "bafybeihz3tubwado7j3wlivndzzuj3c6fdsp4ra5r3nqixn3ufawzo3wii",
+    "protocol/valory/http/1.0.0": "bafybeigzqo2zaakcjtzzsm6dh4x73v72xg6ctk6muyp5uq5ueb7y34fbxy",
+    "protocol/open_aea/signing/1.0.0": "bafybeiambqptflge33eemdhis2whik67hjplfnqwieoa6wblzlaf7vuo44",
+    "connection/valory/abci/0.1.0": "bafybeid6p7vwyikn7sntlpc36vymotldfgonjbk3qa5gfacxxamybhmpvy",
+    "protocol/valory/tendermint/0.1.0": "bafybeihcnjhovvyyfbkuw5sjyfx2lfd4soeocfqzxz54g67333m6nk5gxq",
+    "skill/valory/abstract_abci/0.1.0": "bafybeiabow5j6wc63szukedutrx6bia2agnju62avxsbhqkhchcwwpvu5i",
+    "connection/valory/ledger/0.19.0": "bafybeihmz5us4ntmzvgikpkx4tththrl7zvou4uiebvletdeliidiuhi6m",
+    "protocol/valory/contract_api/1.0.0": "bafybeiaxbrvgtbdrh4lslskuxyp4awyr4whcx3nqq5yrr6vimzsxg5dy64",
+    "protocol/valory/ledger_api/1.0.0": "bafybeih7rhi5zvfvwakx5ifgxsz2cfipeecsh7bm3gnudjxtvhrygpcftq",
+    "contract/valory/service_registry/0.1.0": "bafybeicvmdbhovr247vvunz5rer7sai74jxxavfwxyundiq3ebfxc2pvya",
+    "skill/valory/abstract_round_abci/0.1.0": "bafybeiegpewio6lkpikfnohjqmlwkqtxdmjbky4dphof4jvrixlvkiqixi",
+    "skill/valory/dynamic_nft_abci/0.1.0": "bafybeih7p2ldspbtulbxissdryfnfuo3u6biafvrzy37iycbiewmbmlk3q"
+}
