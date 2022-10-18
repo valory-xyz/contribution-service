@@ -19,8 +19,11 @@
 
 """This package contains the rounds of DynamicNFTAbciApp."""
 
+import json
+from abc import ABC
 from enum import Enum
-from typing import List, Optional, Set, Tuple
+from types import MappingProxyType
+from typing import Dict, List, Optional, Set, Tuple, cast
 
 from packages.valory.skills.abstract_round_abci.base import (
     AbciApp,
@@ -28,6 +31,7 @@ from packages.valory.skills.abstract_round_abci.base import (
     AbstractRound,
     AppState,
     BaseSynchronizedData,
+    CollectSameUntilThresholdRound,
     DegenerateRound,
     EventToTimeout,
     TransactionType,
@@ -37,8 +41,7 @@ from packages.valory.skills.dynamic_nft_abci.payloads import (
     ImageCodeCalculationPayload,
     ImageGenerationPayload,
     ImagePushPayload,
-    NewMemberListPayload,
-    NewMemberUpdatePayload,
+    NewMembersPayload,
     ObservationPayload,
 )
 
@@ -59,51 +62,66 @@ class SynchronizedData(BaseSynchronizedData):
     This data is replicated by the tendermint application.
     """
 
+    @property
+    def members(self) -> dict:
+        """Get the member table."""
+        return cast(dict, self.db.get("members", {}))
 
-class NewMemberListRound(AbstractRound):
+    @property
+    def images(self) -> dict:
+        """Get the image table."""
+        return cast(dict, self.db.get("images", {}))
+
+    @property
+    def redirects(self) -> dict:
+        """Get the redirect table."""
+        return cast(dict, self.db.get("redirects", {}))
+
+    @property
+    def participant_to_new_members(self) -> Dict:
+        """Get the participant_to_new_members."""
+        return cast(Dict, self.db.get_strict("participant_to_new_members"))
+
+    @property
+    def most_voted_new_members(self) -> Dict:
+        """Get the most_voted_new_members."""
+        return cast(Dict, self.db.get_strict("most_voted_new_members"))
+
+
+class DynamicNFTABCIAbstractRound(AbstractRound[Event, TransactionType], ABC):
+    """Abstract round for the Dynamic NFT ABCI skill."""
+
+    @property
+    def synchronized_data(self) -> SynchronizedData:
+        """Return the synchronized data."""
+        return cast(SynchronizedData, self._synchronized_data)
+
+
+class NewMembersRound(CollectSameUntilThresholdRound, DynamicNFTABCIAbstractRound):
     """NewMemberListRound"""
 
-    # TODO: replace AbstractRound with one of CollectDifferentUntilAllRound, CollectSameUntilAllRound, CollectSameUntilThresholdRound, CollectDifferentUntilThresholdRound, OnlyKeeperSendsRound, VotingRound
-    # TODO: set the following class attributes
-    round_id: str = "new_member_list"
-    allowed_tx_type: Optional[TransactionType]
-    payload_attribute: str = NewMemberListPayload.transaction_type
+    round_id: str = "new_members"
+    allowed_tx_type = NewMembersPayload.transaction_type
+    payload_attribute: str = "new_members"
 
-    def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Enum]]:
+    def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:
         """Process the end of the block."""
-        Event.NO_MAJORITY, Event.DONE, Event.ROUND_TIMEOUT
-        raise NotImplementedError
-
-    def check_payload(self, payload: NewMemberListPayload) -> None:
-        """Check payload."""
-        raise NotImplementedError
-
-    def process_payload(self, payload: NewMemberListPayload) -> None:
-        """Process payload."""
-        raise NotImplementedError
-
-
-class NewMemberUpdateRound(AbstractRound):
-    """NewMemberUpdateRound"""
-
-    # TODO: replace AbstractRound with one of CollectDifferentUntilAllRound, CollectSameUntilAllRound, CollectSameUntilThresholdRound, CollectDifferentUntilThresholdRound, OnlyKeeperSendsRound, VotingRound
-    # TODO: set the following class attributes
-    round_id: str = "new_member_update"
-    allowed_tx_type: Optional[TransactionType]
-    payload_attribute: str = NewMemberUpdatePayload.transaction_type
-
-    def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Enum]]:
-        """Process the end of the block."""
-        Event.NO_MAJORITY, Event.DONE, Event.ROUND_TIMEOUT
-        raise NotImplementedError
-
-    def check_payload(self, payload: NewMemberUpdatePayload) -> None:
-        """Check payload."""
-        raise NotImplementedError
-
-    def process_payload(self, payload: NewMemberUpdatePayload) -> None:
-        """Process payload."""
-        raise NotImplementedError
+        if self.threshold_reached:
+            # Add the new members to the members table. Note that the new members have no points or image_code fields
+            members = {
+                **json.loads(self.most_voted_payload),
+                **self.synchronized_data.members,
+            }
+            synchronized_data = self.synchronized_data.update(
+                participant_to_new_members=MappingProxyType(self.collection),
+                members=members,
+            )
+            return synchronized_data, Event.DONE
+        if not self.is_majority_possible(
+            self.collection, self.synchronized_data.nb_participants
+        ):
+            return self.synchronized_data, Event.NO_MAJORITY
+        return None
 
 
 class ObservationRound(AbstractRound):
@@ -230,18 +248,13 @@ class FinishedDBUpdateRound(DegenerateRound):
 class DynamicNFTAbciApp(AbciApp[Event]):
     """DynamicNFTAbciApp"""
 
-    initial_round_cls: AppState = NewMemberListRound
-    initial_states: Set[AppState] = {NewMemberListRound}
+    initial_round_cls: AppState = NewMembersRound
+    initial_states: Set[AppState] = {NewMembersRound}
     transition_function: AbciAppTransitionFunction = {
-        NewMemberListRound: {
-            Event.DONE: NewMemberUpdateRound,
-            Event.NO_MAJORITY: NewMemberListRound,
-            Event.ROUND_TIMEOUT: NewMemberListRound,
-        },
-        NewMemberUpdateRound: {
+        NewMembersRound: {
             Event.DONE: ObservationRound,
-            Event.NO_MAJORITY: NewMemberListRound,
-            Event.ROUND_TIMEOUT: NewMemberListRound,
+            Event.NO_MAJORITY: NewMembersRound,
+            Event.ROUND_TIMEOUT: NewMembersRound,
         },
         ObservationRound: {
             Event.DONE: ImageCodeCalculationRound,
