@@ -29,7 +29,7 @@ class TransactionType(Enum):
     """Enumeration of transaction types."""
 
     NEW_MEMBERS = "new_members"
-    OBSERVATION = "observation"
+    LEADERBOARD_OBSERVATION = "leaderboard_observation"
     IMAGE_CODE_CALCULATION = "image_code_calculation"
     IMAGE_GENERATION = "image_generation"
     IMAGE_PUSH = "image_push"
@@ -66,10 +66,30 @@ class NewMembersPayload(BaseTxPayload):
         return dict(member_to_uri=self.member_to_uri)
 
 
-class ObservationPayload(BaseTxPayload):
-    """Represent a transaction payload for the ObservationRound."""
+class LeaderboardObservationPayload(BaseTxPayload):
+    """Represent a transaction payload for the LeaderboardObservationRound."""
 
-    transaction_type = TransactionType.OBSERVATION
+    transaction_type = TransactionType.LEADERBOARD_OBSERVATION
+
+    def __init__(self, sender: str, leaderboard: str, **kwargs: Any) -> None:
+        """Initialize an 'leaderboard_observation' transaction payload.
+
+        :param sender: the sender (Ethereum) address
+        :param leaderboard: the leaderboard json encoded
+        :param kwargs: the keyword arguments
+        """
+        super().__init__(sender, **kwargs)
+        self._leaderboard = leaderboard
+
+    @property
+    def leaderboard(self) -> str:
+        """Get the leaderboard."""
+        return self._leaderboard
+
+    @property
+    def data(self) -> Dict:
+        """Get the data."""
+        return dict(leaderboard=self.leaderboard)
 
 
 class ImageCodeCalculationPayload(BaseTxPayload):

@@ -16,24 +16,24 @@ states:
 - ImageGenerationRound
 - ImagePushRound
 - NewMembersRound
-- ObservationRound
+- LeaderboardObservationRound
 transition_func:
     (DBUpdateRound, DONE): FinishedDBUpdateRound
-    (DBUpdateRound, NO_MAJORITY): ObservationRound
-    (DBUpdateRound, ROUND_TIMEOUT): ObservationRound
+    (DBUpdateRound, NO_MAJORITY): LeaderboardObservationRound
+    (DBUpdateRound, ROUND_TIMEOUT): LeaderboardObservationRound
     (ImageCodeCalculationRound, DONE): ImageGenerationRound
-    (ImageCodeCalculationRound, NO_MAJORITY): ObservationRound
-    (ImageCodeCalculationRound, ROUND_TIMEOUT): ObservationRound
+    (ImageCodeCalculationRound, NO_MAJORITY): LeaderboardObservationRound
+    (ImageCodeCalculationRound, ROUND_TIMEOUT): LeaderboardObservationRound
     (ImageGenerationRound, DONE): ImagePushRound
-    (ImageGenerationRound, NO_MAJORITY): ObservationRound
+    (ImageGenerationRound, NO_MAJORITY): LeaderboardObservationRound
     (ImageGenerationRound, NO_NEW_IMAGES): DBUpdateRound
-    (ImageGenerationRound, ROUND_TIMEOUT): ObservationRound
+    (ImageGenerationRound, ROUND_TIMEOUT): LeaderboardObservationRound
     (ImagePushRound, DONE): DBUpdateRound
-    (ImagePushRound, NO_MAJORITY): ObservationRound
-    (ImagePushRound, ROUND_TIMEOUT): ObservationRound
-    (NewMembersRound, DONE): ObservationRound
+    (ImagePushRound, NO_MAJORITY): LeaderboardObservationRound
+    (ImagePushRound, ROUND_TIMEOUT): LeaderboardObservationRound
+    (NewMembersRound, DONE): LeaderboardObservationRound
     (NewMembersRound, NO_MAJORITY): NewMembersRound
     (NewMembersRound, ROUND_TIMEOUT): NewMembersRound
-    (ObservationRound, DONE): ImageCodeCalculationRound
-    (ObservationRound, NO_MAJORITY): ObservationRound
-    (ObservationRound, ROUND_TIMEOUT): ObservationRound
+    (LeaderboardObservationRound, DONE): ImageCodeCalculationRound
+    (LeaderboardObservationRound, NO_MAJORITY): LeaderboardObservationRound
+    (LeaderboardObservationRound, ROUND_TIMEOUT): LeaderboardObservationRound

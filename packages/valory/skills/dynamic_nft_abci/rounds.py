@@ -22,7 +22,6 @@
 import json
 from abc import ABC
 from enum import Enum
-from types import MappingProxyType
 from typing import Dict, List, Optional, Set, Tuple, cast
 
 from packages.valory.skills.abstract_round_abci.base import (
@@ -41,8 +40,8 @@ from packages.valory.skills.dynamic_nft_abci.payloads import (
     ImageCodeCalculationPayload,
     ImageGenerationPayload,
     ImagePushPayload,
+    LeaderboardObservationPayload,
     NewMembersPayload,
-    ObservationPayload,
 )
 
 
@@ -78,14 +77,14 @@ class SynchronizedData(BaseSynchronizedData):
         return cast(dict, self.db.get("redirects", {}))
 
     @property
-    def participant_to_new_members(self) -> Dict:
-        """Get the participant_to_new_members."""
-        return cast(Dict, self.db.get_strict("participant_to_new_members"))
-
-    @property
     def most_voted_new_members(self) -> Dict:
         """Get the most_voted_new_members."""
         return cast(Dict, self.db.get_strict("most_voted_new_members"))
+
+    @property
+    def most_voted_leaderboard(self) -> Dict:
+        """Get the most_voted_leaderboard."""
+        return cast(Dict, self.db.get_strict("most_voted_leaderboard"))
 
 
 class DynamicNFTABCIAbstractRound(AbstractRound[Event, TransactionType], ABC):
@@ -103,6 +102,7 @@ class NewMembersRound(CollectSameUntilThresholdRound, DynamicNFTABCIAbstractRoun
     round_id: str = "new_members"
     allowed_tx_type = NewMembersPayload.transaction_type
     payload_attribute: str = "new_members"
+    synchronized_data_class = SynchronizedData
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:
         """Process the end of the block."""
@@ -113,8 +113,8 @@ class NewMembersRound(CollectSameUntilThresholdRound, DynamicNFTABCIAbstractRoun
                 **self.synchronized_data.members,
             }
             synchronized_data = self.synchronized_data.update(
-                participant_to_new_members=MappingProxyType(self.collection),
                 members=members,
+                most_voted_new_members=self.most_voted_payload,
             )
             return synchronized_data, Event.DONE
         if not self.is_majority_possible(
@@ -124,27 +124,28 @@ class NewMembersRound(CollectSameUntilThresholdRound, DynamicNFTABCIAbstractRoun
         return None
 
 
-class ObservationRound(AbstractRound):
-    """ObservationRound"""
+class LeaderboardObservationRound(
+    CollectSameUntilThresholdRound, DynamicNFTABCIAbstractRound
+):
+    """LeaderboardObservationRound"""
 
-    # TODO: replace AbstractRound with one of CollectDifferentUntilAllRound, CollectSameUntilAllRound, CollectSameUntilThresholdRound, CollectDifferentUntilThresholdRound, OnlyKeeperSendsRound, VotingRound
-    # TODO: set the following class attributes
-    round_id: str = "observation"
-    allowed_tx_type: Optional[TransactionType]
-    payload_attribute: str = ObservationPayload.transaction_type
+    round_id = "leaderboard_observation"
+    allowed_tx_type = LeaderboardObservationPayload.transaction_type
+    payload_attribute = "leaderboard_observation"
+    synchronized_data_class = SynchronizedData
 
-    def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Enum]]:
+    def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:
         """Process the end of the block."""
-        Event.NO_MAJORITY, Event.DONE, Event.ROUND_TIMEOUT
-        raise NotImplementedError
-
-    def check_payload(self, payload: ObservationPayload) -> None:
-        """Check payload."""
-        raise NotImplementedError
-
-    def process_payload(self, payload: ObservationPayload) -> None:
-        """Process payload."""
-        raise NotImplementedError
+        if self.threshold_reached:
+            synchronized_data = self.synchronized_data.update(
+                leaderboard=self.most_voted_payload,
+            )
+            return synchronized_data, Event.DONE
+        if not self.is_majority_possible(
+            self.collection, self.synchronized_data.nb_participants
+        ):
+            return self.synchronized_data, Event.NO_MAJORITY
+        return None
 
 
 class ImageCodeCalculationRound(AbstractRound):
@@ -252,35 +253,35 @@ class DynamicNFTAbciApp(AbciApp[Event]):
     initial_states: Set[AppState] = {NewMembersRound}
     transition_function: AbciAppTransitionFunction = {
         NewMembersRound: {
-            Event.DONE: ObservationRound,
+            Event.DONE: LeaderboardObservationRound,
             Event.NO_MAJORITY: NewMembersRound,
             Event.ROUND_TIMEOUT: NewMembersRound,
         },
-        ObservationRound: {
+        LeaderboardObservationRound: {
             Event.DONE: ImageCodeCalculationRound,
-            Event.NO_MAJORITY: ObservationRound,
-            Event.ROUND_TIMEOUT: ObservationRound,
+            Event.NO_MAJORITY: LeaderboardObservationRound,
+            Event.ROUND_TIMEOUT: LeaderboardObservationRound,
         },
         ImageCodeCalculationRound: {
             Event.DONE: ImageGenerationRound,
-            Event.NO_MAJORITY: ObservationRound,
-            Event.ROUND_TIMEOUT: ObservationRound,
+            Event.NO_MAJORITY: LeaderboardObservationRound,
+            Event.ROUND_TIMEOUT: LeaderboardObservationRound,
         },
         ImageGenerationRound: {
             Event.DONE: ImagePushRound,
-            Event.NO_MAJORITY: ObservationRound,
-            Event.ROUND_TIMEOUT: ObservationRound,
+            Event.NO_MAJORITY: LeaderboardObservationRound,
+            Event.ROUND_TIMEOUT: LeaderboardObservationRound,
             Event.NO_NEW_IMAGES: DBUpdateRound,
         },
         ImagePushRound: {
             Event.DONE: DBUpdateRound,
-            Event.NO_MAJORITY: ObservationRound,
-            Event.ROUND_TIMEOUT: ObservationRound,
+            Event.NO_MAJORITY: LeaderboardObservationRound,
+            Event.ROUND_TIMEOUT: LeaderboardObservationRound,
         },
         DBUpdateRound: {
             Event.DONE: FinishedDBUpdateRound,
-            Event.NO_MAJORITY: ObservationRound,
-            Event.ROUND_TIMEOUT: ObservationRound,
+            Event.NO_MAJORITY: LeaderboardObservationRound,
+            Event.ROUND_TIMEOUT: LeaderboardObservationRound,
         },
         FinishedDBUpdateRound: {},
     }

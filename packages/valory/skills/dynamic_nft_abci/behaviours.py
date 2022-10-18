@@ -29,15 +29,18 @@ from packages.valory.skills.abstract_round_abci.behaviours import (
     BaseBehaviour,
 )
 from packages.valory.skills.dynamic_nft_abci.models import Params
-from packages.valory.skills.dynamic_nft_abci.payloads import NewMembersPayload
+from packages.valory.skills.dynamic_nft_abci.payloads import (
+    LeaderboardObservationPayload,
+    NewMembersPayload,
+)
 from packages.valory.skills.dynamic_nft_abci.rounds import (
     DBUpdateRound,
     DynamicNFTAbciApp,
     ImageCodeCalculationRound,
     ImageGenerationRound,
     ImagePushRound,
+    LeaderboardObservationRound,
     NewMembersRound,
-    ObservationRound,
     SynchronizedData,
 )
 
@@ -102,18 +105,22 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
         yield from self.wait_until_round_end()
 
 
-class ObservationBehaviour(DynamicNFTBaseBehaviour):
-    """ObservationBehaviour"""
+class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
+    """LeaderboardBehaviour"""
 
-    behaviour_id: str = "observation"
-    matching_round: Type[AbstractRound] = ObservationRound
+    behaviour_id: str = "leaderboard"
+    matching_round: Type[AbstractRound] = LeaderboardObservationRound
 
     @abstractmethod
     def async_act(self) -> Generator:
         """Do the act, supporting asynchronous execution."""
 
-        # agents read the leaderboard from the API and they agree on
-        # the json file they get.
+        # Get the leaderboard
+        # TODO: in the final implementation the leaderboard will be get from the API
+        leaderboard = json.dumps(DUMMY_LEADERBOARD, sort_keys=True)
+        payload = LeaderboardObservationPayload(self.context.agent_address, leaderboard)
+        yield from self.send_a2a_transaction(payload)
+        yield from self.wait_until_round_end()
 
 
 class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
@@ -230,7 +237,7 @@ class DynamicNFTRoundBehaviour(AbstractRoundBehaviour):
     abci_app_cls = DynamicNFTAbciApp
     behaviours: Set[Type[BaseBehaviour]] = [
         NewMembersBehaviour,
-        ObservationBehaviour,
+        LeaderboardObservationBehaviour,
         ImageCodeCalculationBehaviour,
         ImageGenerationBehaviour,
         ImagePushBehaviour,
