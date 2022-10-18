@@ -68,7 +68,7 @@ class BaseDynamicNFTTest(FSMBehaviourBaseCase):
             SynchronizedData(AbciAppDB(setup_data=AbciAppDB.data_to_lists(data))),
         )
         assert (
-            self.behaviour.behaviour_id  # type: ignore
+            self.behaviour.current_behaviour.behaviour_id  # type: ignore
             == self.behaviour_class.behaviour_id
         )
 
@@ -91,12 +91,10 @@ class TestNewMembersBehaviour(BaseDynamicNFTTest):
     @pytest.mark.parametrize(
         "test_case",
         [
-            (
-                BehaviourTestCase(
-                    "Happy path",
-                    initial_data=dict(),
-                    event=Event.DONE,
-                ),
+            BehaviourTestCase(
+                "Happy path",
+                initial_data=dict(),
+                event=Event.DONE,
             ),
         ],
     )

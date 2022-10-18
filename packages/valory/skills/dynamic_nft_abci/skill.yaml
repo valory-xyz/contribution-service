@@ -7,14 +7,14 @@ license: Apache-2.0
 aea_version: '>=1.0.0, <2.0.0'
 fingerprint:
   __init__.py: bafybeif56b2yk2pzo6njoexydkvwkl5tiaj7p76542ljnrijm3urhtnsxq
-  behaviours.py: bafybeidrtu22esi2bmvekeremkqigb6y2voedazg7nzssmwxqmzrinnbfu
-  dialogues.py: bafybeib4c6vt73zxobz2frfvoh5uc7eckqztpdfb77yr3zgroyonpddiie
+  behaviours.py: bafybeiebytumco7mo2vtefg5vro2sopmxtv5z2vh5hkmdyklejbmprbzl4
+  dialogues.py: bafybeienawgp5jvg6ie3fpdtjepgabxjb3l6ugo46mso7xinx5abgxnafy
   fsm_specification.yaml: bafybeibe4unrn7qqbtpfyedqyjkf5empzpizzv2i5nrylozr5xcxfq64wy
   handlers.py: bafybeidus4ztb2rxaocmi67iwuhg6s4hmafuelsa5u5xnqqk6p7hgmo7da
-  models.py: bafybeialzk5llbuata4bke5qdjke5iozty6tbr5annlgahjl5o5robvv2q
+  models.py: bafybeicg2uiww5mjvavvhd6l74n7o7u55rd6csu25k7pn64b2umuubqi6e
   payloads.py: bafybeiffmwfxk3oykpdkn6jkxl4p32in5k3x7cnqcpya7o67lsxuop7mqi
-  rounds.py: bafybeict6eqfscxzarwmrhlwas2mnudsukgd6uwtwekfcs2nk7mebxv6eq
-  tests/test_behaviours.py: bafybeibndn47vwp6wlvret6xafeylh773ob2lh47tnhwsuhitoewptzolq
+  rounds.py: bafybeidafzmneahjt6v6lvmzkrw3fhzlbjp5ngh3z6oaru62ez3o4puzye
+  tests/test_behaviours.py: bafybeibvabcyamgmcdsqgzutyin7c55yelcfu4aa7naesni262ms5aej4e
 fingerprint_ignore_patterns: []
 connections: []
 contracts: []
@@ -24,7 +24,7 @@ skills:
 behaviours:
   main:
     args: {}
-    class_name: DynamicNFTAbciApp
+    class_name: DynamicNFTRoundBehaviour
 handlers:
   abci:
     args: {}
@@ -45,14 +45,70 @@ handlers:
     args: {}
     class_name: TendermintHandler
 models:
-  params:
+  abci_dialogues:
     args: {}
+    class_name: AbciDialogues
+  benchmark_tool:
+    args:
+      log_dir: /logs
+    class_name: BenchmarkTool
+  contract_api_dialogues:
+    args: {}
+    class_name: ContractApiDialogues
+  http_dialogues:
+    args: {}
+    class_name: HttpDialogues
+  ledger_api_dialogues:
+    args: {}
+    class_name: LedgerApiDialogues
+  params:
+    args:
+      cleanup_history_depth: 1
+      cleanup_history_depth_current: null
+      consensus:
+        max_participants: 1
+      drand_public_key: 868f005eb8e6e4ca0a47c8a77ceaa5309a47978a7c71bc5cce96366b5d7a569937c529eeda66c7293784a9402801af31
+      genesis_config:
+        genesis_time: '2022-09-26T00:00:00.000000000Z'
+        chain_id: chain-c4daS1
+        consensus_params:
+          block:
+            max_bytes: '22020096'
+            max_gas: '-1'
+            time_iota_ms: '1000'
+          evidence:
+            max_age_num_blocks: '100000'
+            max_age_duration: '172800000000000'
+            max_bytes: '1048576'
+          validator:
+            pub_key_types:
+            - ed25519
+          version: {}
+        voting_power: '10'
+      keeper_timeout: 30.0
+      max_healthcheck: 120
+      observation_interval: 10
+      on_chain_service_id: null
+      reset_tendermint_after: 2
+      retry_attempts: 400
+      retry_timeout: 3
+      round_timeout_seconds: 30.0
+      service_id: contribution_service
+      service_registry_address: null
+      sleep_time: 1
+      tendermint_check_sleep_delay: 3
+      tendermint_com_url: http://localhost:8080
+      tendermint_max_retries: 5
+      tendermint_url: http://localhost:26657
     class_name: Params
   requests:
     args: {}
     class_name: Requests
+  signing_dialogues:
+    args: {}
+    class_name: SigningDialogues
   state:
     args: {}
     class_name: SharedState
 dependencies: {}
-is_abstract: false
+is_abstract: true

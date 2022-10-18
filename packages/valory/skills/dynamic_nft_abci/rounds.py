@@ -101,7 +101,7 @@ class NewMembersRound(CollectSameUntilThresholdRound, DynamicNFTABCIAbstractRoun
 
     round_id: str = "new_members"
     allowed_tx_type = NewMembersPayload.transaction_type
-    payload_attribute: str = "new_members"
+    payload_attribute: str = "member_to_uri"
     synchronized_data_class = SynchronizedData
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:

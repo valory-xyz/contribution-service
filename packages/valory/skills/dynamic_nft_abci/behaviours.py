@@ -85,10 +85,9 @@ class DynamicNFTBaseBehaviour(BaseBehaviour):
 class NewMembersBehaviour(DynamicNFTBaseBehaviour):
     """NewMemberListBehaviour"""
 
-    behaviour_id: str = "new_member_list"
+    behaviour_id: str = "new_members"
     matching_round: Type[AbstractRound] = NewMembersRound
 
-    @abstractmethod
     def async_act(self) -> Generator:
         """Do the act, supporting asynchronous execution."""
 
@@ -99,7 +98,6 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
             {k: v for k, v in DUMMY_MEMBER_TO_NFT_URI.items() if k not in old_members},
             sort_keys=True,
         )
-
         payload = NewMembersPayload(self.context.agent_address, member_to_uri)
         yield from self.send_a2a_transaction(payload)
         yield from self.wait_until_round_end()
@@ -111,7 +109,6 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
     behaviour_id: str = "leaderboard_observation"
     matching_round: Type[AbstractRound] = LeaderboardObservationRound
 
-    @abstractmethod
     def async_act(self) -> Generator:
         """Do the act, supporting asynchronous execution."""
 
