@@ -136,7 +136,6 @@ class LeaderboardObservationRound(
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:
         """Process the end of the block."""
-        Event.ROUND_TIMEOUT
         if self.threshold_reached:
             synchronized_data = self.synchronized_data.update(
                 leaderboard=self.most_voted_payload,
@@ -160,7 +159,7 @@ class ImageCodeCalculationRound(AbstractRound):
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Enum]]:
         """Process the end of the block."""
-        Event.NO_MAJORITY, Event.DONE, Event.ROUND_TIMEOUT
+        Event.NO_MAJORITY, Event.DONE
         raise NotImplementedError
 
     def check_payload(self, payload: ImageCodeCalculationPayload) -> None:
@@ -183,7 +182,7 @@ class ImageGenerationRound(AbstractRound):
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Enum]]:
         """Process the end of the block."""
-        Event.NO_MAJORITY, Event.NO_NEW_IMAGES, Event.DONE, Event.ROUND_TIMEOUT
+        Event.NO_MAJORITY, Event.NO_NEW_IMAGES, Event.DONE
         raise NotImplementedError
 
     def check_payload(self, payload: ImageGenerationPayload) -> None:
@@ -206,7 +205,7 @@ class ImagePushRound(AbstractRound):
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Enum]]:
         """Process the end of the block."""
-        Event.NO_MAJORITY, Event.DONE, Event.ROUND_TIMEOUT
+        Event.NO_MAJORITY, Event.DONE
         raise NotImplementedError
 
     def check_payload(self, payload: ImagePushPayload) -> None:
@@ -229,7 +228,7 @@ class DBUpdateRound(AbstractRound):
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Enum]]:
         """Process the end of the block."""
-        Event.NO_MAJORITY, Event.DONE, Event.ROUND_TIMEOUT
+        Event.NO_MAJORITY, Event.DONE
         raise NotImplementedError
 
     def check_payload(self, payload: DBUpdatePayload) -> None:
