@@ -79,8 +79,10 @@ class BaseDynamicNFTTest(FSMBehaviourBaseCase):
         self.mock_a2a_transaction()
         self._test_done_flag_set()
         self.end_round(done_event=event)
-        assert self.behaviour.behaviour_id == self.next_behaviour_class.behaviour_id
-
+        assert (
+            self.behaviour.current_behaviour.behaviour_id  # type: ignore
+            == self.next_behaviour_class.behaviour_id
+        )
 
 class TestNewMembersBehaviour(BaseDynamicNFTTest):
     """Tests NewMembersBehaviour"""

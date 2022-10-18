@@ -90,7 +90,6 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
 
     def async_act(self) -> Generator:
         """Do the act, supporting asynchronous execution."""
-
         # Get a list of the new members
         # TODO: in the final implementation new members will be get from the contract
         old_members = set(self.synchronized_data.members.keys())
@@ -98,9 +97,15 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
             {k: v for k, v in DUMMY_MEMBER_TO_NFT_URI.items() if k not in old_members},
             sort_keys=True,
         )
-        payload = NewMembersPayload(self.context.agent_address, member_to_uri)
-        yield from self.send_a2a_transaction(payload)
-        yield from self.wait_until_round_end()
+
+        with self.context.benchmark_tool.measure(
+            self.behaviour_id,
+        ).consensus():
+            payload = NewMembersPayload(self.context.agent_address, member_to_uri)
+            yield from self.send_a2a_transaction(payload)
+            yield from self.wait_until_round_end()
+
+        self.set_done()
 
 
 class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
