@@ -106,6 +106,7 @@ class NewMembersRound(CollectSameUntilThresholdRound, DynamicNFTABCIAbstractRoun
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:
         """Process the end of the block."""
+        Event.ROUND_TIMEOUT
         if self.threshold_reached:
             # Add the new members to the members table. Note that the new members have no points or image_code fields
             members = {
@@ -136,6 +137,7 @@ class LeaderboardObservationRound(
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:
         """Process the end of the block."""
+        Event.ROUND_TIMEOUT
         if self.threshold_reached:
             synchronized_data = self.synchronized_data.update(
                 leaderboard=self.most_voted_payload,

@@ -108,7 +108,7 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
 class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
     """LeaderboardBehaviour"""
 
-    behaviour_id: str = "leaderboard"
+    behaviour_id: str = "leaderboard_observation"
     matching_round: Type[AbstractRound] = LeaderboardObservationRound
 
     @abstractmethod
