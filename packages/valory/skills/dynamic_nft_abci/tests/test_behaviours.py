@@ -84,6 +84,7 @@ class BaseDynamicNFTTest(FSMBehaviourBaseCase):
             == self.next_behaviour_class.behaviour_id
         )
 
+
 class TestNewMembersBehaviour(BaseDynamicNFTTest):
     """Tests NewMembersBehaviour"""
 
