@@ -106,7 +106,6 @@ class NewMembersRound(CollectSameUntilThresholdRound, DynamicNFTABCIAbstractRoun
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:
         """Process the end of the block."""
-        Event.ROUND_TIMEOUT
         if self.threshold_reached:
             # Add the new members to the members table. Note that the new members have no points or image_code fields
             members = {
@@ -288,5 +287,7 @@ class DynamicNFTAbciApp(AbciApp[Event]):
         FinishedDBUpdateRound: {},
     }
     final_states: Set[AppState] = {FinishedDBUpdateRound}
-    event_to_timeout: EventToTimeout = {}
+    event_to_timeout: EventToTimeout = {
+        Event.ROUND_TIMEOUT: 30.0,
+    }
     cross_period_persisted_keys: List[str] = []
