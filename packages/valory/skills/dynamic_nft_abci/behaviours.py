@@ -31,6 +31,7 @@ from packages.valory.skills.dynamic_nft_abci.models import Params
 from packages.valory.skills.dynamic_nft_abci.payloads import (
     LeaderboardObservationPayload,
     NewMembersPayload,
+    ImageCodeCalculationPayload,
 )
 from packages.valory.skills.dynamic_nft_abci.rounds import (
     DBUpdateRound,
@@ -147,6 +148,27 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
         number of points have changed with respect to the ones in the database
         and will recalculate their images (but not store them yet).
         """
+        leaderboard = self.synchronized_data.most_voted_leaderboard
+        members = self.synchronized_data.members
+
+        updates = {}
+        for member, new_points in leaderboard.items():
+            if member not in members or members[member]["points"] != new_points:
+                image_code = self.points_to_code(new_points)
+                updates[member] = {"points": new_points, "image_code": image_code}
+
+        updates_serialized = json.dumps(updates, sort_keys=True)
+
+        with self.context.benchmark_tool.measure(
+            self.behaviour_id,
+        ).consensus():
+            payload = ImageCodeCalculationPayload(
+                self.context.agent_address, updates_serialized
+            )
+            yield from self.send_a2a_transaction(payload)
+            yield from self.wait_until_round_end()
+
+        self.set_done()
 
     @staticmethod
     def get_layer_code(points: float, thresholds: List[int]) -> Tuple[str, float]:
@@ -168,6 +190,8 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
     @staticmethod
     def points_to_code(points: float) -> str:
         """Calculate the NFT image code given the number of community points.
+
+        Examples of image codes: 000001, 010300, 020102....
 
         :param points: number of community points
         :returns: the image code
