@@ -29,9 +29,9 @@ from packages.valory.skills.abstract_round_abci.behaviours import (
 )
 from packages.valory.skills.dynamic_nft_abci.models import Params
 from packages.valory.skills.dynamic_nft_abci.payloads import (
+    ImageCodeCalculationPayload,
     LeaderboardObservationPayload,
     NewMembersPayload,
-    ImageCodeCalculationPayload,
 )
 from packages.valory.skills.dynamic_nft_abci.rounds import (
     DBUpdateRound,

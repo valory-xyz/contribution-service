@@ -21,22 +21,21 @@
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Hashable, Optional, Type
-from packages.valory.skills.dynamic_nft_abci.tests.test_rounds import get_dummy_leaderboard_payload_serialized
+from typing import Any, Dict, Optional, Type
+
 import pytest
-from packages.valory.skills.dynamic_nft_abci.behaviours import (
-    DUMMY_LEADERBOARD,
-)
+
 from packages.valory.skills.abstract_round_abci.base import AbciAppDB
 from packages.valory.skills.abstract_round_abci.test_tools.base import (
     FSMBehaviourBaseCase,
 )
 from packages.valory.skills.dynamic_nft_abci.behaviours import (
+    DUMMY_LEADERBOARD,
     DynamicNFTBaseBehaviour,
     ImageCodeCalculationBehaviour,
+    ImageGenerationBehaviour,
     LeaderboardObservationBehaviour,
     NewMembersBehaviour,
-    ImageGenerationBehaviour,
 )
 from packages.valory.skills.dynamic_nft_abci.rounds import Event, SynchronizedData
 

@@ -26,11 +26,11 @@ import pytest
 
 from packages.valory.skills.dynamic_nft_abci.payloads import (
     BaseDynamicNFTPayload,
-    LeaderboardObservationPayload,
+    DBUpdatePayload,
     ImageCodeCalculationPayload,
     ImageGenerationPayload,
     ImagePushPayload,
-    DBUpdatePayload,
+    LeaderboardObservationPayload,
     NewMembersPayload,
     TransactionType,
 )
@@ -88,9 +88,3 @@ def test_payloads(test_case: PayloadTestCase) -> None:
     assert getattr(payload, f"{payload.transaction_type}") == test_case.content
     assert payload.transaction_type == test_case.transaction_type
     assert payload.from_json(payload.json) == payload
-
-
-# def test_payload():
-#     p1 = NewMembersPayload("test_send_1", "test1")
-#     p2 = NewMembersPayload("test_send_2", "test2")
-#     assert p1.data != p2.data, "data should be different"

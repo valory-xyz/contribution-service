@@ -34,16 +34,16 @@ from packages.valory.skills.dynamic_nft_abci.behaviours import (
     DUMMY_MEMBER_TO_NFT_URI,
 )
 from packages.valory.skills.dynamic_nft_abci.payloads import (
+    ImageCodeCalculationPayload,
     LeaderboardObservationPayload,
     NewMembersPayload,
-    ImageCodeCalculationPayload,
 )
 from packages.valory.skills.dynamic_nft_abci.rounds import (
     Event,
+    ImageCodeCalculationRound,
     LeaderboardObservationRound,
     NewMembersRound,
     SynchronizedData,
-    ImageCodeCalculationRound,
 )
 
 
@@ -78,7 +78,7 @@ def get_image_code_calculation_payload_serialized() -> str:
     data = {
         "member_a": {"points": 100, "image_code": "dummy_image_code_a"},
         "member_b": {"points": 200, "image_code": "dummy_image_code_b"},
-        "member_c": {"points": 300, "image_code": "dummy_image_code_c"}
+        "member_c": {"points": 300, "image_code": "dummy_image_code_c"},
     }
     return json.dumps(data, sort_keys=True)
 

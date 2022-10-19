@@ -177,7 +177,6 @@ class ImageCodeCalculationRound(
         return None
 
 
-
 class ImageGenerationRound(CollectSameUntilThresholdRound, DynamicNFTABCIAbstractRound):
     """ImageGenerationRound"""
 
