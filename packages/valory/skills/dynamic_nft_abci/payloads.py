@@ -46,16 +46,18 @@ class BaseDynamicNFTPayload(BaseTxPayload, ABC):
 
     def __init__(self, sender: str, content: Hashable, **kwargs: Any) -> None:
         """Initialize a transaction payload."""
-
         super().__init__(sender, **kwargs)
-        setattr(self, f"_{self.transaction_type}", content)
-        p = property(lambda s: getattr(self, f"_{self.transaction_type}"))
-        setattr(self.__class__, f"{self.transaction_type}", p)
+        self._content = content
+
+    @property
+    def content(self):
+        """Get the content."""
+        return self._content
 
     @property
     def data(self) -> Dict[str, Hashable]:
         """Get the data."""
-        return dict(content=getattr(self, str(self.transaction_type)))
+        return dict(content=self.content)
 
 
 class NewMembersPayload(BaseDynamicNFTPayload):

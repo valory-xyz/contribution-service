@@ -101,7 +101,7 @@ class NewMembersRound(CollectSameUntilThresholdRound, DynamicNFTABCIAbstractRoun
 
     round_id: str = "new_members"
     allowed_tx_type = NewMembersPayload.transaction_type
-    payload_attribute: str = "new_members"
+    payload_attribute: str = "content"
     synchronized_data_class = SynchronizedData
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:
@@ -131,7 +131,7 @@ class LeaderboardObservationRound(
 
     round_id = "leaderboard_observation"
     allowed_tx_type = LeaderboardObservationPayload.transaction_type
-    payload_attribute = "leaderboard_observation"
+    payload_attribute = "content"
     synchronized_data_class = SynchronizedData
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:
@@ -155,7 +155,7 @@ class ImageCodeCalculationRound(
 
     round_id: str = "image_code_calculation"
     allowed_tx_type = ImageCodeCalculationPayload.transaction_type
-    payload_attribute = "image_code_calculation"
+    payload_attribute = "content"
     synchronized_data_class = SynchronizedData
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Enum]]:
