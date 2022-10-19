@@ -43,6 +43,11 @@ def get_participants() -> FrozenSet[str]:
     return frozenset([f"agent_{i}" for i in range(MAX_PARTICIPANTS)])
 
 
+def get_dummy_new_members_payload() -> str:
+    """Dummy new members payload"""
+    return json.dumps(DUMMY_MEMBER_TO_NFT_URI, sort_keys=True)
+
+
 def get_new_members_payload(
     participants: FrozenSet[str],
     new_members: Optional[str],
@@ -112,12 +117,18 @@ class TestNewMembersRound(BaseDynamicNFTRoundTestClass):
                 initial_data={},
                 payloads=get_new_members_payload(
                     participants=get_participants(),
-                    new_members=json.dumps(DUMMY_MEMBER_TO_NFT_URI, sort_keys=True),
+                    new_members=get_dummy_new_members_payload(),
                 ),
-                final_data={},
+                final_data={
+                    "members": get_dummy_new_members_payload(),
+                    "most_voted_new_members": get_dummy_new_members_payload(),
+                },
                 event=Event.DONE,
-                most_voted_payload=json.dumps(DUMMY_MEMBER_TO_NFT_URI, sort_keys=True),
-                synchronized_data_attr_checks=[],
+                most_voted_payload=get_dummy_new_members_payload(),
+                synchronized_data_attr_checks=[
+                    lambda _synchronized_data: _synchronized_data.members,
+                    lambda _synchronized_data: _synchronized_data.most_voted_new_members,
+                ],
             ),
         ),
     )
