@@ -26,9 +26,9 @@ import pytest
 
 from packages.valory.skills.dynamic_nft_abci.payloads import (
     BaseDynamicNFTPayload,
-    TransactionType,
-    NewMembersPayload,
     LeaderboardObservationPayload,
+    NewMembersPayload,
+    TransactionType,
 )
 
 

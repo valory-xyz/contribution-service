@@ -19,9 +19,10 @@
 
 """This module contains the transaction payloads of the DynamicNFTAbciApp."""
 
+from abc import ABC
 from enum import Enum
 from typing import Any, Dict, Hashable
-from abc import ABC
+
 from packages.valory.skills.abstract_round_abci.base import BaseTxPayload
 
 

@@ -201,6 +201,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
         images and get their corresponding IPFS hashes.
         """
 
+
 class ImagePushBehaviour(DynamicNFTBaseBehaviour):
     """ImagePushBehaviour"""
 
@@ -235,6 +236,7 @@ class DBUpdateBehaviour(DynamicNFTBaseBehaviour):
 
         Redirect table: must be updated now to reflect the new redirects (if it applies).
         """
+
 
 class DynamicNFTRoundBehaviour(AbstractRoundBehaviour):
     """DynamicNFTRoundBehaviour"""
