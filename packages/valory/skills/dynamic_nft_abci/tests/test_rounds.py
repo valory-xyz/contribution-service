@@ -19,6 +19,7 @@
 
 """This package contains the tests for rounds of DynamicNFTAbciApp."""
 
+import json
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, FrozenSet, Hashable, List, Mapping, Optional
 
@@ -26,9 +27,9 @@ import pytest
 
 from packages.valory.skills.abstract_round_abci.base import BaseTxPayload
 from packages.valory.skills.abstract_round_abci.test_tools.rounds import (
-    BaseCollectSameUntilAllRoundTest,
-    BaseRoundTestClass,
+    BaseCollectSameUntilThresholdRoundTest,
 )
+from packages.valory.skills.dynamic_nft_abci.behaviours import DUMMY_MEMBER_TO_NFT_URI
 from packages.valory.skills.dynamic_nft_abci.payloads import NewMembersPayload
 from packages.valory.skills.dynamic_nft_abci.rounds import (
     Event,
@@ -62,14 +63,13 @@ class RoundTestCase:
     final_data: Dict[str, Hashable]
     event: Event
     most_voted_payload: Any
-    finished: bool
     synchronized_data_attr_checks: List[Callable] = field(default_factory=list)
 
 
 MAX_PARTICIPANTS: int = 4
 
 
-class BaseDynamicNFTRoundTestClass(BaseCollectSameUntilAllRoundTest):
+class BaseDynamicNFTRoundTestClass(BaseCollectSameUntilThresholdRoundTest):
     """Base test class for DynamicNFT rounds."""
 
     synchronized_data: SynchronizedData
@@ -96,7 +96,6 @@ class BaseDynamicNFTRoundTestClass(BaseCollectSameUntilAllRoundTest):
                 synchronized_data_attr_checks=test_case.synchronized_data_attr_checks,
                 most_voted_payload=test_case.most_voted_payload,
                 exit_event=test_case.event,
-                finished=test_case.finished,
             )
         )
 
@@ -113,12 +112,11 @@ class TestNewMembersRound(BaseDynamicNFTRoundTestClass):
                 initial_data={},
                 payloads=get_new_members_payload(
                     participants=get_participants(),
-                    new_members="",
+                    new_members=json.dumps(DUMMY_MEMBER_TO_NFT_URI, sort_keys=True),
                 ),
                 final_data={},
                 event=Event.DONE,
-                most_voted_payload="",
-                finished=True,
+                most_voted_payload=json.dumps(DUMMY_MEMBER_TO_NFT_URI, sort_keys=True),
                 synchronized_data_attr_checks=[],
             ),
         ),
