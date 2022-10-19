@@ -36,12 +36,14 @@ from packages.valory.skills.dynamic_nft_abci.behaviours import (
 from packages.valory.skills.dynamic_nft_abci.payloads import (
     LeaderboardObservationPayload,
     NewMembersPayload,
+    ImageCodeCalculationPayload,
 )
 from packages.valory.skills.dynamic_nft_abci.rounds import (
     Event,
     LeaderboardObservationRound,
     NewMembersRound,
     SynchronizedData,
+    ImageCodeCalculationRound,
 )
 
 
@@ -69,6 +71,16 @@ def get_dummy_new_members_payload_serialized() -> str:
 def get_dummy_leaderboard_payload_serialized() -> str:
     """Dummy leaderboard payload"""
     return json.dumps(DUMMY_LEADERBOARD, sort_keys=True)
+
+
+def get_image_code_calculation_payload_serialized() -> str:
+    """Dummy image code calculation payload"""
+    data = {
+        "member_a": {"points": 100, "image_code": "dummy_image_code_a"},
+        "member_b": {"points": 200, "image_code": "dummy_image_code_b"},
+        "member_c": {"points": 300, "image_code": "dummy_image_code_c"}
+    }
+    return json.dumps(data, sort_keys=True)
 
 
 @dataclass
@@ -174,6 +186,38 @@ class TestLeaderboardObservationRound(BaseDynamicNFTRoundTestClass):
                 most_voted_payload=get_dummy_leaderboard_payload_serialized(),
                 synchronized_data_attr_checks=[
                     lambda _synchronized_data: _synchronized_data.most_voted_leaderboard,
+                ],
+            ),
+        ),
+    )
+    def test_run(self, test_case: RoundTestCase) -> None:
+        """Run tests."""
+        self.run_test(test_case)
+
+
+class TestImageCodeCalculationRound(BaseDynamicNFTRoundTestClass):
+    """Tests for ImageCodeCalculationRound."""
+
+    round_class = ImageCodeCalculationRound
+
+    @pytest.mark.parametrize(
+        "test_case",
+        (
+            RoundTestCase(
+                initial_data={},
+                payloads=get_payloads(
+                    payload_cls=ImageCodeCalculationPayload,
+                    data=get_image_code_calculation_payload_serialized(),
+                ),
+                final_data={
+                    "most_voted_updates": json.loads(
+                        get_image_code_calculation_payload_serialized()
+                    ),
+                },
+                event=Event.DONE,
+                most_voted_payload=get_image_code_calculation_payload_serialized(),
+                synchronized_data_attr_checks=[
+                    lambda _synchronized_data: _synchronized_data.most_voted_updates,
                 ],
             ),
         ),
