@@ -26,6 +26,10 @@ import pytest
 
 from packages.valory.skills.dynamic_nft_abci.payloads import (
     BaseDynamicNFTPayload,
+    DBUpdatePayload,
+    ImageCodeCalculationPayload,
+    ImageGenerationPayload,
+    ImagePushPayload,
     LeaderboardObservationPayload,
     NewMembersPayload,
     TransactionType,
@@ -46,13 +50,33 @@ class PayloadTestCase:
     [
         PayloadTestCase(
             payload_cls=NewMembersPayload,
-            content="test",
+            content="payload_test_content",
             transaction_type=TransactionType.NEW_MEMBERS,
         ),
         PayloadTestCase(
             payload_cls=LeaderboardObservationPayload,
-            content="test",
+            content="payload_test_content",
             transaction_type=TransactionType.LEADERBOARD_OBSERVATION,
+        ),
+        PayloadTestCase(
+            payload_cls=ImageCodeCalculationPayload,
+            content="payload_test_content",
+            transaction_type=TransactionType.IMAGE_CODE_CALCULATION,
+        ),
+        PayloadTestCase(
+            payload_cls=ImageGenerationPayload,
+            content="payload_test_content",
+            transaction_type=TransactionType.IMAGE_GENERATION,
+        ),
+        PayloadTestCase(
+            payload_cls=ImagePushPayload,
+            content="payload_test_content",
+            transaction_type=TransactionType.IMAGE_PUSH,
+        ),
+        PayloadTestCase(
+            payload_cls=DBUpdatePayload,
+            content="payload_test_content",
+            transaction_type=TransactionType.DB_UPDATE,
         ),
     ],
 )

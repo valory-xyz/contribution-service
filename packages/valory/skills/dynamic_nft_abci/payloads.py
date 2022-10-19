@@ -72,25 +72,25 @@ class LeaderboardObservationPayload(BaseDynamicNFTPayload):
     transaction_type = TransactionType.LEADERBOARD_OBSERVATION
 
 
-class ImageCodeCalculationPayload(BaseTxPayload):
+class ImageCodeCalculationPayload(BaseDynamicNFTPayload):
     """Represent a transaction payload for the ImageCodeCalculationRound."""
 
     transaction_type = TransactionType.IMAGE_CODE_CALCULATION
 
 
-class ImageGenerationPayload(BaseTxPayload):
+class ImageGenerationPayload(BaseDynamicNFTPayload):
     """Represent a transaction payload for the ImageGenerationRound."""
 
     transaction_type = TransactionType.IMAGE_GENERATION
 
 
-class ImagePushPayload(BaseTxPayload):
+class ImagePushPayload(BaseDynamicNFTPayload):
     """Represent a transaction payload for the ImagePushRound."""
 
     transaction_type = TransactionType.IMAGE_PUSH
 
 
-class DBUpdatePayload(BaseTxPayload):
+class DBUpdatePayload(BaseDynamicNFTPayload):
     """Represent a transaction payload for the DBUpdateRound."""
 
     transaction_type = TransactionType.DB_UPDATE

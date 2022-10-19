@@ -86,6 +86,11 @@ class SynchronizedData(BaseSynchronizedData):
         """Get the most_voted_leaderboard."""
         return cast(Dict, self.db.get_strict("most_voted_leaderboard"))
 
+    @property
+    def most_voted_updates(self) -> Dict:
+        """Get the most_voted_updates."""
+        return cast(Dict, self.db.get_strict("most_voted_updates"))
+
 
 class DynamicNFTABCIAbstractRound(AbstractRound[Event, TransactionType], ABC):
     """Abstract round for the Dynamic NFT ABCI skill."""
@@ -158,28 +163,27 @@ class ImageCodeCalculationRound(
     payload_attribute = "content"
     synchronized_data_class = SynchronizedData
 
-    def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Enum]]:
+    def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:
         """Process the end of the block."""
-        Event.NO_MAJORITY, Event.DONE
-        raise NotImplementedError
+        if self.threshold_reached:
+            synchronized_data = self.synchronized_data.update(
+                most_voted_updates=json.loads(self.most_voted_payload),
+            )
+            return synchronized_data, Event.DONE
+        if not self.is_majority_possible(
+            self.collection, self.synchronized_data.nb_participants
+        ):
+            return self.synchronized_data, Event.NO_MAJORITY
+        return None
 
-    def check_payload(self, payload: ImageCodeCalculationPayload) -> None:
-        """Check payload."""
-        raise NotImplementedError
 
-    def process_payload(self, payload: ImageCodeCalculationPayload) -> None:
-        """Process payload."""
-        raise NotImplementedError
-
-
-class ImageGenerationRound(AbstractRound):
+class ImageGenerationRound(CollectSameUntilThresholdRound, DynamicNFTABCIAbstractRound):
     """ImageGenerationRound"""
 
-    # TODO: replace AbstractRound with one of CollectDifferentUntilAllRound, CollectSameUntilAllRound, CollectSameUntilThresholdRound, CollectDifferentUntilThresholdRound, OnlyKeeperSendsRound, VotingRound
-    # TODO: set the following class attributes
     round_id: str = "image_generation"
-    allowed_tx_type: Optional[TransactionType]
+    allowed_tx_type = ImageGenerationPayload.transaction_type
     payload_attribute: str = ImageGenerationPayload.transaction_type
+    synchronized_data_class = SynchronizedData
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Enum]]:
         """Process the end of the block."""
