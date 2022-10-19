@@ -89,9 +89,10 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
     matching_round: Type[AbstractRound] = NewMembersRound
 
     def async_act(self) -> Generator:
-        """Do the act, supporting asynchronous execution."""
-        # Get a list of the new members
-        # TODO: in the final implementation new members will be get from the contract
+        """Get a list of the new members.
+
+        TODO: in the final implementation new members will be get from the contract.
+        """
         old_members = set(self.synchronized_data.members.keys())
         member_to_uri = json.dumps(
             {k: v for k, v in DUMMY_MEMBER_TO_NFT_URI.items() if k not in old_members},
@@ -115,10 +116,10 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
     matching_round: Type[AbstractRound] = LeaderboardObservationRound
 
     def async_act(self) -> Generator:
-        """Do the act, supporting asynchronous execution."""
+        """Get the leaderboard.
 
-        # Get the leaderboard
-        # TODO: in the final implementation the leaderboard will be get from the API
+        TODO: in the final implementation the leaderboard will be get from the API
+        """
         leaderboard = json.dumps(DUMMY_LEADERBOARD, sort_keys=True)
         payload = LeaderboardObservationPayload(self.context.agent_address, leaderboard)
         yield from self.send_a2a_transaction(payload)
@@ -133,11 +134,13 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
 
     @abstractmethod
     def async_act(self) -> Generator:
-        """Do the act, supporting asynchronous execution."""
+        """
+        Calculate the image codes.
 
-        # for every entry in the leaderboard, agents look for members whose
-        # number of points have changed with respect to the ones in the database
-        # and will recalculate their images (but not store them yet)
+        For every entry in the leaderboard, agents look for members whose
+        number of points have changed with respect to the ones in the database
+        and will recalculate their images (but not store them yet).
+        """
 
     @staticmethod
     def get_layer_code(points: float, thresholds: List[int]) -> Tuple[str, float]:
@@ -158,7 +161,7 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
 
     @staticmethod
     def points_to_code(points: float) -> str:
-        """Calculate the NFT image code given the number of community points
+        """Calculate the NFT image code given the number of community points.
 
         :param points: number of community points
         :returns: the image code
@@ -189,14 +192,14 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
 
     @abstractmethod
     def async_act(self) -> Generator:
-        """Do the act, supporting asynchronous execution."""
+        """Generate the images.
 
-        # agents will check if the changes list contains an image code
-        # that is not present on the redirect  table. This happens when
-        # a member is granted a status whose corresponding image has never
-        # been used. For each of these cases, agents will generate the new
-        # images and get their corresponding IPFS hashes.
-
+        Check if the changes list contains an image code
+        that is not present on the redirect  table. This happens when
+        a member is granted a status whose corresponding image has never
+        been used. For each of these cases, agents generate the new
+        images and get their corresponding IPFS hashes.
+        """
 
 class ImagePushBehaviour(DynamicNFTBaseBehaviour):
     """ImagePushBehaviour"""
@@ -206,11 +209,12 @@ class ImagePushBehaviour(DynamicNFTBaseBehaviour):
 
     @abstractmethod
     def async_act(self) -> Generator:
-        """Do the act, supporting asynchronous execution."""
+        """Push images to IPFS.
 
-        # every agent pushes the new images to IPFS. This is simpler as no
-        # keepers are needed, does not affect the cost, introduces redundancy
-        #  and the IPFS protocol will handle deduplication.
+        Every agent pushes the new images to IPFS. This is simpler as no
+        keepers are needed, does not affect the cost, introduces redundancy
+        and the IPFS protocol will handle deduplication.
+        """
 
 
 class DBUpdateBehaviour(DynamicNFTBaseBehaviour):
@@ -221,16 +225,16 @@ class DBUpdateBehaviour(DynamicNFTBaseBehaviour):
 
     @abstractmethod
     def async_act(self) -> Generator:
-        """Do the act, supporting asynchronous execution."""
+        """Update the database tables.
 
-        # Second table: the new image codes must be added with their uri (if applies).
+        Image table: the new image codes must be added with their uri (if it applies).
 
-        # First table: all entries whose points changed (the list from
-        # ImageCodeCalculationRound) must now reflect the new points and (if it applies)
-        # new image codes.
+        User table: all entries whose points changed (the list from
+        ImageCodeCalculationRound) must now reflect the new points and (if it applies)
+        new image codes.
 
-        # Third table: must be updated now to reflect the new redirects (if applies).
-
+        Redirect table: must be updated now to reflect the new redirects (if it applies).
+        """
 
 class DynamicNFTRoundBehaviour(AbstractRoundBehaviour):
     """DynamicNFTRoundBehaviour"""
