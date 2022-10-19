@@ -13,11 +13,11 @@ fingerprint:
   handlers.py: bafybeidus4ztb2rxaocmi67iwuhg6s4hmafuelsa5u5xnqqk6p7hgmo7da
   models.py: bafybeicg2uiww5mjvavvhd6l74n7o7u55rd6csu25k7pn64b2umuubqi6e
   payloads.py: bafybeigp5rjfwfkgar7xiutgjvoolc2fqedpbjplzix4mrgjp4fd4ws6ry
-  rounds.py: bafybeict6eqfscxzarwmrhlwas2mnudsukgd6uwtwekfcs2nk7mebxv6eq
+  rounds.py: bafybeihy23rpkum4mygz6a5hnlwxp2odp2f5fexmgxdmcbwrxwztjsxxgu
   tests/__init__.py: bafybeia2xqlacp44lylwlkf7f7ci6m3yshppv3vusgcdjpj4bbcbnuhvla
   tests/test_behaviours.py: bafybeihjs5regdorfvpzuwvvapvw3tv76hm47iinsix2rdtnnhbjlxmdby
   tests/test_payloads.py: bafybeievxdvlimizortwdhljk6eetlfmwk2hvbzbe4jowvtidcukjjhq5m
-  tests/test_rounds.py: bafybeihsucrxiszdjutbci2vajzmot4siadzvjm4wpfpco7lmjggswt3si
+  tests/test_rounds.py: bafybeia53r2z53kiaebelx3jxwgfymljutak6pbqoyocaytsovo7y2x3yu
 fingerprint_ignore_patterns: []
 connections: []
 contracts: []

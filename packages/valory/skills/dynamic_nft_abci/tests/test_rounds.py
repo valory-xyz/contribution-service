@@ -120,8 +120,8 @@ class TestNewMembersRound(BaseDynamicNFTRoundTestClass):
                     new_members=get_dummy_new_members_payload(),
                 ),
                 final_data={
-                    "members": get_dummy_new_members_payload(),
-                    "most_voted_new_members": get_dummy_new_members_payload(),
+                    "members": DUMMY_MEMBER_TO_NFT_URI,
+                    "most_voted_new_members": DUMMY_MEMBER_TO_NFT_URI,
                 },
                 event=Event.DONE,
                 most_voted_payload=get_dummy_new_members_payload(),

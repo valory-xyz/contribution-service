@@ -114,7 +114,7 @@ class NewMembersRound(CollectSameUntilThresholdRound, DynamicNFTABCIAbstractRoun
             }
             synchronized_data = self.synchronized_data.update(
                 members=members,
-                most_voted_new_members=self.most_voted_payload,
+                most_voted_new_members=json.loads(self.most_voted_payload),
             )
             return synchronized_data, Event.DONE
         if not self.is_majority_possible(
