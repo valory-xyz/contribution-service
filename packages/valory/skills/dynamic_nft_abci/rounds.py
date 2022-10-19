@@ -182,7 +182,7 @@ class ImageGenerationRound(CollectSameUntilThresholdRound, DynamicNFTABCIAbstrac
     """ImageGenerationRound"""
 
     round_id: str = "image_generation"
-    allowed_tx_type: Optional[TransactionType]
+    allowed_tx_type = ImageGenerationPayload.transaction_type
     payload_attribute: str = ImageGenerationPayload.transaction_type
     synchronized_data_class = SynchronizedData
 

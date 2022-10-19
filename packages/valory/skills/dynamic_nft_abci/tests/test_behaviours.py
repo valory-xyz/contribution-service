@@ -22,9 +22,11 @@
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Hashable, Optional, Type
-
+from packages.valory.skills.dynamic_nft_abci.tests.test_rounds import get_dummy_leaderboard_payload_serialized
 import pytest
-
+from packages.valory.skills.dynamic_nft_abci.behaviours import (
+    DUMMY_LEADERBOARD,
+)
 from packages.valory.skills.abstract_round_abci.base import AbciAppDB
 from packages.valory.skills.abstract_round_abci.test_tools.base import (
     FSMBehaviourBaseCase,
@@ -34,6 +36,7 @@ from packages.valory.skills.dynamic_nft_abci.behaviours import (
     ImageCodeCalculationBehaviour,
     LeaderboardObservationBehaviour,
     NewMembersBehaviour,
+    ImageGenerationBehaviour,
 )
 from packages.valory.skills.dynamic_nft_abci.rounds import Event, SynchronizedData
 
@@ -43,7 +46,7 @@ class BehaviourTestCase:
     """BehaviourTestCase"""
 
     name: str
-    initial_data: Dict[str, Hashable]
+    initial_data: Dict[str, Any]
     event: Event
     next_behaviour_class: Optional[Type[DynamicNFTBaseBehaviour]] = None
 
@@ -120,6 +123,28 @@ class TestLeaderboardObservationBehaviour(BaseDynamicNFTTest):
             BehaviourTestCase(
                 "Happy path",
                 initial_data=dict(),
+                event=Event.DONE,
+            ),
+        ],
+    )
+    def test_run(self, test_case: BehaviourTestCase) -> None:
+        """Run tests."""
+        self.fast_forward(test_case.initial_data)
+        self.complete(test_case.event)
+
+
+class TestImageCodeCalculationBehaviour(BaseDynamicNFTTest):
+    """Tests ImageCodeCalculationBehaviour"""
+
+    behaviour_class = ImageCodeCalculationBehaviour
+    next_behaviour_class = ImageGenerationBehaviour
+
+    @pytest.mark.parametrize(
+        "test_case",
+        [
+            BehaviourTestCase(
+                "Happy path",
+                initial_data=dict(most_voted_leaderboard=DUMMY_LEADERBOARD),
                 event=Event.DONE,
             ),
         ],
