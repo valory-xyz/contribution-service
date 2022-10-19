@@ -20,7 +20,6 @@
 """This package contains round behaviours of DynamicNFTAbciApp."""
 
 import json
-from abc import abstractmethod
 from typing import Generator, List, Set, Tuple, Type, cast
 
 from packages.valory.skills.abstract_round_abci.base import AbstractRound
@@ -121,9 +120,17 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
         TODO: in the final implementation the leaderboard will be get from the API
         """
         leaderboard = json.dumps(DUMMY_LEADERBOARD, sort_keys=True)
-        payload = LeaderboardObservationPayload(self.context.agent_address, leaderboard)
-        yield from self.send_a2a_transaction(payload)
-        yield from self.wait_until_round_end()
+
+        with self.context.benchmark_tool.measure(
+            self.behaviour_id,
+        ).consensus():
+            payload = LeaderboardObservationPayload(
+                self.context.agent_address, leaderboard
+            )
+            yield from self.send_a2a_transaction(payload)
+            yield from self.wait_until_round_end()
+
+        self.set_done()
 
 
 class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
@@ -132,7 +139,6 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
     behaviour_id: str = "image_code_calculation"
     matching_round: Type[AbstractRound] = ImageCodeCalculationRound
 
-    @abstractmethod
     def async_act(self) -> Generator:
         """
         Calculate the image codes.
@@ -190,7 +196,6 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
     behaviour_id: str = "image_generation"
     matching_round: Type[AbstractRound] = ImageGenerationRound
 
-    @abstractmethod
     def async_act(self) -> Generator:
         """Generate the images.
 
@@ -208,7 +213,6 @@ class ImagePushBehaviour(DynamicNFTBaseBehaviour):
     behaviour_id: str = "image_push"
     matching_round: Type[AbstractRound] = ImagePushRound
 
-    @abstractmethod
     def async_act(self) -> Generator:
         """Push images to IPFS.
 
@@ -224,7 +228,6 @@ class DBUpdateBehaviour(DynamicNFTBaseBehaviour):
     behaviour_id: str = "db_update"
     matching_round: Type[AbstractRound] = DBUpdateRound
 
-    @abstractmethod
     def async_act(self) -> Generator:
         """Update the database tables.
 

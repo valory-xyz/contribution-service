@@ -31,6 +31,7 @@ from packages.valory.skills.abstract_round_abci.test_tools.base import (
 )
 from packages.valory.skills.dynamic_nft_abci.behaviours import (
     DynamicNFTBaseBehaviour,
+    ImageCodeCalculationBehaviour,
     LeaderboardObservationBehaviour,
     NewMembersBehaviour,
 )
@@ -90,6 +91,28 @@ class TestNewMembersBehaviour(BaseDynamicNFTTest):
 
     behaviour_class = NewMembersBehaviour
     next_behaviour_class = LeaderboardObservationBehaviour
+
+    @pytest.mark.parametrize(
+        "test_case",
+        [
+            BehaviourTestCase(
+                "Happy path",
+                initial_data=dict(),
+                event=Event.DONE,
+            ),
+        ],
+    )
+    def test_run(self, test_case: BehaviourTestCase) -> None:
+        """Run tests."""
+        self.fast_forward(test_case.initial_data)
+        self.complete(test_case.event)
+
+
+class TestLeaderboardObservationBehaviour(BaseDynamicNFTTest):
+    """Tests LeaderboardObservationBehaviour"""
+
+    behaviour_class = LeaderboardObservationBehaviour
+    next_behaviour_class = ImageCodeCalculationBehaviour
 
     @pytest.mark.parametrize(
         "test_case",

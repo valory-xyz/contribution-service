@@ -29,10 +29,17 @@ from packages.valory.skills.abstract_round_abci.base import BaseTxPayload
 from packages.valory.skills.abstract_round_abci.test_tools.rounds import (
     BaseCollectSameUntilThresholdRoundTest,
 )
-from packages.valory.skills.dynamic_nft_abci.behaviours import DUMMY_MEMBER_TO_NFT_URI
-from packages.valory.skills.dynamic_nft_abci.payloads import NewMembersPayload
+from packages.valory.skills.dynamic_nft_abci.behaviours import (
+    DUMMY_LEADERBOARD,
+    DUMMY_MEMBER_TO_NFT_URI,
+)
+from packages.valory.skills.dynamic_nft_abci.payloads import (
+    LeaderboardObservationPayload,
+    NewMembersPayload,
+)
 from packages.valory.skills.dynamic_nft_abci.rounds import (
     Event,
+    LeaderboardObservationRound,
     NewMembersRound,
     SynchronizedData,
 )
@@ -43,20 +50,25 @@ def get_participants() -> FrozenSet[str]:
     return frozenset([f"agent_{i}" for i in range(MAX_PARTICIPANTS)])
 
 
-def get_dummy_new_members_payload() -> str:
+def get_payloads(
+    payload_cls: BaseTxPayload,
+    data: Optional[str],
+) -> Mapping[str, BaseTxPayload]:
+    """Get payloads."""
+    return {
+        participant: payload_cls(participant, data)
+        for participant in get_participants()
+    }
+
+
+def get_dummy_new_members_payload_serialized() -> str:
     """Dummy new members payload"""
     return json.dumps(DUMMY_MEMBER_TO_NFT_URI, sort_keys=True)
 
 
-def get_new_members_payload(
-    participants: FrozenSet[str],
-    new_members: Optional[str],
-) -> Mapping[str, BaseTxPayload]:
-    """Get new members payloads."""
-    return {
-        participant: NewMembersPayload(participant, new_members)
-        for participant in participants
-    }
+def get_dummy_leaderboard_payload_serialized() -> str:
+    """Dummy leaderboard payload"""
+    return json.dumps(DUMMY_LEADERBOARD, sort_keys=True)
 
 
 @dataclass
@@ -115,19 +127,53 @@ class TestNewMembersRound(BaseDynamicNFTRoundTestClass):
         (
             RoundTestCase(
                 initial_data={},
-                payloads=get_new_members_payload(
-                    participants=get_participants(),
-                    new_members=get_dummy_new_members_payload(),
+                payloads=get_payloads(
+                    payload_cls=NewMembersPayload,
+                    data=get_dummy_new_members_payload_serialized(),
                 ),
                 final_data={
-                    "members": DUMMY_MEMBER_TO_NFT_URI,
-                    "most_voted_new_members": DUMMY_MEMBER_TO_NFT_URI,
+                    "members": json.loads(get_dummy_new_members_payload_serialized()),
+                    "most_voted_new_members": json.loads(
+                        get_dummy_new_members_payload_serialized()
+                    ),
                 },
                 event=Event.DONE,
-                most_voted_payload=get_dummy_new_members_payload(),
+                most_voted_payload=get_dummy_new_members_payload_serialized(),
                 synchronized_data_attr_checks=[
                     lambda _synchronized_data: _synchronized_data.members,
                     lambda _synchronized_data: _synchronized_data.most_voted_new_members,
+                ],
+            ),
+        ),
+    )
+    def test_run(self, test_case: RoundTestCase) -> None:
+        """Run tests."""
+        self.run_test(test_case)
+
+
+class TestLeaderboardObservationRound(BaseDynamicNFTRoundTestClass):
+    """Tests for LeaderboardObservationRound."""
+
+    round_class = LeaderboardObservationRound
+
+    @pytest.mark.parametrize(
+        "test_case",
+        (
+            RoundTestCase(
+                initial_data={},
+                payloads=get_payloads(
+                    payload_cls=LeaderboardObservationPayload,
+                    data=get_dummy_leaderboard_payload_serialized(),
+                ),
+                final_data={
+                    "most_voted_leaderboard": json.loads(
+                        get_dummy_leaderboard_payload_serialized()
+                    ),
+                },
+                event=Event.DONE,
+                most_voted_payload=get_dummy_leaderboard_payload_serialized(),
+                synchronized_data_attr_checks=[
+                    lambda _synchronized_data: _synchronized_data.most_voted_leaderboard,
                 ],
             ),
         ),

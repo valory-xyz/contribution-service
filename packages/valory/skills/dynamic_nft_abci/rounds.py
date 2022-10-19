@@ -138,7 +138,7 @@ class LeaderboardObservationRound(
         """Process the end of the block."""
         if self.threshold_reached:
             synchronized_data = self.synchronized_data.update(
-                leaderboard=self.most_voted_payload,
+                most_voted_leaderboard=json.loads(self.most_voted_payload),
             )
             return synchronized_data, Event.DONE
         if not self.is_majority_possible(
@@ -148,14 +148,15 @@ class LeaderboardObservationRound(
         return None
 
 
-class ImageCodeCalculationRound(AbstractRound):
+class ImageCodeCalculationRound(
+    CollectSameUntilThresholdRound, DynamicNFTABCIAbstractRound
+):
     """ImageCodeCalculationRound"""
 
-    # TODO: replace AbstractRound with one of CollectDifferentUntilAllRound, CollectSameUntilAllRound, CollectSameUntilThresholdRound, CollectDifferentUntilThresholdRound, OnlyKeeperSendsRound, VotingRound
-    # TODO: set the following class attributes
     round_id: str = "image_code_calculation"
-    allowed_tx_type: Optional[TransactionType]
-    payload_attribute: str = ImageCodeCalculationPayload.transaction_type
+    allowed_tx_type = ImageCodeCalculationPayload.transaction_type
+    payload_attribute = "image_code_calculation"
+    synchronized_data_class = SynchronizedData
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Enum]]:
         """Process the end of the block."""
