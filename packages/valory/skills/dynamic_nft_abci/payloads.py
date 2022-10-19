@@ -20,8 +20,8 @@
 """This module contains the transaction payloads of the DynamicNFTAbciApp."""
 
 from enum import Enum
-from typing import Any, Dict
-
+from typing import Any, Dict, Hashable
+from abc import ABC
 from packages.valory.skills.abstract_round_abci.base import BaseTxPayload
 
 
@@ -40,56 +40,33 @@ class TransactionType(Enum):
         return self.value
 
 
-class NewMembersPayload(BaseTxPayload):
+class BaseDynamicNFTPayload(BaseTxPayload, ABC):
+    """Base payload for DynamicNFT."""
+
+    def __init__(self, sender: str, content: Hashable, **kwargs: Any) -> None:
+        """Initialize a transaction payload."""
+
+        super().__init__(sender, **kwargs)
+        setattr(self, f"_{self.transaction_type}", content)
+        p = property(lambda s: getattr(self, f"_{self.transaction_type}"))
+        setattr(self.__class__, f"{self.transaction_type}", p)
+
+    @property
+    def data(self) -> Dict[str, Hashable]:
+        """Get the data."""
+        return dict(content=getattr(self, str(self.transaction_type)))
+
+
+class NewMembersPayload(BaseDynamicNFTPayload):
     """Represent a transaction payload for the NewMembersRound."""
 
     transaction_type = TransactionType.NEW_MEMBERS
 
-    def __init__(self, sender: str, member_to_uri: str, **kwargs: Any) -> None:
-        """Initialize an 'new_members' transaction payload.
 
-        :param sender: the sender (Ethereum) address
-        :param member_to_uri: a member to uri dict json encoded
-        :param kwargs: the keyword arguments
-        """
-        super().__init__(sender, **kwargs)
-        self._member_to_uri = member_to_uri
-
-    @property
-    def member_to_uri(self) -> str:
-        """Get the member_to_uri."""
-        return self._member_to_uri
-
-    @property
-    def data(self) -> Dict:
-        """Get the data."""
-        return dict(member_to_uri=self.member_to_uri)
-
-
-class LeaderboardObservationPayload(BaseTxPayload):
+class LeaderboardObservationPayload(BaseDynamicNFTPayload):
     """Represent a transaction payload for the LeaderboardObservationRound."""
 
     transaction_type = TransactionType.LEADERBOARD_OBSERVATION
-
-    def __init__(self, sender: str, leaderboard: str, **kwargs: Any) -> None:
-        """Initialize an 'leaderboard_observation' transaction payload.
-
-        :param sender: the sender (Ethereum) address
-        :param leaderboard: the leaderboard json encoded
-        :param kwargs: the keyword arguments
-        """
-        super().__init__(sender, **kwargs)
-        self._leaderboard = leaderboard
-
-    @property
-    def leaderboard(self) -> str:
-        """Get the leaderboard."""
-        return self._leaderboard
-
-    @property
-    def data(self) -> Dict:
-        """Get the data."""
-        return dict(leaderboard=self.leaderboard)
 
 
 class ImageCodeCalculationPayload(BaseTxPayload):
