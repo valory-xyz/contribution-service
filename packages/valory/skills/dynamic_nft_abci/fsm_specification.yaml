@@ -1,7 +1,6 @@
 alphabet_in:
 - DONE
 - NO_MAJORITY
-- NO_NEW_IMAGES
 - ROUND_TIMEOUT
 default_start_state: NewMembersRound
 final_states:
@@ -25,7 +24,6 @@ transition_func:
     (ImageCodeCalculationRound, ROUND_TIMEOUT): LeaderboardObservationRound
     (ImageGenerationRound, DONE): DBUpdateRound
     (ImageGenerationRound, NO_MAJORITY): LeaderboardObservationRound
-    (ImageGenerationRound, NO_NEW_IMAGES): DBUpdateRound
     (ImageGenerationRound, ROUND_TIMEOUT): LeaderboardObservationRound
     (NewMembersRound, DONE): LeaderboardObservationRound
     (NewMembersRound, NO_MAJORITY): NewMembersRound

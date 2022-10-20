@@ -45,7 +45,6 @@ class Event(Enum):
     """DynamicNFTAbciApp Events"""
 
     NO_MAJORITY = "no_majority"
-    NO_NEW_IMAGES = "no_new_images"
     DONE = "done"
     ROUND_TIMEOUT = "round_timeout"
 
@@ -239,7 +238,6 @@ class DynamicNFTAbciApp(AbciApp[Event]):
             Event.DONE: DBUpdateRound,
             Event.NO_MAJORITY: LeaderboardObservationRound,
             Event.ROUND_TIMEOUT: LeaderboardObservationRound,
-            Event.NO_NEW_IMAGES: DBUpdateRound,
         },
         DBUpdateRound: {
             Event.DONE: FinishedDBUpdateRound,
