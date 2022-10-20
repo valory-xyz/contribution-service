@@ -171,7 +171,7 @@ class ImageGenerationRound(CollectSameUntilThresholdRound):
 
     round_id: str = "image_generation"
     allowed_tx_type = ImageGenerationPayload.transaction_type
-    payload_attribute: str = ImageGenerationPayload.transaction_type
+    payload_attribute = "content"
     synchronized_data_class = SynchronizedData
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:
@@ -193,7 +193,7 @@ class DBUpdateRound(CollectSameUntilThresholdRound):
 
     round_id: str = "db_update"
     allowed_tx_type = DBUpdatePayload.transaction_type
-    payload_attribute: str = DBUpdatePayload.transaction_type
+    payload_attribute = "content"
     synchronized_data_class = SynchronizedData
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:

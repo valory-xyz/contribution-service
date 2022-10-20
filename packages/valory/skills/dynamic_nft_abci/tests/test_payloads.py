@@ -29,7 +29,6 @@ from packages.valory.skills.dynamic_nft_abci.payloads import (
     DBUpdatePayload,
     ImageCodeCalculationPayload,
     ImageGenerationPayload,
-    ImagePushPayload,
     LeaderboardObservationPayload,
     NewMembersPayload,
     TransactionType,
@@ -67,11 +66,6 @@ class PayloadTestCase:
             payload_cls=ImageGenerationPayload,
             content="payload_test_content",
             transaction_type=TransactionType.IMAGE_GENERATION,
-        ),
-        PayloadTestCase(
-            payload_cls=ImagePushPayload,
-            content="payload_test_content",
-            transaction_type=TransactionType.IMAGE_PUSH,
         ),
         PayloadTestCase(
             payload_cls=DBUpdatePayload,
