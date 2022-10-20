@@ -20,7 +20,6 @@
 """This package contains the rounds of DynamicNFTAbciApp."""
 
 import json
-from abc import ABC
 from enum import Enum
 from typing import Dict, List, Optional, Set, Tuple, cast
 
@@ -92,16 +91,7 @@ class SynchronizedData(BaseSynchronizedData):
         return cast(Dict, self.db.get_strict("most_voted_updates"))
 
 
-class DynamicNFTABCIAbstractRound(AbstractRound[Event, TransactionType], ABC):
-    """Abstract round for the Dynamic NFT ABCI skill."""
-
-    @property
-    def synchronized_data(self) -> SynchronizedData:
-        """Return the synchronized data."""
-        return cast(SynchronizedData, self._synchronized_data)
-
-
-class NewMembersRound(CollectSameUntilThresholdRound, DynamicNFTABCIAbstractRound):
+class NewMembersRound(CollectSameUntilThresholdRound):
     """NewMemberListRound"""
 
     round_id: str = "new_members"
@@ -130,9 +120,7 @@ class NewMembersRound(CollectSameUntilThresholdRound, DynamicNFTABCIAbstractRoun
         return None
 
 
-class LeaderboardObservationRound(
-    CollectSameUntilThresholdRound, DynamicNFTABCIAbstractRound
-):
+class LeaderboardObservationRound(CollectSameUntilThresholdRound):
     """LeaderboardObservationRound"""
 
     round_id = "leaderboard_observation"
@@ -154,9 +142,7 @@ class LeaderboardObservationRound(
         return None
 
 
-class ImageCodeCalculationRound(
-    CollectSameUntilThresholdRound, DynamicNFTABCIAbstractRound
-):
+class ImageCodeCalculationRound(CollectSameUntilThresholdRound):
     """ImageCodeCalculationRound"""
 
     round_id: str = "image_code_calculation"
@@ -178,7 +164,7 @@ class ImageCodeCalculationRound(
         return None
 
 
-class ImageGenerationRound(CollectSameUntilThresholdRound, DynamicNFTABCIAbstractRound):
+class ImageGenerationRound(CollectSameUntilThresholdRound):
     """ImageGenerationRound"""
 
     round_id: str = "image_generation"
