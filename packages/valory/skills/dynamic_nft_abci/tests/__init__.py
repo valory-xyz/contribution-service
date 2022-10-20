@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 #
-#   Copyright 2021-2022 Valory AG
+#   Copyright 2022 Valory AG
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -17,9 +17,4 @@
 #
 # ------------------------------------------------------------------------------
 
-"""Test dummy."""
-
-
-def test_dummy() -> None:
-    """Test dummy."""
-    assert True
+"""This module contains the tests for the Dynamic NFT ABCI skill."""

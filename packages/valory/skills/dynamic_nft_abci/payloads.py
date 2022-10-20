@@ -29,14 +29,12 @@ from packages.valory.skills.abstract_round_abci.base import BaseTxPayload
 class TransactionType(Enum):
     """Enumeration of transaction types."""
 
-    # TODO: define transaction types: e.g. TX_HASH: "tx_hash"
-    D_B_UPDATE = "d_b_update"
+    NEW_MEMBERS = "new_members"
+    LEADERBOARD_OBSERVATION = "leaderboard_observation"
     IMAGE_CODE_CALCULATION = "image_code_calculation"
     IMAGE_GENERATION = "image_generation"
     IMAGE_PUSH = "image_push"
-    NEW_MEMBER_LIST = "new_member_list"
-    NEW_MEMBER_UPDATE = "new_member_update"
-    OBSERVATION = "observation"
+    DB_UPDATE = "db_update"
 
     def __str__(self) -> str:
         """Get the string value of the transaction type."""
@@ -47,63 +45,52 @@ class BaseDynamicNFTPayload(BaseTxPayload, ABC):
     """Base payload for DynamicNFT."""
 
     def __init__(self, sender: str, content: Hashable, **kwargs: Any) -> None:
-        """Initialize a 'select_keeper' transaction payload."""
-
+        """Initialize a transaction payload."""
         super().__init__(sender, **kwargs)
-        setattr(self, f"_{self.transaction_type}", content)
-        p = property(lambda s: getattr(self, f"_{self.transaction_type}"))
-        setattr(self.__class__, f"{self.transaction_type}", p)
+        self._content = content
+
+    @property
+    def content(self):
+        """Get the content."""
+        return self._content
 
     @property
     def data(self) -> Dict[str, Hashable]:
         """Get the data."""
-        return {str(self.transaction_type): getattr(self, str(self.transaction_type))}
+        return dict(content=self.content)
 
 
-class DBUpdatePayload(BaseDynamicNFTPayload):
-    """Represent a transaction payload for the DBUpdateRound."""
+class NewMembersPayload(BaseDynamicNFTPayload):
+    """Represent a transaction payload for the NewMembersRound."""
 
-    # TODO: specify the transaction type
-    transaction_type = TransactionType.D_B_UPDATE
+    transaction_type = TransactionType.NEW_MEMBERS
+
+
+class LeaderboardObservationPayload(BaseDynamicNFTPayload):
+    """Represent a transaction payload for the LeaderboardObservationRound."""
+
+    transaction_type = TransactionType.LEADERBOARD_OBSERVATION
 
 
 class ImageCodeCalculationPayload(BaseDynamicNFTPayload):
     """Represent a transaction payload for the ImageCodeCalculationRound."""
 
-    # TODO: specify the transaction type
     transaction_type = TransactionType.IMAGE_CODE_CALCULATION
 
 
 class ImageGenerationPayload(BaseDynamicNFTPayload):
     """Represent a transaction payload for the ImageGenerationRound."""
 
-    # TODO: specify the transaction type
     transaction_type = TransactionType.IMAGE_GENERATION
 
 
 class ImagePushPayload(BaseDynamicNFTPayload):
     """Represent a transaction payload for the ImagePushRound."""
 
-    # TODO: specify the transaction type
     transaction_type = TransactionType.IMAGE_PUSH
 
 
-class NewMemberListPayload(BaseDynamicNFTPayload):
-    """Represent a transaction payload for the NewMemberListRound."""
+class DBUpdatePayload(BaseDynamicNFTPayload):
+    """Represent a transaction payload for the DBUpdateRound."""
 
-    # TODO: specify the transaction type
-    transaction_type = TransactionType.NEW_MEMBER_LIST
-
-
-class NewMemberUpdatePayload(BaseDynamicNFTPayload):
-    """Represent a transaction payload for the NewMemberUpdateRound."""
-
-    # TODO: specify the transaction type
-    transaction_type = TransactionType.NEW_MEMBER_UPDATE
-
-
-class ObservationPayload(BaseDynamicNFTPayload):
-    """Represent a transaction payload for the ObservationRound."""
-
-    # TODO: specify the transaction type
-    transaction_type = TransactionType.OBSERVATION
+    transaction_type = TransactionType.DB_UPDATE

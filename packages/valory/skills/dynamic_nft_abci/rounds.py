@@ -19,8 +19,9 @@
 
 """This package contains the rounds of DynamicNFTAbciApp."""
 
+import json
 from enum import Enum
-from typing import List, Optional, Set, Tuple
+from typing import Dict, List, Optional, Set, Tuple, cast
 
 from packages.valory.skills.abstract_round_abci.base import (
     AbciApp,
@@ -28,6 +29,7 @@ from packages.valory.skills.abstract_round_abci.base import (
     AbstractRound,
     AppState,
     BaseSynchronizedData,
+    CollectSameUntilThresholdRound,
     DegenerateRound,
     EventToTimeout,
     TransactionType,
@@ -37,9 +39,8 @@ from packages.valory.skills.dynamic_nft_abci.payloads import (
     ImageCodeCalculationPayload,
     ImageGenerationPayload,
     ImagePushPayload,
-    NewMemberListPayload,
-    NewMemberUpdatePayload,
-    ObservationPayload,
+    LeaderboardObservationPayload,
+    NewMembersPayload,
 )
 
 
@@ -59,111 +60,121 @@ class SynchronizedData(BaseSynchronizedData):
     This data is replicated by the tendermint application.
     """
 
+    @property
+    def members(self) -> dict:
+        """Get the member table."""
+        return cast(dict, self.db.get("members", {}))
 
-class NewMemberListRound(AbstractRound):
+    @property
+    def images(self) -> dict:
+        """Get the image table."""
+        return cast(dict, self.db.get("images", {}))
+
+    @property
+    def redirects(self) -> dict:
+        """Get the redirect table."""
+        return cast(dict, self.db.get("redirects", {}))
+
+    @property
+    def most_voted_new_members(self) -> Dict:
+        """Get the most_voted_new_members."""
+        return cast(Dict, self.db.get_strict("most_voted_new_members"))
+
+    @property
+    def most_voted_leaderboard(self) -> Dict:
+        """Get the most_voted_leaderboard."""
+        return cast(Dict, self.db.get_strict("most_voted_leaderboard"))
+
+    @property
+    def most_voted_updates(self) -> Dict:
+        """Get the most_voted_updates."""
+        return cast(Dict, self.db.get_strict("most_voted_updates"))
+
+
+class NewMembersRound(CollectSameUntilThresholdRound):
     """NewMemberListRound"""
 
-    # TODO: replace AbstractRound with one of CollectDifferentUntilAllRound, CollectSameUntilAllRound, CollectSameUntilThresholdRound, CollectDifferentUntilThresholdRound, OnlyKeeperSendsRound, VotingRound
-    # TODO: set the following class attributes
-    round_id: str = "new_member_list"
-    allowed_tx_type: Optional[TransactionType]
-    payload_attribute: str = NewMemberListPayload.transaction_type
+    round_id: str = "new_members"
+    allowed_tx_type = NewMembersPayload.transaction_type
+    payload_attribute: str = "content"
+    synchronized_data_class = SynchronizedData
 
-    def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Enum]]:
+    def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:
         """Process the end of the block."""
-        Event.NO_MAJORITY, Event.DONE, Event.ROUND_TIMEOUT
-        raise NotImplementedError
+        if self.threshold_reached:
+            # Add the new members to the members table. Note that the new members have no points or image_code fields
+            decoded_payload = json.loads(self.most_voted_payload)
+            members = {
+                **decoded_payload,
+                **self.synchronized_data.members,
+            }
+            synchronized_data = self.synchronized_data.update(
+                members=members,
+                most_voted_new_members=decoded_payload,
+            )
+            return synchronized_data, Event.DONE
+        if not self.is_majority_possible(
+            self.collection, self.synchronized_data.nb_participants
+        ):
+            return self.synchronized_data, Event.NO_MAJORITY
+        return None
 
-    def check_payload(self, payload: NewMemberListPayload) -> None:
-        """Check payload."""
-        raise NotImplementedError
 
-    def process_payload(self, payload: NewMemberListPayload) -> None:
-        """Process payload."""
-        raise NotImplementedError
+class LeaderboardObservationRound(CollectSameUntilThresholdRound):
+    """LeaderboardObservationRound"""
 
+    round_id = "leaderboard_observation"
+    allowed_tx_type = LeaderboardObservationPayload.transaction_type
+    payload_attribute = "content"
+    synchronized_data_class = SynchronizedData
 
-class NewMemberUpdateRound(AbstractRound):
-    """NewMemberUpdateRound"""
-
-    # TODO: replace AbstractRound with one of CollectDifferentUntilAllRound, CollectSameUntilAllRound, CollectSameUntilThresholdRound, CollectDifferentUntilThresholdRound, OnlyKeeperSendsRound, VotingRound
-    # TODO: set the following class attributes
-    round_id: str = "new_member_update"
-    allowed_tx_type: Optional[TransactionType]
-    payload_attribute: str = NewMemberUpdatePayload.transaction_type
-
-    def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Enum]]:
+    def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:
         """Process the end of the block."""
-        Event.NO_MAJORITY, Event.DONE, Event.ROUND_TIMEOUT
-        raise NotImplementedError
-
-    def check_payload(self, payload: NewMemberUpdatePayload) -> None:
-        """Check payload."""
-        raise NotImplementedError
-
-    def process_payload(self, payload: NewMemberUpdatePayload) -> None:
-        """Process payload."""
-        raise NotImplementedError
-
-
-class ObservationRound(AbstractRound):
-    """ObservationRound"""
-
-    # TODO: replace AbstractRound with one of CollectDifferentUntilAllRound, CollectSameUntilAllRound, CollectSameUntilThresholdRound, CollectDifferentUntilThresholdRound, OnlyKeeperSendsRound, VotingRound
-    # TODO: set the following class attributes
-    round_id: str = "observation"
-    allowed_tx_type: Optional[TransactionType]
-    payload_attribute: str = ObservationPayload.transaction_type
-
-    def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Enum]]:
-        """Process the end of the block."""
-        Event.NO_MAJORITY, Event.DONE, Event.ROUND_TIMEOUT
-        raise NotImplementedError
-
-    def check_payload(self, payload: ObservationPayload) -> None:
-        """Check payload."""
-        raise NotImplementedError
-
-    def process_payload(self, payload: ObservationPayload) -> None:
-        """Process payload."""
-        raise NotImplementedError
+        if self.threshold_reached:
+            synchronized_data = self.synchronized_data.update(
+                most_voted_leaderboard=json.loads(self.most_voted_payload),
+            )
+            return synchronized_data, Event.DONE
+        if not self.is_majority_possible(
+            self.collection, self.synchronized_data.nb_participants
+        ):
+            return self.synchronized_data, Event.NO_MAJORITY
+        return None
 
 
-class ImageCodeCalculationRound(AbstractRound):
+class ImageCodeCalculationRound(CollectSameUntilThresholdRound):
     """ImageCodeCalculationRound"""
 
-    # TODO: replace AbstractRound with one of CollectDifferentUntilAllRound, CollectSameUntilAllRound, CollectSameUntilThresholdRound, CollectDifferentUntilThresholdRound, OnlyKeeperSendsRound, VotingRound
-    # TODO: set the following class attributes
     round_id: str = "image_code_calculation"
-    allowed_tx_type: Optional[TransactionType]
-    payload_attribute: str = ImageCodeCalculationPayload.transaction_type
+    allowed_tx_type = ImageCodeCalculationPayload.transaction_type
+    payload_attribute = "content"
+    synchronized_data_class = SynchronizedData
 
-    def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Enum]]:
+    def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:
         """Process the end of the block."""
-        Event.NO_MAJORITY, Event.DONE, Event.ROUND_TIMEOUT
-        raise NotImplementedError
+        if self.threshold_reached:
+            synchronized_data = self.synchronized_data.update(
+                most_voted_updates=json.loads(self.most_voted_payload),
+            )
+            return synchronized_data, Event.DONE
+        if not self.is_majority_possible(
+            self.collection, self.synchronized_data.nb_participants
+        ):
+            return self.synchronized_data, Event.NO_MAJORITY
+        return None
 
-    def check_payload(self, payload: ImageCodeCalculationPayload) -> None:
-        """Check payload."""
-        raise NotImplementedError
 
-    def process_payload(self, payload: ImageCodeCalculationPayload) -> None:
-        """Process payload."""
-        raise NotImplementedError
-
-
-class ImageGenerationRound(AbstractRound):
+class ImageGenerationRound(CollectSameUntilThresholdRound):
     """ImageGenerationRound"""
 
-    # TODO: replace AbstractRound with one of CollectDifferentUntilAllRound, CollectSameUntilAllRound, CollectSameUntilThresholdRound, CollectDifferentUntilThresholdRound, OnlyKeeperSendsRound, VotingRound
-    # TODO: set the following class attributes
     round_id: str = "image_generation"
-    allowed_tx_type: Optional[TransactionType]
+    allowed_tx_type = ImageGenerationPayload.transaction_type
     payload_attribute: str = ImageGenerationPayload.transaction_type
+    synchronized_data_class = SynchronizedData
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Enum]]:
         """Process the end of the block."""
-        Event.NO_MAJORITY, Event.NO_NEW_IMAGES, Event.DONE, Event.ROUND_TIMEOUT
+        Event.NO_MAJORITY, Event.NO_NEW_IMAGES, Event.DONE
         raise NotImplementedError
 
     def check_payload(self, payload: ImageGenerationPayload) -> None:
@@ -186,7 +197,7 @@ class ImagePushRound(AbstractRound):
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Enum]]:
         """Process the end of the block."""
-        Event.NO_MAJORITY, Event.DONE, Event.ROUND_TIMEOUT
+        Event.NO_MAJORITY, Event.DONE
         raise NotImplementedError
 
     def check_payload(self, payload: ImagePushPayload) -> None:
@@ -209,7 +220,7 @@ class DBUpdateRound(AbstractRound):
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Enum]]:
         """Process the end of the block."""
-        Event.NO_MAJORITY, Event.DONE, Event.ROUND_TIMEOUT
+        Event.NO_MAJORITY, Event.DONE
         raise NotImplementedError
 
     def check_payload(self, payload: DBUpdatePayload) -> None:
@@ -230,47 +241,44 @@ class FinishedDBUpdateRound(DegenerateRound):
 class DynamicNFTAbciApp(AbciApp[Event]):
     """DynamicNFTAbciApp"""
 
-    initial_round_cls: AppState = NewMemberListRound
-    initial_states: Set[AppState] = {NewMemberListRound}
+    initial_round_cls: AppState = NewMembersRound
+    initial_states: Set[AppState] = {NewMembersRound}
     transition_function: AbciAppTransitionFunction = {
-        NewMemberListRound: {
-            Event.DONE: NewMemberUpdateRound,
-            Event.NO_MAJORITY: NewMemberListRound,
-            Event.ROUND_TIMEOUT: NewMemberListRound,
+        NewMembersRound: {
+            Event.DONE: LeaderboardObservationRound,
+            Event.NO_MAJORITY: NewMembersRound,
+            Event.ROUND_TIMEOUT: NewMembersRound,
         },
-        NewMemberUpdateRound: {
-            Event.DONE: ObservationRound,
-            Event.NO_MAJORITY: NewMemberListRound,
-            Event.ROUND_TIMEOUT: NewMemberListRound,
-        },
-        ObservationRound: {
+        LeaderboardObservationRound: {
             Event.DONE: ImageCodeCalculationRound,
-            Event.NO_MAJORITY: ObservationRound,
-            Event.ROUND_TIMEOUT: ObservationRound,
+            Event.NO_MAJORITY: LeaderboardObservationRound,
+            Event.ROUND_TIMEOUT: LeaderboardObservationRound,
         },
         ImageCodeCalculationRound: {
             Event.DONE: ImageGenerationRound,
-            Event.NO_MAJORITY: ObservationRound,
-            Event.ROUND_TIMEOUT: ObservationRound,
+            Event.NO_MAJORITY: LeaderboardObservationRound,
+            Event.ROUND_TIMEOUT: LeaderboardObservationRound,
         },
         ImageGenerationRound: {
             Event.DONE: ImagePushRound,
-            Event.NO_MAJORITY: ObservationRound,
-            Event.ROUND_TIMEOUT: ObservationRound,
+            Event.NO_MAJORITY: LeaderboardObservationRound,
+            Event.ROUND_TIMEOUT: LeaderboardObservationRound,
             Event.NO_NEW_IMAGES: DBUpdateRound,
         },
         ImagePushRound: {
             Event.DONE: DBUpdateRound,
-            Event.NO_MAJORITY: ObservationRound,
-            Event.ROUND_TIMEOUT: ObservationRound,
+            Event.NO_MAJORITY: LeaderboardObservationRound,
+            Event.ROUND_TIMEOUT: LeaderboardObservationRound,
         },
         DBUpdateRound: {
             Event.DONE: FinishedDBUpdateRound,
-            Event.NO_MAJORITY: ObservationRound,
-            Event.ROUND_TIMEOUT: ObservationRound,
+            Event.NO_MAJORITY: LeaderboardObservationRound,
+            Event.ROUND_TIMEOUT: LeaderboardObservationRound,
         },
         FinishedDBUpdateRound: {},
     }
     final_states: Set[AppState] = {FinishedDBUpdateRound}
-    event_to_timeout: EventToTimeout = {}
+    event_to_timeout: EventToTimeout = {
+        Event.ROUND_TIMEOUT: 30.0,
+    }
     cross_period_persisted_keys: List[str] = []

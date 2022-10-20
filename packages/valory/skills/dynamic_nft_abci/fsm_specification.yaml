@@ -3,41 +3,37 @@ alphabet_in:
 - NO_MAJORITY
 - NO_NEW_IMAGES
 - ROUND_TIMEOUT
-default_start_state: NewMemberListRound
+default_start_state: NewMembersRound
 final_states:
 - FinishedDBUpdateRound
 label: packages.valory.skills.dynamic_nft_abci.rounds.DynamicNFTAbciApp
 start_states:
-- NewMemberListRound
+- NewMembersRound
 states:
 - DBUpdateRound
 - FinishedDBUpdateRound
 - ImageCodeCalculationRound
 - ImageGenerationRound
 - ImagePushRound
-- NewMemberListRound
-- NewMemberUpdateRound
-- ObservationRound
+- NewMembersRound
+- LeaderboardObservationRound
 transition_func:
     (DBUpdateRound, DONE): FinishedDBUpdateRound
-    (DBUpdateRound, NO_MAJORITY): ObservationRound
-    (DBUpdateRound, ROUND_TIMEOUT): ObservationRound
+    (DBUpdateRound, NO_MAJORITY): LeaderboardObservationRound
+    (DBUpdateRound, ROUND_TIMEOUT): LeaderboardObservationRound
     (ImageCodeCalculationRound, DONE): ImageGenerationRound
-    (ImageCodeCalculationRound, NO_MAJORITY): ObservationRound
-    (ImageCodeCalculationRound, ROUND_TIMEOUT): ObservationRound
+    (ImageCodeCalculationRound, NO_MAJORITY): LeaderboardObservationRound
+    (ImageCodeCalculationRound, ROUND_TIMEOUT): LeaderboardObservationRound
     (ImageGenerationRound, DONE): ImagePushRound
-    (ImageGenerationRound, NO_MAJORITY): ObservationRound
+    (ImageGenerationRound, NO_MAJORITY): LeaderboardObservationRound
     (ImageGenerationRound, NO_NEW_IMAGES): DBUpdateRound
-    (ImageGenerationRound, ROUND_TIMEOUT): ObservationRound
+    (ImageGenerationRound, ROUND_TIMEOUT): LeaderboardObservationRound
     (ImagePushRound, DONE): DBUpdateRound
-    (ImagePushRound, NO_MAJORITY): ObservationRound
-    (ImagePushRound, ROUND_TIMEOUT): ObservationRound
-    (NewMemberListRound, DONE): NewMemberUpdateRound
-    (NewMemberListRound, NO_MAJORITY): NewMemberListRound
-    (NewMemberListRound, ROUND_TIMEOUT): NewMemberListRound
-    (NewMemberUpdateRound, DONE): ObservationRound
-    (NewMemberUpdateRound, NO_MAJORITY): NewMemberListRound
-    (NewMemberUpdateRound, ROUND_TIMEOUT): NewMemberListRound
-    (ObservationRound, DONE): ImageCodeCalculationRound
-    (ObservationRound, NO_MAJORITY): ObservationRound
-    (ObservationRound, ROUND_TIMEOUT): ObservationRound
+    (ImagePushRound, NO_MAJORITY): LeaderboardObservationRound
+    (ImagePushRound, ROUND_TIMEOUT): LeaderboardObservationRound
+    (NewMembersRound, DONE): LeaderboardObservationRound
+    (NewMembersRound, NO_MAJORITY): NewMembersRound
+    (NewMembersRound, ROUND_TIMEOUT): NewMembersRound
+    (LeaderboardObservationRound, DONE): ImageCodeCalculationRound
+    (LeaderboardObservationRound, NO_MAJORITY): LeaderboardObservationRound
+    (LeaderboardObservationRound, ROUND_TIMEOUT): LeaderboardObservationRound
