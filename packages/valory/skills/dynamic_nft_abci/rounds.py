@@ -113,13 +113,14 @@ class NewMembersRound(CollectSameUntilThresholdRound, DynamicNFTABCIAbstractRoun
         """Process the end of the block."""
         if self.threshold_reached:
             # Add the new members to the members table. Note that the new members have no points or image_code fields
+            decoded_payload = json.loads(self.most_voted_payload)
             members = {
-                **json.loads(self.most_voted_payload),
+                **decoded_payload,
                 **self.synchronized_data.members,
             }
             synchronized_data = self.synchronized_data.update(
                 members=members,
-                most_voted_new_members=json.loads(self.most_voted_payload),
+                most_voted_new_members=decoded_payload,
             )
             return synchronized_data, Event.DONE
         if not self.is_majority_possible(
