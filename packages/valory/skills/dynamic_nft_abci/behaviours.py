@@ -20,7 +20,11 @@
 """This package contains round behaviours of DynamicNFTAbciApp."""
 
 import json
+import os
+from pathlib import Path
 from typing import Generator, List, Set, Tuple, Type, cast
+
+from PIL import Image
 
 from packages.valory.skills.abstract_round_abci.base import AbstractRound
 from packages.valory.skills.abstract_round_abci.behaviours import (
@@ -30,6 +34,7 @@ from packages.valory.skills.abstract_round_abci.behaviours import (
 from packages.valory.skills.dynamic_nft_abci.models import Params
 from packages.valory.skills.dynamic_nft_abci.payloads import (
     ImageCodeCalculationPayload,
+    ImageGenerationPayload,
     LeaderboardObservationPayload,
     NewMembersPayload,
 )
@@ -38,7 +43,6 @@ from packages.valory.skills.dynamic_nft_abci.rounds import (
     DynamicNFTAbciApp,
     ImageCodeCalculationRound,
     ImageGenerationRound,
-    ImagePushRound,
     LeaderboardObservationRound,
     NewMembersRound,
     SynchronizedData,
@@ -66,6 +70,10 @@ DUMMY_LEADERBOARD = {
     "0x19B043aD06C48aeCb2028B0f10503422BD0E0918": 100,
     "0x7B394CD0B75f774c6808cc681b26aC3E5DF96E27": 3500,  # this one does not appear in the dummy members
 }
+
+DUMMY_IMAGE_HASHES = ["dummy_hash_1", "dummy_hash_2", "dummy_hash_3"]
+
+IMAGE_ROOT = Path(Path(__file__).parent, "tests", "data")
 
 
 class DynamicNFTBaseBehaviour(BaseBehaviour):
@@ -201,7 +209,7 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
             raise ValueError("Points must be positive")
 
         # Points are updated after every call and we only keep the remainder
-        bg_code, points = ImageCodeCalculationBehaviour.get_layer_code(
+        cls_code, points = ImageCodeCalculationBehaviour.get_layer_code(
             points, BACKGROUND_THRESHOLDS
         )
         fr_code, points = ImageCodeCalculationBehaviour.get_layer_code(
@@ -211,7 +219,7 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
             points, BAR_THRESHOLDS
         )
 
-        return bg_code + fr_code + bar_code
+        return cls_code + fr_code + bar_code
 
 
 class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
@@ -224,26 +232,117 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
         """Generate the images.
 
         Check if the changes list contains an image code
-        that is not present on the redirect  table. This happens when
+        that is not present in the redirect  table. This happens when
         a member is granted a status whose corresponding image has never
         been used. For each of these cases, agents generate the new
-        images and get their corresponding IPFS hashes.
+        images and push them to IPFS.
         """
 
+        # In the current implementation, the image manager will be instanced every time the behaviour is run.
+        # This is not ideal: a singleton or another pattern that avoids this might be more suited to our usecase.
+        img_manager = self.ImageManager()
 
-class ImagePushBehaviour(DynamicNFTBaseBehaviour):
-    """ImagePushBehaviour"""
+        # Get the image codes that have been never generated
+        new_image_paths = []
+        for update in self.synchronized_data.most_voted_updates.values():
+            if update["image_code"] not in self.synchronized_data.images:
+                new_image_paths.append(img_manager.generate(update["image_code"]))
 
-    behaviour_id: str = "image_push"
-    matching_round: Type[AbstractRound] = ImagePushRound
+        # Push to IPFS: we need to extend the supported files before we do this
+        # image_hashes = []  # noqa: E800
+        # for new_image_path in new_image_paths:  # noqa: E800
+        #     image_hashes.append(self.send_to_ipfs(new_image_path))  # noqa: E800
 
-    def async_act(self) -> Generator:
-        """Push images to IPFS.
+        image_hashes = DUMMY_IMAGE_HASHES
 
-        Every agent pushes the new images to IPFS. This is simpler as no
-        keepers are needed, does not affect the cost, introduces redundancy
-        and the IPFS protocol will handle deduplication.
-        """
+        with self.context.benchmark_tool.measure(
+            self.behaviour_id,
+        ).consensus():
+            payload = ImageGenerationPayload(
+                self.context.agent_address, json.dumps(image_hashes, sort_keys=True)
+            )
+            yield from self.send_a2a_transaction(payload)
+            yield from self.wait_until_round_end()
+
+        self.set_done()
+
+    class ImageManager:
+        """Class to load image layers and compose new images from them"""
+
+        LAYERS_DIR = "layers"
+        IMAGES_DIR = "images"
+        CLASSES = "classes"
+        FRAMES = "frames"
+        BARS = "bars"
+        PNG_EXT = "png"
+        CODE_LEN = 6
+
+        def __init__(self, image_root: Path = IMAGE_ROOT):
+            """Load images"""
+            self.image_root = image_root
+            self.layers = (  # lists of available images for each layer, sorted by name
+                list(
+                    sorted(
+                        Path(image_root, self.LAYERS_DIR, self.CLASSES).rglob(
+                            f"*.{self.PNG_EXT}"
+                        )
+                    )
+                ),
+                list(
+                    sorted(
+                        Path(image_root, self.LAYERS_DIR, self.FRAMES).rglob(
+                            f"*.{self.PNG_EXT}"
+                        )
+                    )
+                ),
+                list(
+                    sorted(
+                        Path(image_root, self.LAYERS_DIR, self.BARS).rglob(
+                            f"*.{self.PNG_EXT}"
+                        )
+                    )
+                ),
+            )
+
+            # Create the output directory if it does not exist
+            self.out_path = Path(self.image_root, self.IMAGES_DIR)
+            if not os.path.isdir(self.out_path):
+                os.makedirs(self.out_path)
+
+        def generate(self, image_code: str) -> Path:
+            """Generate an image"""
+
+            # Check code validity
+            if len(image_code) != self.CODE_LEN:
+                raise ValueError(
+                    f"ImageManager: invalid code '{image_code}'. Length is {len(image_code)}, should be {self.CODE_LEN}."
+                )
+
+            img_layer_codes = [int(image_code[i : i + 2]) for i in range(0, 6, 2)]
+
+            for layer_index, layer_code in enumerate(img_layer_codes):
+                if layer_code >= len(self.layers[layer_index]):
+                    raise ValueError(
+                        f"ImageManager: invalid code '{image_code}'. Layer {layer_index} code must be lower than {len(self.layers[layer_index])}. Found {layer_code}."
+                    )
+
+            # Get layers
+            img_layers = [
+                Image.open(str(self.layers[layer_index][layer_code]))
+                for layer_index, layer_code in enumerate(img_layer_codes)
+            ]
+
+            # Combine layers
+            img_layers[0].paste(img_layers[1], (0, 0), mask=img_layers[1])
+            img_layers[0].paste(
+                img_layers[2], (0, 0), mask=img_layers[2]
+            )  # bar layer: bar 03 has some problem with positioning
+
+            # Save image
+            img_path = Path(self.out_path, f"{image_code}.{self.PNG_EXT}")
+            img_layers[0].save(img_path)
+
+            return img_path
 
 
 class DBUpdateBehaviour(DynamicNFTBaseBehaviour):
@@ -263,6 +362,7 @@ class DBUpdateBehaviour(DynamicNFTBaseBehaviour):
 
         Redirect table: must be updated now to reflect the new redirects (if it applies).
         """
+        self.set_done()
 
 
 class DynamicNFTRoundBehaviour(AbstractRoundBehaviour):
@@ -275,6 +375,5 @@ class DynamicNFTRoundBehaviour(AbstractRoundBehaviour):
         LeaderboardObservationBehaviour,
         ImageCodeCalculationBehaviour,
         ImageGenerationBehaviour,
-        ImagePushBehaviour,
         DBUpdateBehaviour,
     ]
