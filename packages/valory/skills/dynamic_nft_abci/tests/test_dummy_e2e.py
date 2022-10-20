@@ -17,17 +17,11 @@
 #
 # ------------------------------------------------------------------------------
 
-"""Test the models.py module of the DynamicNFT skill."""
-
-from packages.valory.skills.abstract_round_abci.test_tools.base import DummyContext
-from packages.valory.skills.dynamic_nft_abci.models import SharedState
+"""This package contains e2e tests for the DynamicNFT skill."""
+import pytest
 
 
-class TestSharedState:  # pylint: disable=too-few-public-methods
-    """Test SharedState of DynamicNFT skill."""
-
-    def test_initialization(  # pylint: disable=no-self-use
-        self,
-    ) -> None:
-        """Test initialization."""
-        SharedState(name="", skill_context=DummyContext())
+@pytest.mark.e2e
+def test_dummy_e2e() -> None:
+    """Dummy e2e test"""
+    assert True
