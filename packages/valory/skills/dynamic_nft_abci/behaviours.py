@@ -281,27 +281,16 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
             """Load images"""
             self.image_root = image_root
             self.layers = (  # lists of available images for each layer, sorted by name
-                list(
-                    sorted(
-                        Path(image_root, self.LAYERS_DIR, self.CLASSES).rglob(
-                            f"*.{self.PNG_EXT}"
+                tuple(
+                    tuple(
+                        sorted(
+                            Path(image_root, self.LAYERS_DIR, i).rglob(
+                                f"*.{self.PNG_EXT}"
+                            )
                         )
                     )
-                ),
-                list(
-                    sorted(
-                        Path(image_root, self.LAYERS_DIR, self.FRAMES).rglob(
-                            f"*.{self.PNG_EXT}"
-                        )
-                    )
-                ),
-                list(
-                    sorted(
-                        Path(image_root, self.LAYERS_DIR, self.BARS).rglob(
-                            f"*.{self.PNG_EXT}"
-                        )
-                    )
-                ),
+                    for i in (self.CLASSES, self.FRAMES, self.BARS)
+                )
             )
 
             # Create the output directory if it does not exist
