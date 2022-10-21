@@ -88,7 +88,9 @@ def get_image_code_calculation_payload_serialized() -> str:
 
 def get_image_generation_payload_serialized() -> str:
     """Dummy image generation payload"""
-    return json.dumps(DUMMY_IMAGE_HASHES, sort_keys=True)
+    return json.dumps(
+        {"image_hashes": DUMMY_IMAGE_HASHES, "status": "success"}, sort_keys=True
+    )
 
 
 @dataclass
@@ -256,7 +258,7 @@ class TestImageGenerationRound(BaseDynamicNFTRoundTestClass):
                 final_data={
                     "most_voted_new_image_hashes": json.loads(
                         get_image_generation_payload_serialized()
-                    ),
+                    )["image_hashes"],
                 },
                 event=Event.DONE,
                 most_voted_payload=get_image_generation_payload_serialized(),
