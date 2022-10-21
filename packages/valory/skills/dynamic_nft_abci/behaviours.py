@@ -21,8 +21,9 @@
 
 import json
 import os
+from logging import Logger
 from pathlib import Path
-from typing import Generator, List, Set, Tuple, Type, cast
+from typing import Generator, List, Optional, Set, Tuple, Type, cast
 
 from PIL import Image
 
@@ -240,7 +241,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
 
         # In the current implementation, the image manager will be instanced every time the behaviour is run.
         # This is not ideal: a singleton or another pattern that avoids this might be more suited to our usecase.
-        img_manager = self.ImageManager()
+        img_manager = self.ImageManager(logger=self.context.logger)
 
         # Get the image codes that have been never generated
         new_image_paths = []
@@ -248,18 +249,25 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
             if update["image_code"] not in self.synchronized_data.images:
                 new_image_paths.append(img_manager.generate(update["image_code"]))
 
-        # Push to IPFS: we need to extend the supported files before we do this
-        # image_hashes = []  # noqa: E800
-        # for new_image_path in new_image_paths:  # noqa: E800
-        #     image_hashes.append(self.send_to_ipfs(new_image_path))  # noqa: E800
-
-        image_hashes = DUMMY_IMAGE_HASHES
+        if None in new_image_paths:
+            status = "error"
+            image_hashes = []
+        else:
+            status = "success"
+            # Push to IPFS: we need to extend the supported files before we do this
+            # image_hashes = []  # noqa: E800
+            # for new_image_path in new_image_paths:  # noqa: E800
+            #     image_hashes.append(self.send_to_ipfs(new_image_path))  # noqa: E800
+            image_hashes = DUMMY_IMAGE_HASHES
 
         with self.context.benchmark_tool.measure(
             self.behaviour_id,
         ).consensus():
             payload = ImageGenerationPayload(
-                self.context.agent_address, json.dumps(image_hashes, sort_keys=True)
+                self.context.agent_address,
+                json.dumps(
+                    {"status": status, "image_hashes": image_hashes}, sort_keys=True
+                ),
             )
             yield from self.send_a2a_transaction(payload)
             yield from self.wait_until_round_end()
@@ -277,8 +285,9 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
         PNG_EXT = "png"
         CODE_LEN = 6
 
-        def __init__(self, image_root: Path = IMAGE_ROOT):
+        def __init__(self, logger: Logger, image_root: Path = IMAGE_ROOT):
             """Load images"""
+            self.logger = logger
             self.image_root = image_root
             self.layers = (  # lists of available images for each layer, sorted by name
                 tuple(
@@ -297,22 +306,24 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
             self.out_path = Path(self.image_root, self.IMAGES_DIR)
             os.makedirs(self.out_path, exist_ok=True)
 
-        def generate(self, image_code: str) -> Path:
+        def generate(self, image_code: str) -> Optional[Path]:
             """Generate an image"""
 
             # Check code validity
             if len(image_code) != self.CODE_LEN:
-                raise ValueError(
+                self.logger.error(
                     f"ImageManager: invalid code '{image_code}'. Length is {len(image_code)}, should be {self.CODE_LEN}."
                 )
+                return None
 
             img_layer_codes = [int(image_code[i : i + 2]) for i in range(0, 6, 2)]
 
             for layer_index, layer_code in enumerate(img_layer_codes):
                 if layer_code >= len(self.layers[layer_index]):
-                    raise ValueError(
+                    self.logger.error(
                         f"ImageManager: invalid code '{image_code}'. Layer {layer_index} code must be lower than {len(self.layers[layer_index])}. Found {layer_code}."
                     )
+                    return None
 
             # Get layers
             img_layers = [

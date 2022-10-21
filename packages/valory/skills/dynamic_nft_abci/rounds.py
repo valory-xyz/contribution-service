@@ -47,6 +47,7 @@ class Event(Enum):
     NO_MAJORITY = "no_majority"
     DONE = "done"
     ROUND_TIMEOUT = "round_timeout"
+    IMAGE_ERROR = "image_error"
 
 
 class SynchronizedData(BaseSynchronizedData):
@@ -176,10 +177,14 @@ class ImageGenerationRound(CollectSameUntilThresholdRound):
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:
         """Process the end of the block."""
         if self.threshold_reached:
-            synchronized_data = self.synchronized_data.update(
-                most_voted_new_image_hashes=json.loads(self.most_voted_payload),
-            )
-            return synchronized_data, Event.DONE
+            payload = json.loads(self.most_voted_payload)
+            if payload["status"] != "success":
+                return self.synchronized_data, Event.IMAGE_ERROR
+            else:
+                synchronized_data = self.synchronized_data.update(
+                    most_voted_new_image_hashes=payload["image_hashes"],
+                )
+                return synchronized_data, Event.DONE
         if not self.is_majority_possible(
             self.collection, self.synchronized_data.nb_participants
         ):
@@ -236,6 +241,7 @@ class DynamicNFTAbciApp(AbciApp[Event]):
         },
         ImageGenerationRound: {
             Event.DONE: DBUpdateRound,
+            Event.IMAGE_ERROR: LeaderboardObservationRound,
             Event.NO_MAJORITY: LeaderboardObservationRound,
             Event.ROUND_TIMEOUT: LeaderboardObservationRound,
         },
