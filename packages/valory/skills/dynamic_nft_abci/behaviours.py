@@ -306,8 +306,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
 
             # Create the output directory if it does not exist
             self.out_path = Path(self.image_root, self.IMAGES_DIR)
-            if not os.path.isdir(self.out_path):
-                os.makedirs(self.out_path)
+            os.makedirs(self.out_path, exist_ok=True)
 
         def generate(self, image_code: str) -> Path:
             """Generate an image"""
