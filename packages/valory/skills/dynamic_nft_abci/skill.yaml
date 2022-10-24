@@ -7,21 +7,34 @@ license: Apache-2.0
 aea_version: '>=1.0.0, <2.0.0'
 fingerprint:
   __init__.py: bafybeif56b2yk2pzo6njoexydkvwkl5tiaj7p76542ljnrijm3urhtnsxq
-  behaviours.py: bafybeife5weuhkp5msvdd7t5ef5eod6khyiwdnp45kffyrdas6zrbffuay
+  behaviours.py: bafybeiabmrkka45we65gv37f5elm4brbnfbhia7rstyp5fjrbq7adr3kv4
   dialogues.py: bafybeienawgp5jvg6ie3fpdtjepgabxjb3l6ugo46mso7xinx5abgxnafy
-  fsm_specification.yaml: bafybeibe4unrn7qqbtpfyedqyjkf5empzpizzv2i5nrylozr5xcxfq64wy
+  fsm_specification.yaml: bafybeifcj345atcf3pwsx3djdy7cwami7cvmcivt6u4f2lceabfdnj4utq
   handlers.py: bafybeidus4ztb2rxaocmi67iwuhg6s4hmafuelsa5u5xnqqk6p7hgmo7da
-  models.py: bafybeicg2uiww5mjvavvhd6l74n7o7u55rd6csu25k7pn64b2umuubqi6e
-  payloads.py: bafybeigjnv6dgkd7lxhxdeap5j7uzx2tkii44o75dy6onohq6cumzswybi
-  rounds.py: bafybeigwyosyjinwxdaszmihlfppxqmly3a45hp52inezihxdbv7gfrb7m
+  models.py: bafybeiatw3mo6n576wz5wqp5spzzr7viingbosziest2hfemwqeviwowja
+  payloads.py: bafybeiaeibgx4faww6sjrqxcehq5a3h54upqqifkbptr6eq57jvlyohxsa
+  rounds.py: bafybeidkrrfio22axrclqfc3szjjbv4s7xyatnfprawzpqhaha7gxbwjfa
   tests/__init__.py: bafybeia2xqlacp44lylwlkf7f7ci6m3yshppv3vusgcdjpj4bbcbnuhvla
-  tests/test_behaviours.py: bafybeig5m2iyqqv4rxduwoeo5vjzsxev7ohsqmlfvn4wy2hfalrqwwq4ny
+  tests/data/images/000100.png: bafybeibclk646v5umywqtswxg44nqoroug6fulrfcwquwhwktx4oljfvra
+  tests/data/images/000102.png: bafybeidrhpe2bsi4ovrgiwrmjxq2ewyceslnm73dltwg56xasg5msarpom
+  tests/data/layers/bars/100.png: bafybeigoziwjitryao5nexnffiqaeheeng6ghhc334ev5twc2oeyf6f5ty
+  tests/data/layers/bars/1000.png: bafybeiczopqs3f2mrxkf4jrlhcu7sszx45qcchbm23gdz2awoi6afgfpgi
+  tests/data/layers/bars/10000.png: bafybeifvzrholq2qyu5pb4nj7lxvqjkpmbda2i6bfd7dcuf7jsmbfvlfmu
+  tests/data/layers/classes/Determinnd.png: bafybeidq3dslr742cgu2stwx5bbsnni4mjojtlkzowymy2662b4p5yk3y4
+  tests/data/layers/classes/Gli.png: bafybeibijhqc22lmmzkacpheeyj2jgqzwm5fzvvg6pba7izglsmi35s4sy
+  tests/data/layers/classes/Kiyoas-16.png: bafybeiamt63gmci573josdswuo5uxhcp6padclopfek7wxcldl2owgzx4a
+  tests/data/layers/classes/Rrhets.png: bafybeie4uj7cn4p5u4axqlcax2hkippoaiucyky4q6mt7hdipejbuxbqpi
+  tests/data/layers/classes/Toyotrs.png: bafybeid5v36zpxkxbk7l2cv3sxollt55xc7n3vfsv5qg3mkqkxqrji5i24
+  tests/data/layers/frames/01.png: bafybeicgg6m7j3eu5akua55mlxohsbqvgonkmk2qqflslrtcdlec6m6ty4
+  tests/data/layers/frames/02.png: bafybeia6thhn2qc3rmj2dnlhy5oov7bvtpjlosesu54ybnuavtl2725h7i
+  tests/data/layers/frames/03.png: bafybeigstc52zkvx3mwzw2dwc3726amgpolwbdxfoylpupnk6ut5ya357a
+  tests/test_behaviours.py: bafybeihkdz2bfou6iwjx7o63fnc5kqihhilu3chtekp4n2wkxk6a3hjxue
   tests/test_dialogues.py: bafybeifcw2m6rgm3bpuh5g7wcvceliq2cpba4l5mr2jbhvdrbnta2b7d4u
   tests/test_dummy_e2e.py: bafybeidrzn2wzng62jptkf2zjtlhup7bu74ptrlwmdwh7lgwuubk5dbm4q
   tests/test_handlers.py: bafybeibnvcz2rxw5r7yfexhr3ayk6ef7ozqkwwxcgycoyvi42osztthhu4
   tests/test_models.py: bafybeidqf7caad3zke6xzefmfoufce6bfn5bqgbiy4racghm5w67yddrea
-  tests/test_payloads.py: bafybeiedrz4wyxuebgoxoclokxjanhyizszlaxxsqyfl4rcd6xq7umwtpu
-  tests/test_rounds.py: bafybeihtd5trv5jbwtacmqeko2fg5okqhme3it3lqwyuizps6wmckrjzdm
+  tests/test_payloads.py: bafybeicfbuq74j7qjzcw5o3m5yf5cskzbtuvodindijrlowhzi67y76lmq
+  tests/test_rounds.py: bafybeiam6m5n2txcglxjoe7drcdlbdac6jf64vtp7cfkpuyjo2c4at2dp4
 fingerprint_ignore_patterns: []
 connections: []
 contracts: []
@@ -93,6 +106,19 @@ models:
           version: {}
         voting_power: '10'
       keeper_timeout: 30.0
+      layer_hashes:
+        0:
+        - hash_00
+        - hash_01
+        - hash_02
+        1:
+        - hash_10
+        - hash_11
+        - hash_12
+        2:
+        - hash_20
+        - hash_21
+        - hash_22
       max_healthcheck: 120
       observation_interval: 10
       on_chain_service_id: null

@@ -30,6 +30,7 @@ from packages.valory.skills.abstract_round_abci.test_tools.base import (
     FSMBehaviourBaseCase,
 )
 from packages.valory.skills.dynamic_nft_abci.behaviours import (
+    DBUpdateBehaviour,
     DUMMY_LEADERBOARD,
     DynamicNFTBaseBehaviour,
     ImageCodeCalculationBehaviour,
@@ -38,6 +39,14 @@ from packages.valory.skills.dynamic_nft_abci.behaviours import (
     NewMembersBehaviour,
 )
 from packages.valory.skills.dynamic_nft_abci.rounds import Event, SynchronizedData
+
+
+def get_dummy_updates() -> Dict:
+    """Dummy updates"""
+    return {
+        "dummy_member_1": {"points": 100, "image_code": "000100"},
+        "dummy_member_2": {"points": 200, "image_code": "000102"},
+    }
 
 
 @dataclass
@@ -144,6 +153,50 @@ class TestImageCodeCalculationBehaviour(BaseDynamicNFTTest):
             BehaviourTestCase(
                 "Happy path",
                 initial_data=dict(most_voted_leaderboard=DUMMY_LEADERBOARD),
+                event=Event.DONE,
+            ),
+        ],
+    )
+    def test_run(self, test_case: BehaviourTestCase) -> None:
+        """Run tests."""
+        self.fast_forward(test_case.initial_data)
+        self.complete(test_case.event)
+
+    @pytest.mark.parametrize(
+        "points, expected_code",
+        [
+            (0, "000000"),
+            (150, "000000"),
+            (999, "000000"),
+            (1000, "000100"),
+            (1999, "000102"),
+            (2000, "000200"),
+            (3750, "000302"),
+            (10000, "000302"),
+        ],
+    )
+    def test_points_to_code(self, points: float, expected_code: str) -> None:
+        """Test the points_to_code function"""
+        assert ImageCodeCalculationBehaviour.points_to_code(points) == expected_code
+
+    def test_points_to_code_negative(self) -> None:
+        """Test the points_to_code function"""
+        with pytest.raises(ValueError):
+            assert ImageCodeCalculationBehaviour.points_to_code(-100)
+
+
+class TestImageGenerationBehaviour(BaseDynamicNFTTest):
+    """Tests ImageGenerationBehaviour"""
+
+    behaviour_class = ImageGenerationBehaviour
+    next_behaviour_class = DBUpdateBehaviour
+
+    @pytest.mark.parametrize(
+        "test_case",
+        [
+            BehaviourTestCase(
+                "Happy path",
+                initial_data=dict(most_voted_updates=get_dummy_updates()),
                 event=Event.DONE,
             ),
         ],

@@ -40,6 +40,14 @@ class SharedState(BaseSharedState):
         super().__init__(*args, abci_app_cls=DynamicNFTAbciApp, **kwargs)
 
 
-Params = BaseParams
+class Params(BaseParams):
+    """Parameters."""
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        """Initialize the parameters object."""
+        self.layer_hashes = self._ensure("layer_hashes", kwargs)
+        super().__init__(*args, **kwargs)
+
+
 Requests = BaseRequests
 BenchmarkTool = BaseBenchmarkTool

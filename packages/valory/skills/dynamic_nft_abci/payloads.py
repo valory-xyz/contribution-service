@@ -33,7 +33,6 @@ class TransactionType(Enum):
     LEADERBOARD_OBSERVATION = "leaderboard_observation"
     IMAGE_CODE_CALCULATION = "image_code_calculation"
     IMAGE_GENERATION = "image_generation"
-    IMAGE_PUSH = "image_push"
     DB_UPDATE = "db_update"
 
     def __str__(self) -> str:
@@ -82,12 +81,6 @@ class ImageGenerationPayload(BaseDynamicNFTPayload):
     """Represent a transaction payload for the ImageGenerationRound."""
 
     transaction_type = TransactionType.IMAGE_GENERATION
-
-
-class ImagePushPayload(BaseDynamicNFTPayload):
-    """Represent a transaction payload for the ImagePushRound."""
-
-    transaction_type = TransactionType.IMAGE_PUSH
 
 
 class DBUpdatePayload(BaseDynamicNFTPayload):

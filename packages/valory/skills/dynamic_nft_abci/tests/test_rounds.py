@@ -30,17 +30,20 @@ from packages.valory.skills.abstract_round_abci.test_tools.rounds import (
     BaseCollectSameUntilThresholdRoundTest,
 )
 from packages.valory.skills.dynamic_nft_abci.behaviours import (
+    DUMMY_IMAGE_HASHES,
     DUMMY_LEADERBOARD,
     DUMMY_MEMBER_TO_NFT_URI,
 )
 from packages.valory.skills.dynamic_nft_abci.payloads import (
     ImageCodeCalculationPayload,
+    ImageGenerationPayload,
     LeaderboardObservationPayload,
     NewMembersPayload,
 )
 from packages.valory.skills.dynamic_nft_abci.rounds import (
     Event,
     ImageCodeCalculationRound,
+    ImageGenerationRound,
     LeaderboardObservationRound,
     NewMembersRound,
     SynchronizedData,
@@ -81,6 +84,13 @@ def get_image_code_calculation_payload_serialized() -> str:
         "member_c": {"points": 300, "image_code": "dummy_image_code_c"},
     }
     return json.dumps(data, sort_keys=True)
+
+
+def get_image_generation_payload_serialized() -> str:
+    """Dummy image generation payload"""
+    return json.dumps(
+        {"image_hashes": DUMMY_IMAGE_HASHES, "status": "success"}, sort_keys=True
+    )
 
 
 @dataclass
@@ -218,6 +228,42 @@ class TestImageCodeCalculationRound(BaseDynamicNFTRoundTestClass):
                 most_voted_payload=get_image_code_calculation_payload_serialized(),
                 synchronized_data_attr_checks=[
                     lambda _synchronized_data: _synchronized_data.most_voted_updates,
+                ],
+            ),
+        ),
+    )
+    def test_run(self, test_case: RoundTestCase) -> None:
+        """Run tests."""
+        self.run_test(test_case)
+
+
+class TestImageGenerationRound(BaseDynamicNFTRoundTestClass):
+    """Tests for ImageGenerationRound."""
+
+    round_class = ImageGenerationRound
+
+    @pytest.mark.parametrize(
+        "test_case",
+        (
+            RoundTestCase(
+                initial_data={
+                    "most_voted_updates": json.loads(
+                        get_image_code_calculation_payload_serialized()
+                    )
+                },
+                payloads=get_payloads(
+                    payload_cls=ImageGenerationPayload,
+                    data=get_image_generation_payload_serialized(),
+                ),
+                final_data={
+                    "most_voted_new_image_hashes": json.loads(
+                        get_image_generation_payload_serialized()
+                    )["image_hashes"],
+                },
+                event=Event.DONE,
+                most_voted_payload=get_image_generation_payload_serialized(),
+                synchronized_data_attr_checks=[
+                    lambda _synchronized_data: _synchronized_data.most_voted_new_image_hashes,
                 ],
             ),
         ),
