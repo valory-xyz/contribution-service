@@ -72,7 +72,11 @@ DUMMY_LEADERBOARD = {
     "0x7B394CD0B75f774c6808cc681b26aC3E5DF96E27": 3500,  # this one does not appear in the dummy members
 }
 
-DUMMY_IMAGE_HASHES = ["dummy_hash_1", "dummy_hash_2", "dummy_hash_3"]
+DUMMY_NEW_IMAGES = {
+    "000000": "dummy_hash_1",
+    "010101": "dummy_hash_2",
+    "020202": "dummy_hash_3",
+}
 
 IMAGE_ROOT = Path(Path(__file__).parent, "tests", "data")
 
@@ -103,15 +107,19 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
         TODO: in the final implementation new members will be get from the contract.
         """
         old_members = set(self.synchronized_data.members.keys())
-        member_to_uri = json.dumps(
-            {k: v for k, v in DUMMY_MEMBER_TO_NFT_URI.items() if k not in old_members},
+        new_member_to_uri = json.dumps(
+            {
+                member: {"uri": uri, "points": None, "image_code": None}
+                for member, uri in DUMMY_MEMBER_TO_NFT_URI.items()
+                if member not in old_members
+            },
             sort_keys=True,
         )
 
         with self.context.benchmark_tool.measure(
             self.behaviour_id,
         ).consensus():
-            payload = NewMembersPayload(self.context.agent_address, member_to_uri)
+            payload = NewMembersPayload(self.context.agent_address, new_member_to_uri)
             yield from self.send_a2a_transaction(payload)
             yield from self.wait_until_round_end()
 
@@ -160,19 +168,22 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
         leaderboard = self.synchronized_data.most_voted_leaderboard
         members = self.synchronized_data.members
 
-        updates = {}
+        member_updates = {}
         for member, new_points in leaderboard.items():
             if member not in members or members[member]["points"] != new_points:
                 image_code = self.points_to_code(new_points)
-                updates[member] = {"points": new_points, "image_code": image_code}
+                member_updates[member] = {
+                    "points": new_points,
+                    "image_code": image_code,
+                }
 
-        updates_serialized = json.dumps(updates, sort_keys=True)
+        member_updates_serialized = json.dumps(member_updates, sort_keys=True)
 
         with self.context.benchmark_tool.measure(
             self.behaviour_id,
         ).consensus():
             payload = ImageCodeCalculationPayload(
-                self.context.agent_address, updates_serialized
+                self.context.agent_address, member_updates_serialized
             )
             yield from self.send_a2a_transaction(payload)
             yield from self.wait_until_round_end()
@@ -244,21 +255,23 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
         img_manager = self.ImageManager(logger=self.context.logger)
 
         # Get the image codes that have been never generated
-        new_image_paths = []
-        for update in self.synchronized_data.most_voted_updates.values():
+        new_image_to_paths = {}
+        for update in self.synchronized_data.most_voted_member_updates.values():
             if update["image_code"] not in self.synchronized_data.images:
-                new_image_paths.append(img_manager.generate(update["image_code"]))
+                new_image_to_paths[update["image_code"]] = img_manager.generate(
+                    update["image_code"]
+                )
 
-        if None in new_image_paths:
+        if None in new_image_to_paths.values():
             status = "error"
-            image_hashes = []
+            new_image_to_hashes = {}
         else:
             status = "success"
             # Push to IPFS: we need to extend the supported files before we do this
-            # image_hashes = []  # noqa: E800
-            # for new_image_path in new_image_paths:  # noqa: E800
-            #     image_hashes.append(self.send_to_ipfs(new_image_path))  # noqa: E800
-            image_hashes = DUMMY_IMAGE_HASHES
+            # new_image_to_hashes = {}  # noqa: E800
+            # for image_code, image_path in new_image_to_paths.items():  # noqa: E800
+            #     new_image_to_hashes[image_code] = self.send_to_ipfs(image_path)  # noqa: E800
+            new_image_to_hashes = DUMMY_NEW_IMAGES
 
         with self.context.benchmark_tool.measure(
             self.behaviour_id,
@@ -266,7 +279,8 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
             payload = ImageGenerationPayload(
                 self.context.agent_address,
                 json.dumps(
-                    {"status": status, "image_hashes": image_hashes}, sort_keys=True
+                    {"status": status, "new_image_to_hashes": new_image_to_hashes},
+                    sort_keys=True,
                 ),
             )
             yield from self.send_a2a_transaction(payload)
@@ -353,14 +367,25 @@ class DBUpdateBehaviour(DynamicNFTBaseBehaviour):
     def async_act(self) -> Generator:
         """Update the database tables.
 
-        Image table: the new image codes must be added with their uri (if it applies).
-
         User table: all entries whose points changed (the list from
         ImageCodeCalculationRound) must now reflect the new points and (if it applies)
         new image codes.
 
         Redirect table: must be updated now to reflect the new redirects (if it applies).
         """
+        with self.context.benchmark_tool.measure(
+            self.behaviour_id,
+        ).consensus():
+            payload = ImageGenerationPayload(
+                self.context.agent_address,
+                json.dumps(
+                    {},  # empty payload for now
+                    sort_keys=True,
+                ),
+            )
+            yield from self.send_a2a_transaction(payload)
+            yield from self.wait_until_round_end()
+
         self.set_done()
 
 

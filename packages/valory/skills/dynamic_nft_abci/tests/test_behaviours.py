@@ -26,6 +26,9 @@ from typing import Any, Dict, Optional, Type
 import pytest
 
 from packages.valory.skills.abstract_round_abci.base import AbciAppDB
+from packages.valory.skills.abstract_round_abci.behaviours import (
+    make_degenerate_behaviour,
+)
 from packages.valory.skills.abstract_round_abci.test_tools.base import (
     FSMBehaviourBaseCase,
 )
@@ -38,7 +41,11 @@ from packages.valory.skills.dynamic_nft_abci.behaviours import (
     LeaderboardObservationBehaviour,
     NewMembersBehaviour,
 )
-from packages.valory.skills.dynamic_nft_abci.rounds import Event, SynchronizedData
+from packages.valory.skills.dynamic_nft_abci.rounds import (
+    Event,
+    FinishedDBUpdateRound,
+    SynchronizedData,
+)
 
 
 def get_dummy_updates() -> Dict:
@@ -196,7 +203,29 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
         [
             BehaviourTestCase(
                 "Happy path",
-                initial_data=dict(most_voted_updates=get_dummy_updates()),
+                initial_data=dict(most_voted_member_updates=get_dummy_updates()),
+                event=Event.DONE,
+            ),
+        ],
+    )
+    def test_run(self, test_case: BehaviourTestCase) -> None:
+        """Run tests."""
+        self.fast_forward(test_case.initial_data)
+        self.complete(test_case.event)
+
+
+class TestDBUpdateBehaviour(BaseDynamicNFTTest):
+    """Tests DBUpdateBehaviour"""
+
+    behaviour_class = DBUpdateBehaviour
+    next_behaviour_class = make_degenerate_behaviour(FinishedDBUpdateRound.round_id)
+
+    @pytest.mark.parametrize(
+        "test_case",
+        [
+            BehaviourTestCase(
+                "Happy path",
+                initial_data={},
                 event=Event.DONE,
             ),
         ],
