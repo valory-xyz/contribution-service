@@ -73,24 +73,14 @@ class SynchronizedData(BaseSynchronizedData):
         return cast(dict, self.db.get("redirects", {}))
 
     @property
-    def most_voted_new_members(self) -> Dict:
-        """Get the most_voted_new_members."""
-        return cast(Dict, self.db.get_strict("most_voted_new_members"))
-
-    @property
     def most_voted_leaderboard(self) -> Dict:
         """Get the most_voted_leaderboard."""
         return cast(Dict, self.db.get_strict("most_voted_leaderboard"))
 
     @property
-    def most_voted_updates(self) -> Dict:
-        """Get the most_voted_updates."""
-        return cast(Dict, self.db.get_strict("most_voted_updates"))
-
-    @property
-    def most_voted_new_image_hashes(self) -> Dict:
-        """Get the most_voted_new_image_hashes."""
-        return cast(Dict, self.db.get_strict("most_voted_new_image_hashes"))
+    def most_voted_member_updates(self) -> Dict:
+        """Get the most_voted_member_updates."""
+        return cast(Dict, self.db.get_strict("most_voted_member_updates"))
 
 
 class NewMembersRound(CollectSameUntilThresholdRound):
@@ -105,14 +95,14 @@ class NewMembersRound(CollectSameUntilThresholdRound):
         """Process the end of the block."""
         if self.threshold_reached:
             # Add the new members to the members table. Note that the new members have no points or image_code fields
-            decoded_payload = json.loads(self.most_voted_payload)
+            new_members = json.loads(self.most_voted_payload)
             members = {
-                **decoded_payload,
+                **new_members,
                 **self.synchronized_data.members,
             }
             synchronized_data = self.synchronized_data.update(
                 members=members,
-                most_voted_new_members=decoded_payload,
+                most_voted_new_members=new_members,
             )
             return synchronized_data, Event.DONE
         if not self.is_majority_possible(
@@ -156,7 +146,7 @@ class ImageCodeCalculationRound(CollectSameUntilThresholdRound):
         """Process the end of the block."""
         if self.threshold_reached:
             synchronized_data = self.synchronized_data.update(
-                most_voted_updates=json.loads(self.most_voted_payload),
+                most_voted_member_updates=json.loads(self.most_voted_payload),
             )
             return synchronized_data, Event.DONE
         if not self.is_majority_possible(
@@ -181,8 +171,12 @@ class ImageGenerationRound(CollectSameUntilThresholdRound):
             if payload["status"] != "success":
                 return self.synchronized_data, Event.IMAGE_ERROR
             else:
+                images = {
+                    **self.synchronized_data.images,
+                    **payload["new_image_to_hashes"],
+                }
                 synchronized_data = self.synchronized_data.update(
-                    most_voted_new_image_hashes=payload["image_hashes"],
+                    images=images,
                 )
                 return synchronized_data, Event.DONE
         if not self.is_majority_possible(
@@ -203,7 +197,25 @@ class DBUpdateRound(CollectSameUntilThresholdRound):
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:
         """Process the end of the block."""
         if self.threshold_reached:
-            synchronized_data = self.synchronized_data.update()
+
+            members = self.synchronized_data.members
+            images = self.synchronized_data.images
+            redirects = self.synchronized_data.redirects
+
+            for (
+                member,
+                data,
+            ) in self.synchronized_data.most_voted_member_updates.items():
+                members[member]["points"] = data["points"]
+                members[member]["image_code"] = data["image_code"]
+
+                uri = members[member]["uri"]
+                redirects[uri] = images[data["image_code"]]
+
+            synchronized_data = self.synchronized_data.update(
+                members=members,
+                redirects=redirects,
+            )
             return synchronized_data, Event.DONE
         if not self.is_majority_possible(
             self.collection, self.synchronized_data.nb_participants
