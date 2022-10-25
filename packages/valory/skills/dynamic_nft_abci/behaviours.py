@@ -23,7 +23,7 @@ import json
 import os
 from logging import Logger
 from pathlib import Path
-from typing import Generator, List, Optional, Set, Tuple, Type, cast
+from typing import Any, Generator, List, Optional, Set, Tuple, Type, cast
 
 from PIL import Image
 
@@ -32,6 +32,8 @@ from packages.valory.skills.abstract_round_abci.behaviours import (
     AbstractRoundBehaviour,
     BaseBehaviour,
 )
+from packages.valory.skills.dynamic_nft_abci.io_.load import Loader
+from packages.valory.skills.dynamic_nft_abci.io_.store import Storer
 from packages.valory.skills.dynamic_nft_abci.models import Params
 from packages.valory.skills.dynamic_nft_abci.payloads import (
     ImageCodeCalculationPayload,
@@ -77,6 +79,10 @@ IMAGE_ROOT = Path("tmp")
 
 class DynamicNFTBaseBehaviour(BaseBehaviour):
     """Base behaviour for the common apps' skill."""
+
+    def __init__(self, **kwargs: Any):
+        """Initialize a Dynamic NFT base behaviour."""
+        super().__init__(**kwargs, loader_cls=Loader, storer_cls=Storer)
 
     @property
     def synchronized_data(self) -> SynchronizedData:
