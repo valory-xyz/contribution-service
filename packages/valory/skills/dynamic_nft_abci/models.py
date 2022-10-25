@@ -45,8 +45,15 @@ class Params(BaseParams):
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         """Initialize the parameters object."""
-        self.layer_hashes = self._ensure("layer_hashes", kwargs)
         self.ipfs_domain_name = self._ensure("ipfs_domain_name", kwargs)
+        leaderboard_base_endpoint = self._ensure("leaderboard_base_endpoint", kwargs)
+        leaderboard_sheet_id = self._ensure("leaderboard_sheet_id", kwargs)
+        leaderboard_cell_range = self._ensure("cell_range", kwargs)
+        leaderboard_api_key = self._ensure("leaderboard_api_key", kwargs)
+        self.leaderboard_endpoint = (
+            f"{leaderboard_base_endpoint}/{leaderboard_sheet_id}/values/{leaderboard_cell_range}?key={leaderboard_api_key}"
+        )
+
         super().__init__(*args, **kwargs)
 
 

@@ -26,6 +26,8 @@ from pathlib import Path
 from typing import Any, Generator, List, Optional, Set, Tuple, Type, cast
 
 from PIL import Image
+from aea.configurations.constants import DEFAULT_LEDGER
+from aea.crypto.ledger_apis import LedgerApis
 
 from packages.valory.skills.abstract_round_abci.base import AbstractRound
 from packages.valory.skills.abstract_round_abci.behaviours import (
@@ -64,14 +66,6 @@ DUMMY_MEMBER_TO_NFT_URI = {
     "0x44704AE66f0B9FF08a7b0584B49FE941AdD1bAE7": f"{IMAGE_URI_BASE}/3",
     "0x19B043aD06C48aeCb2028B0f10503422BD0E0918": f"{IMAGE_URI_BASE}/4",
     "0x8325c5e4a56E352355c590E4A43420840F067F98": f"{IMAGE_URI_BASE}/5",  # this one does not appear in the leaderboard
-}
-
-DUMMY_LEADERBOARD = {
-    "0x54EfA9b1865FFE8c528fb375A7A606149598932A": 1500,
-    "0x3c03a080638b3c176aB7D9ed56E25bC416dFf525": 900,
-    "0x44704AE66f0B9FF08a7b0584B49FE941AdD1bAE7": 575,
-    "0x19B043aD06C48aeCb2028B0f10503422BD0E0918": 100,
-    "0x7B394CD0B75f774c6808cc681b26aC3E5DF96E27": 3500,  # this one does not appear in the dummy members
 }
 
 IMAGE_ROOT = Path("tmp")
@@ -133,11 +127,14 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
     matching_round: Type[AbstractRound] = LeaderboardObservationRound
 
     def async_act(self) -> Generator:
-        """Get the leaderboard.
-
-        TODO: in the final implementation the leaderboard will be get from the API
-        """
-        leaderboard = json.dumps(DUMMY_LEADERBOARD, sort_keys=True)
+        """Get the leaderboard."""
+        with self.context.benchmark_tool.measure(
+            self.behaviour_id,
+        ).local():
+            leaderboard = yield from self.get_leaderboard()
+            self.context.logger.info(
+                f"Received data from Leaderboard API: {leaderboard}"
+            )
 
         with self.context.benchmark_tool.measure(
             self.behaviour_id,
@@ -149,6 +146,61 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
             yield from self.wait_until_round_end()
 
         self.set_done()
+
+    def get_leaderboard(self) -> Generator[None, None, str]:
+        """
+        Get the data from the Leaderboard API.
+
+        :yield: HttpMessage object
+        :return: return the data retrieved from the Leaderboard API, in case something goes wrong we return "{}".
+        """
+        response = yield from self.get_http_response(
+            method="GET",
+            url=self.params.leaderboard_endpoint,
+        )
+        if response.status_code != 200:
+            self.context.logger.error(
+                f"Could not retrieve data from the Leaderboard API. "
+                f"Received status code {response.status_code}."
+            )
+            return "{}"
+
+        try:
+            # Parse the response bytes into a dict
+            leaderboard = json.loads(response.body)["values"]
+            response_body = {
+                entry[0]: int(entry[1])
+                for entry in leaderboard
+                if LedgerApis.is_valid_address(DEFAULT_LEDGER, entry[0])
+            }
+
+            if len(leaderboard) != len(response_body):
+                self.context.logger.error(
+                    "Some elements in the leaderboard are not valid and have been skipped."
+                )
+
+        except (KeyError, ValueError, TypeError) as e:
+            self.context.logger.error(
+                f"Could not parse response from the Leaderboard API, "
+                f"the following error was encountered {type(e).__name__}: {e}"
+            )
+            return "{}"
+
+        except Exception as e:  # pylint: disable=broad-except
+            self.context.logger.error(
+                f"An unexpected error was encountered while parsing the Leaderboard response "
+                f"{type(e).__name__}: {e}"
+            )
+            return "{}"
+
+        # We dump the json into a string, notice the sort_keys=True.
+        # We MUST ensure that they keys are ordered in the same way,
+        # otherwise the payload MAY end up being different on different
+        # agents. This can happen in case the API responds with keys
+        # in different order, which can happen since there is no requirement
+        # against this.
+        deterministic_body = json.dumps(response_body, sort_keys=True)
+        return deterministic_body
 
 
 class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
