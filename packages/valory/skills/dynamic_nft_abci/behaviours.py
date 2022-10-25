@@ -72,13 +72,7 @@ DUMMY_LEADERBOARD = {
     "0x7B394CD0B75f774c6808cc681b26aC3E5DF96E27": 3500,  # this one does not appear in the dummy members
 }
 
-DUMMY_NEW_IMAGES = {
-    "000000": "dummy_hash_1",
-    "010101": "dummy_hash_2",
-    "020202": "dummy_hash_3",
-}
-
-IMAGE_ROOT = Path(Path(__file__).parent, "tests", "data")
+IMAGE_ROOT = Path("tmp")
 
 
 class DynamicNFTBaseBehaviour(BaseBehaviour):
@@ -255,23 +249,27 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
         img_manager = self.ImageManager(logger=self.context.logger)
 
         # Get the image codes that have been never generated
-        new_image_to_paths = {}
+        new_image_code_to_images = {}
         for update in self.synchronized_data.most_voted_member_updates.values():
             if update["image_code"] not in self.synchronized_data.images:
-                new_image_to_paths[update["image_code"]] = img_manager.generate(
+                new_image_code_to_images[update["image_code"]] = img_manager.generate(
                     update["image_code"]
                 )
 
-        if None in new_image_to_paths.values():
+        if None in new_image_code_to_images.values():
             status = "error"
-            new_image_to_hashes = {}
+            new_image_code_to_hashes = {}
         else:
             status = "success"
-            # Push to IPFS: we need to extend the supported files before we do this
-            # new_image_to_hashes = {}  # noqa: E800
-            # for image_code, image_path in new_image_to_paths.items():  # noqa: E800
-            #     new_image_to_hashes[image_code] = self.send_to_ipfs(image_path)  # noqa: E800
-            new_image_to_hashes = DUMMY_NEW_IMAGES
+            # Push to IPFS
+            new_image_code_to_hashes = {}
+            for image_code, image in new_image_code_to_images.items():
+                image_path = Path(
+                    img_manager.out_path, f"{image_code}.{img_manager.PNG_EXT}"
+                )
+                new_image_code_to_hashes[image_code] = self.send_to_ipfs(
+                    image_path, image
+                )
 
         with self.context.benchmark_tool.measure(
             self.behaviour_id,
@@ -279,7 +277,10 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
             payload = ImageGenerationPayload(
                 self.context.agent_address,
                 json.dumps(
-                    {"status": status, "new_image_to_hashes": new_image_to_hashes},
+                    {
+                        "status": status,
+                        "new_image_code_to_hashes": new_image_code_to_hashes,
+                    },
                     sort_keys=True,
                 ),
             )
@@ -320,7 +321,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
             self.out_path = Path(self.image_root, self.IMAGES_DIR)
             os.makedirs(self.out_path, exist_ok=True)
 
-        def generate(self, image_code: str) -> Optional[Path]:
+        def generate(self, image_code: str) -> Optional[Image.Image]:
             """Generate an image"""
 
             # Check code validity
@@ -347,15 +348,8 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
 
             # Combine layers
             img_layers[0].paste(img_layers[1], (0, 0), mask=img_layers[1])
-            img_layers[0].paste(
-                img_layers[2], (0, 0), mask=img_layers[2]
-            )  # bar layer: bar 03 has some problem with positioning
-
-            # Save image
-            img_path = Path(self.out_path, f"{image_code}.{self.PNG_EXT}")
-            img_layers[0].save(img_path)
-
-            return img_path
+            img_layers[0].paste(img_layers[2], (0, 0), mask=img_layers[2])
+            return img_layers[0]
 
 
 class DBUpdateBehaviour(DynamicNFTBaseBehaviour):

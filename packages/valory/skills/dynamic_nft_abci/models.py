@@ -46,6 +46,7 @@ class Params(BaseParams):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         """Initialize the parameters object."""
         self.layer_hashes = self._ensure("layer_hashes", kwargs)
+        self.ipfs_domain_name = self._ensure("ipfs_domain_name", kwargs)
         super().__init__(*args, **kwargs)
 
 

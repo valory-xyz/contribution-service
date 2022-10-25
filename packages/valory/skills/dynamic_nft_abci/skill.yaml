@@ -7,16 +7,16 @@ license: Apache-2.0
 aea_version: '>=1.0.0, <2.0.0'
 fingerprint:
   __init__.py: bafybeif56b2yk2pzo6njoexydkvwkl5tiaj7p76542ljnrijm3urhtnsxq
-  behaviours.py: bafybeidibfe4q2awceomxfepgkseh3nlc4q4saa5pvkm26zqkaeujt6wsy
+  behaviours.py: bafybeibyfkzyuhy4e2p45ytb7ipr7bnzhn43qazcgxyvtraalktrgnhvcy
   dialogues.py: bafybeienawgp5jvg6ie3fpdtjepgabxjb3l6ugo46mso7xinx5abgxnafy
   fsm_specification.yaml: bafybeifcj345atcf3pwsx3djdy7cwami7cvmcivt6u4f2lceabfdnj4utq
   handlers.py: bafybeidus4ztb2rxaocmi67iwuhg6s4hmafuelsa5u5xnqqk6p7hgmo7da
   io_/__init__.py: bafybeidxth2otiyp5gfk2l3zjvnfktgrtpwzsknihkef3v2lhwbkgum3ea
   io_/load.py: bafybeifd7ib4lktvgv6rphk6sblkndn3klmzd5js62h2gzxlubjcmlf6jy
   io_/store.py: bafybeih3wa6quhstymsqcsy7jejpj4fx6crq6gs72dzs6svjklu7wushtq
-  models.py: bafybeiatw3mo6n576wz5wqp5spzzr7viingbosziest2hfemwqeviwowja
+  models.py: bafybeibzpw7qfm7hacvy6u6mjrmnh6kmwpqy6kvneyhmgk5qt2aver5xhm
   payloads.py: bafybeiaeibgx4faww6sjrqxcehq5a3h54upqqifkbptr6eq57jvlyohxsa
-  rounds.py: bafybeibwon6z2jfevhybcmauicq2i5ibyicuyv6tlaam4hfuo6z5bmvz6e
+  rounds.py: bafybeihguxc5zwnniqctdqwtaupng7myo6wrpippjjiwvtwn53n5lx7fti
   tests/__init__.py: bafybeia2xqlacp44lylwlkf7f7ci6m3yshppv3vusgcdjpj4bbcbnuhvla
   tests/data/images/000100.png: bafybeibclk646v5umywqtswxg44nqoroug6fulrfcwquwhwktx4oljfvra
   tests/data/images/000102.png: bafybeidrhpe2bsi4ovrgiwrmjxq2ewyceslnm73dltwg56xasg5msarpom
@@ -37,7 +37,7 @@ fingerprint:
   tests/test_handlers.py: bafybeibnvcz2rxw5r7yfexhr3ayk6ef7ozqkwwxcgycoyvi42osztthhu4
   tests/test_models.py: bafybeidqf7caad3zke6xzefmfoufce6bfn5bqgbiy4racghm5w67yddrea
   tests/test_payloads.py: bafybeicfbuq74j7qjzcw5o3m5yf5cskzbtuvodindijrlowhzi67y76lmq
-  tests/test_rounds.py: bafybeigpisphxabzdz324fbudqw6yxxgakrurmmledcocmpn2mlsn6z73u
+  tests/test_rounds.py: bafybeiciuanr3bsdz3vln5mgtnmgdmf7ct4l4lsenn5qkqtej7zhxc34bq
 fingerprint_ignore_patterns: []
 connections: []
 contracts: []
@@ -108,6 +108,7 @@ models:
             - ed25519
           version: {}
         voting_power: '10'
+      ipfs_domain_name: /dns/registry.autonolas.tech/tcp/443/https
       keeper_timeout: 30.0
       layer_hashes:
         0:
