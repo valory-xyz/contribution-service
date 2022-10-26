@@ -59,10 +59,6 @@ from packages.valory.skills.dynamic_nft_abci.rounds import (
 )
 
 
-BACKGROUND_THRESHOLDS = []
-FRAME_THRESHOLDS = [1000, 2000, 3000]
-BAR_THRESHOLDS = [200, 500]
-
 IMAGE_URI_BASE = "https://pfp.autonolas.network/series/1/"
 
 DUMMY_MEMBER_TO_NFT_URI = {
@@ -256,12 +252,14 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
         and will recalculate their images (but not store them yet).
         """
         leaderboard = self.synchronized_data.most_voted_api_data["leaderboard"]
+        layer_data = self.synchronized_data.most_voted_api_data["layers"]
+        thresholds = {k: list(v.keys()) for k, v in layer_data.items()}
         members = self.synchronized_data.members
 
         member_updates = {}
         for member, new_points in leaderboard.items():
             if member not in members or members[member]["points"] != new_points:
-                image_code = self.points_to_code(new_points)
+                image_code = self.points_to_code(new_points, thresholds)
                 member_updates[member] = {
                     "points": new_points,
                     "image_code": image_code,
@@ -298,12 +296,13 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
         return f"{len(thresholds):02}", points - prev_threshold
 
     @staticmethod
-    def points_to_code(points: float) -> str:
+    def points_to_code(points: float, thresholds: dict) -> str:
         """Calculate the NFT image code given the number of community points.
 
         Examples of image codes: 000001, 010300, 020102....
 
         :param points: number of community points
+        :param thresholds: thresholds dict
         :returns: the image code
         """
 
@@ -312,13 +311,13 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
 
         # Points are updated after every call and we only keep the remainder
         cls_code, points = ImageCodeCalculationBehaviour.get_layer_code(
-            points, BACKGROUND_THRESHOLDS
+            points, thresholds[ImageGenerationBehaviour.ImageManager.LAYER_NAMES[0]]
         )
         fr_code, points = ImageCodeCalculationBehaviour.get_layer_code(
-            points, FRAME_THRESHOLDS
+            points, thresholds[ImageGenerationBehaviour.ImageManager.LAYER_NAMES[1]]
         )
         bar_code, points = ImageCodeCalculationBehaviour.get_layer_code(
-            points, BAR_THRESHOLDS
+            points, thresholds[ImageGenerationBehaviour.ImageManager.LAYER_NAMES[2]]
         )
 
         return cls_code + fr_code + bar_code

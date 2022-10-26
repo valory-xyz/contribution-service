@@ -74,22 +74,24 @@ DUMMY_LEADERBOARD = {
 DUMMY_LAYERS = {
     "classes": {
         0: "bafybeiauzyxtnahzul5gk27az7cb3evq5ttfwnxoi366lbrww3pcpthcmi",
-        1: "bafybeiay7owbbggi4nz4l4aeimzixia3v542iqcuaaiwd4kwsayu54aiqq",
-        2: "bafybeig35zr5r4e2gyc3c2ifkxnc43thyipmtgkauly7fxscut5r7zin2a",
-        3: "bafybeiea4in45zhx644yq4mzwrzjtqzzdgp7xv4ngv3ljttiwpgwldonl4",
-        4: "bafybeif6oacd3pkbpn4ij4daqpopjdehv2dv2tejpazwkdcs4cfvedlrvy",
+        1000: "bafybeiay7owbbggi4nz4l4aeimzixia3v542iqcuaaiwd4kwsayu54aiqq",
+        2000: "bafybeig35zr5r4e2gyc3c2ifkxnc43thyipmtgkauly7fxscut5r7zin2a",
+        3000: "bafybeiea4in45zhx644yq4mzwrzjtqzzdgp7xv4ngv3ljttiwpgwldonl4",
+        4000: "bafybeif6oacd3pkbpn4ij4daqpopjdehv2dv2tejpazwkdcs4cfvedlrvy",
     },
     "frames": {
         0: "bafybeifg2owpyplscve2sr4yjcjg6rxsooif2jqt4qmwvrbu36n5ehancm",
-        1: "bafybeige2swjq6fq6yvbvdhylkvfl7r3kv6nzwzqmkgb5g27ifziro342q",
-        2: "bafybeigyzhrhiybdsg3z7qn2nbqiyk52u4ytd6ndl6ixrdg3tk5g6owtsi",
+        1000: "bafybeige2swjq6fq6yvbvdhylkvfl7r3kv6nzwzqmkgb5g27ifziro342q",
+        2000: "bafybeigyzhrhiybdsg3z7qn2nbqiyk52u4ytd6ndl6ixrdg3tk5g6owtsi",
     },
     "bars": {
         0: "bafybeig4corsme52qixcirhwuh6yquzd3bou3mgvjebspqxl2sh7jfpftq",
-        1: "bafybeifrhbjmou67wn4uelixqxg732nhjmvgeb2w26czedsr4w2htactxy",
-        2: "bafybeif3hvmq7rltk5hxucfnnazcwm4b2nuggquonaxhyx7rgsc3uhimye",
+        200: "bafybeifrhbjmou67wn4uelixqxg732nhjmvgeb2w26czedsr4w2htactxy",
+        500: "bafybeif3hvmq7rltk5hxucfnnazcwm4b2nuggquonaxhyx7rgsc3uhimye",
     },
 }
+
+DUMMY_THRESHOLDS = {"classes": [], "frames": [1000, 2000, 3000], "bars": [200, 500]}
 
 DUMMY_API_DATA = {"leaderboard": DUMMY_LEADERBOARD, "layers": DUMMY_LAYERS}
 
@@ -265,12 +267,15 @@ class TestImageCodeCalculationBehaviour(BaseDynamicNFTTest):
     )
     def test_points_to_code(self, points: float, expected_code: str) -> None:
         """Test the points_to_code function"""
-        assert ImageCodeCalculationBehaviour.points_to_code(points) == expected_code
+        assert (
+            ImageCodeCalculationBehaviour.points_to_code(points, DUMMY_THRESHOLDS)
+            == expected_code
+        )
 
     def test_points_to_code_negative(self) -> None:
         """Test the points_to_code function"""
         with pytest.raises(ValueError):
-            assert ImageCodeCalculationBehaviour.points_to_code(-100)
+            assert ImageCodeCalculationBehaviour.points_to_code(-100, DUMMY_THRESHOLDS)
 
 
 @use_ipfs_daemon
