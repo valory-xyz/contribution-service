@@ -19,6 +19,7 @@
 
 """This package contains round behaviours of DynamicNFTAbciApp."""
 
+import json
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Optional, Type
@@ -34,7 +35,6 @@ from packages.valory.skills.abstract_round_abci.test_tools.base import (
 )
 from packages.valory.skills.dynamic_nft_abci.behaviours import (
     DBUpdateBehaviour,
-    DUMMY_LEADERBOARD,
     DynamicNFTBaseBehaviour,
     ImageCodeCalculationBehaviour,
     ImageGenerationBehaviour,
@@ -45,6 +45,37 @@ from packages.valory.skills.dynamic_nft_abci.rounds import (
     Event,
     FinishedDBUpdateRound,
     SynchronizedData,
+)
+
+
+DUMMY_LEADERBOARD = {
+    "0x54EfA9b1865FFE8c528fb375A7A606149598932A": 1500,
+    "0x3c03a080638b3c176aB7D9ed56E25bC416dFf525": 900,
+    "0x44704AE66f0B9FF08a7b0584B49FE941AdD1bAE7": 575,
+    "0x19B043aD06C48aeCb2028B0f10503422BD0E0918": 100,
+    "0x7B394CD0B75f774c6808cc681b26aC3E5DF96E27": 3500,  # this one does not appear in the dummy members
+}
+
+DUMMY_LAYERS = {
+    0: {0: "dummy_class_hash_0"},
+    1: {
+        0: "dummy_frame_hash_0",
+        1000: "dummy_frame_hash_1",
+        2000: "dummy_frame_hash_2",
+        3000: "dummy_frame_hash_3",
+    },
+    2: {0: "dummy_bar_hash_0", 200: "dummy_bar_hash_1", 500: "dummy_bar_hash_2"},
+}
+
+SHEET_ID = "1JYR9kfj_Zxd9xHX5AWSlO5X6HusFnb7p9amEUGU55Cg"
+GOOGLE_API_KEY = ""
+GOOGLE_SHEETS_ENDPOINT = "https://sheets.googleapis.com/v4/spreadsheets"
+DEFAULT_CELL_RANGE_POINTS = "Leaderboard!A2:B102"
+DEFAULT_CELL_RANGE_LAYERS = "Layers!B1:Z3"
+
+DEFAULT_SHEET_API_URL = (
+    f"{GOOGLE_SHEETS_ENDPOINT}/{SHEET_ID}/values:batchGet?"
+    f"ranges={DEFAULT_CELL_RANGE_POINTS}&ranges={DEFAULT_CELL_RANGE_LAYERS}&key={GOOGLE_API_KEY}"
 )
 
 
@@ -133,18 +164,42 @@ class TestLeaderboardObservationBehaviour(BaseDynamicNFTTest):
     next_behaviour_class = ImageCodeCalculationBehaviour
 
     @pytest.mark.parametrize(
-        "test_case",
+        "test_case, kwargs",
         [
-            BehaviourTestCase(
-                "Happy path",
-                initial_data=dict(),
-                event=Event.DONE,
-            ),
+            (
+                BehaviourTestCase(
+                    "Happy path",
+                    initial_data=dict(),
+                    event=Event.DONE,
+                ),
+                {
+                    "body": json.dumps(
+                        {"leaderboard": DUMMY_LEADERBOARD, "layers": DUMMY_LAYERS}
+                    ),
+                    "status_code": 200,
+                },
+            )
         ],
     )
-    def test_run(self, test_case: BehaviourTestCase) -> None:
+    def test_run(self, test_case: BehaviourTestCase, kwargs: Any) -> None:
         """Run tests."""
         self.fast_forward(test_case.initial_data)
+        self.behaviour.act_wrapper()
+        self.mock_http_request(
+            request_kwargs=dict(
+                method="GET",
+                headers="",
+                version="",
+                url=DEFAULT_SHEET_API_URL,
+            ),
+            response_kwargs=dict(
+                version="",
+                status_code=kwargs.get("status_code"),
+                status_text="",
+                headers="",
+                body=kwargs.get("body").encode(),
+            ),
+        )
         self.complete(test_case.event)
 
 

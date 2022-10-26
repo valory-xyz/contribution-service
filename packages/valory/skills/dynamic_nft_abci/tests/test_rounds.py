@@ -29,10 +29,7 @@ from packages.valory.skills.abstract_round_abci.base import BaseTxPayload
 from packages.valory.skills.abstract_round_abci.test_tools.rounds import (
     BaseCollectSameUntilThresholdRoundTest,
 )
-from packages.valory.skills.dynamic_nft_abci.behaviours import (
-    DUMMY_LEADERBOARD,
-    DUMMY_MEMBER_TO_NFT_URI,
-)
+from packages.valory.skills.dynamic_nft_abci.behaviours import DUMMY_MEMBER_TO_NFT_URI
 from packages.valory.skills.dynamic_nft_abci.payloads import (
     DBUpdatePayload,
     ImageCodeCalculationPayload,
@@ -48,6 +45,9 @@ from packages.valory.skills.dynamic_nft_abci.rounds import (
     LeaderboardObservationRound,
     NewMembersRound,
     SynchronizedData,
+)
+from packages.valory.skills.dynamic_nft_abci.tests.test_behaviours import (
+    DUMMY_LEADERBOARD,
 )
 
 
