@@ -7,14 +7,14 @@ license: Apache-2.0
 aea_version: '>=1.0.0, <2.0.0'
 fingerprint:
   __init__.py: bafybeif56b2yk2pzo6njoexydkvwkl5tiaj7p76542ljnrijm3urhtnsxq
-  behaviours.py: bafybeiaf4rkgbdulspn32buexa33x4drao4j4to6ucsvi5fcv2ebmrwjlq
+  behaviours.py: bafybeidwjlzxaxsu22i2g2jddvqsiila3w47qgvailfl2z2ai3fvplhhjy
   dialogues.py: bafybeienawgp5jvg6ie3fpdtjepgabxjb3l6ugo46mso7xinx5abgxnafy
   fsm_specification.yaml: bafybeifcj345atcf3pwsx3djdy7cwami7cvmcivt6u4f2lceabfdnj4utq
   handlers.py: bafybeidus4ztb2rxaocmi67iwuhg6s4hmafuelsa5u5xnqqk6p7hgmo7da
   io_/__init__.py: bafybeidxth2otiyp5gfk2l3zjvnfktgrtpwzsknihkef3v2lhwbkgum3ea
   io_/load.py: bafybeifd7ib4lktvgv6rphk6sblkndn3klmzd5js62h2gzxlubjcmlf6jy
   io_/store.py: bafybeih3wa6quhstymsqcsy7jejpj4fx6crq6gs72dzs6svjklu7wushtq
-  models.py: bafybeibzpw7qfm7hacvy6u6mjrmnh6kmwpqy6kvneyhmgk5qt2aver5xhm
+  models.py: bafybeibzg4w24cu6dkf4ovef4owhxos5wmn5luk3my7yj3t46kgdhbrihe
   payloads.py: bafybeiaeibgx4faww6sjrqxcehq5a3h54upqqifkbptr6eq57jvlyohxsa
   rounds.py: bafybeihguxc5zwnniqctdqwtaupng7myo6wrpippjjiwvtwn53n5lx7fti
   tests/__init__.py: bafybeia2xqlacp44lylwlkf7f7ci6m3yshppv3vusgcdjpj4bbcbnuhvla
@@ -110,11 +110,12 @@ models:
         voting_power: '10'
       ipfs_domain_name: /dns/registry.autonolas.tech/tcp/443/https
       keeper_timeout: 30.0
-      max_healthcheck: 120
       leaderboard_api_key: null
-      leaderboard_base_endpoint: 'https://sheets.googleapis.com/v4/spreadsheets'
-      leaderboard_cell_range: 'A1:B100'
-      leaderboard_sheet_id: '1JYR9kfj_Zxd9xHX5AWSlO5X6HusFnb7p9amEUGU55Cg'
+      leaderboard_base_endpoint: https://sheets.googleapis.com/v4/spreadsheets
+      leaderboard_layers_range: Layers!B1:Z3
+      leaderboard_points_range: Leaderboard!A2:B102
+      leaderboard_sheet_id: 1JYR9kfj_Zxd9xHX5AWSlO5X6HusFnb7p9amEUGU55Cg
+      max_healthcheck: 120
       observation_interval: 10
       on_chain_service_id: null
       reset_tendermint_after: 2

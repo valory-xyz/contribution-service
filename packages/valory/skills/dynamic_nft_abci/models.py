@@ -48,10 +48,12 @@ class Params(BaseParams):
         self.ipfs_domain_name = self._ensure("ipfs_domain_name", kwargs)
         leaderboard_base_endpoint = self._ensure("leaderboard_base_endpoint", kwargs)
         leaderboard_sheet_id = self._ensure("leaderboard_sheet_id", kwargs)
-        leaderboard_cell_range = self._ensure("cell_range", kwargs)
+        self.leaderboard_points_range = self._ensure("leaderboard_points_range", kwargs)
+        self.leaderboard_layers_range = self._ensure("leaderboard_layers_range", kwargs)
         leaderboard_api_key = self._ensure("leaderboard_api_key", kwargs)
         self.leaderboard_endpoint = (
-            f"{leaderboard_base_endpoint}/{leaderboard_sheet_id}/values/{leaderboard_cell_range}?key={leaderboard_api_key}"
+            f"{leaderboard_base_endpoint}/{leaderboard_sheet_id}/values:batchGet?"
+            f"ranges={self.leaderboard_points_range}&ranges={self.leaderboard_layers_range}&key={leaderboard_api_key}"
         )
 
         super().__init__(*args, **kwargs)

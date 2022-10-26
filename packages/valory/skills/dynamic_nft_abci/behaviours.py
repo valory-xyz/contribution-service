@@ -131,23 +131,19 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
         with self.context.benchmark_tool.measure(
             self.behaviour_id,
         ).local():
-            leaderboard = yield from self.get_leaderboard()
-            self.context.logger.info(
-                f"Received data from Leaderboard API: {leaderboard}"
-            )
+            data = yield from self.get_data()
+            self.context.logger.info(f"Received points from Leaderboard API: {data}")
 
         with self.context.benchmark_tool.measure(
             self.behaviour_id,
         ).consensus():
-            payload = LeaderboardObservationPayload(
-                self.context.agent_address, leaderboard
-            )
+            payload = LeaderboardObservationPayload(self.context.agent_address, data)
             yield from self.send_a2a_transaction(payload)
             yield from self.wait_until_round_end()
 
         self.set_done()
 
-    def get_leaderboard(self) -> Generator[None, None, str]:
+    def get_data(self) -> Generator[None, None, str]:
         """
         Get the data from the Leaderboard API.
 
@@ -167,17 +163,52 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
 
         try:
             # Parse the response bytes into a dict
-            leaderboard = json.loads(response.body)["values"]
-            response_body = {
-                entry[0]: int(entry[1])
-                for entry in leaderboard
-                if LedgerApis.is_valid_address(DEFAULT_LEDGER, entry[0])
-            }
+            response_json = json.loads(response.body)
 
-            if len(leaderboard) != len(response_body):
-                self.context.logger.error(
-                    "Some elements in the leaderboard are not valid and have been skipped."
-                )
+            # We retrieve both leaderboard and layer data in the same call
+            # so we need to iterate it and identify each one by its "valueRanges" field
+            response_body = {}
+            for data in response_json["valueRanges"]:
+                if data["range"] == self.params.leaderboard_points_range:
+                    leaderboard_raw = data["values"]
+
+                    # Format the leaderboard: build a dictionary like the following
+                    # leaderboard = {       # noqa: E800
+                    #    "wallet_0": 1000,  # noqa: E800
+                    #    "wallet_1": 1500,  # noqa: E800
+                    #     ...
+                    # }                     # noqa: E800
+                    leaderboard = {
+                        entry[0]: int(entry[1])
+                        for entry in leaderboard_raw
+                        if LedgerApis.is_valid_address(DEFAULT_LEDGER, entry[0])
+                    }
+
+                    if len(leaderboard) != len(leaderboard_raw):
+                        self.context.logger.error(
+                            "Some elements in the leaderboard are not valid and have been skipped."
+                        )
+
+                    response_body["leaderboard"] = leaderboard
+                    continue
+
+                if data["range"] == self.params.leaderboard_layers_range:
+                    layers_raw = data["values"]
+
+                    # Format the layers: build a dictionary like the following:
+                    # layers = {                                         # noqa: E800
+                    #   0: {0: "hash", "1000": "hash", ...},  # layer 0  # noqa: E800
+                    #   1: {0: "hash", "1000": "hash", ...},  # layer 1  # noqa: E800
+                    #   ...
+                    # }                                                  # noqa: E800
+                    layers = {}
+                    for layer_index, layer_data in enumerate(layers_raw):
+                        layers[layer_index] = {}
+                        for image_data in layer_data:
+                            points, image_hash = image_data.split(":")
+                            layers[layer_index][int(points)] = image_hash
+
+                    response_body["layers"] = layers
 
         except (KeyError, ValueError, TypeError) as e:
             self.context.logger.error(
