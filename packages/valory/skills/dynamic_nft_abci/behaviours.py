@@ -389,22 +389,22 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
 
     def update_layers(self):
         """Updates local layer if they dont match the ones from the leaderboard API"""
-
-        layer_data = self.synchronized_data.most_voted_api_data["layers"]
+        api_layer_data = self.synchronized_data.most_voted_api_data["layers"]
 
         for layer_name in self.ImageManager.LAYER_NAMES:
 
-            api_layer_hashes = set(layer_data["layer_name"].values)
+            api_layer_hashes = set(api_layer_data[layer_name].values())
 
             layer_path = Path(IMAGE_ROOT, self.ImageManager.LAYERS_DIR, layer_name)
 
             local_layer_hashes = set(
                 IPFSHashOnly.get(image_file)
-                for image_file in layer_path.rglob(f"*.{self.PNG_EXT}")
+                for image_file in layer_path.rglob(f"*.{self.ImageManager.PNG_EXT}")
             )
 
             # Check if some image has changed and re-download images
             if api_layer_hashes != local_layer_hashes:
+
                 # Remove local images
                 shutil.rmtree(layer_path)
                 os.mkdir(layer_path)

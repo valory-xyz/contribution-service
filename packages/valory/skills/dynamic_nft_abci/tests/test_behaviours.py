@@ -72,14 +72,23 @@ DUMMY_LEADERBOARD = {
 }
 
 DUMMY_LAYERS = {
-    0: {0: "dummy_class_hash_0"},
-    1: {
-        0: "dummy_frame_hash_0",
-        1000: "dummy_frame_hash_1",
-        2000: "dummy_frame_hash_2",
-        3000: "dummy_frame_hash_3",
+    "classes": {
+        0: "bafybeiauzyxtnahzul5gk27az7cb3evq5ttfwnxoi366lbrww3pcpthcmi",
+        1: "bafybeiay7owbbggi4nz4l4aeimzixia3v542iqcuaaiwd4kwsayu54aiqq",
+        2: "bafybeig35zr5r4e2gyc3c2ifkxnc43thyipmtgkauly7fxscut5r7zin2a",
+        3: "bafybeiea4in45zhx644yq4mzwrzjtqzzdgp7xv4ngv3ljttiwpgwldonl4",
+        4: "bafybeif6oacd3pkbpn4ij4daqpopjdehv2dv2tejpazwkdcs4cfvedlrvy",
     },
-    2: {0: "dummy_bar_hash_0", 200: "dummy_bar_hash_1", 500: "dummy_bar_hash_2"},
+    "frames": {
+        0: "bafybeifg2owpyplscve2sr4yjcjg6rxsooif2jqt4qmwvrbu36n5ehancm",
+        1: "bafybeige2swjq6fq6yvbvdhylkvfl7r3kv6nzwzqmkgb5g27ifziro342q",
+        2: "bafybeigyzhrhiybdsg3z7qn2nbqiyk52u4ytd6ndl6ixrdg3tk5g6owtsi",
+    },
+    "bars": {
+        0: "bafybeig4corsme52qixcirhwuh6yquzd3bou3mgvjebspqxl2sh7jfpftq",
+        1: "bafybeifrhbjmou67wn4uelixqxg732nhjmvgeb2w26czedsr4w2htactxy",
+        2: "bafybeif3hvmq7rltk5hxucfnnazcwm4b2nuggquonaxhyx7rgsc3uhimye",
+    },
 }
 
 DUMMY_API_DATA = {"leaderboard": DUMMY_LEADERBOARD, "layers": DUMMY_LAYERS}
@@ -283,7 +292,10 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
         [
             BehaviourTestCase(
                 "Happy path",
-                initial_data=dict(most_voted_member_updates=get_dummy_updates()),
+                initial_data=dict(
+                    most_voted_member_updates=get_dummy_updates(),
+                    most_voted_api_data=DUMMY_API_DATA,
+                ),
                 event=Event.DONE,
             ),
         ],
