@@ -110,19 +110,6 @@ models:
         voting_power: '10'
       ipfs_domain_name: /dns/registry.autonolas.tech/tcp/443/https
       keeper_timeout: 30.0
-      layer_hashes:
-        0:
-        - hash_00
-        - hash_01
-        - hash_02
-        1:
-        - hash_10
-        - hash_11
-        - hash_12
-        2:
-        - hash_20
-        - hash_21
-        - hash_22
       max_healthcheck: 120
       leaderboard_api_key: null
       leaderboard_base_endpoint: 'https://sheets.googleapis.com/v4/spreadsheets'
