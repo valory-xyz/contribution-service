@@ -73,7 +73,7 @@ DUMMY_MEMBER_TO_NFT_URI = {
     "0x8325c5e4a56E352355c590E4A43420840F067F98": f"{IMAGE_URI_BASE}/5",  # this one does not appear in the leaderboard
 }
 
-IMAGE_ROOT = Path("tmp")
+IMAGE_ROOT = Path(Path(__file__).parent, "tests", "data")
 
 
 class DynamicNFTBaseBehaviour(BaseBehaviour):
@@ -366,7 +366,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                     img_manager.out_path, f"{image_code}.{img_manager.PNG_EXT}"
                 )
                 new_image_code_to_hashes[image_code] = self.send_to_ipfs(
-                    image_path, image
+                    image_path, image, filetype=ExtendedSupportedFiletype.PNG
                 )
 
         with self.context.benchmark_tool.measure(
@@ -432,22 +432,24 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
             """Load images"""
             self.logger = logger
             self.image_root = image_root
-            self.layers = (  # lists of available images for each layer, sorted by name
+            self.layers = self._load_layers()
+
+            # Create the output directory if it does not exist
+            self.out_path = Path(self.image_root, self.IMAGES_DIR)
+            os.makedirs(self.out_path, exist_ok=True)
+
+        def _load_layers(self) -> tuple:
+            """Get the available images for each layer, sorted by name"""
+            return tuple(
                 tuple(
-                    tuple(
-                        sorted(
-                            Path(image_root, self.LAYERS_DIR, i).rglob(
-                                f"*.{self.PNG_EXT}"
-                            )
+                    sorted(
+                        Path(self.image_root, self.LAYERS_DIR, i).rglob(
+                            f"*.{self.PNG_EXT}"
                         )
                     )
                     for i in self.LAYER_NAMES
                 )
             )
-
-            # Create the output directory if it does not exist
-            self.out_path = Path(self.image_root, self.IMAGES_DIR)
-            os.makedirs(self.out_path, exist_ok=True)
 
         def generate(self, image_code: str) -> Optional[Image.Image]:
             """Generate an image"""
