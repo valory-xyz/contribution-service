@@ -21,6 +21,7 @@
 
 import json
 import os
+import shutil
 from logging import Logger
 from pathlib import Path
 from typing import Any, Generator, List, Optional, Set, Tuple, Type, cast
@@ -28,6 +29,7 @@ from typing import Any, Generator, List, Optional, Set, Tuple, Type, cast
 from PIL import Image
 from aea.configurations.constants import DEFAULT_LEDGER
 from aea.crypto.ledger_apis import LedgerApis
+from aea.helpers.ipfs.base import IPFSHashOnly
 
 from packages.valory.skills.abstract_round_abci.base import AbstractRound
 from packages.valory.skills.abstract_round_abci.behaviours import (
@@ -35,7 +37,10 @@ from packages.valory.skills.abstract_round_abci.behaviours import (
     BaseBehaviour,
 )
 from packages.valory.skills.dynamic_nft_abci.io_.load import Loader
-from packages.valory.skills.dynamic_nft_abci.io_.store import Storer
+from packages.valory.skills.dynamic_nft_abci.io_.store import (
+    ExtendedSupportedFiletype,
+    Storer,
+)
 from packages.valory.skills.dynamic_nft_abci.models import Params
 from packages.valory.skills.dynamic_nft_abci.payloads import (
     ImageCodeCalculationPayload,
@@ -195,10 +200,12 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
                 if data["range"] == self.params.leaderboard_layers_range:
                     layers_raw = data["values"]
 
+                    layer_names = ImageGenerationBehaviour.ImageManager.LAYER_NAMES
+
                     # Format the layers: build a dictionary like the following:
                     # layers = {                                         # noqa: E800
-                    #   0: {0: "hash", "1000": "hash", ...},  # layer 0  # noqa: E800
-                    #   1: {0: "hash", "1000": "hash", ...},  # layer 1  # noqa: E800
+                    #   0: {"classes": "hash", "1000": "hash", ...},  # layer 0  # noqa: E800
+                    #   1: {"frames": "hash", "1000": "hash", ...},   # layer 1  # noqa: E800
                     #   ...
                     # }                                                  # noqa: E800
                     layers = {}
@@ -206,7 +213,7 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
                         layers[layer_index] = {}
                         for image_data in layer_data:
                             points, image_hash = image_data.split(":")
-                            layers[layer_index][int(points)] = image_hash
+                            layers[layer_names[layer_index]][int(points)] = image_hash
 
                     response_body["layers"] = layers
 
@@ -332,6 +339,8 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
         been used. For each of these cases, agents generate the new
         images and push them to IPFS.
         """
+        # Get new layers from IPFS if needed
+        self.update_layers()
 
         # In the current implementation, the image manager will be instanced every time the behaviour is run.
         # This is not ideal: a singleton or another pattern that avoids this might be more suited to our usecase.
@@ -378,14 +387,44 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
 
         self.set_done()
 
+    def update_layers(self):
+        """Updates local layer if they dont match the ones from the leaderboard API"""
+
+        layer_data = self.synchronized_data.most_voted_api_data["layers"]
+
+        for layer_name in self.ImageManager.LAYER_NAMES:
+
+            api_layer_hashes = set(layer_data["layer_name"].values)
+
+            layer_path = Path(IMAGE_ROOT, self.ImageManager.LAYERS_DIR, layer_name)
+
+            local_layer_hashes = set(
+                IPFSHashOnly.get(image_file)
+                for image_file in layer_path.rglob(f"*.{self.PNG_EXT}")
+            )
+
+            # Check if some image has changed and re-download images
+            if api_layer_hashes != local_layer_hashes:
+                # Remove local images
+                shutil.rmtree(layer_path)
+                os.mkdir(layer_path)
+
+                # Get new images from IPFS. They are stored in alphabetical order.
+                for i, image_hash in enumerate(api_layer_hashes):
+                    self.get_from_ipfs(
+                        hash_=image_hash,
+                        target_dir=layer_path,
+                        multiple=False,
+                        filename=str(i),
+                        filetype=ExtendedSupportedFiletype.PNG,
+                    )
+
     class ImageManager:
         """Class to load image layers and compose new images from them"""
 
         LAYERS_DIR = "layers"
         IMAGES_DIR = "images"
-        CLASSES = "classes"
-        FRAMES = "frames"
-        BARS = "bars"
+        LAYER_NAMES = ("classes", "frames", "bars")
         PNG_EXT = "png"
         CODE_LEN = 6
 
@@ -402,7 +441,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                             )
                         )
                     )
-                    for i in (self.CLASSES, self.FRAMES, self.BARS)
+                    for i in self.LAYER_NAMES
                 )
             )
 
