@@ -33,7 +33,10 @@ from packages.valory.skills.abstract_round_abci.behaviours import (
     BaseBehaviour,
 )
 from packages.valory.skills.dynamic_nft_abci.io_.load import Loader
-from packages.valory.skills.dynamic_nft_abci.io_.store import Storer
+from packages.valory.skills.dynamic_nft_abci.io_.store import (
+    ExtendedSupportedFiletype,
+    Storer,
+)
 from packages.valory.skills.dynamic_nft_abci.models import Params
 from packages.valory.skills.dynamic_nft_abci.payloads import (
     ImageCodeCalculationPayload,
@@ -74,7 +77,7 @@ DUMMY_LEADERBOARD = {
     "0x7B394CD0B75f774c6808cc681b26aC3E5DF96E27": 3500,  # this one does not appear in the dummy members
 }
 
-IMAGE_ROOT = Path("tmp")
+IMAGE_ROOT = Path(Path(__file__).parent, "tests", "data")
 
 
 class DynamicNFTBaseBehaviour(BaseBehaviour):
@@ -274,7 +277,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                     img_manager.out_path, f"{image_code}.{img_manager.PNG_EXT}"
                 )
                 new_image_code_to_hashes[image_code] = self.send_to_ipfs(
-                    image_path, image
+                    image_path, image, filetype=ExtendedSupportedFiletype.PNG
                 )
 
         with self.context.benchmark_tool.measure(
@@ -310,22 +313,24 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
             """Load images"""
             self.logger = logger
             self.image_root = image_root
-            self.layers = (  # lists of available images for each layer, sorted by name
-                tuple(
-                    tuple(
-                        sorted(
-                            Path(image_root, self.LAYERS_DIR, i).rglob(
-                                f"*.{self.PNG_EXT}"
-                            )
-                        )
-                    )
-                    for i in (self.CLASSES, self.FRAMES, self.BARS)
-                )
-            )
+            self.layers = self._load_layers()
 
             # Create the output directory if it does not exist
             self.out_path = Path(self.image_root, self.IMAGES_DIR)
             os.makedirs(self.out_path, exist_ok=True)
+
+        def _load_layers(self) -> tuple:
+            """Get the available images for each layer, sorted by name"""
+            return tuple(
+                tuple(
+                    sorted(
+                        Path(self.image_root, self.LAYERS_DIR, i).rglob(
+                            f"*.{self.PNG_EXT}"
+                        )
+                    )
+                )
+                for i in (self.CLASSES, self.FRAMES, self.BARS)
+            )
 
         def generate(self, image_code: str) -> Optional[Image.Image]:
             """Generate an image"""

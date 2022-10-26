@@ -7,7 +7,7 @@ license: Apache-2.0
 aea_version: '>=1.0.0, <2.0.0'
 fingerprint:
   __init__.py: bafybeif56b2yk2pzo6njoexydkvwkl5tiaj7p76542ljnrijm3urhtnsxq
-  behaviours.py: bafybeibpedeovo5yg6fkbrir6koijfa4huxhkiwykj4rcdnwofrpkvd7ou
+  behaviours.py: bafybeid5f54gtwzoqy6ads75ctjhadzhskmo3pcrls2s6ozeg6b4czhoty
   dialogues.py: bafybeienawgp5jvg6ie3fpdtjepgabxjb3l6ugo46mso7xinx5abgxnafy
   fsm_specification.yaml: bafybeifcj345atcf3pwsx3djdy7cwami7cvmcivt6u4f2lceabfdnj4utq
   handlers.py: bafybeidus4ztb2rxaocmi67iwuhg6s4hmafuelsa5u5xnqqk6p7hgmo7da
@@ -18,8 +18,6 @@ fingerprint:
   payloads.py: bafybeiaeibgx4faww6sjrqxcehq5a3h54upqqifkbptr6eq57jvlyohxsa
   rounds.py: bafybeihguxc5zwnniqctdqwtaupng7myo6wrpippjjiwvtwn53n5lx7fti
   tests/__init__.py: bafybeia2xqlacp44lylwlkf7f7ci6m3yshppv3vusgcdjpj4bbcbnuhvla
-  tests/data/images/000100.png: bafybeibclk646v5umywqtswxg44nqoroug6fulrfcwquwhwktx4oljfvra
-  tests/data/images/000102.png: bafybeidrhpe2bsi4ovrgiwrmjxq2ewyceslnm73dltwg56xasg5msarpom
   tests/data/layers/bars/100.png: bafybeigoziwjitryao5nexnffiqaeheeng6ghhc334ev5twc2oeyf6f5ty
   tests/data/layers/bars/1000.png: bafybeiczopqs3f2mrxkf4jrlhcu7sszx45qcchbm23gdz2awoi6afgfpgi
   tests/data/layers/bars/10000.png: bafybeifvzrholq2qyu5pb4nj7lxvqjkpmbda2i6bfd7dcuf7jsmbfvlfmu
@@ -31,7 +29,7 @@ fingerprint:
   tests/data/layers/frames/01.png: bafybeicgg6m7j3eu5akua55mlxohsbqvgonkmk2qqflslrtcdlec6m6ty4
   tests/data/layers/frames/02.png: bafybeia6thhn2qc3rmj2dnlhy5oov7bvtpjlosesu54ybnuavtl2725h7i
   tests/data/layers/frames/03.png: bafybeigstc52zkvx3mwzw2dwc3726amgpolwbdxfoylpupnk6ut5ya357a
-  tests/test_behaviours.py: bafybeihvh2sh7d7zobcllrm7tkj6dei66vsk4rpwittkttlx2mjnki3wsa
+  tests/test_behaviours.py: bafybeidkzya4u372sq572vu3zpqx2lsbb4wqrrfmhrlieuv2xvv73ua6hm
   tests/test_dialogues.py: bafybeifcw2m6rgm3bpuh5g7wcvceliq2cpba4l5mr2jbhvdrbnta2b7d4u
   tests/test_dummy_e2e.py: bafybeidrzn2wzng62jptkf2zjtlhup7bu74ptrlwmdwh7lgwuubk5dbm4q
   tests/test_handlers.py: bafybeibnvcz2rxw5r7yfexhr3ayk6ef7ozqkwwxcgycoyvi42osztthhu4
