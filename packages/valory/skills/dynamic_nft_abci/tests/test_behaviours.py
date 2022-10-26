@@ -67,6 +67,8 @@ DUMMY_LAYERS = {
     2: {0: "dummy_bar_hash_0", 200: "dummy_bar_hash_1", 500: "dummy_bar_hash_2"},
 }
 
+DUMMY_API_DATA = {"leaderboard": DUMMY_LEADERBOARD, "layers": DUMMY_LAYERS}
+
 SHEET_ID = "1JYR9kfj_Zxd9xHX5AWSlO5X6HusFnb7p9amEUGU55Cg"
 GOOGLE_API_KEY = ""
 GOOGLE_SHEETS_ENDPOINT = "https://sheets.googleapis.com/v4/spreadsheets"
@@ -174,7 +176,7 @@ class TestLeaderboardObservationBehaviour(BaseDynamicNFTTest):
                 ),
                 {
                     "body": json.dumps(
-                        {"leaderboard": DUMMY_LEADERBOARD, "layers": DUMMY_LAYERS}
+                        DUMMY_API_DATA,
                     ),
                     "status_code": 200,
                 },
@@ -214,7 +216,7 @@ class TestImageCodeCalculationBehaviour(BaseDynamicNFTTest):
         [
             BehaviourTestCase(
                 "Happy path",
-                initial_data=dict(most_voted_leaderboard=DUMMY_LEADERBOARD),
+                initial_data=dict(most_voted_api_data=DUMMY_API_DATA),
                 event=Event.DONE,
             ),
         ],

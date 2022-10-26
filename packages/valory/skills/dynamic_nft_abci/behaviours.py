@@ -248,7 +248,7 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
         number of points have changed with respect to the ones in the database
         and will recalculate their images (but not store them yet).
         """
-        leaderboard = self.synchronized_data.most_voted_leaderboard
+        leaderboard = self.synchronized_data.most_voted_api_data["leaderboard"]
         members = self.synchronized_data.members
 
         member_updates = {}

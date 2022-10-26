@@ -73,9 +73,9 @@ class SynchronizedData(BaseSynchronizedData):
         return cast(dict, self.db.get("redirects", {}))
 
     @property
-    def most_voted_leaderboard(self) -> Dict:
-        """Get the most_voted_leaderboard."""
-        return cast(Dict, self.db.get_strict("most_voted_leaderboard"))
+    def most_voted_api_data(self) -> Dict:
+        """Get the most_voted_api_data."""
+        return cast(Dict, self.db.get_strict("most_voted_api_data"))
 
     @property
     def most_voted_member_updates(self) -> Dict:
@@ -124,7 +124,7 @@ class LeaderboardObservationRound(CollectSameUntilThresholdRound):
         """Process the end of the block."""
         if self.threshold_reached:
             synchronized_data = self.synchronized_data.update(
-                most_voted_leaderboard=json.loads(self.most_voted_payload),
+                most_voted_api_data=json.loads(self.most_voted_payload),
             )
             return synchronized_data, Event.DONE
         if not self.is_majority_possible(

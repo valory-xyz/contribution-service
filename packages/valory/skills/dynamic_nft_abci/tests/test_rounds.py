@@ -220,14 +220,14 @@ class TestLeaderboardObservationRound(BaseDynamicNFTRoundTestClass):
                     data=get_dummy_leaderboard_payload_serialized(),
                 ),
                 final_data={
-                    "most_voted_leaderboard": json.loads(
+                    "most_voted_api_data": json.loads(
                         get_dummy_leaderboard_payload_serialized()
                     ),
                 },
                 event=Event.DONE,
                 most_voted_payload=get_dummy_leaderboard_payload_serialized(),
                 synchronized_data_attr_checks=[
-                    lambda _synchronized_data: _synchronized_data.most_voted_leaderboard,
+                    lambda _synchronized_data: _synchronized_data.most_voted_api_data,
                 ],
             ),
         ),
