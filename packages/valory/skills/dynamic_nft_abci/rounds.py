@@ -173,7 +173,7 @@ class ImageGenerationRound(CollectSameUntilThresholdRound):
             else:
                 images = {
                     **self.synchronized_data.images,
-                    **payload["new_image_to_hashes"],
+                    **payload["new_image_code_to_hashes"],
                 }
                 synchronized_data = self.synchronized_data.update(
                     images=images,

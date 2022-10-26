@@ -21,9 +21,10 @@
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Optional, Type
+from typing import Any, Dict, Iterator, Optional, Type
 
 import pytest
+from aea_cli_ipfs.ipfs_utils import IPFSDaemon
 
 from packages.valory.skills.abstract_round_abci.base import AbciAppDB
 from packages.valory.skills.abstract_round_abci.behaviours import (
@@ -46,6 +47,20 @@ from packages.valory.skills.dynamic_nft_abci.rounds import (
     FinishedDBUpdateRound,
     SynchronizedData,
 )
+
+
+@pytest.fixture(scope="module")
+def ipfs_daemon() -> Iterator[bool]:
+    """Starts an IPFS daemon for the tests."""
+    print("Starting IPFS daemon...")
+    daemon = IPFSDaemon()
+    daemon.start()
+    yield daemon.is_started()
+    print("Tearing down IPFS daemon...")
+    daemon.stop()
+
+
+use_ipfs_daemon = pytest.mark.usefixtures("ipfs_daemon")
 
 
 def get_dummy_updates() -> Dict:
@@ -192,11 +207,19 @@ class TestImageCodeCalculationBehaviour(BaseDynamicNFTTest):
             assert ImageCodeCalculationBehaviour.points_to_code(-100)
 
 
+@use_ipfs_daemon
 class TestImageGenerationBehaviour(BaseDynamicNFTTest):
     """Tests ImageGenerationBehaviour"""
 
     behaviour_class = ImageGenerationBehaviour
     next_behaviour_class = DBUpdateBehaviour
+
+    @classmethod
+    def setup_class(cls, **kwargs: Any) -> None:
+        """Set up the test class."""
+        super().setup_class(
+            param_overrides={"ipfs_domain_name": "/dns/localhost/tcp/5001/http"}
+        )
 
     @pytest.mark.parametrize(
         "test_case",

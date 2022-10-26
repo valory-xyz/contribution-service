@@ -32,7 +32,6 @@ from packages.valory.skills.abstract_round_abci.test_tools.rounds import (
 from packages.valory.skills.dynamic_nft_abci.behaviours import (
     DUMMY_LEADERBOARD,
     DUMMY_MEMBER_TO_NFT_URI,
-    DUMMY_NEW_IMAGES,
 )
 from packages.valory.skills.dynamic_nft_abci.payloads import (
     DBUpdatePayload,
@@ -109,8 +108,19 @@ def get_dummy_images() -> dict:
 
 def get_image_generation_payload_serialized() -> str:
     """Dummy image generation payload"""
+
+    DUMMY_NEW_IMAGE_CODE_TO_HASHES = {
+        "000000": "dummy_hash_1",
+        "010101": "dummy_hash_2",
+        "020202": "dummy_hash_3",
+    }
+
     return json.dumps(
-        {"new_image_to_hashes": DUMMY_NEW_IMAGES, "status": "success"}, sort_keys=True
+        {
+            "new_image_code_to_hashes": DUMMY_NEW_IMAGE_CODE_TO_HASHES,
+            "status": "success",
+        },
+        sort_keys=True,
     )
 
 
@@ -275,7 +285,7 @@ class TestImageGenerationRound(BaseDynamicNFTRoundTestClass):
                 ),
                 final_data={
                     "images": json.loads(get_image_generation_payload_serialized())[
-                        "new_image_to_hashes"
+                        "new_image_code_to_hashes"
                     ],
                 },
                 event=Event.DONE,
