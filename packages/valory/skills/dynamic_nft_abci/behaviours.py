@@ -420,7 +420,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
     class ImageManager:
         """Class to load image layers and compose new images from them"""
 
-        IMAGE_ROOT = Path(Path(__file__).parent, "tests", "data")
+        IMAGE_ROOT = Path(Path(__file__).parent, "data")
         LAYERS_DIR = "layers"
         IMAGES_DIR = "images"
         LAYER_NAMES = ("classes", "frames", "bars")
