@@ -27,7 +27,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterator, Optional, Type
 from unittest import mock
 from unittest.mock import MagicMock
-
+from aea.crypto.ledger_apis import LedgerApis
 import pytest
 from aea_cli_ipfs.ipfs_utils import IPFSDaemon
 
@@ -111,7 +111,7 @@ DUMMY_API_RESPONSE = {
                 ["0x3c03a080638b3c176aB7D9ed56E25bC416dFf525", "900"],
                 ["0x44704AE66f0B9FF08a7b0584B49FE941AdD1bAE7", "575"],
                 ["0x19B043aD06C48aeCb2028B0f10503422BD0E0918", "100"],
-                ["0x7B394CD0B75f774c6808cc681b26aC3E5DF96E27", "3500"],
+                ["not_valid_address", "3500"],
             ],
         },
         {
@@ -130,6 +130,8 @@ DUMMY_API_RESPONSE = {
         },
     ],
 }
+
+DUMMY_BAD_API_RESPONSE = {}
 
 SHEET_ID = "1JYR9kfj_Zxd9xHX5AWSlO5X6HusFnb7p9amEUGU55Cg"
 GOOGLE_API_KEY = ""
@@ -290,11 +292,67 @@ class TestLeaderboardObservationErrorBehaviour(BaseDynamicNFTTest):
                     ),
                     "status_code": 404,
                 },
-            )
+            ),
+            (
+                BehaviourTestCase(
+                    "Happy path",
+                    initial_data=dict(),
+                    event=Event.API_ERROR,
+                ),
+                {
+                    "body": json.dumps(
+                        DUMMY_BAD_API_RESPONSE,
+                    ),
+                    "status_code": 200,
+                },
+            ),
         ],
     )
     def test_run(self, test_case: BehaviourTestCase, kwargs: Any) -> None:
         """Run tests."""
+        self.fast_forward(test_case.initial_data)
+        self.behaviour.act_wrapper()
+        self.mock_http_request(
+            request_kwargs=dict(
+                method="GET",
+                headers="",
+                version="",
+                url=DEFAULT_SHEET_API_URL,
+            ),
+            response_kwargs=dict(
+                version="",
+                status_code=kwargs.get("status_code"),
+                status_text="",
+                headers="",
+                body=kwargs.get("body").encode(),
+            ),
+        )
+        self.complete(test_case.event)
+
+    @pytest.mark.parametrize(
+        "test_case, kwargs",
+        [
+            (
+                BehaviourTestCase(
+                    "Happy path",
+                    initial_data=dict(),
+                    event=Event.DONE,
+                ),
+                {
+                    "body": json.dumps(
+                        DUMMY_API_RESPONSE,
+                    ),
+                    "status_code": 200,
+                },
+            ),
+        ],
+    )
+    def test_force_exception(self, test_case: BehaviourTestCase, kwargs: Any):
+        """Force a exception for coverage purposes"""
+
+        # Raise when is_valid_address() is called
+        LedgerApis.is_valid_address = mock.Mock(side_effect=IndexError("dummy exception"))
+
         self.fast_forward(test_case.initial_data)
         self.behaviour.act_wrapper()
         self.mock_http_request(

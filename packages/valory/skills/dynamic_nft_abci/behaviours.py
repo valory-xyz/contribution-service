@@ -197,14 +197,13 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
                     layer_names = ImageGenerationBehaviour.ImageManager.LAYER_NAMES
 
                     # Format the layers: build a dictionary like the following:
-                    # layers = {                                         # noqa: E800
-                    #   0: {"classes": "hash", "1000": "hash", ...},  # layer 0  # noqa: E800
-                    #   1: {"frames": "hash", "1000": "hash", ...},   # layer 1  # noqa: E800
+                    # layers = {                                               # noqa: E800
+                    #   "classes": {0: "hash", 1000: "hash", ...},  # layer 0  # noqa: E800
+                    #   "frames": {0: "hash", 1000: "hash", ...},   # layer 1  # noqa: E800
                     #   ...
-                    # }                                                  # noqa: E800
-                    layers = {}
+                    # }                                                        # noqa: E800
+                    layers = {layer_name: {} for layer_name in layer_names}
                     for layer_index, layer_data in enumerate(layers_raw):
-                        layers[layer_index] = {}
                         for image_data in layer_data:
                             points, image_hash = image_data.split(":")
                             layers[layer_names[layer_index]][int(points)] = image_hash
