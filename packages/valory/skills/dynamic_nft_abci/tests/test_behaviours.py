@@ -27,8 +27,9 @@ from pathlib import Path
 from typing import Any, Dict, Iterator, Optional, Type
 from unittest import mock
 from unittest.mock import MagicMock
-from aea.crypto.ledger_apis import LedgerApis
+
 import pytest
+from aea.crypto.ledger_apis import LedgerApis
 from aea_cli_ipfs.ipfs_utils import IPFSDaemon
 
 from packages.valory.skills.abstract_round_abci.base import AbciAppDB
@@ -351,7 +352,9 @@ class TestLeaderboardObservationErrorBehaviour(BaseDynamicNFTTest):
         """Force a exception for coverage purposes"""
 
         # Raise when is_valid_address() is called
-        LedgerApis.is_valid_address = mock.Mock(side_effect=IndexError("dummy exception"))
+        LedgerApis.is_valid_address = mock.Mock(
+            side_effect=IndexError("dummy exception")
+        )
 
         self.fast_forward(test_case.initial_data)
         self.behaviour.act_wrapper()
@@ -534,12 +537,17 @@ class TestDBUpdateBehaviour(BaseDynamicNFTTest):
 
 
 class TestImageManager:
+    """TestImageManager"""
+
     def setup_class(self):
+        """Setup class"""
         logger_mock = MagicMock()
         self.manager = ImageGenerationBehaviour.ImageManager(logger_mock)
 
     def test_generate_invalid_code_length(self):
+        """test_generate_invalid_code_length"""
         assert not self.manager.generate("short")  # code too short
 
     def test_generate_invalid_code_non_existent(self):
+        """test_generate_invalid_code_non_existent"""
         assert not self.manager.generate("090909")  # image does not exist
