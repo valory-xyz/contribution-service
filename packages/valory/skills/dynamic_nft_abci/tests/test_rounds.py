@@ -72,8 +72,10 @@ def get_dummy_new_members_payload_serialized() -> str:
     return json.dumps(DUMMY_MEMBER_TO_NFT_URI, sort_keys=True)
 
 
-def get_dummy_leaderboard_payload_serialized() -> str:
+def get_dummy_leaderboard_payload_serialized(api_error: bool = False) -> str:
     """Dummy leaderboard payload"""
+    if api_error:
+        return json.dumps({})
     return json.dumps(DUMMY_LEADERBOARD, sort_keys=True)
 
 
@@ -133,6 +135,7 @@ def get_db_update_payload_serialized() -> str:
 class RoundTestCase:
     """RoundTestCase"""
 
+    name: str
     initial_data: Dict[str, Hashable]
     payloads: Mapping[str, BaseTxPayload]
     final_data: Dict[str, Hashable]
@@ -184,6 +187,7 @@ class TestNewMembersRound(BaseDynamicNFTRoundTestClass):
         "test_case",
         (
             RoundTestCase(
+                name="Happy path",
                 initial_data={},
                 payloads=get_payloads(
                     payload_cls=NewMembersPayload,
@@ -214,6 +218,7 @@ class TestLeaderboardObservationRound(BaseDynamicNFTRoundTestClass):
         "test_case",
         (
             RoundTestCase(
+                name="Happy path",
                 initial_data={},
                 payloads=get_payloads(
                     payload_cls=LeaderboardObservationPayload,
@@ -229,6 +234,18 @@ class TestLeaderboardObservationRound(BaseDynamicNFTRoundTestClass):
                 synchronized_data_attr_checks=[
                     lambda _synchronized_data: _synchronized_data.most_voted_api_data,
                 ],
+            ),
+            RoundTestCase(
+                name="Api error",
+                initial_data={},
+                payloads=get_payloads(
+                    payload_cls=LeaderboardObservationPayload,
+                    data=get_dummy_leaderboard_payload_serialized(api_error=True),
+                ),
+                final_data={},
+                event=Event.API_ERROR,
+                most_voted_payload=get_dummy_leaderboard_payload_serialized(api_error=True),
+                synchronized_data_attr_checks=[],
             ),
         ),
     )
@@ -246,6 +263,7 @@ class TestImageCodeCalculationRound(BaseDynamicNFTRoundTestClass):
         "test_case",
         (
             RoundTestCase(
+                name="Happy path",
                 initial_data={},
                 payloads=get_payloads(
                     payload_cls=ImageCodeCalculationPayload,
@@ -278,6 +296,7 @@ class TestImageGenerationRound(BaseDynamicNFTRoundTestClass):
         "test_case",
         (
             RoundTestCase(
+                name="Happy path",
                 initial_data={},
                 payloads=get_payloads(
                     payload_cls=ImageGenerationPayload,
@@ -295,6 +314,7 @@ class TestImageGenerationRound(BaseDynamicNFTRoundTestClass):
                 ],
             ),
             RoundTestCase(
+                name="Happy path",
                 initial_data={},
                 payloads=get_payloads(
                     payload_cls=ImageGenerationPayload,
@@ -321,6 +341,7 @@ class TestDBUpdateRound(BaseDynamicNFTRoundTestClass):
         "test_case",
         (
             RoundTestCase(
+                name="Happy path",
                 initial_data={
                     "members": json.loads(get_dummy_members()),
                     "images": get_dummy_images(),
