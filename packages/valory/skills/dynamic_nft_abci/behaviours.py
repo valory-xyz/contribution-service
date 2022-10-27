@@ -69,8 +69,6 @@ DUMMY_MEMBER_TO_NFT_URI = {
     "0x8325c5e4a56E352355c590E4A43420840F067F98": f"{IMAGE_URI_BASE}/5",  # this one does not appear in the leaderboard
 }
 
-IMAGE_ROOT = Path(Path(__file__).parent, "tests", "data")
-
 
 class DynamicNFTBaseBehaviour(BaseBehaviour):
     """Base behaviour for the common apps' skill."""
@@ -199,14 +197,13 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
                     layer_names = ImageGenerationBehaviour.ImageManager.LAYER_NAMES
 
                     # Format the layers: build a dictionary like the following:
-                    # layers = {                                         # noqa: E800
-                    #   0: {"classes": "hash", "1000": "hash", ...},  # layer 0  # noqa: E800
-                    #   1: {"frames": "hash", "1000": "hash", ...},   # layer 1  # noqa: E800
+                    # layers = {                                               # noqa: E800
+                    #   "classes": {0: "hash", 1000: "hash", ...},  # layer 0  # noqa: E800
+                    #   "frames": {0: "hash", 1000: "hash", ...},   # layer 1  # noqa: E800
                     #   ...
-                    # }                                                  # noqa: E800
-                    layers = {}
+                    # }                                                        # noqa: E800
+                    layers = {layer_name: {} for layer_name in layer_names}
                     for layer_index, layer_data in enumerate(layers_raw):
-                        layers[layer_index] = {}
                         for image_data in layer_data:
                             points, image_hash = image_data.split(":")
                             layers[layer_names[layer_index]][int(points)] = image_hash
@@ -394,7 +391,9 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
 
             api_layer_hashes = set(api_layer_data[layer_name].values())
 
-            layer_path = Path(IMAGE_ROOT, self.ImageManager.LAYERS_DIR, layer_name)
+            layer_path = Path(
+                self.ImageManager.IMAGE_ROOT, self.ImageManager.LAYERS_DIR, layer_name
+            )
 
             local_layer_hashes = set(
                 IPFSHashOnly.get(image_file)
@@ -403,10 +402,10 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
 
             # Check if some image has changed and re-download images
             if api_layer_hashes != local_layer_hashes:
-
                 # Remove local images
-                shutil.rmtree(layer_path)
-                os.mkdir(layer_path)
+                if os.path.isdir(layer_path):
+                    shutil.rmtree(layer_path)
+                os.makedirs(layer_path)
 
                 # Get new images from IPFS. They are stored in alphabetical order.
                 for i, image_hash in enumerate(api_layer_hashes):
@@ -421,6 +420,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
     class ImageManager:
         """Class to load image layers and compose new images from them"""
 
+        IMAGE_ROOT = Path(Path(__file__).parent, "tests", "data")
         LAYERS_DIR = "layers"
         IMAGES_DIR = "images"
         LAYER_NAMES = ("classes", "frames", "bars")
@@ -453,7 +453,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
         def generate(self, image_code: str) -> Optional[Image.Image]:
             """Generate an image"""
 
-            # Check code validity
+            # Check code length
             if len(image_code) != self.CODE_LEN:
                 self.logger.error(
                     f"ImageManager: invalid code '{image_code}'. Length is {len(image_code)}, should be {self.CODE_LEN}."
@@ -462,6 +462,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
 
             img_layer_codes = [int(image_code[i : i + 2]) for i in range(0, 6, 2)]
 
+            # Check that code indices do not reference non-existent images
             for layer_index, layer_code in enumerate(img_layer_codes):
                 if layer_code >= len(self.layers[layer_index]):
                     self.logger.error(

@@ -20,14 +20,20 @@
 """This package contains round behaviours of DynamicNFTAbciApp."""
 
 import json
+import os
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Iterator, Optional, Type
+from unittest import mock
+from unittest.mock import MagicMock
 
 import pytest
+from aea.crypto.ledger_apis import LedgerApis
 from aea_cli_ipfs.ipfs_utils import IPFSDaemon
 
 from packages.valory.skills.abstract_round_abci.base import AbciAppDB
+from packages.valory.skills.abstract_round_abci.behaviour_utils import BaseBehaviour
 from packages.valory.skills.abstract_round_abci.behaviours import (
     make_degenerate_behaviour,
 )
@@ -95,6 +101,39 @@ DUMMY_THRESHOLDS = {"classes": [], "frames": [1000, 2000, 3000], "bars": [200, 5
 
 DUMMY_API_DATA = {"leaderboard": DUMMY_LEADERBOARD, "layers": DUMMY_LAYERS}
 
+DUMMY_API_RESPONSE = {
+    "spreadsheetId": "1JYR9kfj_Zxd9xHX5AWSlO5X6HusFnb7p9amEUGU55Cg",
+    "valueRanges": [
+        {
+            "range": "Leaderboard!A2:B102",
+            "majorDimension": "ROWS",
+            "values": [
+                ["0x54EfA9b1865FFE8c528fb375A7A606149598932A", "1500"],
+                ["0x3c03a080638b3c176aB7D9ed56E25bC416dFf525", "900"],
+                ["0x44704AE66f0B9FF08a7b0584B49FE941AdD1bAE7", "575"],
+                ["0x19B043aD06C48aeCb2028B0f10503422BD0E0918", "100"],
+                ["not_valid_address", "3500"],
+            ],
+        },
+        {
+            "range": "Layers!B1:Z3",
+            "majorDimension": "ROWS",
+            "values": [
+                ["0:dummy_class_hash_0"],
+                [
+                    "0:dummy_frame_hash_0",
+                    "1000:dummy_frame_hash_1",
+                    "2000:dummy_frame_hash_2",
+                    "3000:dummy_frame_hash_3",
+                ],
+                ["0:dummy_bar_hash_0", "200:dummy_bar_hash_1", "500:dummy_bar_hash_2"],
+            ],
+        },
+    ],
+}
+
+DUMMY_BAD_API_RESPONSE = {}
+
 SHEET_ID = "1JYR9kfj_Zxd9xHX5AWSlO5X6HusFnb7p9amEUGU55Cg"
 GOOGLE_API_KEY = ""
 GOOGLE_SHEETS_ENDPOINT = "https://sheets.googleapis.com/v4/spreadsheets"
@@ -107,8 +146,10 @@ DEFAULT_SHEET_API_URL = (
 )
 
 
-def get_dummy_updates() -> Dict:
+def get_dummy_updates(error: bool = False) -> Dict:
     """Dummy updates"""
+    if error:
+        return {"dummy_member_1": {"points": 100, "image_code": "error_code"}}
     return {
         "dummy_member_1": {"points": 100, "image_code": "000100"},
         "dummy_member_2": {"points": 200, "image_code": "000102"},
@@ -202,15 +243,119 @@ class TestLeaderboardObservationBehaviour(BaseDynamicNFTTest):
                 ),
                 {
                     "body": json.dumps(
-                        DUMMY_API_DATA,
+                        DUMMY_API_RESPONSE,
                     ),
                     "status_code": 200,
                 },
-            )
+            ),
         ],
     )
     def test_run(self, test_case: BehaviourTestCase, kwargs: Any) -> None:
         """Run tests."""
+        self.fast_forward(test_case.initial_data)
+        self.behaviour.act_wrapper()
+        self.mock_http_request(
+            request_kwargs=dict(
+                method="GET",
+                headers="",
+                version="",
+                url=DEFAULT_SHEET_API_URL,
+            ),
+            response_kwargs=dict(
+                version="",
+                status_code=kwargs.get("status_code"),
+                status_text="",
+                headers="",
+                body=kwargs.get("body").encode(),
+            ),
+        )
+        self.complete(test_case.event)
+
+
+class TestLeaderboardObservationErrorBehaviour(BaseDynamicNFTTest):
+    """Tests LeaderboardObservationBehaviour"""
+
+    behaviour_class = LeaderboardObservationBehaviour
+    next_behaviour_class = LeaderboardObservationBehaviour
+
+    @pytest.mark.parametrize(
+        "test_case, kwargs",
+        [
+            (
+                BehaviourTestCase(
+                    "Api code not 200",
+                    initial_data=dict(),
+                    event=Event.API_ERROR,
+                ),
+                {
+                    "body": json.dumps(
+                        {},
+                    ),
+                    "status_code": 404,
+                },
+            ),
+            (
+                BehaviourTestCase(
+                    "Happy path",
+                    initial_data=dict(),
+                    event=Event.API_ERROR,
+                ),
+                {
+                    "body": json.dumps(
+                        DUMMY_BAD_API_RESPONSE,
+                    ),
+                    "status_code": 200,
+                },
+            ),
+        ],
+    )
+    def test_run(self, test_case: BehaviourTestCase, kwargs: Any) -> None:
+        """Run tests."""
+        self.fast_forward(test_case.initial_data)
+        self.behaviour.act_wrapper()
+        self.mock_http_request(
+            request_kwargs=dict(
+                method="GET",
+                headers="",
+                version="",
+                url=DEFAULT_SHEET_API_URL,
+            ),
+            response_kwargs=dict(
+                version="",
+                status_code=kwargs.get("status_code"),
+                status_text="",
+                headers="",
+                body=kwargs.get("body").encode(),
+            ),
+        )
+        self.complete(test_case.event)
+
+    @pytest.mark.parametrize(
+        "test_case, kwargs",
+        [
+            (
+                BehaviourTestCase(
+                    "Force unexpected exception",
+                    initial_data=dict(),
+                    event=Event.API_ERROR,
+                ),
+                {
+                    "body": json.dumps(
+                        DUMMY_API_RESPONSE,
+                    ),
+                    "status_code": 200,
+                },
+            ),
+        ],
+    )
+    def test_force_exception(self, test_case: BehaviourTestCase, kwargs: Any):
+        """Force a exception for coverage purposes"""
+
+        # Raise when is_valid_address() is called
+        LedgerApis.is_valid_address = mock.Mock(
+            side_effect=IndexError("dummy exception")
+        )
+
         self.fast_forward(test_case.initial_data)
         self.behaviour.act_wrapper()
         self.mock_http_request(
@@ -310,6 +455,64 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
         self.fast_forward(test_case.initial_data)
         self.complete(test_case.event)
 
+    @mock.patch.object(BaseBehaviour, "get_from_ipfs", return_value=False)
+    def test_run_redownload_layers(self, *_: Any):
+        """Run tests."""
+        test_case = BehaviourTestCase(
+            "Trigger image download from IPFS",
+            initial_data=dict(
+                most_voted_member_updates=get_dummy_updates(),
+                most_voted_api_data=DUMMY_API_DATA,
+            ),
+            event=Event.DONE,
+        )
+
+        # Use an empty temporary directory as local image storage
+        # so update_layers() detects that images are missing and tries to redownload
+        with tempfile.TemporaryDirectory() as tmpdir:
+            image_manager_cls = self.behaviour.behaviours[3].ImageManager
+            image_manager_cls.IMAGE_ROOT = Path(tmpdir)
+
+            # Create layer directory so it is removed
+            layer_path = Path(tmpdir, image_manager_cls.LAYERS_DIR, "classes")
+            os.makedirs(layer_path)
+
+            self.fast_forward(test_case.initial_data)
+            self.complete(test_case.event)
+
+
+@use_ipfs_daemon
+class TestImageGenerationErrorBehaviour(BaseDynamicNFTTest):
+    """Tests ImageGenerationBehaviour"""
+
+    behaviour_class = ImageGenerationBehaviour
+    next_behaviour_class = LeaderboardObservationBehaviour
+
+    @classmethod
+    def setup_class(cls, **kwargs: Any) -> None:
+        """Set up the test class."""
+        super().setup_class(
+            param_overrides={"ipfs_domain_name": "/dns/localhost/tcp/5001/http"}
+        )
+
+    @pytest.mark.parametrize(
+        "test_case",
+        [
+            BehaviourTestCase(
+                "Generation error",
+                initial_data=dict(
+                    most_voted_member_updates=get_dummy_updates(error=True),
+                    most_voted_api_data=DUMMY_API_DATA,
+                ),
+                event=Event.IMAGE_ERROR,
+            ),
+        ],
+    )
+    def test_run(self, test_case: BehaviourTestCase) -> None:
+        """Run tests."""
+        self.fast_forward(test_case.initial_data)
+        self.complete(test_case.event)
+
 
 class TestDBUpdateBehaviour(BaseDynamicNFTTest):
     """Tests DBUpdateBehaviour"""
@@ -331,3 +534,20 @@ class TestDBUpdateBehaviour(BaseDynamicNFTTest):
         """Run tests."""
         self.fast_forward(test_case.initial_data)
         self.complete(test_case.event)
+
+
+class TestImageManager:
+    """TestImageManager"""
+
+    def setup_class(self):
+        """Setup class"""
+        logger_mock = MagicMock()
+        self.manager = ImageGenerationBehaviour.ImageManager(logger_mock)
+
+    def test_generate_invalid_code_length(self):
+        """test_generate_invalid_code_length"""
+        assert not self.manager.generate("short")  # code too short
+
+    def test_generate_invalid_code_non_existent(self):
+        """test_generate_invalid_code_non_existent"""
+        assert not self.manager.generate("090909")  # image does not exist
