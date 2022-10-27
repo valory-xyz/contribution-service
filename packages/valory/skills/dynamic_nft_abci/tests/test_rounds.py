@@ -244,7 +244,9 @@ class TestLeaderboardObservationRound(BaseDynamicNFTRoundTestClass):
                 ),
                 final_data={},
                 event=Event.API_ERROR,
-                most_voted_payload=get_dummy_leaderboard_payload_serialized(api_error=True),
+                most_voted_payload=get_dummy_leaderboard_payload_serialized(
+                    api_error=True
+                ),
                 synchronized_data_attr_checks=[],
             ),
         ),
@@ -303,9 +305,9 @@ class TestImageGenerationRound(BaseDynamicNFTRoundTestClass):
                     data=get_image_generation_payload_serialized("success"),
                 ),
                 final_data={
-                    "images": json.loads(get_image_generation_payload_serialized("success"))[
-                        "new_image_code_to_hashes"
-                    ],
+                    "images": json.loads(
+                        get_image_generation_payload_serialized("success")
+                    )["new_image_code_to_hashes"],
                 },
                 event=Event.DONE,
                 most_voted_payload=get_image_generation_payload_serialized("success"),

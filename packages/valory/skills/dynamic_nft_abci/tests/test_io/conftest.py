@@ -27,14 +27,21 @@ from typing import Dict
 import pytest
 from PIL import Image
 
-from packages.valory.skills.dynamic_nft_abci.behaviours import IMAGE_ROOT
+from packages.valory.skills.dynamic_nft_abci.behaviours import ImageGenerationBehaviour
 from packages.valory.skills.dynamic_nft_abci.io_.store import StoredPNGType
 
 
 @pytest.fixture
 def dummy_obj() -> StoredPNGType:
     """A dummy custom object to test the storing with."""
-    return Image.open(Path(IMAGE_ROOT, "layers", "classes", "Gli.png"))
+    return Image.open(
+        Path(
+            ImageGenerationBehaviour.ImageManager.IMAGE_ROOT,
+            "layers",
+            "classes",
+            "Gli.png",
+        )
+    )
 
 
 @pytest.fixture
