@@ -106,7 +106,7 @@ def get_dummy_images() -> dict:
     }
 
 
-def get_image_generation_payload_serialized() -> str:
+def get_image_generation_payload_serialized(status: str = "success") -> str:
     """Dummy image generation payload"""
 
     DUMMY_NEW_IMAGE_CODE_TO_HASHES = {
@@ -118,7 +118,7 @@ def get_image_generation_payload_serialized() -> str:
     return json.dumps(
         {
             "new_image_code_to_hashes": DUMMY_NEW_IMAGE_CODE_TO_HASHES,
-            "status": "success",
+            "status": status,
         },
         sort_keys=True,
     )
@@ -281,18 +281,29 @@ class TestImageGenerationRound(BaseDynamicNFTRoundTestClass):
                 initial_data={},
                 payloads=get_payloads(
                     payload_cls=ImageGenerationPayload,
-                    data=get_image_generation_payload_serialized(),
+                    data=get_image_generation_payload_serialized("success"),
                 ),
                 final_data={
-                    "images": json.loads(get_image_generation_payload_serialized())[
+                    "images": json.loads(get_image_generation_payload_serialized("success"))[
                         "new_image_code_to_hashes"
                     ],
                 },
                 event=Event.DONE,
-                most_voted_payload=get_image_generation_payload_serialized(),
+                most_voted_payload=get_image_generation_payload_serialized("success"),
                 synchronized_data_attr_checks=[
                     lambda _synchronized_data: _synchronized_data.images,
                 ],
+            ),
+            RoundTestCase(
+                initial_data={},
+                payloads=get_payloads(
+                    payload_cls=ImageGenerationPayload,
+                    data=get_image_generation_payload_serialized("error"),
+                ),
+                final_data={},
+                event=Event.IMAGE_ERROR,
+                most_voted_payload=get_image_generation_payload_serialized("error"),
+                synchronized_data_attr_checks=[],
             ),
         ),
     )
