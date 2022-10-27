@@ -334,9 +334,9 @@ class TestLeaderboardObservationErrorBehaviour(BaseDynamicNFTTest):
         [
             (
                 BehaviourTestCase(
-                    "Happy path",
+                    "Force unexpected exception",
                     initial_data=dict(),
-                    event=Event.DONE,
+                    event=Event.API_ERROR,
                 ),
                 {
                     "body": json.dumps(
