@@ -21,11 +21,15 @@
 
 import json
 import os
+import shutil
 from logging import Logger
 from pathlib import Path
 from typing import Any, Generator, List, Optional, Set, Tuple, Type, cast
 
 from PIL import Image
+from aea.configurations.constants import DEFAULT_LEDGER
+from aea.crypto.ledger_apis import LedgerApis
+from aea.helpers.ipfs.base import IPFSHashOnly
 
 from packages.valory.skills.abstract_round_abci.base import AbstractRound
 from packages.valory.skills.abstract_round_abci.behaviours import (
@@ -55,10 +59,6 @@ from packages.valory.skills.dynamic_nft_abci.rounds import (
 )
 
 
-BACKGROUND_THRESHOLDS = []
-FRAME_THRESHOLDS = [1000, 2000, 3000]
-BAR_THRESHOLDS = [200, 500]
-
 IMAGE_URI_BASE = "https://pfp.autonolas.network/series/1/"
 
 DUMMY_MEMBER_TO_NFT_URI = {
@@ -67,14 +67,6 @@ DUMMY_MEMBER_TO_NFT_URI = {
     "0x44704AE66f0B9FF08a7b0584B49FE941AdD1bAE7": f"{IMAGE_URI_BASE}/3",
     "0x19B043aD06C48aeCb2028B0f10503422BD0E0918": f"{IMAGE_URI_BASE}/4",
     "0x8325c5e4a56E352355c590E4A43420840F067F98": f"{IMAGE_URI_BASE}/5",  # this one does not appear in the leaderboard
-}
-
-DUMMY_LEADERBOARD = {
-    "0x54EfA9b1865FFE8c528fb375A7A606149598932A": 1500,
-    "0x3c03a080638b3c176aB7D9ed56E25bC416dFf525": 900,
-    "0x44704AE66f0B9FF08a7b0584B49FE941AdD1bAE7": 575,
-    "0x19B043aD06C48aeCb2028B0f10503422BD0E0918": 100,
-    "0x7B394CD0B75f774c6808cc681b26aC3E5DF96E27": 3500,  # this one does not appear in the dummy members
 }
 
 IMAGE_ROOT = Path(Path(__file__).parent, "tests", "data")
@@ -136,22 +128,113 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
     matching_round: Type[AbstractRound] = LeaderboardObservationRound
 
     def async_act(self) -> Generator:
-        """Get the leaderboard.
-
-        TODO: in the final implementation the leaderboard will be get from the API
-        """
-        leaderboard = json.dumps(DUMMY_LEADERBOARD, sort_keys=True)
+        """Get the leaderboard."""
+        with self.context.benchmark_tool.measure(
+            self.behaviour_id,
+        ).local():
+            data = yield from self.get_data()
+            self.context.logger.info(f"Received points from Leaderboard API: {data}")
 
         with self.context.benchmark_tool.measure(
             self.behaviour_id,
         ).consensus():
-            payload = LeaderboardObservationPayload(
-                self.context.agent_address, leaderboard
-            )
+            payload = LeaderboardObservationPayload(self.context.agent_address, data)
             yield from self.send_a2a_transaction(payload)
             yield from self.wait_until_round_end()
 
         self.set_done()
+
+    def get_data(self) -> Generator[None, None, str]:
+        """
+        Get the data from the Leaderboard API.
+
+        :yield: HttpMessage object
+        :return: return the data retrieved from the Leaderboard API, in case something goes wrong we return "{}".
+        """
+        response = yield from self.get_http_response(
+            method="GET",
+            url=self.params.leaderboard_endpoint,
+        )
+        if response.status_code != 200:
+            self.context.logger.error(
+                f"Could not retrieve data from the Leaderboard API. "
+                f"Received status code {response.status_code}."
+            )
+            return "{}"
+
+        try:
+            # Parse the response bytes into a dict
+            response_json = json.loads(response.body)
+
+            # We retrieve both leaderboard and layer data in the same call
+            # so we need to iterate it and identify each one by its "valueRanges" field
+            response_body = {}
+            for data in response_json["valueRanges"]:
+                if data["range"] == self.params.leaderboard_points_range:
+                    leaderboard_raw = data["values"]
+
+                    # Format the leaderboard: build a dictionary like the following
+                    # leaderboard = {       # noqa: E800
+                    #    "wallet_0": 1000,  # noqa: E800
+                    #    "wallet_1": 1500,  # noqa: E800
+                    #     ...
+                    # }                     # noqa: E800
+                    leaderboard = {
+                        entry[0]: int(entry[1])
+                        for entry in leaderboard_raw
+                        if LedgerApis.is_valid_address(DEFAULT_LEDGER, entry[0])
+                    }
+
+                    if len(leaderboard) != len(leaderboard_raw):
+                        self.context.logger.error(
+                            "Some elements in the leaderboard are not valid and have been skipped."
+                        )
+
+                    response_body["leaderboard"] = leaderboard
+                    continue
+
+                if data["range"] == self.params.leaderboard_layers_range:
+                    layers_raw = data["values"]
+
+                    layer_names = ImageGenerationBehaviour.ImageManager.LAYER_NAMES
+
+                    # Format the layers: build a dictionary like the following:
+                    # layers = {                                         # noqa: E800
+                    #   0: {"classes": "hash", "1000": "hash", ...},  # layer 0  # noqa: E800
+                    #   1: {"frames": "hash", "1000": "hash", ...},   # layer 1  # noqa: E800
+                    #   ...
+                    # }                                                  # noqa: E800
+                    layers = {}
+                    for layer_index, layer_data in enumerate(layers_raw):
+                        layers[layer_index] = {}
+                        for image_data in layer_data:
+                            points, image_hash = image_data.split(":")
+                            layers[layer_names[layer_index]][int(points)] = image_hash
+
+                    response_body["layers"] = layers
+
+        except (KeyError, ValueError, TypeError) as e:
+            self.context.logger.error(
+                f"Could not parse response from the Leaderboard API, "
+                f"the following error was encountered {type(e).__name__}: {e}"
+            )
+            return "{}"
+
+        except Exception as e:  # pylint: disable=broad-except
+            self.context.logger.error(
+                f"An unexpected error was encountered while parsing the Leaderboard response "
+                f"{type(e).__name__}: {e}"
+            )
+            return "{}"
+
+        # We dump the json into a string, notice the sort_keys=True.
+        # We MUST ensure that they keys are ordered in the same way,
+        # otherwise the payload MAY end up being different on different
+        # agents. This can happen in case the API responds with keys
+        # in different order, which can happen since there is no requirement
+        # against this.
+        deterministic_body = json.dumps(response_body, sort_keys=True)
+        return deterministic_body
 
 
 class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
@@ -168,13 +251,15 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
         number of points have changed with respect to the ones in the database
         and will recalculate their images (but not store them yet).
         """
-        leaderboard = self.synchronized_data.most_voted_leaderboard
+        leaderboard = self.synchronized_data.most_voted_api_data["leaderboard"]
+        layer_data = self.synchronized_data.most_voted_api_data["layers"]
+        thresholds = {k: list(v.keys()) for k, v in layer_data.items()}
         members = self.synchronized_data.members
 
         member_updates = {}
         for member, new_points in leaderboard.items():
             if member not in members or members[member]["points"] != new_points:
-                image_code = self.points_to_code(new_points)
+                image_code = self.points_to_code(new_points, thresholds)
                 member_updates[member] = {
                     "points": new_points,
                     "image_code": image_code,
@@ -211,12 +296,13 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
         return f"{len(thresholds):02}", points - prev_threshold
 
     @staticmethod
-    def points_to_code(points: float) -> str:
+    def points_to_code(points: float, thresholds: dict) -> str:
         """Calculate the NFT image code given the number of community points.
 
         Examples of image codes: 000001, 010300, 020102....
 
         :param points: number of community points
+        :param thresholds: thresholds dict
         :returns: the image code
         """
 
@@ -225,13 +311,13 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
 
         # Points are updated after every call and we only keep the remainder
         cls_code, points = ImageCodeCalculationBehaviour.get_layer_code(
-            points, BACKGROUND_THRESHOLDS
+            points, thresholds[ImageGenerationBehaviour.ImageManager.LAYER_NAMES[0]]
         )
         fr_code, points = ImageCodeCalculationBehaviour.get_layer_code(
-            points, FRAME_THRESHOLDS
+            points, thresholds[ImageGenerationBehaviour.ImageManager.LAYER_NAMES[1]]
         )
         bar_code, points = ImageCodeCalculationBehaviour.get_layer_code(
-            points, BAR_THRESHOLDS
+            points, thresholds[ImageGenerationBehaviour.ImageManager.LAYER_NAMES[2]]
         )
 
         return cls_code + fr_code + bar_code
@@ -252,6 +338,8 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
         been used. For each of these cases, agents generate the new
         images and push them to IPFS.
         """
+        # Get new layers from IPFS if needed
+        self.update_layers()
 
         # In the current implementation, the image manager will be instanced every time the behaviour is run.
         # This is not ideal: a singleton or another pattern that avoids this might be more suited to our usecase.
@@ -298,14 +386,44 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
 
         self.set_done()
 
+    def update_layers(self):
+        """Updates local layer if they dont match the ones from the leaderboard API"""
+        api_layer_data = self.synchronized_data.most_voted_api_data["layers"]
+
+        for layer_name in self.ImageManager.LAYER_NAMES:
+
+            api_layer_hashes = set(api_layer_data[layer_name].values())
+
+            layer_path = Path(IMAGE_ROOT, self.ImageManager.LAYERS_DIR, layer_name)
+
+            local_layer_hashes = set(
+                IPFSHashOnly.get(image_file)
+                for image_file in layer_path.rglob(f"*.{self.ImageManager.PNG_EXT}")
+            )
+
+            # Check if some image has changed and re-download images
+            if api_layer_hashes != local_layer_hashes:
+
+                # Remove local images
+                shutil.rmtree(layer_path)
+                os.mkdir(layer_path)
+
+                # Get new images from IPFS. They are stored in alphabetical order.
+                for i, image_hash in enumerate(api_layer_hashes):
+                    self.get_from_ipfs(
+                        hash_=image_hash,
+                        target_dir=layer_path,
+                        multiple=False,
+                        filename=str(i),
+                        filetype=ExtendedSupportedFiletype.PNG,
+                    )
+
     class ImageManager:
         """Class to load image layers and compose new images from them"""
 
         LAYERS_DIR = "layers"
         IMAGES_DIR = "images"
-        CLASSES = "classes"
-        FRAMES = "frames"
-        BARS = "bars"
+        LAYER_NAMES = ("classes", "frames", "bars")
         PNG_EXT = "png"
         CODE_LEN = 6
 
@@ -328,8 +446,8 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                             f"*.{self.PNG_EXT}"
                         )
                     )
+                    for i in self.LAYER_NAMES
                 )
-                for i in (self.CLASSES, self.FRAMES, self.BARS)
             )
 
         def generate(self, image_code: str) -> Optional[Image.Image]:

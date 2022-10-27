@@ -19,6 +19,7 @@
 
 """This package contains round behaviours of DynamicNFTAbciApp."""
 
+import json
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Iterator, Optional, Type
@@ -35,7 +36,6 @@ from packages.valory.skills.abstract_round_abci.test_tools.base import (
 )
 from packages.valory.skills.dynamic_nft_abci.behaviours import (
     DBUpdateBehaviour,
-    DUMMY_LEADERBOARD,
     DynamicNFTBaseBehaviour,
     ImageCodeCalculationBehaviour,
     ImageGenerationBehaviour,
@@ -61,6 +61,50 @@ def ipfs_daemon() -> Iterator[bool]:
 
 
 use_ipfs_daemon = pytest.mark.usefixtures("ipfs_daemon")
+
+
+DUMMY_LEADERBOARD = {
+    "0x54EfA9b1865FFE8c528fb375A7A606149598932A": 1500,
+    "0x3c03a080638b3c176aB7D9ed56E25bC416dFf525": 900,
+    "0x44704AE66f0B9FF08a7b0584B49FE941AdD1bAE7": 575,
+    "0x19B043aD06C48aeCb2028B0f10503422BD0E0918": 100,
+    "0x7B394CD0B75f774c6808cc681b26aC3E5DF96E27": 3500,  # this one does not appear in the dummy members
+}
+
+DUMMY_LAYERS = {
+    "classes": {
+        0: "bafybeiauzyxtnahzul5gk27az7cb3evq5ttfwnxoi366lbrww3pcpthcmi",
+        1000: "bafybeiay7owbbggi4nz4l4aeimzixia3v542iqcuaaiwd4kwsayu54aiqq",
+        2000: "bafybeig35zr5r4e2gyc3c2ifkxnc43thyipmtgkauly7fxscut5r7zin2a",
+        3000: "bafybeiea4in45zhx644yq4mzwrzjtqzzdgp7xv4ngv3ljttiwpgwldonl4",
+        4000: "bafybeif6oacd3pkbpn4ij4daqpopjdehv2dv2tejpazwkdcs4cfvedlrvy",
+    },
+    "frames": {
+        0: "bafybeifg2owpyplscve2sr4yjcjg6rxsooif2jqt4qmwvrbu36n5ehancm",
+        1000: "bafybeige2swjq6fq6yvbvdhylkvfl7r3kv6nzwzqmkgb5g27ifziro342q",
+        2000: "bafybeigyzhrhiybdsg3z7qn2nbqiyk52u4ytd6ndl6ixrdg3tk5g6owtsi",
+    },
+    "bars": {
+        0: "bafybeig4corsme52qixcirhwuh6yquzd3bou3mgvjebspqxl2sh7jfpftq",
+        200: "bafybeifrhbjmou67wn4uelixqxg732nhjmvgeb2w26czedsr4w2htactxy",
+        500: "bafybeif3hvmq7rltk5hxucfnnazcwm4b2nuggquonaxhyx7rgsc3uhimye",
+    },
+}
+
+DUMMY_THRESHOLDS = {"classes": [], "frames": [1000, 2000, 3000], "bars": [200, 500]}
+
+DUMMY_API_DATA = {"leaderboard": DUMMY_LEADERBOARD, "layers": DUMMY_LAYERS}
+
+SHEET_ID = "1JYR9kfj_Zxd9xHX5AWSlO5X6HusFnb7p9amEUGU55Cg"
+GOOGLE_API_KEY = ""
+GOOGLE_SHEETS_ENDPOINT = "https://sheets.googleapis.com/v4/spreadsheets"
+DEFAULT_CELL_RANGE_POINTS = "Leaderboard!A2:B102"
+DEFAULT_CELL_RANGE_LAYERS = "Layers!B1:Z3"
+
+DEFAULT_SHEET_API_URL = (
+    f"{GOOGLE_SHEETS_ENDPOINT}/{SHEET_ID}/values:batchGet?"
+    f"ranges={DEFAULT_CELL_RANGE_POINTS}&ranges={DEFAULT_CELL_RANGE_LAYERS}&key={GOOGLE_API_KEY}"
+)
 
 
 def get_dummy_updates() -> Dict:
@@ -148,18 +192,42 @@ class TestLeaderboardObservationBehaviour(BaseDynamicNFTTest):
     next_behaviour_class = ImageCodeCalculationBehaviour
 
     @pytest.mark.parametrize(
-        "test_case",
+        "test_case, kwargs",
         [
-            BehaviourTestCase(
-                "Happy path",
-                initial_data=dict(),
-                event=Event.DONE,
-            ),
+            (
+                BehaviourTestCase(
+                    "Happy path",
+                    initial_data=dict(),
+                    event=Event.DONE,
+                ),
+                {
+                    "body": json.dumps(
+                        DUMMY_API_DATA,
+                    ),
+                    "status_code": 200,
+                },
+            )
         ],
     )
-    def test_run(self, test_case: BehaviourTestCase) -> None:
+    def test_run(self, test_case: BehaviourTestCase, kwargs: Any) -> None:
         """Run tests."""
         self.fast_forward(test_case.initial_data)
+        self.behaviour.act_wrapper()
+        self.mock_http_request(
+            request_kwargs=dict(
+                method="GET",
+                headers="",
+                version="",
+                url=DEFAULT_SHEET_API_URL,
+            ),
+            response_kwargs=dict(
+                version="",
+                status_code=kwargs.get("status_code"),
+                status_text="",
+                headers="",
+                body=kwargs.get("body").encode(),
+            ),
+        )
         self.complete(test_case.event)
 
 
@@ -174,7 +242,7 @@ class TestImageCodeCalculationBehaviour(BaseDynamicNFTTest):
         [
             BehaviourTestCase(
                 "Happy path",
-                initial_data=dict(most_voted_leaderboard=DUMMY_LEADERBOARD),
+                initial_data=dict(most_voted_api_data=DUMMY_API_DATA),
                 event=Event.DONE,
             ),
         ],
@@ -199,12 +267,15 @@ class TestImageCodeCalculationBehaviour(BaseDynamicNFTTest):
     )
     def test_points_to_code(self, points: float, expected_code: str) -> None:
         """Test the points_to_code function"""
-        assert ImageCodeCalculationBehaviour.points_to_code(points) == expected_code
+        assert (
+            ImageCodeCalculationBehaviour.points_to_code(points, DUMMY_THRESHOLDS)
+            == expected_code
+        )
 
     def test_points_to_code_negative(self) -> None:
         """Test the points_to_code function"""
         with pytest.raises(ValueError):
-            assert ImageCodeCalculationBehaviour.points_to_code(-100)
+            assert ImageCodeCalculationBehaviour.points_to_code(-100, DUMMY_THRESHOLDS)
 
 
 @use_ipfs_daemon
@@ -226,7 +297,10 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
         [
             BehaviourTestCase(
                 "Happy path",
-                initial_data=dict(most_voted_member_updates=get_dummy_updates()),
+                initial_data=dict(
+                    most_voted_member_updates=get_dummy_updates(),
+                    most_voted_api_data=DUMMY_API_DATA,
+                ),
                 event=Event.DONE,
             ),
         ],
