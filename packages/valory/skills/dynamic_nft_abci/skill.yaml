@@ -29,7 +29,7 @@ fingerprint:
   payloads.py: bafybeiaeibgx4faww6sjrqxcehq5a3h54upqqifkbptr6eq57jvlyohxsa
   rounds.py: bafybeihmwfaoyljv6azcncp3cdkqiy7nwfgsgubq5lddppuuqfi7ac2co4
   tests/__init__.py: bafybeia2xqlacp44lylwlkf7f7ci6m3yshppv3vusgcdjpj4bbcbnuhvla
-  tests/test_behaviours.py: bafybeicgtr5xbkns5ovdrfx4oxfiyhey3kxxndcvjpgquupcdorf7h3aae
+  tests/test_behaviours.py: bafybeierf3qri5cm3sflearmhhqkg3qvmnnckisvpndqvjoymjq4pg3wii
   tests/test_dialogues.py: bafybeifcw2m6rgm3bpuh5g7wcvceliq2cpba4l5mr2jbhvdrbnta2b7d4u
   tests/test_dummy_e2e.py: bafybeidrzn2wzng62jptkf2zjtlhup7bu74ptrlwmdwh7lgwuubk5dbm4q
   tests/test_handlers.py: bafybeibnvcz2rxw5r7yfexhr3ayk6ef7ozqkwwxcgycoyvi42osztthhu4

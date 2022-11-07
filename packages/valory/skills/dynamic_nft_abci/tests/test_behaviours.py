@@ -565,5 +565,6 @@ class TestImageManager:
         assert not self.manager.generate("090909")  # image does not exist
 
     def teardown_class(self):
+        """Teardown class"""
         if os.path.isdir(self.tmpdir):
             shutil.rmtree(self.tmpdir)
