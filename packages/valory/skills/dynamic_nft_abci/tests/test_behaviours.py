@@ -21,6 +21,7 @@
 
 import json
 import os
+import shutil
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
@@ -202,6 +203,14 @@ class BaseDynamicNFTTest(FSMBehaviourBaseCase):
             self.behaviour.current_behaviour.behaviour_id  # type: ignore
             == self.next_behaviour_class.behaviour_id
         )
+
+    def teardown_class(self):
+        """Teardown"""
+        # Clean image output directory
+        image_manager_cls = ImageGenerationBehaviour.ImageManager
+        out_path = Path(image_manager_cls.IMAGE_ROOT, image_manager_cls.IMAGES_DIR)
+        if os.path.isdir(out_path):
+            shutil.rmtree(out_path)
 
 
 class TestNewMembersBehaviour(BaseDynamicNFTTest):
@@ -542,7 +551,10 @@ class TestImageManager:
     def setup_class(self):
         """Setup class"""
         logger_mock = MagicMock()
-        self.manager = ImageGenerationBehaviour.ImageManager(logger_mock)
+        self.tmpdir = tempfile.TemporaryDirectory().name
+        self.manager = ImageGenerationBehaviour.ImageManager(
+            logger_mock, Path(self.tmpdir)
+        )
 
     def test_generate_invalid_code_length(self):
         """test_generate_invalid_code_length"""
@@ -551,3 +563,8 @@ class TestImageManager:
     def test_generate_invalid_code_non_existent(self):
         """test_generate_invalid_code_non_existent"""
         assert not self.manager.generate("090909")  # image does not exist
+
+    def teardown_class(self):
+        """Teardown class"""
+        if os.path.isdir(self.tmpdir):
+            shutil.rmtree(self.tmpdir)
