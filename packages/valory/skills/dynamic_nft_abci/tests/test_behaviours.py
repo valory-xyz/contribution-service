@@ -551,10 +551,10 @@ class TestImageManager:
     def setup_class(self):
         """Setup class"""
         logger_mock = MagicMock()
-        with tempfile.TemporaryDirectory() as tmpdir:
-            self.manager = ImageGenerationBehaviour.ImageManager(
-                logger_mock, Path(tmpdir)
-            )
+        self.tmpdir = tempfile.TemporaryDirectory().name
+        self.manager = ImageGenerationBehaviour.ImageManager(
+            logger_mock, Path(self.tmpdir)
+        )
 
     def test_generate_invalid_code_length(self):
         """test_generate_invalid_code_length"""
@@ -563,3 +563,7 @@ class TestImageManager:
     def test_generate_invalid_code_non_existent(self):
         """test_generate_invalid_code_non_existent"""
         assert not self.manager.generate("090909")  # image does not exist
+
+    def teardown_class(self):
+        if os.path.isdir(self.tmpdir):
+            shutil.rmtree(self.tmpdir)
