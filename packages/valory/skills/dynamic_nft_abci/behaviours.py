@@ -99,15 +99,19 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
 
         TODO: in the final implementation new members will be get from the contract.
         """
-        old_members = set(self.synchronized_data.members.keys())
-        new_member_to_uri = json.dumps(
-            {
-                member: {"uri": uri, "points": None, "image_code": None}
-                for member, uri in DUMMY_MEMBER_TO_NFT_URI.items()
-                if member not in old_members
-            },
-            sort_keys=True,
-        )
+        with self.context.benchmark_tool.measure(
+            self.behaviour_id,
+        ).local():
+            old_members = set(self.synchronized_data.members.keys())
+            new_member_to_uri = json.dumps(
+                {
+                    member: {"uri": uri, "points": None, "image_code": None}
+                    for member, uri in DUMMY_MEMBER_TO_NFT_URI.items()
+                    if member not in old_members
+                },
+                sort_keys=True,
+            )
+            self.context.logger.info(f"Got the new member list: {new_member_to_uri}")
 
         with self.context.benchmark_tool.measure(
             self.behaviour_id,
@@ -248,21 +252,27 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
         number of points have changed with respect to the ones in the database
         and will recalculate their images (but not store them yet).
         """
-        leaderboard = self.synchronized_data.most_voted_api_data["leaderboard"]
-        layer_data = self.synchronized_data.most_voted_api_data["layers"]
-        thresholds = {k: list(v.keys()) for k, v in layer_data.items()}
-        members = self.synchronized_data.members
+        with self.context.benchmark_tool.measure(
+            self.behaviour_id,
+        ).local():
+            leaderboard = self.synchronized_data.most_voted_api_data["leaderboard"]
+            layer_data = self.synchronized_data.most_voted_api_data["layers"]
+            thresholds = {k: list(v.keys()) for k, v in layer_data.items()}
+            members = self.synchronized_data.members
 
-        member_updates = {}
-        for member, new_points in leaderboard.items():
-            if member not in members or members[member]["points"] != new_points:
-                image_code = self.points_to_code(new_points, thresholds)
-                member_updates[member] = {
-                    "points": new_points,
-                    "image_code": image_code,
-                }
+            member_updates = {}
+            for member, new_points in leaderboard.items():
+                if member not in members or members[member]["points"] != new_points:
+                    image_code = self.points_to_code(new_points, thresholds)
+                    member_updates[member] = {
+                        "points": new_points,
+                        "image_code": image_code,
+                    }
 
-        member_updates_serialized = json.dumps(member_updates, sort_keys=True)
+            member_updates_serialized = json.dumps(member_updates, sort_keys=True)
+            self.context.logger.info(
+                f"Calculated member updates: {member_updates_serialized}"
+            )
 
         with self.context.benchmark_tool.measure(
             self.behaviour_id,
@@ -335,35 +345,42 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
         been used. For each of these cases, agents generate the new
         images and push them to IPFS.
         """
-        # Get new layers from IPFS if needed
-        self.update_layers()
+        with self.context.benchmark_tool.measure(
+            self.behaviour_id,
+        ).local():
+            # Get new layers from IPFS if needed
+            self.update_layers()
 
-        # In the current implementation, the image manager will be instanced every time the behaviour is run.
-        # This is not ideal: a singleton or another pattern that avoids this might be more suited to our usecase.
-        img_manager = self.ImageManager(logger=self.context.logger)
+            # In the current implementation, the image manager will be instanced every time the behaviour is run.
+            # This is not ideal: a singleton or another pattern that avoids this might be more suited to our usecase.
+            img_manager = self.ImageManager(logger=self.context.logger)
 
-        # Get the image codes that have been never generated
-        new_image_code_to_images = {}
-        for update in self.synchronized_data.most_voted_member_updates.values():
-            if update["image_code"] not in self.synchronized_data.images:
-                new_image_code_to_images[update["image_code"]] = img_manager.generate(
-                    update["image_code"]
-                )
+            # Get the image codes that have been never generated
+            new_image_code_to_images = {}
+            for update in self.synchronized_data.most_voted_member_updates.values():
+                if update["image_code"] not in self.synchronized_data.images:
+                    new_image_code_to_images[
+                        update["image_code"]
+                    ] = img_manager.generate(update["image_code"])
 
-        if None in new_image_code_to_images.values():
-            status = "error"
-            new_image_code_to_hashes = {}
-        else:
-            status = "success"
-            # Push to IPFS
-            new_image_code_to_hashes = {}
-            for image_code, image in new_image_code_to_images.items():
-                image_path = Path(
-                    img_manager.out_path, f"{image_code}.{img_manager.PNG_EXT}"
-                )
-                new_image_code_to_hashes[image_code] = self.send_to_ipfs(
-                    image_path, image, filetype=ExtendedSupportedFiletype.PNG
-                )
+            if None in new_image_code_to_images.values():
+                status = "error"
+                new_image_code_to_hashes = {}
+            else:
+                status = "success"
+                # Push to IPFS
+                new_image_code_to_hashes = {}
+                for image_code, image in new_image_code_to_images.items():
+                    image_path = Path(
+                        img_manager.out_path, f"{image_code}.{img_manager.PNG_EXT}"
+                    )
+                    new_image_code_to_hashes[image_code] = self.send_to_ipfs(
+                        image_path, image, filetype=ExtendedSupportedFiletype.PNG
+                    )
+
+            self.context.logger.info(
+                f"Generated the following new images: {new_image_code_to_hashes}"
+            )
 
         with self.context.benchmark_tool.measure(
             self.behaviour_id,
@@ -497,6 +514,10 @@ class DBUpdateBehaviour(DynamicNFTBaseBehaviour):
 
         Redirect table: must be updated now to reflect the new redirects (if it applies).
         """
+        self.context.logger.info(
+            "Updating database tables",
+        )
+
         with self.context.benchmark_tool.measure(
             self.behaviour_id,
         ).consensus():
