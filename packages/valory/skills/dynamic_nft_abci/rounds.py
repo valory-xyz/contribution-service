@@ -49,6 +49,7 @@ class Event(Enum):
     ROUND_TIMEOUT = "round_timeout"
     IMAGE_ERROR = "image_error"
     API_ERROR = "api_error"
+    CONTRACT_ERROR = "contract_error"
 
 
 class SynchronizedData(BaseSynchronizedData):
@@ -92,11 +93,17 @@ class NewMembersRound(CollectSameUntilThresholdRound):
     payload_attribute: str = "content"
     synchronized_data_class = SynchronizedData
 
+    ERROR_PAYLOAD = {"error": True}
+
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:
         """Process the end of the block."""
         if self.threshold_reached:
             # Add the new members to the members table. Note that the new members have no points or image_code fields
             new_members = json.loads(self.most_voted_payload)
+
+            if new_members == NewMembersRound.ERROR_PAYLOAD:
+                return self.synchronized_data, Event.CONTRACT_ERROR
+
             members = {
                 **new_members,
                 **self.synchronized_data.members,
@@ -243,6 +250,7 @@ class DynamicNFTAbciApp(AbciApp[Event]):
     transition_function: AbciAppTransitionFunction = {
         NewMembersRound: {
             Event.DONE: LeaderboardObservationRound,
+            Event.CONTRACT_ERROR: NewMembersRound,
             Event.NO_MAJORITY: NewMembersRound,
             Event.ROUND_TIMEOUT: NewMembersRound,
         },
