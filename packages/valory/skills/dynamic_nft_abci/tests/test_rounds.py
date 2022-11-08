@@ -29,7 +29,7 @@ from packages.valory.skills.abstract_round_abci.base import BaseTxPayload
 from packages.valory.skills.abstract_round_abci.test_tools.rounds import (
     BaseCollectSameUntilThresholdRoundTest,
 )
-from packages.valory.skills.dynamic_nft_abci.behaviours import DUMMY_MEMBER_TO_NFT_URI
+from packages.valory.skills.dynamic_nft_abci.behaviours import TOKEN_URI_BASE
 from packages.valory.skills.dynamic_nft_abci.payloads import (
     DBUpdatePayload,
     ImageCodeCalculationPayload,
@@ -51,6 +51,15 @@ from packages.valory.skills.dynamic_nft_abci.tests.test_behaviours import (
 )
 
 
+DUMMY_MEMBER_TO_NFT_URI = {
+    "0x54EfA9b1865FFE8c528fb375A7A606149598932A": f"{TOKEN_URI_BASE}/1",
+    "0x3c03a080638b3c176aB7D9ed56E25bC416dFf525": f"{TOKEN_URI_BASE}/2",
+    "0x44704AE66f0B9FF08a7b0584B49FE941AdD1bAE7": f"{TOKEN_URI_BASE}/3",
+    "0x19B043aD06C48aeCb2028B0f10503422BD0E0918": f"{TOKEN_URI_BASE}/4",
+    "0x8325c5e4a56E352355c590E4A43420840F067F98": f"{TOKEN_URI_BASE}/5",  # this one does not appear in the dummy leaderboard
+}
+
+
 def get_participants() -> FrozenSet[str]:
     """Participants"""
     return frozenset([f"agent_{i}" for i in range(MAX_PARTICIPANTS)])
@@ -70,6 +79,11 @@ def get_payloads(
 def get_dummy_new_members_payload_serialized() -> str:
     """Dummy new members payload"""
     return json.dumps(DUMMY_MEMBER_TO_NFT_URI, sort_keys=True)
+
+
+def get_dummy_new_members_payload_error_serialized() -> str:
+    """Dummy new members payload"""
+    return json.dumps({"error": True}, sort_keys=True)
 
 
 def get_dummy_leaderboard_payload_serialized(api_error: bool = False) -> str:
@@ -201,6 +215,22 @@ class TestNewMembersRound(BaseDynamicNFTRoundTestClass):
                 synchronized_data_attr_checks=[
                     lambda _synchronized_data: _synchronized_data.members,
                 ],
+            ),
+            RoundTestCase(
+                name="Contract error",
+                initial_data={},
+                payloads=get_payloads(
+                    payload_cls=NewMembersPayload,
+                    data=get_dummy_new_members_payload_error_serialized(),
+                ),
+                final_data={
+                    "members": json.loads(
+                        get_dummy_new_members_payload_error_serialized()
+                    ),
+                },
+                event=Event.CONTRACT_ERROR,
+                most_voted_payload=get_dummy_new_members_payload_error_serialized(),
+                synchronized_data_attr_checks=[],
             ),
         ),
     )

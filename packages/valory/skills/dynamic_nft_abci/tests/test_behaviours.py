@@ -33,6 +33,9 @@ import pytest
 from aea.crypto.ledger_apis import LedgerApis
 from aea_cli_ipfs.ipfs_utils import IPFSDaemon
 
+from packages.valory.contracts.ERC721Collective.contract import ERC721CollectiveContract
+from packages.valory.protocols.contract_api import ContractApiMessage
+from packages.valory.protocols.contract_api.custom_types import State
 from packages.valory.skills.abstract_round_abci.base import AbciAppDB
 from packages.valory.skills.abstract_round_abci.behaviour_utils import BaseBehaviour
 from packages.valory.skills.abstract_round_abci.behaviours import (
@@ -48,6 +51,7 @@ from packages.valory.skills.dynamic_nft_abci.behaviours import (
     ImageGenerationBehaviour,
     LeaderboardObservationBehaviour,
     NewMembersBehaviour,
+    SYNDICATE_CONTRACT_ADDRESS,
 )
 from packages.valory.skills.dynamic_nft_abci.rounds import (
     Event,
@@ -219,19 +223,84 @@ class TestNewMembersBehaviour(BaseDynamicNFTTest):
     behaviour_class = NewMembersBehaviour
     next_behaviour_class = LeaderboardObservationBehaviour
 
+    def _mock_syndicate_contract_request(
+        self,
+        response_body: Dict,
+        response_performative: ContractApiMessage.Performative,
+    ) -> None:
+        """Mock the WeightedPoolContract."""
+        self.mock_contract_api_request(
+            contract_id=str(ERC721CollectiveContract.contract_id),
+            request_kwargs=dict(
+                performative=ContractApiMessage.Performative.GET_STATE,
+                contract_address=SYNDICATE_CONTRACT_ADDRESS,
+            ),
+            response_kwargs=dict(
+                performative=response_performative,
+                state=State(
+                    ledger_id="ethereum",
+                    body=response_body,
+                ),
+            ),
+        )
+
     @pytest.mark.parametrize(
-        "test_case",
+        "test_case, kwargs",
         [
-            BehaviourTestCase(
-                "Happy path",
-                initial_data=dict(),
-                event=Event.DONE,
+            (
+                BehaviourTestCase(
+                    "Happy path",
+                    initial_data=dict(),
+                    event=Event.DONE,
+                ),
+                {
+                    "mock_response_data": dict(member_to_token_id={}),
+                    "mock_response_performative": ContractApiMessage.Performative.STATE,
+                },
             ),
         ],
     )
-    def test_run(self, test_case: BehaviourTestCase) -> None:
+    def test_run(self, test_case: BehaviourTestCase, kwargs: Any) -> None:
         """Run tests."""
         self.fast_forward(test_case.initial_data)
+        self.behaviour.act_wrapper()
+        self._mock_syndicate_contract_request(
+            response_body=kwargs.get("mock_response_data"),
+            response_performative=kwargs.get("mock_response_performative"),
+        )
+        self.complete(test_case.event)
+
+
+class TestNewMembersBehaviourContractError(TestNewMembersBehaviour):
+    """Tests NewMembersBehaviour"""
+
+    behaviour_class = NewMembersBehaviour
+    next_behaviour_class = NewMembersBehaviour
+
+    @pytest.mark.parametrize(
+        "test_case, kwargs",
+        [
+            (
+                BehaviourTestCase(
+                    "Contract error",
+                    initial_data=dict(),
+                    event=Event.CONTRACT_ERROR,
+                ),
+                {
+                    "mock_response_data": dict(member_to_token_id={"error": True}),
+                    "mock_response_performative": ContractApiMessage.Performative.ERROR,
+                },
+            )
+        ],
+    )
+    def test_run(self, test_case: BehaviourTestCase, kwargs: Any) -> None:
+        """Run tests."""
+        self.fast_forward(test_case.initial_data)
+        self.behaviour.act_wrapper()
+        self._mock_syndicate_contract_request(
+            response_body=kwargs.get("mock_response_data"),
+            response_performative=kwargs.get("mock_response_performative"),
+        )
         self.complete(test_case.event)
 
 

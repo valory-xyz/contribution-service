@@ -98,6 +98,10 @@ class NewMembersRound(CollectSameUntilThresholdRound):
         if self.threshold_reached:
             # Add the new members to the members table. Note that the new members have no points or image_code fields
             new_members = json.loads(self.most_voted_payload)
+
+            if new_members == {"error": True}:
+                return self.synchronized_data, Event.CONTRACT_ERROR
+
             members = {
                 **new_members,
                 **self.synchronized_data.members,
