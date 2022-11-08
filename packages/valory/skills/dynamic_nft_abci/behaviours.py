@@ -61,9 +61,9 @@ from packages.valory.skills.dynamic_nft_abci.rounds import (
 )
 
 
-TOKEN_URI_BASE = "https://pfp.autonolas.network/series/1/"
+TOKEN_URI_BASE = "https://pfp.autonolas.network/series/1/"  # nosec
 
-SYNDICATE_CONTRACT_ADDRESS = "DUMMY_ADDRESS"
+SYNDICATE_CONTRACT_ADDRESS = "DUMMY_ADDRESS"  # nosec
 NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
 
 
