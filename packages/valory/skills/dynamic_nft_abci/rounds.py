@@ -49,6 +49,7 @@ class Event(Enum):
     ROUND_TIMEOUT = "round_timeout"
     IMAGE_ERROR = "image_error"
     API_ERROR = "api_error"
+    CONTRACT_ERROR = "contract_error"
 
 
 class SynchronizedData(BaseSynchronizedData):
@@ -243,6 +244,7 @@ class DynamicNFTAbciApp(AbciApp[Event]):
     transition_function: AbciAppTransitionFunction = {
         NewMembersRound: {
             Event.DONE: LeaderboardObservationRound,
+            Event.CONTRACT_ERROR: NewMembersRound,
             Event.NO_MAJORITY: NewMembersRound,
             Event.ROUND_TIMEOUT: NewMembersRound,
         },

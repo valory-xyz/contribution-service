@@ -1,0 +1,17 @@
+name: ERC721Collective
+author: valory
+version: 0.1.0
+type: contract
+description: ERC721Collective contract
+license: Apache-2.0
+aea_version: '>=1.0.0, <2.0.0'
+fingerprint:
+  __init__.py: bafybeibpgrtsjp5gktuvmohqr54r475mn6obya6nfutmxyvfdcb4sx4zva
+  build/ERC721Collective.json: bafybeiauwp7q7omvyuvt5zqilgb32lxcom6w4c7ehw33tsisckob3pxdba
+  contract.py: bafybeiexmchwd3ux5q7v7el3dovttkkdoejyoxnzjfqvh45vt73zryxc6m
+fingerprint_ignore_patterns: []
+class_name: ERC721CollectiveContract
+contract_interface_paths:
+  ethereum: build/ERC721Collective.json
+dependencies: {}
+contracts: []

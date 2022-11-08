@@ -7,7 +7,7 @@ license: Apache-2.0
 aea_version: '>=1.0.0, <2.0.0'
 fingerprint:
   __init__.py: bafybeif56b2yk2pzo6njoexydkvwkl5tiaj7p76542ljnrijm3urhtnsxq
-  behaviours.py: bafybeigv5jnczxnqgjds4brx6wm7zy2rn455hw4gjwwivc5cqv7k5xggxm
+  behaviours.py: bafybeidwi2cuzoikvekodbjhwydguh7a6lh22zpziyyifrh3otvlwtrgli
   data/layers/bars/100.png: bafybeigoziwjitryao5nexnffiqaeheeng6ghhc334ev5twc2oeyf6f5ty
   data/layers/bars/1000.png: bafybeiczopqs3f2mrxkf4jrlhcu7sszx45qcchbm23gdz2awoi6afgfpgi
   data/layers/bars/10000.png: bafybeifvzrholq2qyu5pb4nj7lxvqjkpmbda2i6bfd7dcuf7jsmbfvlfmu
@@ -20,14 +20,14 @@ fingerprint:
   data/layers/frames/02.png: bafybeia6thhn2qc3rmj2dnlhy5oov7bvtpjlosesu54ybnuavtl2725h7i
   data/layers/frames/03.png: bafybeigstc52zkvx3mwzw2dwc3726amgpolwbdxfoylpupnk6ut5ya357a
   dialogues.py: bafybeienawgp5jvg6ie3fpdtjepgabxjb3l6ugo46mso7xinx5abgxnafy
-  fsm_specification.yaml: bafybeico3tt74umdiswf6t56lwq6ezf3guenervxm5jb7kwoezrqlubxgm
+  fsm_specification.yaml: bafybeiay6apxjlgv5gcc65x7rzko2khslvdft4wnaaa57en7vycwrycht4
   handlers.py: bafybeidus4ztb2rxaocmi67iwuhg6s4hmafuelsa5u5xnqqk6p7hgmo7da
   io_/__init__.py: bafybeidxth2otiyp5gfk2l3zjvnfktgrtpwzsknihkef3v2lhwbkgum3ea
   io_/load.py: bafybeifd7ib4lktvgv6rphk6sblkndn3klmzd5js62h2gzxlubjcmlf6jy
   io_/store.py: bafybeih3wa6quhstymsqcsy7jejpj4fx6crq6gs72dzs6svjklu7wushtq
   models.py: bafybeibzg4w24cu6dkf4ovef4owhxos5wmn5luk3my7yj3t46kgdhbrihe
   payloads.py: bafybeiaeibgx4faww6sjrqxcehq5a3h54upqqifkbptr6eq57jvlyohxsa
-  rounds.py: bafybeihmwfaoyljv6azcncp3cdkqiy7nwfgsgubq5lddppuuqfi7ac2co4
+  rounds.py: bafybeiazkn2tctm6mfv62hfuji2oc3bnea3qd2h6ajjis4cvjyfnra4lpm
   tests/__init__.py: bafybeia2xqlacp44lylwlkf7f7ci6m3yshppv3vusgcdjpj4bbcbnuhvla
   tests/test_behaviours.py: bafybeierf3qri5cm3sflearmhhqkg3qvmnnckisvpndqvjoymjq4pg3wii
   tests/test_dialogues.py: bafybeifcw2m6rgm3bpuh5g7wcvceliq2cpba4l5mr2jbhvdrbnta2b7d4u
@@ -42,7 +42,8 @@ fingerprint:
   tests/test_rounds.py: bafybeibi4brvoeyma3iw44zrisedzztisdu4tlgfw66up4faf73xreplom
 fingerprint_ignore_patterns: []
 connections: []
-contracts: []
+contracts:
+- valory/ERC721Collective:0.1.0:bafybeiemzs6fi4fbzezdjvybu5tujzsc6zgzzspobkj745tn2ovhga22ve
 protocols: []
 skills:
 - valory/abstract_round_abci:0.1.0:bafybeiegpewio6lkpikfnohjqmlwkqtxdmjbky4dphof4jvrixlvkiqixi

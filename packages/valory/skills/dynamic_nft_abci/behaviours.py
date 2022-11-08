@@ -31,6 +31,8 @@ from aea.configurations.constants import DEFAULT_LEDGER
 from aea.crypto.ledger_apis import LedgerApis
 from aea.helpers.ipfs.base import IPFSHashOnly
 
+from packages.valory.contracts.ERC721Collective.contract import ERC721CollectiveContract
+from packages.valory.protocols.contract_api import ContractApiMessage
 from packages.valory.skills.abstract_round_abci.base import AbstractRound
 from packages.valory.skills.abstract_round_abci.behaviours import (
     AbstractRoundBehaviour,
@@ -59,15 +61,10 @@ from packages.valory.skills.dynamic_nft_abci.rounds import (
 )
 
 
-IMAGE_URI_BASE = "https://pfp.autonolas.network/series/1/"
+TOKEN_URI_BASE = "https://pfp.autonolas.network/series/1/"
 
-DUMMY_MEMBER_TO_NFT_URI = {
-    "0x54EfA9b1865FFE8c528fb375A7A606149598932A": f"{IMAGE_URI_BASE}/1",
-    "0x3c03a080638b3c176aB7D9ed56E25bC416dFf525": f"{IMAGE_URI_BASE}/2",
-    "0x44704AE66f0B9FF08a7b0584B49FE941AdD1bAE7": f"{IMAGE_URI_BASE}/3",
-    "0x19B043aD06C48aeCb2028B0f10503422BD0E0918": f"{IMAGE_URI_BASE}/4",
-    "0x8325c5e4a56E352355c590E4A43420840F067F98": f"{IMAGE_URI_BASE}/5",  # this one does not appear in the leaderboard
-}
+SYNDICATE_CONTRACT_ADDRESS = "DUMMY_ADDRESS"
+NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
 
 
 class DynamicNFTBaseBehaviour(BaseBehaviour):
@@ -95,23 +92,32 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
     matching_round: Type[AbstractRound] = NewMembersRound
 
     def async_act(self) -> Generator:
-        """Get a list of the new members.
-
-        TODO: in the final implementation new members will be get from the contract.
-        """
+        """Get a list of the new members."""
         with self.context.benchmark_tool.measure(
             self.behaviour_id,
         ).local():
-            old_members = set(self.synchronized_data.members.keys())
-            new_member_to_uri = json.dumps(
-                {
-                    member: {"uri": uri, "points": None, "image_code": None}
-                    for member, uri in DUMMY_MEMBER_TO_NFT_URI.items()
-                    if member not in old_members
-                },
-                sort_keys=True,
-            )
-            self.context.logger.info(f"Got the new member list: {new_member_to_uri}")
+
+            member_to_token_id = yield from self.get_member_to_token_id()
+
+            if member_to_token_id == {"error": True}:
+                new_member_to_uri = member_to_token_id
+            else:
+                member_to_nft_uri = {
+                    member: f"{TOKEN_URI_BASE}/{token_id}"
+                    for member, token_id in member_to_token_id.values()
+                }
+                old_members = set(self.synchronized_data.members.keys())
+                new_member_to_uri = json.dumps(
+                    {
+                        member: {"uri": uri, "points": None, "image_code": None}
+                        for member, uri in member_to_nft_uri.items()
+                        if member not in old_members
+                    },
+                    sort_keys=True,
+                )
+                self.context.logger.info(
+                    f"Got the new member list: {new_member_to_uri}"
+                )
 
         with self.context.benchmark_tool.measure(
             self.behaviour_id,
@@ -121,6 +127,22 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
             yield from self.wait_until_round_end()
 
         self.set_done()
+
+    def get_member_to_token_id(self) -> Generator[None, None, dict]:
+        """Get member to token id data."""
+        contract_api_msg = yield from self.get_contract_api_response(
+            performative=ContractApiMessage.Performative.GET_STATE,  # type: ignore
+            contract_address=SYNDICATE_CONTRACT_ADDRESS,
+            contract_id=str(ERC721CollectiveContract.contract_id),
+            contract_callable="get_all_erc721_transfers",
+            from_address=NULL_ADDRESS,
+        )
+        if contract_api_msg.performative != ContractApiMessage.Performative.STATE:
+            self.context.logger.info("Error retrieving the member to token_id data")
+            return {"error": True}
+        data = cast(dict, contract_api_msg.state.body["member_to_token_id"])
+        self.context.logger.info(f"Got member to token_id data: {data}")
+        return data
 
 
 class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
@@ -437,7 +459,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
     class ImageManager:
         """Class to load image layers and compose new images from them"""
 
-        IMAGE_ROOT = Path(Path(__file__).parent, "data")
+        IMAGE_ROOT = Path(Path(__file__).parent, "tests", "data")
         LAYERS_DIR = "layers"
         IMAGES_DIR = "images"
         LAYER_NAMES = ("classes", "frames", "bars")
