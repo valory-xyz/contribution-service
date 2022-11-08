@@ -99,8 +99,10 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
 
             member_to_token_id = yield from self.get_member_to_token_id()
 
-            if member_to_token_id == {"error": True}:
-                new_member_to_uri = {"error": True}
+            if member_to_token_id == NewMembersRound.ERROR_PAYLOAD:
+                new_member_to_uri = json.dumps(
+                    NewMembersRound.ERROR_PAYLOAD, sort_keys=True
+                )
             else:
                 member_to_nft_uri = {
                     member: f"{TOKEN_URI_BASE}/{token_id}"
@@ -139,7 +141,7 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
         )
         if contract_api_msg.performative != ContractApiMessage.Performative.STATE:
             self.context.logger.info("Error retrieving the member to token_id data")
-            return {"error": True}
+            return NewMembersRound.ERROR_PAYLOAD
         data = cast(dict, contract_api_msg.state.body["member_to_token_id"])
         self.context.logger.info(f"Got member to token_id data: {data}")
         return data

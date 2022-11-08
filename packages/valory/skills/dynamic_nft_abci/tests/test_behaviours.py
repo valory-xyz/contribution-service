@@ -56,6 +56,7 @@ from packages.valory.skills.dynamic_nft_abci.behaviours import (
 from packages.valory.skills.dynamic_nft_abci.rounds import (
     Event,
     FinishedDBUpdateRound,
+    NewMembersRound,
     SynchronizedData,
 )
 
@@ -287,7 +288,9 @@ class TestNewMembersBehaviourContractError(TestNewMembersBehaviour):
                     event=Event.CONTRACT_ERROR,
                 ),
                 {
-                    "mock_response_data": dict(member_to_token_id={"error": True}),
+                    "mock_response_data": dict(
+                        member_to_token_id=NewMembersRound.ERROR_PAYLOAD
+                    ),
                     "mock_response_performative": ContractApiMessage.Performative.ERROR,
                 },
             )
