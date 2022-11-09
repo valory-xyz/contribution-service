@@ -192,21 +192,3 @@ class HttpHandler(BaseHttpHandler):
         # Send response
         self.context.logger.info("responding with: {}".format(http_response))
         self.context.outbox.put_message(message=http_response)
-
-    def _handle_invalid(
-        self, http_msg: HttpMessage, http_dialogue: HttpDialogue
-    ) -> None:
-        """
-        Handle an invalid http message.
-
-        :param http_msg: the http message
-        :param http_dialogue: the http dialogue
-        """
-        self.context.logger.warning(
-            "cannot handle http message of performative={} in dialogue={}.".format(
-                http_msg.performative, http_dialogue
-            )
-        )
-
-    def teardown(self) -> None:
-        """Implement the handler teardown."""

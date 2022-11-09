@@ -243,36 +243,6 @@ class TestHttpHandler(BaseSkillTestCase):
             f"responding with: {message}",
         )
 
-    def test_handle_invalid(self):
-        """Test the _handle_invalid method of the http_echo handler."""
-        # setup
-        http_dialogue = self.prepare_skill_dialogue(
-            dialogues=self.http_dialogues,
-            messages=self.list_of_messages[:1],
-        )
-        incoming_message = cast(
-            HttpMessage,
-            self.build_incoming_message_for_skill_dialogue(
-                dialogue=http_dialogue,
-                performative=HttpMessage.Performative.RESPONSE,
-                version=self.version,
-                status_code=self.status_code,
-                status_text=self.status_text,
-                headers=self.headers,
-                body=self.body,
-            ),
-        )
-
-        # operation
-        with patch.object(self.logger, "log") as mock_logger:
-            self.http_handler.handle(incoming_message)
-
-        # after
-        mock_logger.assert_any_call(
-            logging.WARNING,
-            f"cannot handle http message of performative={incoming_message.performative} in dialogue={http_dialogue}.",
-        )
-
     def test_teardown(self):
         """Test the teardown method of the http_echo handler."""
         assert self.http_handler.teardown() is None
