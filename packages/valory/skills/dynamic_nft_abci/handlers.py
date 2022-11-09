@@ -51,7 +51,6 @@ from packages.valory.skills.dynamic_nft_abci.dialogues import (
 
 
 ABCIRoundHandler = BaseABCIRoundHandler
-HttpHandler = BaseHttpHandler
 SigningHandler = BaseSigningHandler
 LedgerApiHandler = BaseLedgerApiHandler
 ContractApiHandler = BaseContractApiHandler
