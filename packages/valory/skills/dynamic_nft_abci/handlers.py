@@ -22,7 +22,6 @@
 from typing import cast
 
 from aea.protocols.base import Message
-from aea.skills.base import Handler
 
 from packages.fetchai.protocols.default import DefaultMessage
 from packages.valory.protocols.http.message import HttpMessage
@@ -63,7 +62,7 @@ NOT_FOUND_CODE = 404
 BAD_REQUEST_CODE = 400
 
 
-class HttpHandler(Handler):
+class HttpHandler(BaseHttpHandler):
     """This implements the echo handler."""
 
     SUPPORTED_PROTOCOL = HttpMessage.protocol_id
@@ -79,18 +78,17 @@ class HttpHandler(Handler):
         """
         http_msg = cast(HttpMessage, message)
 
-        # recover dialogue
-        http_dialogues = cast(HttpDialogues, self.context.http_dialogues)
-        http_dialogue = cast(HttpDialogue, http_dialogues.update(http_msg))
-        if http_dialogue is None:
-            self._handle_unidentified_dialogue(http_msg)
-            return
-
         # handle message
         if http_msg.performative == HttpMessage.Performative.REQUEST:
+            # recover dialogue
+            http_dialogues = cast(HttpDialogues, self.context.http_dialogues)
+            http_dialogue = cast(HttpDialogue, http_dialogues.update(http_msg))
+            if http_dialogue is None:
+                self._handle_unidentified_dialogue(http_msg)
+                return
             self._handle_request(http_msg, http_dialogue)
         else:
-            self._handle_invalid(http_msg, http_dialogue)
+            super().handle(message)
 
     def _handle_unidentified_dialogue(self, http_msg: HttpMessage) -> None:
         """
