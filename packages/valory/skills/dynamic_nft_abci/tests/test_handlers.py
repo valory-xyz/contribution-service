@@ -19,8 +19,261 @@
 
 """Test the handlers.py module of the DynamicNFT skill."""
 
-import packages.valory.skills.dynamic_nft_abci.handlers  # pylint: disable=unused-import # noqa: F401
+import logging
+from pathlib import Path
+from typing import cast
+from unittest.mock import patch
+
+from aea.protocols.dialogue.base import DialogueMessage
+from aea.test_tools.test_skill import BaseSkillTestCase
+
+from packages.fetchai.protocols.default.message import DefaultMessage
+from packages.valory.protocols.http.message import HttpMessage
+from packages.valory.skills.dynamic_nft_abci.dialogues import HttpDialogues
+from packages.valory.skills.dynamic_nft_abci.handlers import (
+    BAD_REQUEST_CODE,
+    HttpHandler,
+    TEMPORARY_REDIRECT_CODE,
+)
 
 
-def test_import() -> None:
-    """Test that the 'handlers.py' of the DynamicNFT skill can be imported."""
+PACKAGE_DIR = Path(__file__).parent.parent
+
+
+class TestHttpHandler(BaseSkillTestCase):
+    """Test HttpHandler of http_echo."""
+
+    path_to_skill = PACKAGE_DIR
+
+    @classmethod
+    def setup_class(cls):
+        """Setup the test class."""
+        super().setup_class()
+        cls.http_handler = cast(HttpHandler, cls._skill.skill_context.handlers.http)
+        cls.logger = cls._skill.skill_context.logger
+
+        cls.http_dialogues = cast(
+            HttpDialogues, cls._skill.skill_context.http_dialogues
+        )
+
+        cls.get_method = "get"
+        cls.post_method = "post"
+        cls.url = "some_url"
+        cls.url_redirect = "some_url_redirect"
+        cls.version = "some_version"
+        cls.headers = "some_headers"
+        cls.body = b"some_body"
+        cls.sender = "fetchai/some_skill:0.1.0"
+        cls.skill_id = str(cls._skill.skill_context.skill_id)
+
+        cls.status_code = 100
+        cls.status_text = "some_status_text"
+
+        cls.content = b"some_content"
+        cls.list_of_messages = (
+            DialogueMessage(
+                HttpMessage.Performative.REQUEST,
+                {
+                    "method": cls.get_method,
+                    "url": cls.url,
+                    "version": cls.version,
+                    "headers": cls.headers,
+                    "body": cls.body,
+                },
+            ),
+        )
+
+    def test_setup(self):
+        """Test the setup method of the http_echo handler."""
+        assert self.http_handler.setup() is None
+        self.assert_quantity_in_outbox(0)
+
+    def test_handle_unidentified_dialogue(self):
+        """Test the _handle_unidentified_dialogue method of the http_echo handler."""
+        # setup
+        incorrect_dialogue_reference = ("", "")
+        incoming_message = self.build_incoming_message(
+            message_type=HttpMessage,
+            dialogue_reference=incorrect_dialogue_reference,
+            performative=HttpMessage.Performative.REQUEST,
+            to=self.skill_id,
+            method=self.get_method,
+            url=self.url,
+            version=self.version,
+            headers=self.headers,
+            body=self.body,
+        )
+
+        # operation
+        with patch.object(self.logger, "log") as mock_logger:
+            self.http_handler.handle(incoming_message)
+
+        # after
+        self.assert_quantity_in_outbox(1)
+
+        mock_logger.assert_any_call(
+            logging.INFO,
+            f"received invalid http message={incoming_message}, unidentified dialogue.",
+        )
+
+        message = self.get_message_from_outbox()
+        has_attributes, error_str = self.message_has_attributes(
+            actual_message=message,
+            message_type=DefaultMessage,
+            performative=DefaultMessage.Performative.ERROR,
+            to=incoming_message.sender,
+            sender=self.skill.skill_context.agent_address,
+            error_code=DefaultMessage.ErrorCode.INVALID_DIALOGUE,
+            error_msg="Invalid dialogue.",
+            error_data={"http_message": incoming_message.encode()},
+        )
+        assert has_attributes, error_str
+
+    def test_handle_request_get(self):
+        """Test the _handle_request method of the http_echo handler where method is get."""
+        # setup
+        incoming_message = cast(
+            HttpMessage,
+            self.build_incoming_message(
+                message_type=HttpMessage,
+                performative=HttpMessage.Performative.REQUEST,
+                to=self.skill_id,
+                sender=self.sender,
+                method=self.get_method,
+                url=self.url,
+                version=self.version,
+                headers=self.headers,
+                body=self.body,
+            ),
+        )
+
+        # operation
+        with patch.object(self.logger, "log") as mock_logger:
+            with patch.object(
+                self.http_handler.context.state, "_round_sequence"
+            ) as mock_round_sequence:
+                mock_round_sequence.latest_synchronized_data.redirects = {
+                    self.url: self.url_redirect
+                }
+                self.http_handler.handle(incoming_message)
+
+        # after
+        self.assert_quantity_in_outbox(1)
+
+        mock_logger.assert_any_call(
+            logging.INFO,
+            "received http request with method={}, url={} and body={!r}".format(
+                incoming_message.method, incoming_message.url, incoming_message.body
+            ),
+        )
+
+        location_headers = f"Location: {self.url_redirect}\n"
+
+        # _handle_get
+        message = self.get_message_from_outbox()
+        has_attributes, error_str = self.message_has_attributes(
+            actual_message=message,
+            message_type=HttpMessage,
+            performative=HttpMessage.Performative.RESPONSE,
+            to=incoming_message.sender,
+            sender=incoming_message.to,
+            version=incoming_message.version,
+            status_code=TEMPORARY_REDIRECT_CODE,
+            status_text="Temporary redirect",
+            headers=f"{location_headers}{incoming_message.headers}",
+            body=b"",
+        )
+        assert has_attributes, error_str
+
+        mock_logger.assert_any_call(
+            logging.INFO,
+            f"responding with: {message}",
+        )
+
+    def test_handle_request_post(self):
+        """Test the _handle_request method of the http_echo handler where method is post."""
+        # setup
+        incoming_message = cast(
+            HttpMessage,
+            self.build_incoming_message(
+                message_type=HttpMessage,
+                performative=HttpMessage.Performative.REQUEST,
+                to=self.skill_id,
+                sender=self.sender,
+                method=self.post_method,
+                url=self.url,
+                version=self.version,
+                headers=self.headers,
+                body=self.body,
+            ),
+        )
+
+        # operation
+        with patch.object(self.logger, "log") as mock_logger:
+            self.http_handler.handle(incoming_message)
+
+        # after
+        self.assert_quantity_in_outbox(1)
+
+        mock_logger.assert_any_call(
+            logging.INFO,
+            "received http request with method={}, url={} and body={!r}".format(
+                incoming_message.method, incoming_message.url, incoming_message.body
+            ),
+        )
+
+        # _handle_non_get
+        message = self.get_message_from_outbox()
+        has_attributes, error_str = self.message_has_attributes(
+            actual_message=message,
+            message_type=HttpMessage,
+            performative=HttpMessage.Performative.RESPONSE,
+            to=incoming_message.sender,
+            sender=incoming_message.to,
+            version=incoming_message.version,
+            status_code=BAD_REQUEST_CODE,
+            status_text="Bad request",
+            headers=incoming_message.headers,
+            body=b"",
+        )
+        assert has_attributes, error_str
+
+        mock_logger.assert_any_call(
+            logging.INFO,
+            f"responding with: {message}",
+        )
+
+    def test_handle_invalid(self):
+        """Test the _handle_invalid method of the http_echo handler."""
+        # setup
+        http_dialogue = self.prepare_skill_dialogue(
+            dialogues=self.http_dialogues,
+            messages=self.list_of_messages[:1],
+        )
+        incoming_message = cast(
+            HttpMessage,
+            self.build_incoming_message_for_skill_dialogue(
+                dialogue=http_dialogue,
+                performative=HttpMessage.Performative.RESPONSE,
+                version=self.version,
+                status_code=self.status_code,
+                status_text=self.status_text,
+                headers=self.headers,
+                body=self.body,
+            ),
+        )
+
+        # operation
+        with patch.object(self.logger, "log") as mock_logger:
+            self.http_handler.handle(incoming_message)
+
+        # after
+        mock_logger.assert_any_call(
+            logging.WARNING,
+            f"cannot handle http message of performative={incoming_message.performative} in dialogue={http_dialogue}.",
+        )
+
+    def test_teardown(self):
+        """Test the teardown method of the http_echo handler."""
+        assert self.http_handler.teardown() is None
+        self.assert_quantity_in_outbox(0)

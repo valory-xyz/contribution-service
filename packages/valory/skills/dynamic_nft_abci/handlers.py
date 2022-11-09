@@ -130,7 +130,7 @@ class HttpHandler(Handler):
         if http_msg.method == "get":
             self._handle_get(http_msg, http_dialogue)
         else:
-            self._handle_invalid(http_msg, http_dialogue)  # reject other methods
+            self._handle_non_get(http_msg, http_dialogue)  # reject other methods
 
     def _handle_get(self, http_msg: HttpMessage, http_dialogue: HttpDialogue) -> None:
         """
@@ -172,6 +172,29 @@ class HttpHandler(Handler):
         self.context.logger.info("responding with: {}".format(http_response))
         self.context.outbox.put_message(message=http_response)
 
+    def _handle_non_get(
+        self, http_msg: HttpMessage, http_dialogue: HttpDialogue
+    ) -> None:
+        """
+        Handle a Http request different from GET.
+
+        :param http_msg: the http message
+        :param http_dialogue: the http dialogue
+        """
+        http_response = http_dialogue.reply(
+            performative=HttpMessage.Performative.RESPONSE,
+            target_message=http_msg,
+            version=http_msg.version,
+            status_code=BAD_REQUEST_CODE,
+            status_text="Bad request",
+            headers=http_msg.headers,
+            body=b"",
+        )
+
+        # Send response
+        self.context.logger.info("responding with: {}".format(http_response))
+        self.context.outbox.put_message(message=http_response)
+
     def _handle_invalid(
         self, http_msg: HttpMessage, http_dialogue: HttpDialogue
     ) -> None:
@@ -186,20 +209,6 @@ class HttpHandler(Handler):
                 http_msg.performative, http_dialogue
             )
         )
-
-        http_response = http_dialogue.reply(
-            performative=HttpMessage.Performative.RESPONSE,
-            target_message=http_msg,
-            version=http_msg.version,
-            status_code=BAD_REQUEST_CODE,
-            status_text="Bad request",
-            headers=http_msg.headers,
-            body=b"",
-        )
-
-        # Send response
-        self.context.logger.info("responding with: {}".format(http_response))
-        self.context.outbox.put_message(message=http_response)
 
     def teardown(self) -> None:
         """Implement the handler teardown."""

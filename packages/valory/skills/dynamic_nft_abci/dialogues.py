@@ -31,6 +31,8 @@ from packages.fetchai.protocols.default.dialogues import (
 from packages.fetchai.protocols.default.dialogues import (
     DefaultDialogues as BaseDefaultDialogues,
 )
+from packages.valory.protocols.http.dialogues import HttpDialogue as BaseHttpDialogue
+from packages.valory.protocols.http.dialogues import HttpDialogues as BaseHttpDialogues
 from packages.valory.skills.abstract_round_abci.dialogues import (
     AbciDialogue as BaseAbciDialogue,
 )
@@ -43,9 +45,6 @@ from packages.valory.skills.abstract_round_abci.dialogues import (
 from packages.valory.skills.abstract_round_abci.dialogues import (
     ContractApiDialogues as BaseContractApiDialogues,
 )
-from packages.valory.protocols.http.dialogues import HttpDialogue as BaseHttpDialogue
-from packages.valory.protocols.http.dialogues import HttpDialogues as BaseHttpDialogues
-
 from packages.valory.skills.abstract_round_abci.dialogues import (
     LedgerApiDialogue as BaseLedgerApiDialogue,
 )
@@ -119,7 +118,6 @@ class DefaultDialogues(Model, BaseDefaultDialogues):
             self_address=self.context.agent_address,
             role_from_first_message=role_from_first_message,
         )
-
 
 
 class HttpDialogues(Model, BaseHttpDialogues):
