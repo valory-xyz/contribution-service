@@ -141,9 +141,7 @@ class HttpHandler(Handler):
         """
         # Get the requested uri and the redirects table
         request_uri = http_msg.url
-        redirects = self.context.shared_state[
-            str(self.__class__)
-        ].synchronized_data.redirects
+        redirects = self.context.state.round_sequence.latest_synchronized_data.redirects
 
         # Check if the uri exists in the redirect table
         if request_uri not in redirects:
