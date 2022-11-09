@@ -17,4 +17,4 @@
 #
 # ------------------------------------------------------------------------------
 
-"""This module contains the tests for the Dynamic NFT ABCI skill."""
+"""This package contains the tests of the default protocol package."""
