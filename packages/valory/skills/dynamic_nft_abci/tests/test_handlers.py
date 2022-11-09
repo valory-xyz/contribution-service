@@ -20,10 +20,12 @@
 """Test the handlers.py module of the DynamicNFT skill."""
 
 import logging
+from dataclasses import dataclass
 from pathlib import Path
-from typing import cast
+from typing import Dict, cast
 from unittest.mock import patch
 
+import pytest
 from aea.protocols.dialogue.base import DialogueMessage
 from aea.test_tools.test_skill import BaseSkillTestCase
 
@@ -33,11 +35,24 @@ from packages.valory.skills.dynamic_nft_abci.dialogues import HttpDialogues
 from packages.valory.skills.dynamic_nft_abci.handlers import (
     BAD_REQUEST_CODE,
     HttpHandler,
+    NOT_FOUND_CODE,
     TEMPORARY_REDIRECT_CODE,
 )
 
 
 PACKAGE_DIR = Path(__file__).parent.parent
+
+
+@dataclass
+class HandlerTestCase:
+    """HandlerTestCase"""
+
+    name: str
+    request_url: str
+    redirects: Dict[str, str]
+    response_status_code: int
+    response_status_text: str
+    response_headers: str
 
 
 class TestHttpHandler(BaseSkillTestCase):
@@ -129,7 +144,28 @@ class TestHttpHandler(BaseSkillTestCase):
         )
         assert has_attributes, error_str
 
-    def test_handle_request_get(self):
+    @pytest.mark.parametrize(
+        "test_case",
+        [
+            HandlerTestCase(
+                name="uri in redirects",
+                request_url="some_url",
+                redirects={"some_url": "some_url_redirect"},
+                response_status_code=TEMPORARY_REDIRECT_CODE,
+                response_status_text="Temporary redirect",
+                response_headers="Location: some_url_redirect\nsome_headers",
+            ),
+            HandlerTestCase(
+                name="uri not in redirects",
+                request_url="some_url",
+                redirects={},
+                response_status_code=NOT_FOUND_CODE,
+                response_status_text="Not found",
+                response_headers="some_headers",
+            ),
+        ],
+    )
+    def test_handle_request_get(self, test_case):
         """Test the _handle_request method of the http_echo handler where method is get."""
         # setup
         incoming_message = cast(
@@ -140,7 +176,7 @@ class TestHttpHandler(BaseSkillTestCase):
                 to=self.skill_id,
                 sender=self.sender,
                 method=self.get_method,
-                url=self.url,
+                url=test_case.request_url,
                 version=self.version,
                 headers=self.headers,
                 body=self.body,
@@ -152,9 +188,9 @@ class TestHttpHandler(BaseSkillTestCase):
             with patch.object(
                 self.http_handler.context.state, "_round_sequence"
             ) as mock_round_sequence:
-                mock_round_sequence.latest_synchronized_data.redirects = {
-                    self.url: self.url_redirect
-                }
+                mock_round_sequence.latest_synchronized_data.redirects = (
+                    test_case.redirects
+                )
                 self.http_handler.handle(incoming_message)
 
         # after
@@ -167,8 +203,6 @@ class TestHttpHandler(BaseSkillTestCase):
             ),
         )
 
-        location_headers = f"Location: {self.url_redirect}\n"
-
         # _handle_get
         message = self.get_message_from_outbox()
         has_attributes, error_str = self.message_has_attributes(
@@ -178,9 +212,9 @@ class TestHttpHandler(BaseSkillTestCase):
             to=incoming_message.sender,
             sender=incoming_message.to,
             version=incoming_message.version,
-            status_code=TEMPORARY_REDIRECT_CODE,
-            status_text="Temporary redirect",
-            headers=f"{location_headers}{incoming_message.headers}",
+            status_code=test_case.response_status_code,
+            status_text=test_case.response_status_text,
+            headers=test_case.response_headers,
             body=b"",
         )
         assert has_attributes, error_str
