@@ -43,12 +43,9 @@ from packages.valory.skills.abstract_round_abci.dialogues import (
 from packages.valory.skills.abstract_round_abci.dialogues import (
     ContractApiDialogues as BaseContractApiDialogues,
 )
-from packages.valory.skills.abstract_round_abci.dialogues import (
-    HttpDialogue as BaseHttpDialogue,
-)
-from packages.valory.skills.abstract_round_abci.dialogues import (
-    HttpDialogues as BaseHttpDialogues,
-)
+from packages.valory.protocols.http.dialogues import HttpDialogue as BaseHttpDialogue
+from packages.valory.protocols.http.dialogues import HttpDialogues as BaseHttpDialogues
+
 from packages.valory.skills.abstract_round_abci.dialogues import (
     LedgerApiDialogue as BaseLedgerApiDialogue,
 )
@@ -74,7 +71,6 @@ AbciDialogues = BaseAbciDialogues
 
 
 HttpDialogue = BaseHttpDialogue
-HttpDialogues = BaseHttpDialogues
 
 
 SigningDialogue = BaseSigningDialogue
@@ -124,8 +120,6 @@ class DefaultDialogues(Model, BaseDefaultDialogues):
             role_from_first_message=role_from_first_message,
         )
 
-
-HttpDialogue = BaseHttpDialogue
 
 
 class HttpDialogues(Model, BaseHttpDialogues):

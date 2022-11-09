@@ -84,6 +84,9 @@ models:
   contract_api_dialogues:
     args: {}
     class_name: ContractApiDialogues
+  default_dialogues:
+    args: {}
+    class_name: DefaultDialogues
   http_dialogues:
     args: {}
     class_name: HttpDialogues

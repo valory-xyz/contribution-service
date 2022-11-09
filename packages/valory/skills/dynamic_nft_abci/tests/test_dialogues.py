@@ -19,8 +19,60 @@
 
 """Test the dialogues.py module of the DynamicNFT skill."""
 
-import packages.valory.skills.dynamic_nft_abci.dialogues  # pylint: disable=unused-import # noqa: F401
+from pathlib import Path
+from typing import cast
+
+from aea.test_tools.test_skill import BaseSkillTestCase, COUNTERPARTY_AGENT_ADDRESS
+
+from packages.fetchai.protocols.default.message import DefaultMessage
+from packages.valory.protocols.http.message import HttpMessage
+from packages.valory.skills.dynamic_nft_abci.dialogues import (
+    DefaultDialogue,
+    DefaultDialogues,
+    HttpDialogue,
+    HttpDialogues,
+)
 
 
-def test_import() -> None:
-    """Test that the 'dialogues.py' of the DynamicNFT skill can be imported."""
+PACKAGE_DIR = Path(__file__).parent.parent
+
+
+class TestDialogues(BaseSkillTestCase):
+    """Test dialogue class of http_echo."""
+
+    path_to_skill = PACKAGE_DIR
+
+    @classmethod
+    def setup_class(cls):
+        """Setup the test class."""
+        super().setup_class()
+        cls.default_dialogues = cast(
+            DefaultDialogues, cls._skill.skill_context.default_dialogues
+        )
+        cls.http_dialogues = cast(
+            HttpDialogues, cls._skill.skill_context.http_dialogues
+        )
+
+    def test_default_dialogues(self):
+        """Test the DefaultDialogues class."""
+        _, dialogue = self.default_dialogues.create(
+            counterparty=COUNTERPARTY_AGENT_ADDRESS,
+            performative=DefaultMessage.Performative.BYTES,
+            content=b"some_content",
+        )
+        assert dialogue.role == DefaultDialogue.Role.AGENT
+        assert dialogue.self_address == self.skill.skill_context.agent_address
+
+    def test_http_dialogues(self):
+        """Test the HttpDialogues class."""
+        _, dialogue = self.http_dialogues.create(
+            counterparty=COUNTERPARTY_AGENT_ADDRESS,
+            performative=HttpMessage.Performative.REQUEST,
+            method="some_method",
+            url="some_url",
+            version="some_version",
+            headers="some_headers",
+            body=b"some_body",
+        )
+        assert dialogue.role == HttpDialogue.Role.SERVER
+        assert dialogue.self_address == str(self.skill.skill_context.skill_id)
