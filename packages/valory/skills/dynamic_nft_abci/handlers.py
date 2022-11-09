@@ -60,6 +60,7 @@ TendermintHandler = BaseTendermintHandler
 
 TEMPORARY_REDIRECT_CODE = 307
 NOT_FOUND_CODE = 404
+BAD_REQUEST_CODE = 400
 
 
 class HttpHandler(Handler):
@@ -128,8 +129,8 @@ class HttpHandler(Handler):
         )
         if http_msg.method == "get":
             self._handle_get(http_msg, http_dialogue)
-        elif http_msg.method == "post":
-            self._handle_invalid(http_msg, http_dialogue)  # reject POST
+        else:
+            self._handle_invalid(http_msg, http_dialogue)  # reject other methods
 
     def _handle_get(self, http_msg: HttpMessage, http_dialogue: HttpDialogue) -> None:
         """
@@ -187,6 +188,20 @@ class HttpHandler(Handler):
                 http_msg.performative, http_dialogue
             )
         )
+
+        http_response = http_dialogue.reply(
+            performative=HttpMessage.Performative.RESPONSE,
+            target_message=http_msg,
+            version=http_msg.version,
+            status_code=BAD_REQUEST_CODE,
+            status_text="Bad request",
+            headers=http_msg.headers,
+            body=b"",
+        )
+
+        # Send response
+        self.context.logger.info("responding with: {}".format(http_response))
+        self.context.outbox.put_message(message=http_response)
 
     def teardown(self) -> None:
         """Implement the handler teardown."""
