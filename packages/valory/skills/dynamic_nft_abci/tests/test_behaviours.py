@@ -209,7 +209,7 @@ class BaseDynamicNFTTest(FSMBehaviourBaseCase):
             == self.next_behaviour_class.behaviour_id
         )
 
-    def teardown_class(self):
+    def teardown_class(self) -> None:
         """Teardown"""
         # Clean image output directory
         image_manager_cls = ImageGenerationBehaviour.ImageManager
@@ -429,7 +429,7 @@ class TestLeaderboardObservationErrorBehaviour(BaseDynamicNFTTest):
             ),
         ],
     )
-    def test_force_exception(self, test_case: BehaviourTestCase, kwargs: Any):
+    def test_force_exception(self, test_case: BehaviourTestCase, kwargs: Any) -> None:
         """Force a exception for coverage purposes"""
 
         # Raise when is_valid_address() is called
@@ -537,7 +537,7 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
         self.complete(test_case.event)
 
     @mock.patch.object(BaseBehaviour, "get_from_ipfs", return_value=False)
-    def test_run_redownload_layers(self, *_: Any):
+    def test_run_redownload_layers(self, *_: Any) -> None:
         """Run tests."""
         test_case = BehaviourTestCase(
             "Trigger image download from IPFS",
@@ -620,7 +620,7 @@ class TestDBUpdateBehaviour(BaseDynamicNFTTest):
 class TestImageManager:
     """TestImageManager"""
 
-    def setup_class(self):
+    def setup_class(self) -> None:
         """Setup class"""
         logger_mock = MagicMock()
         self.tmpdir = tempfile.TemporaryDirectory().name
@@ -628,15 +628,15 @@ class TestImageManager:
             logger_mock, Path(self.tmpdir)
         )
 
-    def test_generate_invalid_code_length(self):
+    def test_generate_invalid_code_length(self) -> None:
         """test_generate_invalid_code_length"""
         assert not self.manager.generate("short")  # code too short
 
-    def test_generate_invalid_code_non_existent(self):
+    def test_generate_invalid_code_non_existent(self) -> None:
         """test_generate_invalid_code_non_existent"""
         assert not self.manager.generate("090909")  # image does not exist
 
-    def teardown_class(self):
+    def teardown_class(self) -> None:
         """Teardown class"""
         if os.path.isdir(self.tmpdir):
             shutil.rmtree(self.tmpdir)
