@@ -8,10 +8,15 @@
     "connection/valory/ledger/0.19.0": "bafybeihmz5us4ntmzvgikpkx4tththrl7zvou4uiebvletdeliidiuhi6m",
     "contract/valory/service_registry/0.1.0": "bafybeicvmdbhovr247vvunz5rer7sai74jxxavfwxyundiq3ebfxc2pvya",
     "protocol/open_aea/signing/1.0.0": "bafybeiambqptflge33eemdhis2whik67hjplfnqwieoa6wblzlaf7vuo44",
+    "protocol/valory/acn/1.1.0": "bafybeifontek6tvaecatoauiule3j3id6xoktpjubvuqi3h2jkzqg7zh7a",
     "protocol/valory/tendermint/0.1.0": "bafybeihcnjhovvyyfbkuw5sjyfx2lfd4soeocfqzxz54g67333m6nk5gxq",
     "skill/valory/abstract_abci/0.1.0": "bafybeiabow5j6wc63szukedutrx6bia2agnju62avxsbhqkhchcwwpvu5i",
-    "contract/valory/ERC721Collective/0.1.0": "bafybeiemzs6fi4fbzezdjvybu5tujzsc6zgzzspobkj745tn2ovhga22ve",
+    "connection/valory/p2p_libp2p_client/0.1.0": "bafybeihf35zfr35qsvfte4vbi7njvuzfx4httysw7owmlux53gvxh2or54",
+    "contract/valory/ERC721Collective/0.1.0": "bafybeibe6cp35idn56pewbfzpyvyarrp4mueguntxnwoifopeneozslqbe",
     "protocol/fetchai/default/1.0.0": "bafybeihzesahyayexkhk26fg7rqnjuqaab3bmcijtjekvskvs4xw6ecyuu",
     "skill/valory/abstract_round_abci/0.1.0": "bafybeiegpewio6lkpikfnohjqmlwkqtxdmjbky4dphof4jvrixlvkiqixi",
-    "skill/valory/dynamic_nft_abci/0.1.0": "bafybeigxohdvdo4ine22pdosxkwgfabgwprkn7znlxqqzyr5kpc7vll3va"
+    "skill/valory/dynamic_nft_abci/0.1.0": "bafybeienzhy3yg6y2od5uz7uignal7lzxtskcgqgiwwo6glsqplp3zbln4",
+    "skill/valory/registration_abci/0.1.0": "bafybeigck3gb5tvm5tilzii7kvzqpryxrmxu2meck5empgl7lhuz66mbgq",
+    "skill/valory/reset_pause_abci/0.1.0": "bafybeid65rpcwq3rzxijwrpsbirersuwk2sdtcwnpkplczbszzoq2tbitu",
+    "skill/valory/contribution_skill_abci/0.1.0": "bafybeihnhfk2giwqq6ssmtsufkxm2tpedibkkpe2hagz64fkem5ow6fyve"
 }

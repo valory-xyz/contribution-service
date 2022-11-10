@@ -29,7 +29,7 @@ import pytest
 from aea.protocols.dialogue.base import DialogueMessage
 from aea.test_tools.test_skill import BaseSkillTestCase
 
-from packages.fetchai.protocols.default.message import DefaultMessage
+from packages.fetchai.protocols.default.message import DefaultMessage  # type: ignore
 from packages.valory.protocols.http.message import HttpMessage
 from packages.valory.skills.dynamic_nft_abci.dialogues import HttpDialogues
 from packages.valory.skills.dynamic_nft_abci.handlers import (

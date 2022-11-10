@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 #
-#   Copyright 2021-2022 Valory AG
+#   Copyright 2022 Valory AG
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -17,4 +17,10 @@
 #
 # ------------------------------------------------------------------------------
 
-"""Packages authored by 'valory'."""
+"""Test the dialogues.py module of the contribution skill."""
+
+import packages.valory.skills.contribution_skill_abci.dialogues  # pylint: disable=unused-import # noqa: F401
+
+
+def test_import() -> None:
+    """Test that the 'dialogues.py' of the contribution skill can be imported."""

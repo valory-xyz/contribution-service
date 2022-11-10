@@ -32,7 +32,7 @@ fingerprint:
   tests/test_behaviours.py: bafybeigvhic6aj2bnqlfdea5k3qbdxed655sfgq5rxinbssdjckbnevm5e
   tests/test_dialogues.py: bafybeieno2rjzhgboggkrff4wfrpv4t5dmr6lmvc7k33stgayyso4coizi
   tests/test_dummy_e2e.py: bafybeidrzn2wzng62jptkf2zjtlhup7bu74ptrlwmdwh7lgwuubk5dbm4q
-  tests/test_handlers.py: bafybeifjq7gy75cmg2b7zim2l6rc5ob4q2t7hlf2wssdfjkjf3tjsmenae
+  tests/test_handlers.py: bafybeig5hxzgohjcmxjkantfrgdaw6fvsq3llbxvdylxxledtlyhyfw24q
   tests/test_io/__init__.py: bafybeid3sssvbbyju4snrdssxyafleuo57sqyuepl25btxcbuj3p5oonsm
   tests/test_io/conftest.py: bafybeicnntywbba52xbsurlj55s7ppjqm7p3ngj3u5dsehwijm5veegywi
   tests/test_io/test_load.py: bafybeidljwrzoadvpbxbyiesdjmw6a26t4lyidu2wmyy4pjqdrrpqq6ajq
@@ -43,7 +43,7 @@ fingerprint:
 fingerprint_ignore_patterns: []
 connections: []
 contracts:
-- valory/ERC721Collective:0.1.0:bafybeiemzs6fi4fbzezdjvybu5tujzsc6zgzzspobkj745tn2ovhga22ve
+- valory/ERC721Collective:0.1.0:bafybeibe6cp35idn56pewbfzpyvyarrp4mueguntxnwoifopeneozslqbe
 protocols:
 - fetchai/default:1.0.0:bafybeihzesahyayexkhk26fg7rqnjuqaab3bmcijtjekvskvs4xw6ecyuu
 - valory/contract_api:1.0.0:bafybeiaxbrvgtbdrh4lslskuxyp4awyr4whcx3nqq5yrr6vimzsxg5dy64

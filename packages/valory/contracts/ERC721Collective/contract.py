@@ -25,8 +25,8 @@ from aea.common import JSONLike
 from aea.configurations.base import PublicId
 from aea.contracts.base import Contract
 from aea.crypto.base import LedgerApi
-from web3.types import BlockIdentifier
 from aea_ledger_ethereum import EthereumApi
+from web3.types import BlockIdentifier
 
 
 class ERC721CollectiveContract(Contract):
@@ -96,6 +96,7 @@ class ERC721CollectiveContract(Contract):
     ) -> JSONLike:
         """
         Get all ERC721 transfers from a given address.
+
         :param ledger_api: LedgerApi object
         :param contract_address: the address of the token to be used
         :param from_address: the address transferring the tokens.
