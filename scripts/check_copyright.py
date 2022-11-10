@@ -311,7 +311,7 @@ def main() -> None:
     python_files = filter(
         lambda x: x not in exclude_files,
         itertools.chain(
-            Path("packages", "valory").glob("**/*.py"),
+            Path("packages", "valory", "skills").glob("**/*.py"),
             Path("tests").glob("**/*.py"),
             Path("scripts").glob("**/*.py"),
         ),
