@@ -19,7 +19,7 @@ fingerprint:
   data/layers/frames/01.png: bafybeicgg6m7j3eu5akua55mlxohsbqvgonkmk2qqflslrtcdlec6m6ty4
   data/layers/frames/02.png: bafybeia6thhn2qc3rmj2dnlhy5oov7bvtpjlosesu54ybnuavtl2725h7i
   data/layers/frames/03.png: bafybeigstc52zkvx3mwzw2dwc3726amgpolwbdxfoylpupnk6ut5ya357a
-  dialogues.py: bafybeigoaradknyngsvswqwfgfbdy75uyf4kl5c4iqzh3zh5il25mboe54
+  dialogues.py: bafybeidnhjbqhnokm7lsilq62wbiltsexi5jo3fbbwl2exifuy7x7n2nmi
   fsm_specification.yaml: bafybeiay6apxjlgv5gcc65x7rzko2khslvdft4wnaaa57en7vycwrycht4
   handlers.py: bafybeibfsajs4yeqgqyqdnvt3chabi53amckl6dx2segn3onp4wub3dfkq
   io_/__init__.py: bafybeidxth2otiyp5gfk2l3zjvnfktgrtpwzsknihkef3v2lhwbkgum3ea
@@ -30,7 +30,7 @@ fingerprint:
   rounds.py: bafybeihrft4a2vji3s3rydpojhdcqggohsnro4uot7fvnfetb3rvug6jka
   tests/__init__.py: bafybeia2xqlacp44lylwlkf7f7ci6m3yshppv3vusgcdjpj4bbcbnuhvla
   tests/test_behaviours.py: bafybeigvhic6aj2bnqlfdea5k3qbdxed655sfgq5rxinbssdjckbnevm5e
-  tests/test_dialogues.py: bafybeieno2rjzhgboggkrff4wfrpv4t5dmr6lmvc7k33stgayyso4coizi
+  tests/test_dialogues.py: bafybeihgk56lvkh5572yhaifokchdksso6uebkaf74croqau7bxhrodznq
   tests/test_dummy_e2e.py: bafybeidrzn2wzng62jptkf2zjtlhup7bu74ptrlwmdwh7lgwuubk5dbm4q
   tests/test_handlers.py: bafybeifjq7gy75cmg2b7zim2l6rc5ob4q2t7hlf2wssdfjkjf3tjsmenae
   tests/test_io/__init__.py: bafybeid3sssvbbyju4snrdssxyafleuo57sqyuepl25btxcbuj3p5oonsm
