@@ -400,7 +400,8 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                     )
                     # Whitelist the image
                     image_hash = IPFSHashOnly.get(str(image_path))
-                    if not self.whitelist_hash(image_hash):
+                    whitelist_success = yield from self.whitelist_hash(image_hash)
+                    if not whitelist_success:
                         status = "error"
                         break
 
@@ -471,13 +472,12 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                         filetype=ExtendedSupportedFiletype.PNG,
                     )
 
-    def whitelist_hash(self, image_hash: str) -> bool:
+    def whitelist_hash(self, image_hash: str) -> Generator[None, None, bool]:
         """Send a whitelist request to the whitelist server
 
         :param image_hash: the hash to whitelist
         :returns: True on success, False on error
         """
-
         response = yield from self.get_http_response(
             method="POST",
             url=f"{self.params.whitelist_endpoint}",

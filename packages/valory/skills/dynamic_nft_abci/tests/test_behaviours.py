@@ -551,8 +551,43 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
         for test_code in test_codes:
             open(Path(image_dir, f"{test_code}.png"), "w").close()
 
+        # Hashes for these newly generated files
+        EMPTY_FILE_HASHES = [
+            "bafybeih6phzkblum5yvkyc527a6p324s2a23cjw3cqfg36wu7c2j7zg7ty",
+            "bafybeidbxgqtmy65rls5jog5llm5fs3yfkhmt57wz4o4mefgrtosujrilu"
+        ]
+
         self.fast_forward(test_case.initial_data)
-        self.complete(test_case.event)
+        self.behaviour.act_wrapper()
+
+        # Mock the IPFS whitelisting
+        for hash_ in EMPTY_FILE_HASHES:
+            WHITELIST_ENDPOINT = f"{DEFAULT_WHITELIST_URL}?hash={hash_}&key="
+
+            self.mock_http_request(
+                request_kwargs=dict(
+                    method="POST",
+                    headers="",
+                    version="",
+                    url=WHITELIST_ENDPOINT,
+                ),
+                response_kwargs=dict(
+                    version="",
+                    status_code=kwargs.get("status_code"),
+                    status_text="",
+                    headers="",
+                    body=b"",
+                ),
+            )
+
+        self.behaviour.act_wrapper()
+        self.mock_a2a_transaction()
+        self._test_done_flag_set()
+        self.end_round(done_event=test_case.event)
+        assert (
+            self.behaviour.current_behaviour.behaviour_id  # type: ignore
+            == self.next_behaviour_class.behaviour_id
+        )
 
         shutil.rmtree(image_dir)
 
@@ -589,8 +624,45 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
             for test_code in test_codes:
                 open(Path(image_dir, f"{test_code}.png"), "w").close()
 
+            # Hashes for these newly generated files
+            EMPTY_FILE_HASHES = [
+                "bafybeih6phzkblum5yvkyc527a6p324s2a23cjw3cqfg36wu7c2j7zg7ty",
+                "bafybeidbxgqtmy65rls5jog5llm5fs3yfkhmt57wz4o4mefgrtosujrilu"
+            ]
+
             self.fast_forward(test_case.initial_data)
-            self.complete(test_case.event)
+            self.behaviour.act_wrapper()
+
+            # Mock the IPFS whitelisting
+            for hash_ in EMPTY_FILE_HASHES:
+                WHITELIST_ENDPOINT = f"{DEFAULT_WHITELIST_URL}?hash={hash_}&key="
+
+                self.mock_http_request(
+                    request_kwargs=dict(
+                        method="POST",
+                        headers="",
+                        version="",
+                        url=WHITELIST_ENDPOINT,
+                    ),
+                    response_kwargs=dict(
+                        version="",
+                        status_code=200,
+                        status_text="",
+                        headers="",
+                        body=b"",
+                    ),
+                )
+
+            self.behaviour.act_wrapper()
+            self.mock_a2a_transaction()
+            self._test_done_flag_set()
+            self.end_round(done_event=test_case.event)
+            assert (
+                self.behaviour.current_behaviour.behaviour_id  # type: ignore
+                == self.next_behaviour_class.behaviour_id
+            )
+
+            shutil.rmtree(image_dir)
 
 
 @use_ipfs_daemon
