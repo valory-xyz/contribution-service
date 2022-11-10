@@ -43,7 +43,7 @@ fingerprint:
 fingerprint_ignore_patterns: []
 connections: []
 contracts:
-- valory/ERC721Collective:0.1.0:bafybeibe6cp35idn56pewbfzpyvyarrp4mueguntxnwoifopeneozslqbe
+- valory/ERC721Collective:0.1.0:bafybeieuz5zajy5rgz3iodo2wr4czra7zkhixlusppcdae466csalltinq
 protocols:
 - fetchai/default:1.0.0:bafybeihzesahyayexkhk26fg7rqnjuqaab3bmcijtjekvskvs4xw6ecyuu
 - valory/contract_api:1.0.0:bafybeiaxbrvgtbdrh4lslskuxyp4awyr4whcx3nqq5yrr6vimzsxg5dy64
