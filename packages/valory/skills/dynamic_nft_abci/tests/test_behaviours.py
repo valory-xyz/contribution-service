@@ -595,6 +595,7 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
     @mock.patch.object(BaseBehaviour, "get_from_ipfs", return_value=False)
     def test_run_redownload_layers(self, *_: Any) -> None:
         """Run tests."""
+
         test_case = BehaviourTestCase(
             "Trigger image download from IPFS",
             initial_data=dict(
@@ -741,7 +742,7 @@ class TestImageGenerationErrorBehaviour(BaseDynamicNFTTest):
         self.behaviour.act_wrapper()
 
         # Mock the IPFS whitelisting
-
+        # In this case, we only use the first file/hash as we will fail on the first image
         WHITELIST_ENDPOINT = f"{DEFAULT_WHITELIST_URL}?hash={EMPTY_FILE_HASHES[0]}&key="
 
         self.mock_http_request(
@@ -754,6 +755,70 @@ class TestImageGenerationErrorBehaviour(BaseDynamicNFTTest):
             response_kwargs=dict(
                 version="",
                 status_code=kwargs.get("status_code"),
+                status_text="",
+                headers="",
+                body=b"",
+            ),
+        )
+
+        self.behaviour.act_wrapper()
+        self.mock_a2a_transaction()
+        self._test_done_flag_set()
+        self.end_round(done_event=test_case.event)
+        assert (
+            self.behaviour.current_behaviour.behaviour_id  # type: ignore
+            == self.next_behaviour_class.behaviour_id
+        )
+
+        shutil.rmtree(image_dir)
+
+    @mock.patch.object(BaseBehaviour, "send_to_ipfs", return_value=None)
+    def test_send_to_ipfs_error(self, *_: Any) -> None:
+        """Run tests."""
+
+        test_case = BehaviourTestCase(
+            "Happy path",
+            initial_data=dict(
+                most_voted_member_updates=get_dummy_updates(),
+                most_voted_api_data=DUMMY_API_DATA,
+            ),
+            event=Event.IMAGE_ERROR,
+        )
+
+        # Create empty png files for the tests
+        test_codes = [i["image_code"] for i in get_dummy_updates().values()]
+        image_dir = Path(
+            ImageGenerationBehaviour.ImageManager.IMAGE_ROOT,
+            ImageGenerationBehaviour.ImageManager.IMAGES_DIR,
+        )
+        if not os.path.isdir(image_dir):
+            os.makedirs(image_dir)
+        for test_code in test_codes:
+            open(Path(image_dir, f"{test_code}.png"), "w").close()
+
+        # Hashes for these newly generated files
+        EMPTY_FILE_HASHES = [
+            "bafybeih6phzkblum5yvkyc527a6p324s2a23cjw3cqfg36wu7c2j7zg7ty",
+            "bafybeidbxgqtmy65rls5jog5llm5fs3yfkhmt57wz4o4mefgrtosujrilu",
+        ]
+
+        self.fast_forward(test_case.initial_data)
+        self.behaviour.act_wrapper()
+
+        # Mock the IPFS whitelisting
+        # In this case, we only use the first file/hash as we will fail on the first image
+        WHITELIST_ENDPOINT = f"{DEFAULT_WHITELIST_URL}?hash={EMPTY_FILE_HASHES[0]}&key="
+
+        self.mock_http_request(
+            request_kwargs=dict(
+                method="POST",
+                headers="",
+                version="",
+                url=WHITELIST_ENDPOINT,
+            ),
+            response_kwargs=dict(
+                version="",
+                status_code=200,
                 status_text="",
                 headers="",
                 body=b"",
