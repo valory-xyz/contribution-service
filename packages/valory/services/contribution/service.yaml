@@ -1,0 +1,49 @@
+name: contribution
+author: valory
+version: 0.1.0
+description: A service that tracks the community members' points and updates their NFTs autonomously
+aea_version: '>=1.0.0, <2.0.0'
+license: Apache-2.0
+fingerprint:
+  README.md: bafybeibhbkelnxxvsln677imq65vgbglmlhyxtax4iqtzempjiwcoef3gq
+fingerprint_ignore_patterns: []
+agent: valory/contribution:0.1.0:bafybeihjt53sybzqynsf6wrxm4agf2sezkzf5tdp4lqbnxjrnx4h5drjfe
+number_of_agents: 4
+---
+public_id: valory/contribution_skill_abci:0.1.0
+type: skill
+models:
+  params:
+    args:
+      broadcast_to_server: true
+      history_end: null
+      ipfs_domain_name: /dns/registry.autonolas.tech/tcp/443/https
+---
+benchmark_persistence_params:
+  args: &id001
+    log_dir: /benchmarks
+public_id: valory/contribution_skill_abci:0.1.0
+type: skill
+models:
+  0:
+  - benchmark_tool:
+      args: *id001
+  1:
+  - benchmark_tool:
+      args: *id001
+  2:
+  - benchmark_tool:
+      args: *id001
+  3:
+  - benchmark_tool:
+      args: *id001
+---
+public_id: valory/ledger:0.19.0
+type: connection
+config:
+  ledger_apis:
+    ethereum:
+      address: ${SERVICE_CONTRIBUTION_RPC:str:http://host.docker.internal:8545}
+      chain_id: 31337
+      poa_chain: false
+      default_gas_price_strategy: eip1559
