@@ -547,14 +547,15 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
             ImageGenerationBehaviour.ImageManager.IMAGE_ROOT,
             ImageGenerationBehaviour.ImageManager.IMAGES_DIR,
         )
-        os.makedirs(image_dir)
+        if not os.path.isdir(image_dir):
+            os.makedirs(image_dir)
         for test_code in test_codes:
             open(Path(image_dir, f"{test_code}.png"), "w").close()
 
         # Hashes for these newly generated files
         EMPTY_FILE_HASHES = [
             "bafybeih6phzkblum5yvkyc527a6p324s2a23cjw3cqfg36wu7c2j7zg7ty",
-            "bafybeidbxgqtmy65rls5jog5llm5fs3yfkhmt57wz4o4mefgrtosujrilu"
+            "bafybeidbxgqtmy65rls5jog5llm5fs3yfkhmt57wz4o4mefgrtosujrilu",
         ]
 
         self.fast_forward(test_case.initial_data)
@@ -620,14 +621,15 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
                 ImageGenerationBehaviour.ImageManager.IMAGE_ROOT,
                 ImageGenerationBehaviour.ImageManager.IMAGES_DIR,
             )
-            os.makedirs(image_dir)
+            if not os.path.isdir(image_dir):
+                os.makedirs(image_dir)
             for test_code in test_codes:
                 open(Path(image_dir, f"{test_code}.png"), "w").close()
 
             # Hashes for these newly generated files
             EMPTY_FILE_HASHES = [
                 "bafybeih6phzkblum5yvkyc527a6p324s2a23cjw3cqfg36wu7c2j7zg7ty",
-                "bafybeidbxgqtmy65rls5jog5llm5fs3yfkhmt57wz4o4mefgrtosujrilu"
+                "bafybeidbxgqtmy65rls5jog5llm5fs3yfkhmt57wz4o4mefgrtosujrilu",
             ]
 
             self.fast_forward(test_case.initial_data)
@@ -692,10 +694,82 @@ class TestImageGenerationErrorBehaviour(BaseDynamicNFTTest):
             ),
         ],
     )
-    def test_run(self, test_case: BehaviourTestCase) -> None:
+    def test_generation_error(self, test_case: BehaviourTestCase) -> None:
         """Run tests."""
         self.fast_forward(test_case.initial_data)
         self.complete(test_case.event)
+
+    @pytest.mark.parametrize(
+        "test_case, kwargs",
+        [
+            (
+                BehaviourTestCase(
+                    "Happy path",
+                    initial_data=dict(
+                        most_voted_member_updates=get_dummy_updates(),
+                        most_voted_api_data=DUMMY_API_DATA,
+                    ),
+                    event=Event.IMAGE_ERROR,
+                ),
+                {
+                    "status_code": 404,
+                },
+            )
+        ],
+    )
+    def test_whitelist_error(self, test_case: BehaviourTestCase, kwargs: Any) -> None:
+        """Run tests."""
+
+        # Create empty png files for the tests
+        test_codes = [i["image_code"] for i in get_dummy_updates().values()]
+        image_dir = Path(
+            ImageGenerationBehaviour.ImageManager.IMAGE_ROOT,
+            ImageGenerationBehaviour.ImageManager.IMAGES_DIR,
+        )
+        if not os.path.isdir(image_dir):
+            os.makedirs(image_dir)
+        for test_code in test_codes:
+            open(Path(image_dir, f"{test_code}.png"), "w").close()
+
+        # Hashes for these newly generated files
+        EMPTY_FILE_HASHES = [
+            "bafybeih6phzkblum5yvkyc527a6p324s2a23cjw3cqfg36wu7c2j7zg7ty",
+            "bafybeidbxgqtmy65rls5jog5llm5fs3yfkhmt57wz4o4mefgrtosujrilu",
+        ]
+
+        self.fast_forward(test_case.initial_data)
+        self.behaviour.act_wrapper()
+
+        # Mock the IPFS whitelisting
+
+        WHITELIST_ENDPOINT = f"{DEFAULT_WHITELIST_URL}?hash={EMPTY_FILE_HASHES[0]}&key="
+
+        self.mock_http_request(
+            request_kwargs=dict(
+                method="POST",
+                headers="",
+                version="",
+                url=WHITELIST_ENDPOINT,
+            ),
+            response_kwargs=dict(
+                version="",
+                status_code=kwargs.get("status_code"),
+                status_text="",
+                headers="",
+                body=b"",
+            ),
+        )
+
+        self.behaviour.act_wrapper()
+        self.mock_a2a_transaction()
+        self._test_done_flag_set()
+        self.end_round(done_event=test_case.event)
+        assert (
+            self.behaviour.current_behaviour.behaviour_id  # type: ignore
+            == self.next_behaviour_class.behaviour_id
+        )
+
+        shutil.rmtree(image_dir)
 
 
 class TestDBUpdateBehaviour(BaseDynamicNFTTest):
