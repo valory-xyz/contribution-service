@@ -24,10 +24,10 @@ from typing import cast
 
 from aea.test_tools.test_skill import BaseSkillTestCase, COUNTERPARTY_AGENT_ADDRESS
 
+from packages.fetchai.protocols.default.dialogues import DefaultDialogue
 from packages.fetchai.protocols.default.message import DefaultMessage
 from packages.valory.protocols.http.message import HttpMessage
 from packages.valory.skills.dynamic_nft_abci.dialogues import (
-    DefaultDialogue,
     DefaultDialogues,
     HttpDialogue,
     HttpDialogues,

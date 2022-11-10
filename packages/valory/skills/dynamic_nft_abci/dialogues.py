@@ -88,9 +88,6 @@ TendermintDialogue = BaseTendermintDialogue
 TendermintDialogues = BaseTendermintDialogues
 
 
-DefaultDialogue = BaseDefaultDialogue
-
-
 class DefaultDialogues(Model, BaseDefaultDialogues):
     """The dialogues class keeps track of all dialogues."""
 
@@ -111,7 +108,7 @@ class DefaultDialogues(Model, BaseDefaultDialogues):
             :param receiver_address: the address of the receiving agent
             :return: The role of the agent
             """
-            return DefaultDialogue.Role.AGENT
+            return BaseDefaultDialogue.Role.AGENT
 
         BaseDefaultDialogues.__init__(
             self,
