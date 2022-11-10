@@ -55,6 +55,8 @@ class Params(BaseParams):
             f"{leaderboard_base_endpoint}/{leaderboard_sheet_id}/values:batchGet?"
             f"ranges={self.leaderboard_points_range}&ranges={self.leaderboard_layers_range}&key={leaderboard_api_key}"
         )
+        self.whitelist_api_key = self._ensure("whitelist_api_key", kwargs)
+        self.whitelist_endpoint = self._ensure("whitelist_endpoint", kwargs)
 
         super().__init__(*args, **kwargs)
 

@@ -138,6 +138,8 @@ models:
       tendermint_com_url: http://localhost:8080
       tendermint_max_retries: 5
       tendermint_url: http://localhost:26657
+      whitelist_api_key: ''
+      whitelist_endpoint: https://ipfs-whitelist-admin.staging.autonolas.tech/whitelist
     class_name: Params
   requests:
     args: {}

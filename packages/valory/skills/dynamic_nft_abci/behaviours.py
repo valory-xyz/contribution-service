@@ -398,9 +398,22 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                     image_path = Path(
                         img_manager.out_path, f"{image_code}.{img_manager.PNG_EXT}"
                     )
-                    new_image_code_to_hashes[image_code] = self.send_to_ipfs(
+                    # Whitelist the image
+                    image_hash = IPFSHashOnly.get(str(image_path))
+                    if not self.whitelist_hash(image_hash):
+                        status = "error"
+                        break
+
+                    # Send
+                    image_hash = self.send_to_ipfs(
                         image_path, image, filetype=ExtendedSupportedFiletype.PNG
                     )
+
+                    if not image_hash:
+                        status = "error"
+                        break
+
+                    new_image_code_to_hashes[image_code] = image_hash
 
             self.context.logger.info(
                 f"Generated the following new images: {new_image_code_to_hashes}"
@@ -457,6 +470,27 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                         filename=str(i),
                         filetype=ExtendedSupportedFiletype.PNG,
                     )
+
+    def whitelist_hash(self, image_hash: str) -> bool:
+        """Send a whitelist request to the whitelist server
+
+        :param image_hash: the hash to whitelist
+        :returns: True on success, False on error
+        """
+
+        response = yield from self.get_http_response(
+            method="POST",
+            url=f"{self.params.whitelist_endpoint}",
+            parameters=[("hash", image_hash), ("key", self.params.whitelist_api_key)],
+        )
+        if response.status_code != 200:
+            self.context.logger.error(
+                f"Could not whitelist the hash {image_hash}. "
+                f"Received status code {response.status_code}."
+            )
+            return False
+
+        return True
 
     class ImageManager:
         """Class to load image layers and compose new images from them"""
