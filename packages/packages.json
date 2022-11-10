@@ -15,5 +15,8 @@
     "contract/valory/ERC721Collective/0.1.0": "bafybeibe6cp35idn56pewbfzpyvyarrp4mueguntxnwoifopeneozslqbe",
     "protocol/fetchai/default/1.0.0": "bafybeihzesahyayexkhk26fg7rqnjuqaab3bmcijtjekvskvs4xw6ecyuu",
     "skill/valory/abstract_round_abci/0.1.0": "bafybeiegpewio6lkpikfnohjqmlwkqtxdmjbky4dphof4jvrixlvkiqixi",
-    "skill/valory/dynamic_nft_abci/0.1.0": "bafybeihsvnlfyp4veker5n7a5cs5d4ztw2ssqaxrpple6mihgo2b74wlwa"
+    "skill/valory/dynamic_nft_abci/0.1.0": "bafybeibcbpm4t4hyqkbfykj24jb3z3casrzpaoruz7udt7pmwzlpsorj3a",
+    "skill/valory/registration_abci/0.1.0": "bafybeigck3gb5tvm5tilzii7kvzqpryxrmxu2meck5empgl7lhuz66mbgq",
+    "skill/valory/reset_pause_abci/0.1.0": "bafybeid65rpcwq3rzxijwrpsbirersuwk2sdtcwnpkplczbszzoq2tbitu",
+    "skill/valory/contribution_skill_abci/0.1.0": "bafybeigzdx3rvj4d7hkkpkuux6twqucirbuiqpd7eosjwuyywpxasjsmb4"
 }

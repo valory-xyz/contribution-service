@@ -151,6 +151,8 @@ DEFAULT_SHEET_API_URL = (
     f"ranges={DEFAULT_CELL_RANGE_POINTS}&ranges={DEFAULT_CELL_RANGE_LAYERS}&key={GOOGLE_API_KEY}"
 )
 
+DEFAULT_WHITELIST_URL = "https://ipfs-whitelist-admin.staging.autonolas.tech/whitelist"
+
 
 def get_dummy_updates(error: bool = False) -> Dict:
     """Dummy updates"""
@@ -519,22 +521,40 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
         )
 
     @pytest.mark.parametrize(
-        "test_case",
+        "test_case, kwargs",
         [
-            BehaviourTestCase(
-                "Happy path",
-                initial_data=dict(
-                    most_voted_member_updates=get_dummy_updates(),
-                    most_voted_api_data=DUMMY_API_DATA,
+            (
+                BehaviourTestCase(
+                    "Happy path",
+                    initial_data=dict(
+                        most_voted_member_updates=get_dummy_updates(),
+                        most_voted_api_data=DUMMY_API_DATA,
+                    ),
+                    event=Event.DONE,
                 ),
-                event=Event.DONE,
-            ),
+                {
+                    "status_code": 200,
+                },
+            )
         ],
     )
-    def test_run(self, test_case: BehaviourTestCase) -> None:
+    def test_run(self, test_case: BehaviourTestCase, kwargs: Any) -> None:
         """Run tests."""
+
+        # Create empty png files for the tests
+        test_codes = [i["image_code"] for i in get_dummy_updates().values()]
+        image_dir = Path(
+            ImageGenerationBehaviour.ImageManager.IMAGE_ROOT,
+            ImageGenerationBehaviour.ImageManager.IMAGES_DIR,
+        )
+        os.makedirs(image_dir)
+        for test_code in test_codes:
+            open(Path(image_dir, f"{test_code}.png"), "w").close()
+
         self.fast_forward(test_case.initial_data)
         self.complete(test_case.event)
+
+        shutil.rmtree(image_dir)
 
     @mock.patch.object(BaseBehaviour, "get_from_ipfs", return_value=False)
     def test_run_redownload_layers(self, *_: Any) -> None:
@@ -551,12 +571,23 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
         # Use an empty temporary directory as local image storage
         # so update_layers() detects that images are missing and tries to redownload
         with tempfile.TemporaryDirectory() as tmpdir:
+
             image_manager_cls = self.behaviour.behaviours[3].ImageManager
             image_manager_cls.IMAGE_ROOT = Path(tmpdir)
 
             # Create layer directory so it is removed
             layer_path = Path(tmpdir, image_manager_cls.LAYERS_DIR, "classes")
             os.makedirs(layer_path)
+
+            # Create empty png files for the tests
+            test_codes = [i["image_code"] for i in get_dummy_updates().values()]
+            image_dir = Path(
+                ImageGenerationBehaviour.ImageManager.IMAGE_ROOT,
+                ImageGenerationBehaviour.ImageManager.IMAGES_DIR,
+            )
+            os.makedirs(image_dir)
+            for test_code in test_codes:
+                open(Path(image_dir, f"{test_code}.png"), "w").close()
 
             self.fast_forward(test_case.initial_data)
             self.complete(test_case.event)
