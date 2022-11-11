@@ -50,12 +50,12 @@ class Params(BaseParams):
         leaderboard_sheet_id = self._ensure("leaderboard_sheet_id", kwargs)
         self.leaderboard_points_range = self._ensure("leaderboard_points_range", kwargs)
         self.leaderboard_layers_range = self._ensure("leaderboard_layers_range", kwargs)
-        leaderboard_api_key = self._ensure("leaderboard_api_key", kwargs)
+        leaderboard_api_key = kwargs.pop("leaderboard_api_key", None)
         self.leaderboard_endpoint = (
             f"{leaderboard_base_endpoint}/{leaderboard_sheet_id}/values:batchGet?"
             f"ranges={self.leaderboard_points_range}&ranges={self.leaderboard_layers_range}&key={leaderboard_api_key}"
         )
-        self.whitelist_api_key = self._ensure("whitelist_api_key", kwargs)
+        self.whitelist_api_key = kwargs.pop("whitelist_api_key", None)
         self.whitelist_endpoint = self._ensure("whitelist_endpoint", kwargs)
 
         super().__init__(*args, **kwargs)

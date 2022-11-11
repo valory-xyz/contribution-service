@@ -141,7 +141,7 @@ DUMMY_API_RESPONSE = {
 DUMMY_BAD_API_RESPONSE = {}
 
 SHEET_ID = "1JYR9kfj_Zxd9xHX5AWSlO5X6HusFnb7p9amEUGU55Cg"
-GOOGLE_API_KEY = ""
+GOOGLE_API_KEY = None
 GOOGLE_SHEETS_ENDPOINT = "https://sheets.googleapis.com/v4/spreadsheets"
 DEFAULT_CELL_RANGE_POINTS = "Leaderboard!A2:B102"
 DEFAULT_CELL_RANGE_LAYERS = "Layers!B1:Z3"
@@ -151,7 +151,7 @@ DEFAULT_SHEET_API_URL = (
     f"ranges={DEFAULT_CELL_RANGE_POINTS}&ranges={DEFAULT_CELL_RANGE_LAYERS}&key={GOOGLE_API_KEY}"
 )
 
-DEFAULT_WHITELIST_URL = "https://ipfs-whitelist-admin.staging.autonolas.tech/whitelist"
+DEFAULT_WHITELIST_URL = "http://localhost"
 
 
 def get_dummy_updates(error: bool = False) -> Dict:

@@ -24,7 +24,7 @@ contracts: []
 protocols: []
 skills:
 - valory/abstract_round_abci:0.1.0:bafybeiegpewio6lkpikfnohjqmlwkqtxdmjbky4dphof4jvrixlvkiqixi
-- valory/dynamic_nft_abci:0.1.0:bafybeie6pxxogzw5llmvfefn5ea4uktepzii3lxgwifnu2jcw57mflzf44
+- valory/dynamic_nft_abci:0.1.0:bafybeih36tjurs7xdb6qakxmeov2jtriir6bhw75ly2gbcfjpe5rhfndse
 - valory/registration_abci:0.1.0:bafybeigck3gb5tvm5tilzii7kvzqpryxrmxu2meck5empgl7lhuz66mbgq
 - valory/reset_pause_abci:0.1.0:bafybeid65rpcwq3rzxijwrpsbirersuwk2sdtcwnpkplczbszzoq2tbitu
 behaviours:
@@ -73,6 +73,7 @@ models:
       cleanup_history_depth_current: null
       consensus:
         max_participants: 1
+      drand_public_key: 868f005eb8e6e4ca0a47c8a77ceaa5309a47978a7c71bc5cce96366b5d7a569937c529eeda66c7293784a9402801af31
       genesis_config:
         genesis_time: '2022-09-26T00:00:00.000000000Z'
         chain_id: chain-c4daS1
@@ -90,6 +91,13 @@ models:
             - ed25519
           version: {}
         voting_power: '10'
+      ipfs_domain_name: /dns/registry.autonolas.tech/tcp/443/https
+      keeper_timeout: 30.0
+      leaderboard_api_key: null
+      leaderboard_base_endpoint: https://sheets.googleapis.com/v4/spreadsheets
+      leaderboard_layers_range: Layers!B1:Z3
+      leaderboard_points_range: Leaderboard!A2:B102
+      leaderboard_sheet_id: 1JYR9kfj_Zxd9xHX5AWSlO5X6HusFnb7p9amEUGU55Cg
       max_healthcheck: 120
       observation_interval: 10
       on_chain_service_id: null
@@ -104,6 +112,8 @@ models:
       tendermint_com_url: http://localhost:8080
       tendermint_max_retries: 5
       tendermint_url: http://localhost:26657
+      whitelist_api_key: null
+      whitelist_endpoint: http://localhost
     class_name: Params
   requests:
     args: {}

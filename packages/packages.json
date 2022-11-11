@@ -14,8 +14,8 @@
     "connection/valory/p2p_libp2p_client/0.1.0": "bafybeihf35zfr35qsvfte4vbi7njvuzfx4httysw7owmlux53gvxh2or54",
     "contract/valory/ERC721Collective/0.1.0": "bafybeieuz5zajy5rgz3iodo2wr4czra7zkhixlusppcdae466csalltinq",
     "skill/valory/abstract_round_abci/0.1.0": "bafybeiegpewio6lkpikfnohjqmlwkqtxdmjbky4dphof4jvrixlvkiqixi",
-    "skill/valory/dynamic_nft_abci/0.1.0": "bafybeie6pxxogzw5llmvfefn5ea4uktepzii3lxgwifnu2jcw57mflzf44",
+    "skill/valory/dynamic_nft_abci/0.1.0": "bafybeih36tjurs7xdb6qakxmeov2jtriir6bhw75ly2gbcfjpe5rhfndse",
     "skill/valory/registration_abci/0.1.0": "bafybeigck3gb5tvm5tilzii7kvzqpryxrmxu2meck5empgl7lhuz66mbgq",
     "skill/valory/reset_pause_abci/0.1.0": "bafybeid65rpcwq3rzxijwrpsbirersuwk2sdtcwnpkplczbszzoq2tbitu",
-    "skill/valory/contribution_skill_abci/0.1.0": "bafybeigm65hxb6727bixzgprqzhpengaefjiq3hn2y2hcpxmqbcoszumjy"
+    "skill/valory/contribution_skill_abci/0.1.0": "bafybeif27ciehwfw42f4t33osiczmwmxck27x4hnfh6t54jkdrmleuofd4"
 }
