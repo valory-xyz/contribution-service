@@ -11,7 +11,6 @@
     "protocol/valory/tendermint/0.1.0": "bafybeihcnjhovvyyfbkuw5sjyfx2lfd4soeocfqzxz54g67333m6nk5gxq",
     "skill/valory/abstract_abci/0.1.0": "bafybeiabow5j6wc63szukedutrx6bia2agnju62avxsbhqkhchcwwpvu5i",
     "contract/valory/ERC721Collective/0.1.0": "bafybeiemzs6fi4fbzezdjvybu5tujzsc6zgzzspobkj745tn2ovhga22ve",
-    "protocol/fetchai/default/1.0.0": "bafybeihzesahyayexkhk26fg7rqnjuqaab3bmcijtjekvskvs4xw6ecyuu",
     "skill/valory/abstract_round_abci/0.1.0": "bafybeiegpewio6lkpikfnohjqmlwkqtxdmjbky4dphof4jvrixlvkiqixi",
-    "skill/valory/dynamic_nft_abci/0.1.0": "bafybeihsvnlfyp4veker5n7a5cs5d4ztw2ssqaxrpple6mihgo2b74wlwa"
+    "skill/valory/dynamic_nft_abci/0.1.0": "bafybeiembxv4nzqlxai4k4v2ctclna3ddj6ijp7mbmgifldfdquiodr3b4"
 }
