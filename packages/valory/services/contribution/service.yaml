@@ -1,13 +1,14 @@
 name: contribution
 author: valory
 version: 0.1.0
-description: A service that tracks the community members' points and updates their NFTs autonomously
+description: A service that tracks the community members' points and updates their
+  NFTs autonomously
 aea_version: '>=1.0.0, <2.0.0'
 license: Apache-2.0
 fingerprint:
-  README.md: bafybeibhbkelnxxvsln677imq65vgbglmlhyxtax4iqtzempjiwcoef3gq
+  README.md: bafybeiaeysyipptsieavfpyfkrfl3n37klu3ux7o2rtks2w4k2nnr2hshu
 fingerprint_ignore_patterns: []
-agent: valory/contribution:0.1.0:bafybeihjt53sybzqynsf6wrxm4agf2sezkzf5tdp4lqbnxjrnx4h5drjfe
+agent: valory/contribution:0.1.0:bafybeihceh2doaoic6zknshxhv6opmbgsqx75rtnjwt6thsyf42mvd22hu
 number_of_agents: 1
 ---
 public_id: valory/contribution_skill_abci:0.1.0
@@ -18,16 +19,6 @@ models:
       broadcast_to_server: true
       history_end: null
       ipfs_domain_name: /dns/registry.autonolas.tech/tcp/443/https
----
-benchmark_persistence_params:
-  args: &id001
-    log_dir: /benchmarks
-public_id: valory/contribution_skill_abci:0.1.0
-type: skill
-models:
-  0:
-  - benchmark_tool:
-      args: *id001
 ---
 public_id: valory/ledger:0.19.0
 type: connection

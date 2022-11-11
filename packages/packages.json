@@ -17,5 +17,7 @@
     "skill/valory/dynamic_nft_abci/0.1.0": "bafybeih36tjurs7xdb6qakxmeov2jtriir6bhw75ly2gbcfjpe5rhfndse",
     "skill/valory/registration_abci/0.1.0": "bafybeigck3gb5tvm5tilzii7kvzqpryxrmxu2meck5empgl7lhuz66mbgq",
     "skill/valory/reset_pause_abci/0.1.0": "bafybeid65rpcwq3rzxijwrpsbirersuwk2sdtcwnpkplczbszzoq2tbitu",
-    "skill/valory/contribution_skill_abci/0.1.0": "bafybeif27ciehwfw42f4t33osiczmwmxck27x4hnfh6t54jkdrmleuofd4"
+    "skill/valory/contribution_skill_abci/0.1.0": "bafybeif27ciehwfw42f4t33osiczmwmxck27x4hnfh6t54jkdrmleuofd4",
+    "agent/valory/contribution/0.1.0": "bafybeihceh2doaoic6zknshxhv6opmbgsqx75rtnjwt6thsyf42mvd22hu",
+    "service/valory/contribution/0.1.0": "bafybeib4gmlxemqiuy7sdnptgg2lnebhgxu5uoahrykvsth42t5fxo7iqm"
 }
