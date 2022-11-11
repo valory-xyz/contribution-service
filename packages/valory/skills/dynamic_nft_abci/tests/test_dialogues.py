@@ -19,8 +19,44 @@
 
 """Test the dialogues.py module of the DynamicNFT skill."""
 
-import packages.valory.skills.dynamic_nft_abci.dialogues  # pylint: disable=unused-import # noqa: F401
+from pathlib import Path
+from typing import cast
+
+from aea.test_tools.test_skill import BaseSkillTestCase, COUNTERPARTY_AGENT_ADDRESS
+
+from packages.valory.protocols.http.message import HttpMessage
+from packages.valory.skills.dynamic_nft_abci.dialogues import (
+    HttpDialogue,
+    HttpDialogues,
+)
 
 
-def test_import() -> None:
-    """Test that the 'dialogues.py' of the DynamicNFT skill can be imported."""
+PACKAGE_DIR = Path(__file__).parent.parent
+
+
+class TestDialogues(BaseSkillTestCase):
+    """Test dialogue class of http_echo."""
+
+    path_to_skill = PACKAGE_DIR
+
+    @classmethod
+    def setup_class(cls):
+        """Setup the test class."""
+        super().setup_class()
+        cls.http_dialogues = cast(
+            HttpDialogues, cls._skill.skill_context.http_dialogues
+        )
+
+    def test_http_dialogues(self):
+        """Test the HttpDialogues class."""
+        _, dialogue = self.http_dialogues.create(
+            counterparty=COUNTERPARTY_AGENT_ADDRESS,
+            performative=HttpMessage.Performative.REQUEST,
+            method="some_method",
+            url="some_url",
+            version="some_version",
+            headers="some_headers",
+            body=b"some_body",
+        )
+        assert dialogue.role == HttpDialogue.Role.SERVER
+        assert dialogue.self_address == str(self.skill.skill_context.skill_id)

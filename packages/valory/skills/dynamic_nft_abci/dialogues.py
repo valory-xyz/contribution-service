@@ -19,6 +19,14 @@
 
 """This module contains the dialogues of the DynamicNFTAbciApp."""
 
+from typing import Any
+
+from aea.protocols.base import Address, Message
+from aea.protocols.dialogue.base import Dialogue as BaseDialogue
+from aea.skills.base import Model
+
+from packages.valory.protocols.http.dialogues import HttpDialogue as BaseHttpDialogue
+from packages.valory.protocols.http.dialogues import HttpDialogues as BaseHttpDialogues
 from packages.valory.skills.abstract_round_abci.dialogues import (
     AbciDialogue as BaseAbciDialogue,
 )
@@ -30,12 +38,6 @@ from packages.valory.skills.abstract_round_abci.dialogues import (
 )
 from packages.valory.skills.abstract_round_abci.dialogues import (
     ContractApiDialogues as BaseContractApiDialogues,
-)
-from packages.valory.skills.abstract_round_abci.dialogues import (
-    HttpDialogue as BaseHttpDialogue,
-)
-from packages.valory.skills.abstract_round_abci.dialogues import (
-    HttpDialogues as BaseHttpDialogues,
 )
 from packages.valory.skills.abstract_round_abci.dialogues import (
     LedgerApiDialogue as BaseLedgerApiDialogue,
@@ -62,7 +64,6 @@ AbciDialogues = BaseAbciDialogues
 
 
 HttpDialogue = BaseHttpDialogue
-HttpDialogues = BaseHttpDialogues
 
 
 SigningDialogue = BaseSigningDialogue
@@ -79,3 +80,32 @@ ContractApiDialogues = BaseContractApiDialogues
 
 TendermintDialogue = BaseTendermintDialogue
 TendermintDialogues = BaseTendermintDialogues
+
+
+class HttpDialogues(Model, BaseHttpDialogues):
+    """The dialogues class keeps track of all dialogues."""
+
+    def __init__(self, **kwargs: Any) -> None:
+        """
+        Initialize dialogues.
+
+        :param kwargs: keyword arguments
+        """
+        Model.__init__(self, **kwargs)
+
+        def role_from_first_message(  # pylint: disable=unused-argument
+            message: Message, receiver_address: Address
+        ) -> BaseDialogue.Role:
+            """Infer the role of the agent from an incoming/outgoing first message
+
+            :param message: an incoming/outgoing first message
+            :param receiver_address: the address of the receiving agent
+            :return: The role of the agent
+            """
+            return BaseHttpDialogue.Role.SERVER
+
+        BaseHttpDialogues.__init__(
+            self,
+            self_address=str(self.skill_id),
+            role_from_first_message=role_from_first_message,
+        )
