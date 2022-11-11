@@ -21,5 +21,4 @@ packages/valory/skills/registration_abci
 packages/valory/skills/reset_pause_abci
 packages/valory/skills/safe_deployment_abci
 packages/valory/skills/transaction_settlement_abci
-packages/fetchai/
 packages/open_aea
