@@ -481,7 +481,9 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
         response = yield from self.get_http_response(
             method="POST",
             url=f"{self.params.whitelist_endpoint}",
-            parameters=[("hash", image_hash), ("key", self.params.whitelist_api_key)],
+            content=json.dumps(
+                {"hash": image_hash, "key": self.params.whitelist_api_key}
+            ).encode(),
         )
         if response.status_code != 200:
             self.context.logger.error(
