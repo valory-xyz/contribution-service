@@ -23,7 +23,6 @@ from typing import cast
 
 from aea.protocols.base import Message
 
-from packages.fetchai.protocols.default import DefaultMessage
 from packages.valory.protocols.http.message import HttpMessage
 from packages.valory.skills.abstract_round_abci.handlers import (
     ABCIRoundHandler as BaseABCIRoundHandler,
@@ -44,7 +43,6 @@ from packages.valory.skills.abstract_round_abci.handlers import (
     TendermintHandler as BaseTendermintHandler,
 )
 from packages.valory.skills.dynamic_nft_abci.dialogues import (
-    DefaultDialogues,
     HttpDialogue,
     HttpDialogues,
 )
@@ -83,30 +81,15 @@ class HttpHandler(BaseHttpHandler):
             http_dialogues = cast(HttpDialogues, self.context.http_dialogues)
             http_dialogue = cast(HttpDialogue, http_dialogues.update(http_msg))
             if http_dialogue is None:
-                self._handle_unidentified_dialogue(http_msg)
+                self.context.logger.info(
+                    "received invalid http message={}, unidentified dialogue.".format(
+                        http_msg
+                    )
+                )
                 return
             self._handle_request(http_msg, http_dialogue)
         else:
             super().handle(message)
-
-    def _handle_unidentified_dialogue(self, http_msg: HttpMessage) -> None:
-        """
-        Handle an unidentified dialogue.
-
-        :param http_msg: the message
-        """
-        self.context.logger.info(
-            "received invalid http message={}, unidentified dialogue.".format(http_msg)
-        )
-        default_dialogues = cast(DefaultDialogues, self.context.default_dialogues)
-        default_msg, _ = default_dialogues.create(
-            counterparty=http_msg.sender,
-            performative=DefaultMessage.Performative.ERROR,
-            error_code=DefaultMessage.ErrorCode.INVALID_DIALOGUE,
-            error_msg="Invalid dialogue.",
-            error_data={"http_message": http_msg.encode()},
-        )
-        self.context.outbox.put_message(message=default_msg)
 
     def _handle_request(
         self, http_msg: HttpMessage, http_dialogue: HttpDialogue

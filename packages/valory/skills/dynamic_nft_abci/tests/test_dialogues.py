@@ -24,11 +24,8 @@ from typing import cast
 
 from aea.test_tools.test_skill import BaseSkillTestCase, COUNTERPARTY_AGENT_ADDRESS
 
-from packages.fetchai.protocols.default.dialogues import DefaultDialogue
-from packages.fetchai.protocols.default.message import DefaultMessage
 from packages.valory.protocols.http.message import HttpMessage
 from packages.valory.skills.dynamic_nft_abci.dialogues import (
-    DefaultDialogues,
     HttpDialogue,
     HttpDialogues,
 )
@@ -46,22 +43,9 @@ class TestDialogues(BaseSkillTestCase):
     def setup_class(cls):
         """Setup the test class."""
         super().setup_class()
-        cls.default_dialogues = cast(
-            DefaultDialogues, cls._skill.skill_context.default_dialogues
-        )
         cls.http_dialogues = cast(
             HttpDialogues, cls._skill.skill_context.http_dialogues
         )
-
-    def test_default_dialogues(self):
-        """Test the DefaultDialogues class."""
-        _, dialogue = self.default_dialogues.create(
-            counterparty=COUNTERPARTY_AGENT_ADDRESS,
-            performative=DefaultMessage.Performative.BYTES,
-            content=b"some_content",
-        )
-        assert dialogue.role == DefaultDialogue.Role.AGENT
-        assert dialogue.self_address == self.skill.skill_context.agent_address
 
     def test_http_dialogues(self):
         """Test the HttpDialogues class."""

@@ -29,7 +29,6 @@ import pytest
 from aea.protocols.dialogue.base import DialogueMessage
 from aea.test_tools.test_skill import BaseSkillTestCase
 
-from packages.fetchai.protocols.default.message import DefaultMessage  # type: ignore
 from packages.valory.protocols.http.message import HttpMessage
 from packages.valory.skills.dynamic_nft_abci.dialogues import HttpDialogues
 from packages.valory.skills.dynamic_nft_abci.handlers import (
@@ -124,25 +123,10 @@ class TestHttpHandler(BaseSkillTestCase):
             self.http_handler.handle(incoming_message)
 
         # after
-        self.assert_quantity_in_outbox(1)
-
         mock_logger.assert_any_call(
             logging.INFO,
             f"received invalid http message={incoming_message}, unidentified dialogue.",
         )
-
-        message = self.get_message_from_outbox()
-        has_attributes, error_str = self.message_has_attributes(
-            actual_message=message,
-            message_type=DefaultMessage,
-            performative=DefaultMessage.Performative.ERROR,
-            to=incoming_message.sender,
-            sender=self.skill.skill_context.agent_address,
-            error_code=DefaultMessage.ErrorCode.INVALID_DIALOGUE,
-            error_msg="Invalid dialogue.",
-            error_data={"http_message": incoming_message.encode()},
-        )
-        assert has_attributes, error_str
 
     @pytest.mark.parametrize(
         "test_case",
