@@ -552,25 +552,17 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
         for test_code in test_codes:
             open(Path(image_dir, f"{test_code}.png"), "w").close()
 
-        # Hashes for these newly generated files
-        EMPTY_FILE_HASHES = [
-            "bafybeih6phzkblum5yvkyc527a6p324s2a23cjw3cqfg36wu7c2j7zg7ty",
-            "bafybeidbxgqtmy65rls5jog5llm5fs3yfkhmt57wz4o4mefgrtosujrilu",
-        ]
-
         self.fast_forward(test_case.initial_data)
         self.behaviour.act_wrapper()
 
         # Mock the IPFS whitelisting
-        for hash_ in EMPTY_FILE_HASHES:
-            WHITELIST_ENDPOINT = f"{DEFAULT_WHITELIST_URL}?hash={hash_}&key="
-
+        for _ in range(2):
             self.mock_http_request(
                 request_kwargs=dict(
                     method="POST",
                     headers="",
                     version="",
-                    url=WHITELIST_ENDPOINT,
+                    url=DEFAULT_WHITELIST_URL,
                 ),
                 response_kwargs=dict(
                     version="",
@@ -627,25 +619,17 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
             for test_code in test_codes:
                 open(Path(image_dir, f"{test_code}.png"), "w").close()
 
-            # Hashes for these newly generated files
-            EMPTY_FILE_HASHES = [
-                "bafybeih6phzkblum5yvkyc527a6p324s2a23cjw3cqfg36wu7c2j7zg7ty",
-                "bafybeidbxgqtmy65rls5jog5llm5fs3yfkhmt57wz4o4mefgrtosujrilu",
-            ]
-
             self.fast_forward(test_case.initial_data)
             self.behaviour.act_wrapper()
 
             # Mock the IPFS whitelisting
-            for hash_ in EMPTY_FILE_HASHES:
-                WHITELIST_ENDPOINT = f"{DEFAULT_WHITELIST_URL}?hash={hash_}&key="
-
+            for _ in range(2):
                 self.mock_http_request(
                     request_kwargs=dict(
                         method="POST",
                         headers="",
                         version="",
-                        url=WHITELIST_ENDPOINT,
+                        url=DEFAULT_WHITELIST_URL,
                     ),
                     response_kwargs=dict(
                         version="",
@@ -732,25 +716,17 @@ class TestImageGenerationErrorBehaviour(BaseDynamicNFTTest):
         for test_code in test_codes:
             open(Path(image_dir, f"{test_code}.png"), "w").close()
 
-        # Hashes for these newly generated files
-        EMPTY_FILE_HASHES = [
-            "bafybeih6phzkblum5yvkyc527a6p324s2a23cjw3cqfg36wu7c2j7zg7ty",
-            "bafybeidbxgqtmy65rls5jog5llm5fs3yfkhmt57wz4o4mefgrtosujrilu",
-        ]
-
         self.fast_forward(test_case.initial_data)
         self.behaviour.act_wrapper()
 
         # Mock the IPFS whitelisting
         # In this case, we only use the first file/hash as we will fail on the first image
-        WHITELIST_ENDPOINT = f"{DEFAULT_WHITELIST_URL}?hash={EMPTY_FILE_HASHES[0]}&key="
-
         self.mock_http_request(
             request_kwargs=dict(
                 method="POST",
                 headers="",
                 version="",
-                url=WHITELIST_ENDPOINT,
+                url=DEFAULT_WHITELIST_URL,
             ),
             response_kwargs=dict(
                 version="",
@@ -796,25 +772,17 @@ class TestImageGenerationErrorBehaviour(BaseDynamicNFTTest):
         for test_code in test_codes:
             open(Path(image_dir, f"{test_code}.png"), "w").close()
 
-        # Hashes for these newly generated files
-        EMPTY_FILE_HASHES = [
-            "bafybeih6phzkblum5yvkyc527a6p324s2a23cjw3cqfg36wu7c2j7zg7ty",
-            "bafybeidbxgqtmy65rls5jog5llm5fs3yfkhmt57wz4o4mefgrtosujrilu",
-        ]
-
         self.fast_forward(test_case.initial_data)
         self.behaviour.act_wrapper()
 
         # Mock the IPFS whitelisting
         # In this case, we only use the first file/hash as we will fail on the first image
-        WHITELIST_ENDPOINT = f"{DEFAULT_WHITELIST_URL}?hash={EMPTY_FILE_HASHES[0]}&key="
-
         self.mock_http_request(
             request_kwargs=dict(
                 method="POST",
                 headers="",
                 version="",
-                url=WHITELIST_ENDPOINT,
+                url=DEFAULT_WHITELIST_URL,
             ),
             response_kwargs=dict(
                 version="",
