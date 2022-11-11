@@ -17,4 +17,9 @@
 #
 # ------------------------------------------------------------------------------
 
-"""This module contains the support resources for the ERC721Collective contract."""
+"""This module contains the implementation of the contribution skill."""
+
+from aea.configurations.base import PublicId
+
+
+PUBLIC_ID = PublicId.from_str("valory/contribution_skill_abci:0.1.0")

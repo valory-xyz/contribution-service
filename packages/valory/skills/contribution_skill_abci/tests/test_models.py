@@ -17,4 +17,17 @@
 #
 # ------------------------------------------------------------------------------
 
-"""This module contains the support resources for the ERC721Collective contract."""
+"""Test the models.py module of the contribution skill."""
+
+from packages.valory.skills.contribution_skill_abci.models import SharedState
+from packages.valory.skills.abstract_round_abci.test_tools.base import DummyContext
+
+
+class TestSharedState:  # pylint: disable=too-few-public-methods
+    """Test SharedState of the contribution skill."""
+
+    def test_initialization(  # pylint: disable=no-self-use
+        self,
+    ) -> None:
+        """Test initialization."""
+        SharedState(name="", skill_context=DummyContext())

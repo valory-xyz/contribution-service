@@ -17,4 +17,10 @@
 #
 # ------------------------------------------------------------------------------
 
-"""This module contains the support resources for the ERC721Collective contract."""
+"""Test the handlers.py module of the contribution skill."""
+
+import packages.valory.skills.contribution_skill_abci.handlers  # pylint: disable=unused-import # noqa: F401
+
+
+def test_import() -> None:
+    """Test that the 'handlers.py' of the contribution skill can be imported."""
