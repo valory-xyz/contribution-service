@@ -141,7 +141,7 @@ DUMMY_API_RESPONSE = {
 DUMMY_BAD_API_RESPONSE = {}
 
 SHEET_ID = "1JYR9kfj_Zxd9xHX5AWSlO5X6HusFnb7p9amEUGU55Cg"
-GOOGLE_API_KEY = ""
+GOOGLE_API_KEY = None
 GOOGLE_SHEETS_ENDPOINT = "https://sheets.googleapis.com/v4/spreadsheets"
 DEFAULT_CELL_RANGE_POINTS = "Leaderboard!A2:B102"
 DEFAULT_CELL_RANGE_LAYERS = "Layers!B1:Z3"
@@ -150,6 +150,8 @@ DEFAULT_SHEET_API_URL = (
     f"{GOOGLE_SHEETS_ENDPOINT}/{SHEET_ID}/values:batchGet?"
     f"ranges={DEFAULT_CELL_RANGE_POINTS}&ranges={DEFAULT_CELL_RANGE_LAYERS}&key={GOOGLE_API_KEY}"
 )
+
+DEFAULT_WHITELIST_URL = "http://localhost"
 
 
 def get_dummy_updates(error: bool = False) -> Dict:
@@ -519,26 +521,73 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
         )
 
     @pytest.mark.parametrize(
-        "test_case",
+        "test_case, kwargs",
         [
-            BehaviourTestCase(
-                "Happy path",
-                initial_data=dict(
-                    most_voted_member_updates=get_dummy_updates(),
-                    most_voted_api_data=DUMMY_API_DATA,
+            (
+                BehaviourTestCase(
+                    "Happy path",
+                    initial_data=dict(
+                        most_voted_member_updates=get_dummy_updates(),
+                        most_voted_api_data=DUMMY_API_DATA,
+                    ),
+                    event=Event.DONE,
                 ),
-                event=Event.DONE,
-            ),
+                {
+                    "status_code": 200,
+                },
+            )
         ],
     )
-    def test_run(self, test_case: BehaviourTestCase) -> None:
+    def test_run(self, test_case: BehaviourTestCase, kwargs: Any) -> None:
         """Run tests."""
+
+        # Create empty png files for the tests
+        test_codes = [i["image_code"] for i in get_dummy_updates().values()]
+        image_dir = Path(
+            ImageGenerationBehaviour.ImageManager.IMAGE_ROOT,
+            ImageGenerationBehaviour.ImageManager.IMAGES_DIR,
+        )
+        if not os.path.isdir(image_dir):
+            os.makedirs(image_dir)
+        for test_code in test_codes:
+            open(Path(image_dir, f"{test_code}.png"), "w").close()
+
         self.fast_forward(test_case.initial_data)
-        self.complete(test_case.event)
+        self.behaviour.act_wrapper()
+
+        # Mock the IPFS whitelisting
+        for _ in range(2):
+            self.mock_http_request(
+                request_kwargs=dict(
+                    method="POST",
+                    headers="",
+                    version="",
+                    url=DEFAULT_WHITELIST_URL,
+                ),
+                response_kwargs=dict(
+                    version="",
+                    status_code=kwargs.get("status_code"),
+                    status_text="",
+                    headers="",
+                    body=b"",
+                ),
+            )
+
+        self.behaviour.act_wrapper()
+        self.mock_a2a_transaction()
+        self._test_done_flag_set()
+        self.end_round(done_event=test_case.event)
+        assert (
+            self.behaviour.current_behaviour.behaviour_id  # type: ignore
+            == self.next_behaviour_class.behaviour_id
+        )
+
+        shutil.rmtree(image_dir)
 
     @mock.patch.object(BaseBehaviour, "get_from_ipfs", return_value=False)
     def test_run_redownload_layers(self, *_: Any) -> None:
         """Run tests."""
+
         test_case = BehaviourTestCase(
             "Trigger image download from IPFS",
             initial_data=dict(
@@ -551,6 +600,7 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
         # Use an empty temporary directory as local image storage
         # so update_layers() detects that images are missing and tries to redownload
         with tempfile.TemporaryDirectory() as tmpdir:
+
             image_manager_cls = self.behaviour.behaviours[3].ImageManager
             image_manager_cls.IMAGE_ROOT = Path(tmpdir)
 
@@ -558,8 +608,48 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
             layer_path = Path(tmpdir, image_manager_cls.LAYERS_DIR, "classes")
             os.makedirs(layer_path)
 
+            # Create empty png files for the tests
+            test_codes = [i["image_code"] for i in get_dummy_updates().values()]
+            image_dir = Path(
+                ImageGenerationBehaviour.ImageManager.IMAGE_ROOT,
+                ImageGenerationBehaviour.ImageManager.IMAGES_DIR,
+            )
+            if not os.path.isdir(image_dir):
+                os.makedirs(image_dir)
+            for test_code in test_codes:
+                open(Path(image_dir, f"{test_code}.png"), "w").close()
+
             self.fast_forward(test_case.initial_data)
-            self.complete(test_case.event)
+            self.behaviour.act_wrapper()
+
+            # Mock the IPFS whitelisting
+            for _ in range(2):
+                self.mock_http_request(
+                    request_kwargs=dict(
+                        method="POST",
+                        headers="",
+                        version="",
+                        url=DEFAULT_WHITELIST_URL,
+                    ),
+                    response_kwargs=dict(
+                        version="",
+                        status_code=200,
+                        status_text="",
+                        headers="",
+                        body=b"",
+                    ),
+                )
+
+            self.behaviour.act_wrapper()
+            self.mock_a2a_transaction()
+            self._test_done_flag_set()
+            self.end_round(done_event=test_case.event)
+            assert (
+                self.behaviour.current_behaviour.behaviour_id  # type: ignore
+                == self.next_behaviour_class.behaviour_id
+            )
+
+            shutil.rmtree(image_dir)
 
 
 @use_ipfs_daemon
@@ -589,10 +679,130 @@ class TestImageGenerationErrorBehaviour(BaseDynamicNFTTest):
             ),
         ],
     )
-    def test_run(self, test_case: BehaviourTestCase) -> None:
+    def test_generation_error(self, test_case: BehaviourTestCase) -> None:
         """Run tests."""
         self.fast_forward(test_case.initial_data)
         self.complete(test_case.event)
+
+    @pytest.mark.parametrize(
+        "test_case, kwargs",
+        [
+            (
+                BehaviourTestCase(
+                    "Happy path",
+                    initial_data=dict(
+                        most_voted_member_updates=get_dummy_updates(),
+                        most_voted_api_data=DUMMY_API_DATA,
+                    ),
+                    event=Event.IMAGE_ERROR,
+                ),
+                {
+                    "status_code": 404,
+                },
+            )
+        ],
+    )
+    def test_whitelist_error(self, test_case: BehaviourTestCase, kwargs: Any) -> None:
+        """Run tests."""
+
+        # Create empty png files for the tests
+        test_codes = [i["image_code"] for i in get_dummy_updates().values()]
+        image_dir = Path(
+            ImageGenerationBehaviour.ImageManager.IMAGE_ROOT,
+            ImageGenerationBehaviour.ImageManager.IMAGES_DIR,
+        )
+        if not os.path.isdir(image_dir):
+            os.makedirs(image_dir)
+        for test_code in test_codes:
+            open(Path(image_dir, f"{test_code}.png"), "w").close()
+
+        self.fast_forward(test_case.initial_data)
+        self.behaviour.act_wrapper()
+
+        # Mock the IPFS whitelisting
+        # In this case, we only use the first file/hash as we will fail on the first image
+        self.mock_http_request(
+            request_kwargs=dict(
+                method="POST",
+                headers="",
+                version="",
+                url=DEFAULT_WHITELIST_URL,
+            ),
+            response_kwargs=dict(
+                version="",
+                status_code=kwargs.get("status_code"),
+                status_text="",
+                headers="",
+                body=b"",
+            ),
+        )
+
+        self.behaviour.act_wrapper()
+        self.mock_a2a_transaction()
+        self._test_done_flag_set()
+        self.end_round(done_event=test_case.event)
+        assert (
+            self.behaviour.current_behaviour.behaviour_id  # type: ignore
+            == self.next_behaviour_class.behaviour_id
+        )
+
+        shutil.rmtree(image_dir)
+
+    @mock.patch.object(BaseBehaviour, "send_to_ipfs", return_value=None)
+    def test_send_to_ipfs_error(self, *_: Any) -> None:
+        """Run tests."""
+
+        test_case = BehaviourTestCase(
+            "Happy path",
+            initial_data=dict(
+                most_voted_member_updates=get_dummy_updates(),
+                most_voted_api_data=DUMMY_API_DATA,
+            ),
+            event=Event.IMAGE_ERROR,
+        )
+
+        # Create empty png files for the tests
+        test_codes = [i["image_code"] for i in get_dummy_updates().values()]
+        image_dir = Path(
+            ImageGenerationBehaviour.ImageManager.IMAGE_ROOT,
+            ImageGenerationBehaviour.ImageManager.IMAGES_DIR,
+        )
+        if not os.path.isdir(image_dir):
+            os.makedirs(image_dir)
+        for test_code in test_codes:
+            open(Path(image_dir, f"{test_code}.png"), "w").close()
+
+        self.fast_forward(test_case.initial_data)
+        self.behaviour.act_wrapper()
+
+        # Mock the IPFS whitelisting
+        # In this case, we only use the first file/hash as we will fail on the first image
+        self.mock_http_request(
+            request_kwargs=dict(
+                method="POST",
+                headers="",
+                version="",
+                url=DEFAULT_WHITELIST_URL,
+            ),
+            response_kwargs=dict(
+                version="",
+                status_code=200,
+                status_text="",
+                headers="",
+                body=b"",
+            ),
+        )
+
+        self.behaviour.act_wrapper()
+        self.mock_a2a_transaction()
+        self._test_done_flag_set()
+        self.end_round(done_event=test_case.event)
+        assert (
+            self.behaviour.current_behaviour.behaviour_id  # type: ignore
+            == self.next_behaviour_class.behaviour_id
+        )
+
+        shutil.rmtree(image_dir)
 
 
 class TestDBUpdateBehaviour(BaseDynamicNFTTest):
