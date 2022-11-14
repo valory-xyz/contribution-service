@@ -8,10 +8,11 @@ fingerprint:
   __init__.py: bafybeihg57xcq4tc5wjymsj3mx2zfp7oxc6fmboh56epajeqfj4vlygmnu
   tests/__init__.py: bafybeicmv3jjcqcdnmubfmrgdgeyic3nkm77z4mutsyuo34hpddwupofre
   tests/helpers/__init__.py: bafybeiauwuw4a4wxqacqqkkk52ktps2qedadhypvh3ex7uqs7qaqrpygmy
-  tests/helpers/constants.py: bafybeifkitbifaxa4o552zki2uurdhasli2dbi7loby23ifgra3bz7wtja
-  tests/helpers/docker.py: bafybeigpl53g2shxhluueft7j4bwdkhk5bu5r6evcyksrirgckfohkxer4
-  tests/helpers/fixtures.py: bafybeiewms7fnxfdhazoan7lnqzjxwkcftuszfimnwpck4jnuqp55jucbm
-  tests/test_contribution.py: bafybeih4fi6lyn56r5hp3qdze77wheo466u2plqjvdvlrtjpef6r2e3n34
+  tests/helpers/constants.py: bafybeic4rgcl4cypnuz72zmdsyu2z4kxolc6znc3ihcdurgz4447s5gnt4
+  tests/helpers/data/json_server/data.json: bafybeicnxwpxdgffmdndjllwv23wq2mdnkolc4qpczd6tz77u3xsoeckqy
+  tests/helpers/docker.py: bafybeieytsigunv5kcowkz6rve5vtn3av3z4bhfkhkekpqlkkop6nuxcd4
+  tests/helpers/fixtures.py: bafybeig75witrqx6nbzux345n4wzygfn54v4irdm5lwvf6gwtsitkmqula
+  tests/test_contribution.py: bafybeihbz46lksoqydidjvlpimodkgxlvhcyjirbzqfqfrndiweaiqk6g4
 fingerprint_ignore_patterns: []
 connections:
 - valory/abci:0.1.0:bafybeid6p7vwyikn7sntlpc36vymotldfgonjbk3qa5gfacxxamybhmpvy
