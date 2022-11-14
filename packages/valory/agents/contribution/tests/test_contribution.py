@@ -46,6 +46,7 @@ from aea_test_autonomy.fixture_helpers import tendermint  # noqa: F401
 from aea_test_autonomy.fixture_helpers import tendermint_port  # noqa: F401
 from packages.valory.agents.contribution.tests.helpers.fixtures import (  # noqa: F401
     UseHardHatAutoFundBaseTest,
+    UseMockFearAndGreedApiBaseTest,
 )
 
 
@@ -74,6 +75,7 @@ PACKAGES_DIR = Path(__file__).parent.parent.parent.parent.parent
 @pytest.mark.parametrize("nb_nodes", (1,))
 class TestABCIPriceEstimationSingleAgent(
     BaseTestEnd2EndExecution,
+    UseMockFearAndGreedApiBaseTest,
     UseHardHatAutoFundBaseTest,
 ):
     """Test the contribution skill with only one agent."""
