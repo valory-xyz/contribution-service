@@ -1,2 +1,3 @@
 20636dab91e9b9348994a425500acb01d596fdf5:packages/valory/skills/dynamic_nft_abci/skill.yaml:generic-api-key:70
 df690e8ab6086514de8bf9613997dfa23dc08bda:packages/valory/skills/contribution_skill_abci/skill.yaml:generic-api-key:76
+9a5b96de17f6d1674678e6d248b188fbbb8df26d:packages/valory/agents/contribution/tests/helpers/constants.py:generic-api-key:46
