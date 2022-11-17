@@ -153,8 +153,10 @@ DEFAULT_SHEET_API_URL = (
 
 DEFAULT_WHITELIST_URL = "http://localhost"
 
-IMAGE_PATH = Path(ImageGenerationBehaviour.ImageManager.IMAGE_ROOT,
-                  ImageGenerationBehaviour.ImageManager.IMAGES_DIR)
+IMAGE_PATH = Path(
+    ImageGenerationBehaviour.ImageManager.IMAGE_ROOT,
+    ImageGenerationBehaviour.ImageManager.IMAGES_DIR,
+)
 
 
 def get_dummy_updates(error: bool = False) -> Dict:
@@ -439,10 +441,12 @@ class TestLeaderboardObservationErrorBehaviour(BaseDynamicNFTTest):
         ],
     )
     def test_force_exception(self, test_case: BehaviourTestCase, kwargs: Any) -> None:
-        """Force a exception for coverage purposes"""
+        """Force an exception for coverage purposes"""
 
         # Raise when is_valid_address() is called
-        with mock.patch.object(LedgerApis, "is_valid_address", side_effect=IndexError("dummy exception")):
+        with mock.patch.object(
+            LedgerApis, "is_valid_address", side_effect=IndexError("dummy exception")
+        ):
             self.fast_forward(test_case.initial_data)
             self.behaviour.act_wrapper()
             self.mock_http_request(
