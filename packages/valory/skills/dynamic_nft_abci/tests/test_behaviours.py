@@ -153,6 +153,9 @@ DEFAULT_SHEET_API_URL = (
 
 DEFAULT_WHITELIST_URL = "http://localhost"
 
+IMAGE_PATH = Path(ImageGenerationBehaviour.ImageManager.IMAGE_ROOT,
+                  ImageGenerationBehaviour.ImageManager.IMAGES_DIR)
+
 
 def get_dummy_updates(error: bool = False) -> Dict:
     """Dummy updates"""
@@ -184,6 +187,18 @@ class BaseDynamicNFTTest(FSMBehaviourBaseCase):
     next_behaviour_class: Type[DynamicNFTBaseBehaviour]
     synchronized_data: SynchronizedData
     done_event = Event.DONE
+    image_dir: Path
+
+    def setup(self, **kwargs: Any) -> None:
+        """Setup test"""
+        super().setup(**kwargs)
+        self.image_dir = IMAGE_PATH
+        Path(self.image_dir).mkdir()
+
+    def teardown(self) -> None:
+        """Teardown test"""
+        super().teardown()
+        shutil.rmtree(self.image_dir)
 
     def fast_forward(self, data: Optional[Dict[str, Any]] = None) -> None:
         """Fast-forward on initialization"""
@@ -210,14 +225,6 @@ class BaseDynamicNFTTest(FSMBehaviourBaseCase):
             self.behaviour.current_behaviour.behaviour_id  # type: ignore
             == self.next_behaviour_class.behaviour_id
         )
-
-    def teardown_class(self) -> None:
-        """Teardown"""
-        # Clean image output directory
-        image_manager_cls = ImageGenerationBehaviour.ImageManager
-        out_path = Path(image_manager_cls.IMAGE_ROOT, image_manager_cls.IMAGES_DIR)
-        if os.path.isdir(out_path):
-            shutil.rmtree(out_path)
 
 
 class TestNewMembersBehaviour(BaseDynamicNFTTest):
@@ -543,14 +550,8 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
 
         # Create empty png files for the tests
         test_codes = [i["image_code"] for i in get_dummy_updates().values()]
-        image_dir = Path(
-            ImageGenerationBehaviour.ImageManager.IMAGE_ROOT,
-            ImageGenerationBehaviour.ImageManager.IMAGES_DIR,
-        )
-        if not os.path.isdir(image_dir):
-            os.makedirs(image_dir)
         for test_code in test_codes:
-            open(Path(image_dir, f"{test_code}.png"), "w").close()
+            open(Path(self.image_dir, f"{test_code}.png"), "w").close()
 
         self.fast_forward(test_case.initial_data)
         self.behaviour.act_wrapper()
@@ -582,8 +583,6 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
             == self.next_behaviour_class.behaviour_id
         )
 
-        shutil.rmtree(image_dir)
-
     @mock.patch.object(BaseBehaviour, "get_from_ipfs", return_value=False)
     def test_run_redownload_layers(self, *_: Any) -> None:
         """Run tests."""
@@ -610,14 +609,8 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
 
             # Create empty png files for the tests
             test_codes = [i["image_code"] for i in get_dummy_updates().values()]
-            image_dir = Path(
-                ImageGenerationBehaviour.ImageManager.IMAGE_ROOT,
-                ImageGenerationBehaviour.ImageManager.IMAGES_DIR,
-            )
-            if not os.path.isdir(image_dir):
-                os.makedirs(image_dir)
             for test_code in test_codes:
-                open(Path(image_dir, f"{test_code}.png"), "w").close()
+                open(Path(self.image_dir, f"{test_code}.png"), "w").close()
 
             self.fast_forward(test_case.initial_data)
             self.behaviour.act_wrapper()
@@ -648,8 +641,6 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
                 self.behaviour.current_behaviour.behaviour_id  # type: ignore
                 == self.next_behaviour_class.behaviour_id
             )
-
-            shutil.rmtree(image_dir)
 
 
 @use_ipfs_daemon
@@ -707,14 +698,8 @@ class TestImageGenerationErrorBehaviour(BaseDynamicNFTTest):
 
         # Create empty png files for the tests
         test_codes = [i["image_code"] for i in get_dummy_updates().values()]
-        image_dir = Path(
-            ImageGenerationBehaviour.ImageManager.IMAGE_ROOT,
-            ImageGenerationBehaviour.ImageManager.IMAGES_DIR,
-        )
-        if not os.path.isdir(image_dir):
-            os.makedirs(image_dir)
         for test_code in test_codes:
-            open(Path(image_dir, f"{test_code}.png"), "w").close()
+            open(Path(self.image_dir, f"{test_code}.png"), "w").close()
 
         self.fast_forward(test_case.initial_data)
         self.behaviour.act_wrapper()
@@ -746,8 +731,6 @@ class TestImageGenerationErrorBehaviour(BaseDynamicNFTTest):
             == self.next_behaviour_class.behaviour_id
         )
 
-        shutil.rmtree(image_dir)
-
     @mock.patch.object(BaseBehaviour, "send_to_ipfs", return_value=None)
     def test_send_to_ipfs_error(self, *_: Any) -> None:
         """Run tests."""
@@ -763,14 +746,8 @@ class TestImageGenerationErrorBehaviour(BaseDynamicNFTTest):
 
         # Create empty png files for the tests
         test_codes = [i["image_code"] for i in get_dummy_updates().values()]
-        image_dir = Path(
-            ImageGenerationBehaviour.ImageManager.IMAGE_ROOT,
-            ImageGenerationBehaviour.ImageManager.IMAGES_DIR,
-        )
-        if not os.path.isdir(image_dir):
-            os.makedirs(image_dir)
         for test_code in test_codes:
-            open(Path(image_dir, f"{test_code}.png"), "w").close()
+            open(Path(self.image_dir, f"{test_code}.png"), "w").close()
 
         self.fast_forward(test_case.initial_data)
         self.behaviour.act_wrapper()
@@ -801,8 +778,6 @@ class TestImageGenerationErrorBehaviour(BaseDynamicNFTTest):
             self.behaviour.current_behaviour.behaviour_id  # type: ignore
             == self.next_behaviour_class.behaviour_id
         )
-
-        shutil.rmtree(image_dir)
 
 
 class TestDBUpdateBehaviour(BaseDynamicNFTTest):
