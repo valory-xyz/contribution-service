@@ -8,7 +8,7 @@ aea_version: '>=1.0.0, <2.0.0'
 fingerprint:
   __init__.py: bafybeigsysq5bmm6gmtghakad5rvqgjxfrdi22b53oyjfwrpiuyhkugm4y
   build/ERC721Collective.json: bafybeih27h2cvvfhymipkfgma7poctswwrbzwunfsf2y26pbnti566pxvu
-  contract.py: bafybeibt6cbpnkbg66twgrhqt7coyrtevikgvrwg6a3es2iexjexlg6d24
+  contract.py: bafybeid4r56ebln4crhih3rj6pynh7gogva66us5tperfqrlw6hcl2lduy
 fingerprint_ignore_patterns: []
 class_name: ERC721CollectiveContract
 contract_interface_paths:
