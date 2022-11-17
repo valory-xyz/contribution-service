@@ -32,7 +32,7 @@ from docker.models.containers import Container
 
 from packages.valory.agents.contribution import PACKAGE_DIR
 from packages.valory.agents.contribution.tests.helpers.constants import (
-    MANAGED_POOL_CONTROLLER,
+    SYNDICATE_CONTRACT,
 )
 
 
@@ -40,8 +40,8 @@ DEFAULT_HARDHAT_ADDR = "http://127.0.0.1"
 DEFAULT_HARDHAT_PORT = 8545
 
 
-class AutonomousFundNetworkDockerImage(DockerImage):
-    """Spawn a local network with deployed Gnosis Safe Factory and Balancer Contracts."""
+class ContributionNetworkDockerImage(DockerImage):
+    """Spawn a local network with the Autonolas registries, Gnosis Safe, Syndicate contract and some NFTs minted."""
 
     _CONTAINER_PORT = DEFAULT_HARDHAT_PORT
 
@@ -72,11 +72,11 @@ class AutonomousFundNetworkDockerImage(DockerImage):
     @property
     def tag(self) -> str:
         """Get the tag."""
-        return "valory/autonomous-fund-contracts:latest"
+        return "valory/contribution-contracts:latest"
 
     def _get_env_vars(self) -> Dict:
         """Returns the container env vars."""
-        env_vars = {"USE_SAFE_CONTRACTS": self.use_safe_contracts.__str__().lower()}
+        env_vars = {}
         return env_vars
 
     def create(self) -> Container:
@@ -105,7 +105,7 @@ class AutonomousFundNetworkDockerImage(DockerImage):
                 body = {
                     "jsonrpc": "2.0",
                     "method": "eth_getCode",
-                    "params": [MANAGED_POOL_CONTROLLER],
+                    "params": [SYNDICATE_CONTRACT],
                     "id": 1,
                 }
                 response = requests.post(
@@ -131,8 +131,8 @@ DEFAULT_JSON_DATA_DIR = (
 )
 
 
-class MockFearAndGreedApi(DockerImage):
-    """Spawn a JSON server to for mocking the Fear and Greed API."""
+class MockGoogleSheetsApi(DockerImage):
+    """Spawn a JSON server to for mocking the Google Sheets API."""
 
     def __init__(
         self,

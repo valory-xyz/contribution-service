@@ -28,17 +28,17 @@ from aea_test_autonomy.docker.base import launch_image
 
 from packages.valory.agents.contribution.tests.helpers.constants import ACCOUNTS
 from packages.valory.agents.contribution.tests.helpers.docker import (
-    AutonomousFundNetworkDockerImage,
+    ContributionNetworkDockerImage,
     DEFAULT_HARDHAT_ADDR,
     DEFAULT_HARDHAT_PORT,
     DEFAULT_JSON_SERVER_ADDR,
     DEFAULT_JSON_SERVER_PORT,
-    MockFearAndGreedApi,
+    MockGoogleSheetsApi,
 )
 
 
 @pytest.mark.integration
-class UseHardHatAutoFundBaseTest:  # pylint: disable=too-few-public-methods
+class UseHardHatContributionBaseTest:  # pylint: disable=too-few-public-methods
     """Inherit from this class to use HardHat local net with the Autonomous Fund related contracts deployed."""
 
     key_pairs: List[Tuple[str, str]] = ACCOUNTS
@@ -58,7 +58,7 @@ class UseHardHatAutoFundBaseTest:  # pylint: disable=too-few-public-methods
         logging.info(
             f"Launching the Autonomous Fund network on port {cls.NETWORK_ADDRESS}"
         )
-        image = AutonomousFundNetworkDockerImage(
+        image = ContributionNetworkDockerImage(
             client,
             addr=cls.NETWORK_ADDRESS,
             port=cls.NETWORK_PORT,
@@ -68,8 +68,8 @@ class UseHardHatAutoFundBaseTest:  # pylint: disable=too-few-public-methods
 
 
 @pytest.mark.integration
-class UseMockFearAndGreedApiBaseTest:  # pylint: disable=too-few-public-methods
-    """Inherit from this class to use a mock Fear and Greed API."""
+class UseMockGoogleSheetsApiBaseTest:  # pylint: disable=too-few-public-methods
+    """Inherit from this class to use a mock of Google Sheets API."""
 
     MOCK_API_ADDRESS = DEFAULT_JSON_SERVER_ADDR
     MOCK_API_PORT = DEFAULT_JSON_SERVER_PORT
@@ -81,10 +81,10 @@ class UseMockFearAndGreedApiBaseTest:  # pylint: disable=too-few-public-methods
         timeout: int = 3,
         max_attempts: int = 200,
     ) -> Generator:
-        """Start a Fear and Greed API instance."""
+        """Start a Google Sheets API instance."""
         client = docker.from_env()
-        logging.info(f"Launching the Fear and Greed API on port {cls.MOCK_API_PORT}")
-        image = MockFearAndGreedApi(
+        logging.info(f"Launching the Google Sheets API on port {cls.MOCK_API_PORT}")
+        image = MockGoogleSheetsApi(
             client,
             addr=cls.MOCK_API_ADDRESS,
             port=cls.MOCK_API_PORT,

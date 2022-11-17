@@ -12,12 +12,12 @@
     "protocol/valory/tendermint/0.1.0": "bafybeihcnjhovvyyfbkuw5sjyfx2lfd4soeocfqzxz54g67333m6nk5gxq",
     "skill/valory/abstract_abci/0.1.0": "bafybeiabow5j6wc63szukedutrx6bia2agnju62avxsbhqkhchcwwpvu5i",
     "connection/valory/p2p_libp2p_client/0.1.0": "bafybeihf35zfr35qsvfte4vbi7njvuzfx4httysw7owmlux53gvxh2or54",
-    "contract/valory/ERC721Collective/0.1.0": "bafybeicpzxeedbdmtjhydx45uskzhtqpglb5slvhmckd7nghqqr23tlmqm",
+    "contract/valory/ERC721Collective/0.1.0": "bafybeih2vkjqeczuiqhspwwu66eizcojk27esvw3af3u3gf3jumqtmfe3m",
     "skill/valory/abstract_round_abci/0.1.0": "bafybeiegpewio6lkpikfnohjqmlwkqtxdmjbky4dphof4jvrixlvkiqixi",
-    "skill/valory/dynamic_nft_abci/0.1.0": "bafybeieymdj7p2jmrjnyqihghfy3ckdxd2nrb5labogeegyac7yocqtt5y",
+    "skill/valory/dynamic_nft_abci/0.1.0": "bafybeih42ixyaxnwz4pvimq2hedbvpc5u5cqzlefuy7ybuzpkx4gcltqoq",
     "skill/valory/registration_abci/0.1.0": "bafybeigck3gb5tvm5tilzii7kvzqpryxrmxu2meck5empgl7lhuz66mbgq",
     "skill/valory/reset_pause_abci/0.1.0": "bafybeid65rpcwq3rzxijwrpsbirersuwk2sdtcwnpkplczbszzoq2tbitu",
-    "skill/valory/contribution_skill_abci/0.1.0": "bafybeid4ugrtehjzvomgvazmrmbdvj3de35ip3m5gw6tulvl7xd7gbxvku",
-    "agent/valory/contribution/0.1.0": "bafybeihiy2a7hrllrhqoqvzllrbzownxbplyor3a7nb7w65rlw7bp43ll4",
-    "service/valory/contribution/0.1.0": "bafybeibq5bk7btbioev65gs5f2visz3xrdyp6wpcod44cqmxcqzdvkchbe"
+    "skill/valory/contribution_skill_abci/0.1.0": "bafybeigyapiwvfkuslockpi3gaj2jtaeceqagwh6pinqztbbsie4xcysmm",
+    "agent/valory/contribution/0.1.0": "bafybeifvphhokc6ayptpxcydky2ujgybwbzfjfmzbu2txgdk7n5cz2dcwi",
+    "service/valory/contribution/0.1.0": "bafybeiaypah57j2dwf7d2wtdh3hxp5cbrszrfnuxpha5smyxsbqc743dxq"
 }

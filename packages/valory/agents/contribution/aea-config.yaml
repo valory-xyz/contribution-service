@@ -8,11 +8,11 @@ fingerprint:
   __init__.py: bafybeihg57xcq4tc5wjymsj3mx2zfp7oxc6fmboh56epajeqfj4vlygmnu
   tests/__init__.py: bafybeicmv3jjcqcdnmubfmrgdgeyic3nkm77z4mutsyuo34hpddwupofre
   tests/helpers/__init__.py: bafybeiauwuw4a4wxqacqqkkk52ktps2qedadhypvh3ex7uqs7qaqrpygmy
-  tests/helpers/constants.py: bafybeic4rgcl4cypnuz72zmdsyu2z4kxolc6znc3ihcdurgz4447s5gnt4
+  tests/helpers/constants.py: bafybeiguegd2xa4jym7svf3wknntz3ofad4u2xob5d5bgqbxmljy2mwkmm
   tests/helpers/data/json_server/data.json: bafybeicnxwpxdgffmdndjllwv23wq2mdnkolc4qpczd6tz77u3xsoeckqy
-  tests/helpers/docker.py: bafybeieytsigunv5kcowkz6rve5vtn3av3z4bhfkhkekpqlkkop6nuxcd4
-  tests/helpers/fixtures.py: bafybeig75witrqx6nbzux345n4wzygfn54v4irdm5lwvf6gwtsitkmqula
-  tests/test_contribution.py: bafybeihbz46lksoqydidjvlpimodkgxlvhcyjirbzqfqfrndiweaiqk6g4
+  tests/helpers/docker.py: bafybeibvg7v5qle6xurhaped4c5h2gojclgxvcr3pmiovug5vquxl5iyci
+  tests/helpers/fixtures.py: bafybeibbzank7chfncg6ifb4r3lvnttahixu2cq7cs6nnglbeolwlbrsvm
+  tests/test_contribution.py: bafybeiflr7fd6xrgeoxn2ylwdzghkn4by4wzqay2qj2hfqx4niee6fwz4u
 fingerprint_ignore_patterns: []
 connections:
 - valory/abci:0.1.0:bafybeid6p7vwyikn7sntlpc36vymotldfgonjbk3qa5gfacxxamybhmpvy
@@ -20,7 +20,7 @@ connections:
 - valory/ledger:0.19.0:bafybeihmz5us4ntmzvgikpkx4tththrl7zvou4uiebvletdeliidiuhi6m
 - valory/p2p_libp2p_client:0.1.0:bafybeihf35zfr35qsvfte4vbi7njvuzfx4httysw7owmlux53gvxh2or54
 contracts:
-- valory/ERC721Collective:0.1.0:bafybeicpzxeedbdmtjhydx45uskzhtqpglb5slvhmckd7nghqqr23tlmqm
+- valory/ERC721Collective:0.1.0:bafybeih2vkjqeczuiqhspwwu66eizcojk27esvw3af3u3gf3jumqtmfe3m
 protocols:
 - open_aea/signing:1.0.0:bafybeiambqptflge33eemdhis2whik67hjplfnqwieoa6wblzlaf7vuo44
 - valory/contract_api:1.0.0:bafybeiaxbrvgtbdrh4lslskuxyp4awyr4whcx3nqq5yrr6vimzsxg5dy64
@@ -28,8 +28,8 @@ protocols:
 skills:
 - valory/abstract_abci:0.1.0:bafybeiabow5j6wc63szukedutrx6bia2agnju62avxsbhqkhchcwwpvu5i
 - valory/abstract_round_abci:0.1.0:bafybeiegpewio6lkpikfnohjqmlwkqtxdmjbky4dphof4jvrixlvkiqixi
-- valory/contribution_skill_abci:0.1.0:bafybeid4ugrtehjzvomgvazmrmbdvj3de35ip3m5gw6tulvl7xd7gbxvku
-- valory/dynamic_nft_abci:0.1.0:bafybeieymdj7p2jmrjnyqihghfy3ckdxd2nrb5labogeegyac7yocqtt5y
+- valory/contribution_skill_abci:0.1.0:bafybeigyapiwvfkuslockpi3gaj2jtaeceqagwh6pinqztbbsie4xcysmm
+- valory/dynamic_nft_abci:0.1.0:bafybeih42ixyaxnwz4pvimq2hedbvpc5u5cqzlefuy7ybuzpkx4gcltqoq
 - valory/registration_abci:0.1.0:bafybeigck3gb5tvm5tilzii7kvzqpryxrmxu2meck5empgl7lhuz66mbgq
 - valory/reset_pause_abci:0.1.0:bafybeid65rpcwq3rzxijwrpsbirersuwk2sdtcwnpkplczbszzoq2tbitu
 default_ledger: ethereum
@@ -142,9 +142,11 @@ models:
       service_id: contribution_service
       service_registry_address: null
       sleep_time: 1
+      syndicate_contract_address: '0x9A676e781A523b5d0C0e43731313A708CB607508'
       tendermint_check_sleep_delay: 3
       tendermint_com_url: http://localhost:8080
       tendermint_max_retries: 5
       tendermint_url: http://localhost:26657
+      token_uri_base: https://pfp.autonolas.network/series/1/
       whitelist_api_key: null
       whitelist_endpoint: http://localhost
