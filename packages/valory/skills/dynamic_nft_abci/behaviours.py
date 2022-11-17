@@ -103,7 +103,7 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
             else:
                 member_to_nft_uri = {
                     member: f"{self.params.token_uri_base}/{token_id}"
-                    for member, token_id in member_to_token_id.values()
+                    for member, token_id in member_to_token_id.items()
                 }
                 old_members = set(self.synchronized_data.members.keys())
                 new_member_to_uri = json.dumps(
