@@ -29,7 +29,6 @@ from packages.valory.skills.abstract_round_abci.base import BaseTxPayload
 from packages.valory.skills.abstract_round_abci.test_tools.rounds import (
     BaseCollectSameUntilThresholdRoundTest,
 )
-from packages.valory.skills.dynamic_nft_abci.behaviours import TOKEN_URI_BASE
 from packages.valory.skills.dynamic_nft_abci.payloads import (
     DBUpdatePayload,
     ImageCodeCalculationPayload,
@@ -50,6 +49,8 @@ from packages.valory.skills.dynamic_nft_abci.tests.test_behaviours import (
     DUMMY_LEADERBOARD,
 )
 
+
+TOKEN_URI_BASE = "https://pfp.autonolas.network/series/1/"
 
 DUMMY_MEMBER_TO_NFT_URI = {
     "0x54EfA9b1865FFE8c528fb375A7A606149598932A": f"{TOKEN_URI_BASE}/1",

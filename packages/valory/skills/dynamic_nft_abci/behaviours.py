@@ -61,9 +61,6 @@ from packages.valory.skills.dynamic_nft_abci.rounds import (
 )
 
 
-TOKEN_URI_BASE = "https://pfp.autonolas.network/series/1/"  # nosec
-
-SYNDICATE_CONTRACT_ADDRESS = "DUMMY_ADDRESS"  # nosec
 NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
 
 
@@ -105,7 +102,7 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
                 )
             else:
                 member_to_nft_uri = {
-                    member: f"{TOKEN_URI_BASE}/{token_id}"
+                    member: f"{self.params.token_uri_base}/{token_id}"
                     for member, token_id in member_to_token_id.values()
                 }
                 old_members = set(self.synchronized_data.members.keys())
@@ -134,7 +131,7 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
         """Get member to token id data."""
         contract_api_msg = yield from self.get_contract_api_response(
             performative=ContractApiMessage.Performative.GET_STATE,  # type: ignore
-            contract_address=SYNDICATE_CONTRACT_ADDRESS,
+            contract_address=self.params.syndicate_contract_address,
             contract_id=str(ERC721CollectiveContract.contract_id),
             contract_callable="get_all_erc721_transfers",
             from_address=NULL_ADDRESS,

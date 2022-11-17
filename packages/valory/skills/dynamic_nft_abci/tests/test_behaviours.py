@@ -51,7 +51,6 @@ from packages.valory.skills.dynamic_nft_abci.behaviours import (
     ImageGenerationBehaviour,
     LeaderboardObservationBehaviour,
     NewMembersBehaviour,
-    SYNDICATE_CONTRACT_ADDRESS,
 )
 from packages.valory.skills.dynamic_nft_abci.rounds import (
     Event,
@@ -73,6 +72,8 @@ def ipfs_daemon() -> Iterator[bool]:
 
 
 use_ipfs_daemon = pytest.mark.usefixtures("ipfs_daemon")
+
+SYNDICATE_CONTRACT_ADDRESS = "0x9A676e781A523b5d0C0e43731313A708CB607508"
 
 
 DUMMY_LEADERBOARD = {
