@@ -442,28 +442,25 @@ class TestLeaderboardObservationErrorBehaviour(BaseDynamicNFTTest):
         """Force a exception for coverage purposes"""
 
         # Raise when is_valid_address() is called
-        LedgerApis.is_valid_address = mock.Mock(
-            side_effect=IndexError("dummy exception")
-        )
-
-        self.fast_forward(test_case.initial_data)
-        self.behaviour.act_wrapper()
-        self.mock_http_request(
-            request_kwargs=dict(
-                method="GET",
-                headers="",
-                version="",
-                url=DEFAULT_SHEET_API_URL,
-            ),
-            response_kwargs=dict(
-                version="",
-                status_code=kwargs.get("status_code"),
-                status_text="",
-                headers="",
-                body=kwargs.get("body").encode(),
-            ),
-        )
-        self.complete(test_case.event)
+        with mock.patch.object(LedgerApis, "is_valid_address", side_effect=IndexError("dummy exception")):
+            self.fast_forward(test_case.initial_data)
+            self.behaviour.act_wrapper()
+            self.mock_http_request(
+                request_kwargs=dict(
+                    method="GET",
+                    headers="",
+                    version="",
+                    url=DEFAULT_SHEET_API_URL,
+                ),
+                response_kwargs=dict(
+                    version="",
+                    status_code=kwargs.get("status_code"),
+                    status_text="",
+                    headers="",
+                    body=kwargs.get("body").encode(),
+                ),
+            )
+            self.complete(test_case.event)
 
 
 class TestImageCodeCalculationBehaviour(BaseDynamicNFTTest):
