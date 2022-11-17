@@ -20,7 +20,7 @@ connections:
 - valory/ledger:0.19.0:bafybeihmz5us4ntmzvgikpkx4tththrl7zvou4uiebvletdeliidiuhi6m
 - valory/p2p_libp2p_client:0.1.0:bafybeihf35zfr35qsvfte4vbi7njvuzfx4httysw7owmlux53gvxh2or54
 contracts:
-- valory/ERC721Collective:0.1.0:bafybeih2vkjqeczuiqhspwwu66eizcojk27esvw3af3u3gf3jumqtmfe3m
+- valory/ERC721Collective:0.1.0:bafybeicqee3vcgbbr2vnpnkg2q4erjaspodmpwof34qp2icstk3p6eqniy
 protocols:
 - open_aea/signing:1.0.0:bafybeiambqptflge33eemdhis2whik67hjplfnqwieoa6wblzlaf7vuo44
 - valory/contract_api:1.0.0:bafybeiaxbrvgtbdrh4lslskuxyp4awyr4whcx3nqq5yrr6vimzsxg5dy64
@@ -28,8 +28,8 @@ protocols:
 skills:
 - valory/abstract_abci:0.1.0:bafybeiabow5j6wc63szukedutrx6bia2agnju62avxsbhqkhchcwwpvu5i
 - valory/abstract_round_abci:0.1.0:bafybeiegpewio6lkpikfnohjqmlwkqtxdmjbky4dphof4jvrixlvkiqixi
-- valory/contribution_skill_abci:0.1.0:bafybeigyapiwvfkuslockpi3gaj2jtaeceqagwh6pinqztbbsie4xcysmm
-- valory/dynamic_nft_abci:0.1.0:bafybeih42ixyaxnwz4pvimq2hedbvpc5u5cqzlefuy7ybuzpkx4gcltqoq
+- valory/contribution_skill_abci:0.1.0:bafybeibmhtpwawwxvk44kdjefxskwldio55zrrj5kyq6t2qn7ehvse7icy
+- valory/dynamic_nft_abci:0.1.0:bafybeialbmrwxsfsljmmjt3iwb4np52bzfpxhunrab7bnd3ckmphtbkbfm
 - valory/registration_abci:0.1.0:bafybeigck3gb5tvm5tilzii7kvzqpryxrmxu2meck5empgl7lhuz66mbgq
 - valory/reset_pause_abci:0.1.0:bafybeid65rpcwq3rzxijwrpsbirersuwk2sdtcwnpkplczbszzoq2tbitu
 default_ledger: ethereum

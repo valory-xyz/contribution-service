@@ -110,7 +110,7 @@ class ERC721CollectiveContract(Contract):
             fromBlock=from_block,
             toBlock=to_block,
             argument_filters={"from": from_address},
-        ).get_all_entries()
+        ).get_all_entries()  # limited to 10k entries for now: https://github.com/valory-xyz/contribution-service/issues/13
 
         member_to_token_id = {
             entry["args"]["to"]: entry["args"]["tokenId"] for entry in entries
