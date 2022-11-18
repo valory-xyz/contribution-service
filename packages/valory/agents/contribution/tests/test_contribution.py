@@ -48,6 +48,12 @@ from packages.valory.agents.contribution.tests.helpers.fixtures import (  # noqa
     UseHardHatContributionBaseTest,
     UseMockGoogleSheetsApiBaseTest,
 )
+from packages.valory.agents.contribution.tests.helpers.docker import (
+    DEFAULT_JSON_SERVER_ADDR as _DEFAULT_JSON_SERVER_ADDR,
+)
+from packages.valory.agents.contribution.tests.helpers.docker import (
+    DEFAULT_JSON_SERVER_PORT as _DEFAULT_JSON_SERVER_PORT,
+)
 
 
 HAPPY_PATH: Tuple[RoundChecks, ...] = (
@@ -71,6 +77,10 @@ STRICT_CHECK_STRINGS = (
 PACKAGES_DIR = Path(__file__).parent.parent.parent.parent.parent
 
 
+MOCK_API_ADDRESS = _DEFAULT_JSON_SERVER_ADDR
+MOCK_API_PORT = _DEFAULT_JSON_SERVER_PORT
+
+
 @pytest.mark.e2e
 @pytest.mark.parametrize("nb_nodes", (1,))
 class TestABCIPriceEstimationSingleAgent(
@@ -86,3 +96,16 @@ class TestABCIPriceEstimationSingleAgent(
     strict_check_strings = STRICT_CHECK_STRINGS
     happy_path = HAPPY_PATH
     package_registry_src_rel = PACKAGES_DIR
+
+    __args_prefix = f"vendor.valory.skills.{PublicId.from_str(skill_package).name}.models.params.args"
+
+    extra_configs = [
+        {
+            "dotted_path": f"{__args_prefix}.leaderboard_base_endpoint",
+            "value": f"{MOCK_API_ADDRESS}:{MOCK_API_PORT}",
+        },
+        {
+            "dotted_path": f"{__args_prefix}.leaderboard_sheet_id",
+            "value": "mock_sheet_id",
+        },
+    ]

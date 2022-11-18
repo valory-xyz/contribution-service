@@ -8,11 +8,11 @@ fingerprint:
   __init__.py: bafybeihg57xcq4tc5wjymsj3mx2zfp7oxc6fmboh56epajeqfj4vlygmnu
   tests/__init__.py: bafybeicmv3jjcqcdnmubfmrgdgeyic3nkm77z4mutsyuo34hpddwupofre
   tests/helpers/__init__.py: bafybeiauwuw4a4wxqacqqkkk52ktps2qedadhypvh3ex7uqs7qaqrpygmy
-  tests/helpers/constants.py: bafybeiguegd2xa4jym7svf3wknntz3ofad4u2xob5d5bgqbxmljy2mwkmm
-  tests/helpers/data/json_server/data.json: bafybeicnxwpxdgffmdndjllwv23wq2mdnkolc4qpczd6tz77u3xsoeckqy
+  tests/helpers/constants.py: bafybeih6m7ic3r5rblcoj4z2yulcgvwe5xql2mcqgfcpcqzhyrdz2rcchu
+  tests/helpers/data/json_server/data.json: bafybeibqilntawjag5a5a7iqoqvrdqwpg6bdohc5eu2ww42owq564ilmse
   tests/helpers/docker.py: bafybeibvg7v5qle6xurhaped4c5h2gojclgxvcr3pmiovug5vquxl5iyci
   tests/helpers/fixtures.py: bafybeibbzank7chfncg6ifb4r3lvnttahixu2cq7cs6nnglbeolwlbrsvm
-  tests/test_contribution.py: bafybeiflr7fd6xrgeoxn2ylwdzghkn4by4wzqay2qj2hfqx4niee6fwz4u
+  tests/test_contribution.py: bafybeihilakwevknzhvoe5hmcai23c2zl46h6mg4dyrpmuabhhwiys5mn4
 fingerprint_ignore_patterns: []
 connections:
 - valory/abci:0.1.0:bafybeid6p7vwyikn7sntlpc36vymotldfgonjbk3qa5gfacxxamybhmpvy
@@ -28,8 +28,8 @@ protocols:
 skills:
 - valory/abstract_abci:0.1.0:bafybeiabow5j6wc63szukedutrx6bia2agnju62avxsbhqkhchcwwpvu5i
 - valory/abstract_round_abci:0.1.0:bafybeiegpewio6lkpikfnohjqmlwkqtxdmjbky4dphof4jvrixlvkiqixi
-- valory/contribution_skill_abci:0.1.0:bafybeibjsaqocxxqkrnzlk4fs5v4swu6drhpahwg5uzq7fb2xt7b5zm35a
-- valory/dynamic_nft_abci:0.1.0:bafybeicvogwdjv6qt2jdnstrqla2hqkcqfivxyy6zf4egzcbwsi5iwtjqq
+- valory/contribution_skill_abci:0.1.0:bafybeidhsje2r6cbhxtkyfnfob5pcntmxyq6t3dc7f5xwp54hdongldd3y
+- valory/dynamic_nft_abci:0.1.0:bafybeievymcw6mdfgiadmj5nixpfit2db5qk3goatybwiscl4s54umi2dq
 - valory/registration_abci:0.1.0:bafybeigck3gb5tvm5tilzii7kvzqpryxrmxu2meck5empgl7lhuz66mbgq
 - valory/reset_pause_abci:0.1.0:bafybeid65rpcwq3rzxijwrpsbirersuwk2sdtcwnpkplczbszzoq2tbitu
 default_ledger: ethereum
