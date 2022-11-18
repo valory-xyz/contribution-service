@@ -20,7 +20,7 @@ fingerprint:
   data/layers/frames/02.png: bafybeia6thhn2qc3rmj2dnlhy5oov7bvtpjlosesu54ybnuavtl2725h7i
   data/layers/frames/03.png: bafybeigstc52zkvx3mwzw2dwc3726amgpolwbdxfoylpupnk6ut5ya357a
   dialogues.py: bafybeifxlkz47umd63ojgydccujs4j2kwhfh32bdhxcjdodm5brvc25fjq
-  fsm_specification.yaml: bafybeiay6apxjlgv5gcc65x7rzko2khslvdft4wnaaa57en7vycwrycht4
+  fsm_specification.yaml: bafybeicyqbndd5bzjsdckjbpb2qhkjfwa4leovfofm5ugvikttp56tygey
   handlers.py: bafybeifxbw4xd7klttdc2mcpcmnpz6rvtnkfcf3si6hipc6np4wjoul54u
   io_/__init__.py: bafybeidxth2otiyp5gfk2l3zjvnfktgrtpwzsknihkef3v2lhwbkgum3ea
   io_/load.py: bafybeifd7ib4lktvgv6rphk6sblkndn3klmzd5js62h2gzxlubjcmlf6jy
@@ -43,12 +43,12 @@ fingerprint:
 fingerprint_ignore_patterns: []
 connections: []
 contracts:
-- valory/ERC721Collective:0.1.0:bafybeieuz5zajy5rgz3iodo2wr4czra7zkhixlusppcdae466csalltinq
+- valory/ERC721Collective:0.1.0:bafybeid47n244s2pomxkiak5ixl6ed4eut46qigg5yxhtdd4rstzngedxu
 protocols:
 - valory/contract_api:1.0.0:bafybeiaxbrvgtbdrh4lslskuxyp4awyr4whcx3nqq5yrr6vimzsxg5dy64
 - valory/http:1.0.0:bafybeigzqo2zaakcjtzzsm6dh4x73v72xg6ctk6muyp5uq5ueb7y34fbxy
 skills:
-- valory/abstract_round_abci:0.1.0:bafybeiegpewio6lkpikfnohjqmlwkqtxdmjbky4dphof4jvrixlvkiqixi
+- valory/abstract_round_abci:0.1.0:bafybeid3sx66tzs6mmwu52tlaqdycfszzpetgybzu34gagfocg5bmivh7e
 behaviours:
   main:
     args: {}
@@ -146,5 +146,7 @@ models:
   state:
     args: {}
     class_name: SharedState
-dependencies: {}
+dependencies:
+  Pillow:
+    version: ==9.2.0
 is_abstract: true

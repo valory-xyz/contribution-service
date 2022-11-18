@@ -8,7 +8,7 @@ alphabet_in:
 default_start_state: NewMembersRound
 final_states:
 - FinishedDBUpdateRound
-label: packages.valory.skills.dynamic_nft_abci.rounds.DynamicNFTAbciApp
+label: DynamicNFTAbciApp
 start_states:
 - NewMembersRound
 states:
@@ -16,8 +16,8 @@ states:
 - FinishedDBUpdateRound
 - ImageCodeCalculationRound
 - ImageGenerationRound
-- NewMembersRound
 - LeaderboardObservationRound
+- NewMembersRound
 transition_func:
     (DBUpdateRound, DONE): FinishedDBUpdateRound
     (DBUpdateRound, NO_MAJORITY): LeaderboardObservationRound
@@ -29,11 +29,11 @@ transition_func:
     (ImageGenerationRound, IMAGE_ERROR): LeaderboardObservationRound
     (ImageGenerationRound, NO_MAJORITY): LeaderboardObservationRound
     (ImageGenerationRound, ROUND_TIMEOUT): LeaderboardObservationRound
-    (NewMembersRound, DONE): LeaderboardObservationRound
-    (NewMembersRound, CONTRACT_ERROR): NewMembersRound
-    (NewMembersRound, NO_MAJORITY): NewMembersRound
-    (NewMembersRound, ROUND_TIMEOUT): NewMembersRound
-    (LeaderboardObservationRound, DONE): ImageCodeCalculationRound
     (LeaderboardObservationRound, API_ERROR): LeaderboardObservationRound
+    (LeaderboardObservationRound, DONE): ImageCodeCalculationRound
     (LeaderboardObservationRound, NO_MAJORITY): LeaderboardObservationRound
     (LeaderboardObservationRound, ROUND_TIMEOUT): LeaderboardObservationRound
+    (NewMembersRound, CONTRACT_ERROR): NewMembersRound
+    (NewMembersRound, DONE): LeaderboardObservationRound
+    (NewMembersRound, NO_MAJORITY): NewMembersRound
+    (NewMembersRound, ROUND_TIMEOUT): NewMembersRound

@@ -103,4 +103,4 @@ new_env: clean
 
 .PHONY: fix-abci-app-specs
 fix-abci-app-specs:
-	export PYTHONPATH=${PYTHONPATH}:${PWD} && autonomy analyse abci generate-app-specs packages.valory.skills.dynamic_nft_abci.rounds.DynamicNFTAbciApp packages/valory/skills/dynamic_nft_abci/fsm_specification.yaml || (echo "Failed to check dynamic_nft_abci abci consistency" && exit 1)
+	export PYTHONPATH=${PYTHONPATH}:${PWD} && autonomy analyse fsm-specs --update --app-class DynamicNFTAbciApp --package packages/valory/skills/dynamic_nft_abci/ || (echo "Failed to check dynamic_nft_abci abci consistency" && exit 1)

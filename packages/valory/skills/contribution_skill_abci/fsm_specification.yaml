@@ -9,7 +9,7 @@ alphabet_in:
 - ROUND_TIMEOUT
 default_start_state: RegistrationStartupRound
 final_states: []
-label: packages.valory.skills.contribution_skill_abci.composition.ContributionSkillAbciApp
+label: ContributionSkillAbciApp
 start_states:
 - RegistrationStartupRound
 states:
