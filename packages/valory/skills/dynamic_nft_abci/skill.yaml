@@ -43,7 +43,7 @@ fingerprint:
 fingerprint_ignore_patterns: []
 connections: []
 contracts:
-- valory/ERC721Collective:0.1.0:bafybeieuz5zajy5rgz3iodo2wr4czra7zkhixlusppcdae466csalltinq
+- valory/ERC721Collective:0.1.0:bafybeid47n244s2pomxkiak5ixl6ed4eut46qigg5yxhtdd4rstzngedxu
 protocols:
 - valory/contract_api:1.0.0:bafybeiaxbrvgtbdrh4lslskuxyp4awyr4whcx3nqq5yrr6vimzsxg5dy64
 - valory/http:1.0.0:bafybeigzqo2zaakcjtzzsm6dh4x73v72xg6ctk6muyp5uq5ueb7y34fbxy
@@ -146,5 +146,7 @@ models:
   state:
     args: {}
     class_name: SharedState
-dependencies: {}
+dependencies:
+  Pillow:
+    version: ==9.2.0
 is_abstract: true

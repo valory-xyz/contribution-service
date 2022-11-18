@@ -13,5 +13,9 @@ fingerprint_ignore_patterns: []
 class_name: ERC721CollectiveContract
 contract_interface_paths:
   ethereum: build/ERC721Collective.json
-dependencies: {}
+dependencies:
+  open-aea-ledger-ethereum:
+    version: ==1.24.0
+  web3:
+    version: ==5.25.0
 contracts: []
