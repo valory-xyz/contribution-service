@@ -317,13 +317,14 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
             for member, new_points in leaderboard.items():
                 if member not in members or members[member]["points"] != new_points:
                     self.context.logger.info(
-                        f"Calculating image code: points={new_points} thresholds={thresholds}"
+                        f"Calculating image code for member {member}: points={new_points} thresholds={thresholds}"
                     )
                     image_code = self.points_to_code(new_points, thresholds)
                     member_updates[member] = {
                         "points": new_points,
                         "image_code": image_code,
                     }
+                    self.context.logger.info(f"Image code for member {member} is {image_code}")
 
             member_updates_serialized = json.dumps(member_updates, sort_keys=True)
             self.context.logger.info(
@@ -426,12 +427,15 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
             new_image_code_to_images = {}
             for update in self.synchronized_data.most_voted_member_updates.values():
                 if update["image_code"] not in self.synchronized_data.images:
+                    self.context.logger.info(f"Image {update['image_code']} does not exist. Generating...")
                     new_image_code_to_images[
                         update["image_code"]
                     ] = img_manager.generate(update["image_code"])
 
             if None in new_image_code_to_images.values():
-                self.context.logger.info("An error happened while generating the new images")
+                self.context.logger.info(
+                    "An error happened while generating the new images"
+                )
                 status = "error"
                 new_image_code_to_hashes = {}
             else:
@@ -444,27 +448,39 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                     )
                     # Whitelist the image
                     image_hash = IPFSHashOnly.get(str(image_path))
-                    self.context.logger.info(f"Trying to whitelist image with hash {image_hash}...")
+                    self.context.logger.info(
+                        f"Trying to whitelist image with hash {image_hash}..."
+                    )
                     whitelist_success = yield from self.whitelist_hash(image_hash)
                     if not whitelist_success:
-                        self.context.logger.info(f"Error whitelisting image with hash {image_hash}")
+                        self.context.logger.info(
+                            f"Error whitelisting image with hash {image_hash}"
+                        )
                         status = "error"
                         break
 
-                    self.context.logger.info(f"Image with hash {image_hash} was whitelisted")
+                    self.context.logger.info(
+                        f"Image with hash {image_hash} was whitelisted"
+                    )
 
                     # Send
-                    self.context.logger.info(f"Trying to whitelist image with hash {image_hash}...")
+                    self.context.logger.info(
+                        f"Trying to whitelist image with hash {image_hash}..."
+                    )
                     image_hash = self.send_to_ipfs(
                         image_path, image, filetype=ExtendedSupportedFiletype.PNG
                     )
 
                     if not image_hash:
-                        self.context.logger.info(f"Error pushing image with hash {image_hash} to IPFS")
+                        self.context.logger.info(
+                            f"Error pushing image with hash {image_hash} to IPFS"
+                        )
                         status = "error"
                         break
 
-                    self.context.logger.info(f"Image with hash {image_hash} was pushed to IPFS")
+                    self.context.logger.info(
+                        f"Image with hash {image_hash} was pushed to IPFS"
+                    )
 
                     new_image_code_to_hashes[image_code] = image_hash
 
@@ -505,6 +521,8 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                 self.ImageManager.IMAGE_ROOT, self.ImageManager.LAYERS_DIR, layer_name
             )
 
+            self.context.logger.info(f"Checking local image hashes from: {layer_path}")
+
             local_layer_hashes = set(
                 IPFSHashOnly.get(image_file)
                 for image_file in layer_path.rglob(f"*.{self.ImageManager.PNG_EXT}")
@@ -512,7 +530,9 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
 
             # Check if some image has changed and re-download images
             if api_layer_hashes != local_layer_hashes:
-                self.context.logger.info(f"Layer {layer_name} is out of date. Local={local_layer_hashes}, API={api_layer_hashes} Re-downloading.")
+                self.context.logger.info(
+                    f"Layer {layer_name} is out of date. Local={local_layer_hashes}, API={api_layer_hashes} Re-downloading."
+                )
                 # Remove local images
                 if os.path.isdir(layer_path):
                     shutil.rmtree(layer_path)
@@ -528,7 +548,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                         filetype=ExtendedSupportedFiletype.PNG,
                     )
             else:
-                self.context.logger.info("Layers are already up to date")
+                self.context.logger.info(f"Layer {layer_name} is already up to date")
 
     def whitelist_hash(self, image_hash: str) -> Generator[None, None, bool]:
         """Send a whitelist request to the whitelist server
