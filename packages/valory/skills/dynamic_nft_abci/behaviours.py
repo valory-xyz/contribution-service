@@ -420,6 +420,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                     ] = img_manager.generate(update["image_code"])
 
             if None in new_image_code_to_images.values():
+                self.context.logger.info("An error happened while generating the new images")
                 status = "error"
                 new_image_code_to_hashes = {}
             else:
@@ -432,19 +433,27 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                     )
                     # Whitelist the image
                     image_hash = IPFSHashOnly.get(str(image_path))
+                    self.context.logger.info(f"Trying to whitelist image with hash {image_hash}...")
                     whitelist_success = yield from self.whitelist_hash(image_hash)
                     if not whitelist_success:
+                        self.context.logger.info(f"Error whitelisting image with hash {image_hash}")
                         status = "error"
                         break
 
+                    self.context.logger.info(f"Image with hash {image_hash} was whitelisted")
+
                     # Send
+                    self.context.logger.info(f"Trying to whitelist image with hash {image_hash}...")
                     image_hash = self.send_to_ipfs(
                         image_path, image, filetype=ExtendedSupportedFiletype.PNG
                     )
 
                     if not image_hash:
+                        self.context.logger.info(f"Error pushing image with hash {image_hash} to IPFS")
                         status = "error"
                         break
+
+                    self.context.logger.info(f"Image with hash {image_hash} was pushed to IPFS")
 
                     new_image_code_to_hashes[image_code] = image_hash
 
@@ -492,6 +501,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
 
             # Check if some image has changed and re-download images
             if api_layer_hashes != local_layer_hashes:
+                self.context.logger.info(f"Layer {layer_name} is out of date. Local={local_layer_hashes}, API={api_layer_hashes} Re-downloading.")
                 # Remove local images
                 if os.path.isdir(layer_path):
                     shutil.rmtree(layer_path)
@@ -506,6 +516,8 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                         filename=str(i),
                         filetype=ExtendedSupportedFiletype.PNG,
                     )
+            else:
+                self.context.logger.info("Layers are already up to date")
 
     def whitelist_hash(self, image_hash: str) -> Generator[None, None, bool]:
         """Send a whitelist request to the whitelist server
