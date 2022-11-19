@@ -163,10 +163,10 @@ IMAGE_PATH = Path(
 def get_dummy_updates(error: bool = False) -> Dict:
     """Dummy updates"""
     if error:
-        return {"dummy_member_1": {"points": 100, "image_code": "error_code"}}
+        return {"dummy_member_1": {"points": 1000, "image_code": "error_code"}}
     return {
-        "dummy_member_1": {"points": 100, "image_code": "000100"},
-        "dummy_member_2": {"points": 200, "image_code": "000102"},
+        "dummy_member_1": {"points": 1000, "image_code": "000100"},
+        "dummy_member_2": {"points": 2000, "image_code": "000200"},
     }
 
 
