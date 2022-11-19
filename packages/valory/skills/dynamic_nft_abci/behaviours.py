@@ -45,6 +45,7 @@ from packages.valory.skills.dynamic_nft_abci.io_.store import (
 )
 from packages.valory.skills.dynamic_nft_abci.models import Params
 from packages.valory.skills.dynamic_nft_abci.payloads import (
+    DBUpdatePayload,
     ImageCodeCalculationPayload,
     ImageGenerationPayload,
     LeaderboardObservationPayload,
@@ -681,7 +682,7 @@ class DBUpdateBehaviour(DynamicNFTBaseBehaviour):
         with self.context.benchmark_tool.measure(
             self.behaviour_id,
         ).consensus():
-            payload = ImageGenerationPayload(
+            payload = DBUpdatePayload(
                 self.context.agent_address,
                 json.dumps(
                     {},  # empty payload for now
