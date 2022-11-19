@@ -54,6 +54,9 @@ from packages.valory.agents.contribution.tests.helpers.docker import (
 from packages.valory.agents.contribution.tests.helpers.docker import (
     DEFAULT_JSON_SERVER_PORT as _DEFAULT_JSON_SERVER_PORT,
 )
+from packages.valory.skills.abstract_round_abci.tests.test_io.test_ipfs import (  # noqa: F401
+    ipfs_daemon,
+)
 
 
 HAPPY_PATH: Tuple[RoundChecks, ...] = (
@@ -83,6 +86,7 @@ MOCK_API_PORT = _DEFAULT_JSON_SERVER_PORT
 
 @pytest.mark.e2e
 @pytest.mark.parametrize("nb_nodes", (1,))
+@pytest.mark.usefixtures("ipfs_daemon")
 class TestABCIPriceEstimationSingleAgent(
     BaseTestEnd2EndExecution,
     UseMockGoogleSheetsApiBaseTest,
@@ -107,5 +111,9 @@ class TestABCIPriceEstimationSingleAgent(
         {
             "dotted_path": f"{__args_prefix}.leaderboard_sheet_id",
             "value": "mock_sheet_id",
+        },
+        {
+            "dotted_path": f"{__args_prefix}.ipfs_domain_name",
+            "value": "/dns/localhost/tcp/5001/http",
         },
     ]
