@@ -174,9 +174,19 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
         :yield: HttpMessage object
         :return: return the data retrieved from the Leaderboard API, in case something goes wrong we return "{}".
         """
+        leaderboard_endpoint = self.params.leaderboard_endpoint
+
+        # While running e2e tests, the mock api server does not work
+        # if parameters are sent in the url, ao we remove them here.
+        if "mock_sheet_id" in leaderboard_endpoint:
+            leaderboard_endpoint = leaderboard_endpoint.split("?")[0]
+
+        self.context.logger.info(
+            f"Sending leaderboard request to: {leaderboard_endpoint}"
+        )
         response = yield from self.get_http_response(
             method="GET",
-            url=self.params.leaderboard_endpoint,
+            url=leaderboard_endpoint,
         )
         if response.status_code != 200:
             self.context.logger.error(
