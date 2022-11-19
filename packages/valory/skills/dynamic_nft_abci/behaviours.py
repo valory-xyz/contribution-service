@@ -351,12 +351,23 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
         :param thresholds: layer thresholds that mark the points at which images change
         :returns: the layer code and the remainder points
         """
+        if len(thresholds) < 1:
+            raise ValueError(f"Threshold list must contain at least one value: {thresholds}")
+
+        if points < thresholds[0]:
+            raise ValueError(f"Points for this layer must be greater than {thresholds[0]}, got {points}")
+
+        code = None
+        remaining_points = None
+
         for i, threshold in enumerate(thresholds):
-            if points < threshold:
-                prev_threshold = thresholds[i - 1] if i >= 1 else thresholds[0]
-                return f"{i:02}", points - prev_threshold
-        prev_threshold = thresholds[-1] if thresholds else 0
-        return f"{len(thresholds):02}", points - prev_threshold
+            if points >= threshold:
+                code = i
+                remaining_points = points - threshold
+            else:
+                break
+
+        return f"{code:02}", remaining_points
 
     @staticmethod
     def points_to_code(points: float, thresholds: dict) -> str:

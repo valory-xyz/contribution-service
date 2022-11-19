@@ -104,7 +104,7 @@ DUMMY_LAYERS = {
     },
 }
 
-DUMMY_THRESHOLDS = {"classes": [], "frames": [1000, 2000, 3000], "bars": [200, 500]}
+DUMMY_THRESHOLDS = {"classes": [0], "frames": [0, 1000, 2000, 3000], "bars": [0, 200, 500]}
 
 DUMMY_API_DATA = {"leaderboard": DUMMY_LEADERBOARD, "layers": DUMMY_LAYERS}
 
@@ -494,7 +494,7 @@ class TestImageCodeCalculationBehaviour(BaseDynamicNFTTest):
         [
             (0, "000000"),
             (150, "000000"),
-            (999, "000000"),
+            (999, "000002"),
             (1000, "000100"),
             (1999, "000102"),
             (2000, "000200"),
