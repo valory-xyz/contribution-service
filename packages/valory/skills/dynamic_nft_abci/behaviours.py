@@ -531,7 +531,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
             # Check if some image has changed and re-download images
             if api_layer_hashes != local_layer_hashes:
                 self.context.logger.info(
-                    f"Layer {layer_name} is out of date. Local={local_layer_hashes}, API={api_layer_hashes} Re-downloading."
+                    f"Layer '{layer_name}' is out of date. Local={local_layer_hashes}, API={api_layer_hashes} Re-downloading."
                 )
                 # Remove local images
                 if os.path.isdir(layer_path):
