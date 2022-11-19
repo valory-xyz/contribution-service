@@ -324,7 +324,9 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
                         "points": new_points,
                         "image_code": image_code,
                     }
-                    self.context.logger.info(f"Image code for member {member} is {image_code}")
+                    self.context.logger.info(
+                        f"Image code for member {member} is {image_code}"
+                    )
 
             member_updates_serialized = json.dumps(member_updates, sort_keys=True)
             self.context.logger.info(
@@ -353,10 +355,14 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
         :returns: the layer code and the remainder points
         """
         if len(thresholds) < 1:
-            raise ValueError(f"Threshold list must contain at least one value: {thresholds}")
+            raise ValueError(
+                f"Threshold list must contain at least one value: {thresholds}"
+            )
 
         if points < thresholds[0]:
-            raise ValueError(f"Points for this layer must be greater than {thresholds[0]}, got {points}")
+            raise ValueError(
+                f"Points for this layer must be greater than {thresholds[0]}, got {points}"
+            )
 
         code = None
         remaining_points = None
@@ -427,7 +433,9 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
             new_image_code_to_images = {}
             for update in self.synchronized_data.most_voted_member_updates.values():
                 if update["image_code"] not in self.synchronized_data.images:
-                    self.context.logger.info(f"Image {update['image_code']} does not exist. Generating...")
+                    self.context.logger.info(
+                        f"Image {update['image_code']} does not exist. Generating..."
+                    )
                     new_image_code_to_images[
                         update["image_code"]
                     ] = img_manager.generate(update["image_code"])
@@ -447,9 +455,12 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                         img_manager.out_path, f"{image_code}.{img_manager.PNG_EXT}"
                     )
                     # Whitelist the image
+                    self.context.logger.info(
+                        f"Getting hash for image at {image_path}..."
+                    )
                     image_hash = IPFSHashOnly.get(str(image_path))
                     self.context.logger.info(
-                        f"Trying to whitelist image with hash {image_hash}..."
+                        f"Hash is for {image_path} is {image_hash}. Trying to whitelist..."
                     )
                     whitelist_success = yield from self.whitelist_hash(image_hash)
                     if not whitelist_success:
@@ -588,6 +599,8 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
             self.image_root = image_root
             self.layers = self._load_layers()
 
+            self.logger.info(f"ImageManager: loaded layer images: {self.layers}")
+
             # Create the output directory if it does not exist
             self.out_path = Path(self.image_root, self.IMAGES_DIR)
             os.makedirs(self.out_path, exist_ok=True)
@@ -634,6 +647,14 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
             # Combine layers
             img_layers[0].paste(img_layers[1], (0, 0), mask=img_layers[1])
             img_layers[0].paste(img_layers[2], (0, 0), mask=img_layers[2])
+
+            # Save image
+            img_path = Path(self.out_path, f"{image_code}.{self.PNG_EXT}")
+            img_layers[0].save(str(img_path))
+            self.logger.info(
+                f"Image {image_code} has been generated and saved at {img_path}"
+            )
+
             return img_layers[0]
 
 
