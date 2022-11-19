@@ -82,6 +82,7 @@ PACKAGES_DIR = Path(__file__).parent.parent.parent.parent.parent
 
 MOCK_API_ADDRESS = _DEFAULT_JSON_SERVER_ADDR
 MOCK_API_PORT = _DEFAULT_JSON_SERVER_PORT
+MOCK_WHITELIST_ADDRESS = _DEFAULT_JSON_SERVER_ADDR
 
 
 @pytest.mark.e2e
@@ -115,5 +116,9 @@ class TestABCIPriceEstimationSingleAgent(
         {
             "dotted_path": f"{__args_prefix}.ipfs_domain_name",
             "value": "/dns/localhost/tcp/5001/http",
+        },
+        {
+            "dotted_path": f"{__args_prefix}.whitelist_endpoint",
+            "value": f"{MOCK_WHITELIST_ADDRESS}:{MOCK_API_PORT}/mock_whitelist",
         },
     ]

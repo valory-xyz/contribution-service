@@ -577,7 +577,8 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
         if response.status_code != 200:
             self.context.logger.error(
                 f"Could not whitelist the hash {image_hash}. "
-                f"Received status code {response.status_code}."
+                f"Received status code {response.status_code} "
+                f"from {self.params.whitelist_endpoint}"
             )
             return False
 

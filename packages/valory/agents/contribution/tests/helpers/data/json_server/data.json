@@ -54,5 +54,8 @@
          }
       ]
    }
+  },
+  "/mock_whitelist": {
+    "post": {}
   }
 }

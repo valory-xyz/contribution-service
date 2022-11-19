@@ -104,7 +104,11 @@ DUMMY_LAYERS = {
     },
 }
 
-DUMMY_THRESHOLDS = {"classes": [0], "frames": [0, 1000, 2000, 3000], "bars": [0, 200, 500]}
+DUMMY_THRESHOLDS = {
+    "classes": [0],
+    "frames": [0, 1000, 2000, 3000],
+    "bars": [0, 200, 500],
+}
 
 DUMMY_API_DATA = {"leaderboard": DUMMY_LEADERBOARD, "layers": DUMMY_LAYERS}
 
