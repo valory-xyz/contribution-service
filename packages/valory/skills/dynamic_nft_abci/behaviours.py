@@ -268,6 +268,25 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
         deterministic_body = json.dumps(response_body, sort_keys=True)
         return deterministic_body
 
+    @staticmethod
+    def validate_api_data(data):
+        """Fixes format problems derived from serialization and de-serialization.
+
+        :param data: the source data
+        :returns: the fixed data
+        """
+
+        fixed_layer_data = {}
+        for layer_name, layer_data in data["layers"].items():
+            fixed_layer_data[layer_name] = {}
+            for threshold, hash_ in layer_data.items():
+                # Integer keys must be int, not str
+                fixed_layer_data[layer_name][int(threshold)] = hash_
+
+        data["layers"] = fixed_layer_data
+
+        return data
+
 
 class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
     """ImageCodeCalculationBehaviour"""
@@ -286,14 +305,20 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
         with self.context.benchmark_tool.measure(
             self.behaviour_id,
         ).local():
-            leaderboard = self.synchronized_data.most_voted_api_data["leaderboard"]
-            layer_data = self.synchronized_data.most_voted_api_data["layers"]
+            api_data = LeaderboardObservationBehaviour.validate_api_data(
+                self.synchronized_data.most_voted_api_data
+            )
+            leaderboard = api_data["leaderboard"]
+            layer_data = api_data["layers"]
             thresholds = {k: list(v.keys()) for k, v in layer_data.items()}
             members = self.synchronized_data.members
 
             member_updates = {}
             for member, new_points in leaderboard.items():
                 if member not in members or members[member]["points"] != new_points:
+                    self.context.logger.info(
+                        f"Calculating image code: points={new_points} thresholds={thresholds}"
+                    )
                     image_code = self.points_to_code(new_points, thresholds)
                     member_updates[member] = {
                         "points": new_points,
@@ -447,7 +472,10 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
 
     def update_layers(self):
         """Updates local layer if they dont match the ones from the leaderboard API"""
-        api_layer_data = self.synchronized_data.most_voted_api_data["layers"]
+        api_data = LeaderboardObservationBehaviour.validate_api_data(
+            self.synchronized_data.most_voted_api_data
+        )
+        api_layer_data = api_data["layers"]
 
         for layer_name in self.ImageManager.LAYER_NAMES:
 
