@@ -19,8 +19,8 @@
 
 """This package contains the rounds of DynamicNFTAbciApp."""
 
-from abc import ABC
 import json
+from abc import ABC
 from enum import Enum
 from typing import Dict, List, Optional, Set, Tuple, cast
 
@@ -133,7 +133,9 @@ class NewMembersRound(ContributionAbstractRound, CollectSameUntilThresholdRound)
         return None
 
 
-class LeaderboardObservationRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
+class LeaderboardObservationRound(
+    ContributionAbstractRound, CollectSameUntilThresholdRound
+):
     """LeaderboardObservationRound"""
 
     round_id = "leaderboard_observation"
@@ -160,7 +162,9 @@ class LeaderboardObservationRound(ContributionAbstractRound, CollectSameUntilThr
         return None
 
 
-class ImageCodeCalculationRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
+class ImageCodeCalculationRound(
+    ContributionAbstractRound, CollectSameUntilThresholdRound
+):
     """ImageCodeCalculationRound"""
 
     round_id: str = "image_code_calculation"
@@ -229,11 +233,12 @@ class DBUpdateRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
             members = self.synchronized_data.members
             images = self.synchronized_data.images
             redirects = self.synchronized_data.redirects
+            updates = self.synchronized_data.most_voted_member_updates
 
             for (
                 member,
                 data,
-            ) in self.synchronized_data.most_voted_member_updates.items():
+            ) in updates.items():
                 members[member]["points"] = data["points"]
                 members[member]["image_code"] = data["image_code"]
 

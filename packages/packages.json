@@ -14,10 +14,10 @@
     "connection/valory/p2p_libp2p_client/0.1.0": "bafybeihf35zfr35qsvfte4vbi7njvuzfx4httysw7owmlux53gvxh2or54",
     "contract/valory/ERC721Collective/0.1.0": "bafybeicqee3vcgbbr2vnpnkg2q4erjaspodmpwof34qp2icstk3p6eqniy",
     "skill/valory/abstract_round_abci/0.1.0": "bafybeiegpewio6lkpikfnohjqmlwkqtxdmjbky4dphof4jvrixlvkiqixi",
-    "skill/valory/dynamic_nft_abci/0.1.0": "bafybeifpa24oyeuaskkgnkfkdg7rdyo3f6ka3ag5gytinubtom4qw3oawe",
+    "skill/valory/dynamic_nft_abci/0.1.0": "bafybeiaqozyqiiuvqdibcsrfhtmfkoua3qwboedvc2y5ogps2ju46v2zp4",
     "skill/valory/registration_abci/0.1.0": "bafybeigck3gb5tvm5tilzii7kvzqpryxrmxu2meck5empgl7lhuz66mbgq",
     "skill/valory/reset_pause_abci/0.1.0": "bafybeid65rpcwq3rzxijwrpsbirersuwk2sdtcwnpkplczbszzoq2tbitu",
-    "skill/valory/contribution_skill_abci/0.1.0": "bafybeifmdlvnkz7yljci7p7rbh3im2bmusnboajbs5vojtus7iozgos2pq",
-    "agent/valory/contribution/0.1.0": "bafybeibwlcc2krfpe24lwupg3h4rvhuvbth44kcxs3fdxdogdx5qdykn6y",
-    "service/valory/contribution/0.1.0": "bafybeifzstto77tnqmidomeqhhj5laabuqb3my3qnbmzydfzyaeczcjotm"
+    "skill/valory/contribution_skill_abci/0.1.0": "bafybeihtxe6hag7ydbaj7dqx5sycn7gyjjk7o7jwvacyamm5bzjkumoh7q",
+    "agent/valory/contribution/0.1.0": "bafybeiczcfpbrer5bbyiv6d37hpno3bloypp5bfwtqy3hu6xv3upuzxt7u",
+    "service/valory/contribution/0.1.0": "bafybeidgxddduq2usxs6unacjbl7ioqjqlbziom7bztdiwzs3l2ol5e76a"
 }
