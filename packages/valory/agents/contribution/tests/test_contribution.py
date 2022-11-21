@@ -126,3 +126,23 @@ class TestABCIPriceEstimationSingleAgent(
     UseHardHatContributionBaseTest,
 ):
     """Test the contribution skill with only one agent."""
+
+
+@pytest.mark.e2e
+@pytest.mark.parametrize("nb_nodes", (2,))
+class TestABCIPriceEstimationTwoAgents(
+    BaseTestEnd2EndContributionNormalExecution,
+    UseMockGoogleSheetsApiBaseTest,
+    UseHardHatContributionBaseTest,
+):
+    """Test the contribution skill with two agents."""
+
+
+@pytest.mark.e2e
+@pytest.mark.parametrize("nb_nodes", (4,))
+class TestABCIPriceEstimationFourAgents(
+    BaseTestEnd2EndContributionNormalExecution,
+    UseMockGoogleSheetsApiBaseTest,
+    UseHardHatContributionBaseTest,
+):
+    """Test the contribution skill with four agents."""
