@@ -61,7 +61,10 @@ logging_config:
       - console
       propagate: false
 dependencies:
-  open-aea-ledger-ethereum: {}
+  Pillow:
+    version: ==9.2.0
+  open-aea-ledger-ethereum:
+    version: ==1.24.0
 default_connection: null
 ---
 public_id: valory/abci:0.1.0
@@ -106,7 +109,7 @@ models:
       cleanup_history_depth: 1
       cleanup_history_depth_current: null
       consensus:
-        max_participants: 1
+        max_participants: ${MAX_PARTICIPANTS:int:1}
       drand_public_key: 868f005eb8e6e4ca0a47c8a77ceaa5309a47978a7c71bc5cce96366b5d7a569937c529eeda66c7293784a9402801af31
       genesis_config:
         genesis_time: '2022-09-26T00:00:00.000000000Z'
@@ -125,9 +128,9 @@ models:
             - ed25519
           version: {}
         voting_power: '10'
-      ipfs_domain_name: /dns/registry.autonolas.tech/tcp/443/https
+      ipfs_domain_name: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_IPFS_DOMAIN_NAME:str:/dns/registry.autonolas.tech/tcp/443/https}
       keeper_timeout: 30.0
-      leaderboard_api_key: null
+      leaderboard_api_key: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_LEADERBOARD_API_KEY:str:api_key}
       leaderboard_base_endpoint: https://sheets.googleapis.com/v4/spreadsheets
       leaderboard_layers_range: Layers!B1:Z3
       leaderboard_points_range: Leaderboard!A2:B102
@@ -144,9 +147,9 @@ models:
       sleep_time: 1
       syndicate_contract_address: '0x9A676e781A523b5d0C0e43731313A708CB607508'
       tendermint_check_sleep_delay: 3
-      tendermint_com_url: http://localhost:8080
+      tendermint_com_url: ${TENDERMINT_COM_URL:str:http://localhost:8080}
       tendermint_max_retries: 5
-      tendermint_url: http://localhost:26657
+      tendermint_url: ${TENDERMINT_URL:str:http://localhost:26657}
       token_uri_base: https://pfp.autonolas.network/series/1/
       whitelist_api_key: null
       whitelist_endpoint: http://localhost
