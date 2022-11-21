@@ -9,7 +9,7 @@ fingerprint:
   __init__.py: bafybeihrdde2hozs5v5nwwwf3vvinneyxtdyni4bbqlxp7r222sqajlaai
   behaviours.py: bafybeicezipgftkdnvvsccc7pdlwdbhxoddz4ojphaqtu52jfhsvmjreoq
   composition.py: bafybeibyizxv3lhtfp5atshgwvwtoyehxot2akng25zgjicets7r3iadtq
-  dialogues.py: bafybeih3x4egnkh7xwnlawqbu6fpqyqbaum7ivdhqm6r6557dyy2rhzneq
+  dialogues.py: bafybeiflpquascygrfxcgb4ufiigqykmvbxlgbrxxa6cxmiy6f4w3aknmq
   fsm_specification.yaml: bafybeidoaqcaa5egcpvshcb56jdas4h2thtxql4mguty62uuuqglon6n54
   handlers.py: bafybeibeeb3oafle3fc6no5oklimj36uwnuk7pp6hxzpjwrty2jglsgy4u
   models.py: bafybeiauejymqcxe6mw5x5dcmmjkewfioickdxvusvalkzcvqfpjsqx7la
@@ -24,7 +24,7 @@ contracts: []
 protocols: []
 skills:
 - valory/abstract_round_abci:0.1.0:bafybeid3sx66tzs6mmwu52tlaqdycfszzpetgybzu34gagfocg5bmivh7e
-- valory/dynamic_nft_abci:0.1.0:bafybeic2tsmwtojygsp2fp74vufuesw2url2ymfgeox24h3lwjj65mmavu
+- valory/dynamic_nft_abci:0.1.0:bafybeiez6ojho3sqdxrqyebstnaoyhmflulxer5t43jpund2anzmsdx2qq
 - valory/registration_abci:0.1.0:bafybeifxquhkccygjawoqyj26b3k6rxizaa7geoef7oyet2baojjk4gy2q
 - valory/reset_pause_abci:0.1.0:bafybeibnziujsv7toespbguradspw52rfrhhgdojcbznckqia2jwm2jvwm
 behaviours:
@@ -126,6 +126,9 @@ models:
   state:
     args: {}
     class_name: SharedState
+  tendermint_dialogues:
+    args: {}
+    class_name: TendermintDialogues
 dependencies:
   open-aea-cli-ipfs:
     version: <2.0.0,>=1.24.0
