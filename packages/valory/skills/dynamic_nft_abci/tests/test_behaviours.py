@@ -485,7 +485,7 @@ class TestLeaderboardObservationURLMockBehaviour(BaseDynamicNFTTest):
         """Set up the test class."""
         super().setup_class(
             param_overrides={
-                "leaderboard_base_endpoint": MOCK_SHEET_API_URL,
+                "leaderboard_endpoint": MOCK_SHEET_API_URL,
             }
         )
 
