@@ -469,24 +469,24 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                         f"Getting hash for image at {image_path}..."
                     )
                     image_hash = IPFSHashOnly.get(str(image_path))
-                    self.context.logger.info(
-                        f"Hash is for {image_path} is {image_hash}. Trying to whitelist..."
-                    )
-                    whitelist_success = yield from self.whitelist_hash(image_hash)
-                    if not whitelist_success:
-                        self.context.logger.info(
-                            f"Error whitelisting image with hash {image_hash}"
-                        )
-                        status = "error"
-                        break
+                    # self.context.logger.info(
+                    #     f"Hash is for {image_path} is {image_hash}. Trying to whitelist..."
+                    # )
+                    # whitelist_success = yield from self.whitelist_hash(image_hash)
+                    # if not whitelist_success:
+                    #     self.context.logger.info(
+                    #         f"Error whitelisting image with hash {image_hash}"
+                    #     )
+                    #     status = "error"
+                    #     break
 
-                    self.context.logger.info(
-                        f"Image with hash {image_hash} was whitelisted"
-                    )
+                    # self.context.logger.info(
+                    #     f"Image with hash {image_hash} was whitelisted"
+                    # )
 
                     # Send
                     self.context.logger.info(
-                        f"Trying to whitelist image with hash {image_hash}..."
+                        f"Trying to push image with hash {image_hash}..."
                     )
                     image_hash = self.send_to_ipfs(
                         image_path, image, filetype=ExtendedSupportedFiletype.PNG
