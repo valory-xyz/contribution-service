@@ -107,7 +107,10 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
                     member: f"{self.params.token_uri_base}/{token_id}"
                     for member, token_id in member_to_token_id.items()
                 }
-                old_members = set(self.synchronized_data.members.keys())
+                # TOFIX: synchronized_data is not usable on the first round/behaviour
+                # old_members = set(self.synchronized_data.members.keys())  # noqa: E800
+                old_members = {}
+
                 new_member_to_uri = json.dumps(
                     {
                         member: {"uri": uri, "points": None, "image_code": None}

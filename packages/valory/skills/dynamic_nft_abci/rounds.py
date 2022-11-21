@@ -118,7 +118,8 @@ class NewMembersRound(ContributionAbstractRound, CollectSameUntilThresholdRound)
 
             members = {
                 **new_members,
-                **self.synchronized_data.members,
+                # TOFIX: synchronized_data is not usable on the first round/behaviour
+                # **self.synchronized_data.members,  # noqa: E800
             }
             synchronized_data = self.synchronized_data.update(
                 synchronized_data_class=SynchronizedData,
