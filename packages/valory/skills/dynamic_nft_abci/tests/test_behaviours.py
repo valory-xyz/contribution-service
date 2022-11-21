@@ -641,26 +641,6 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
 
         self.fast_forward(test_case.initial_data)
         self.behaviour.act_wrapper()
-
-        # Mock the IPFS whitelisting
-        for _ in range(2):
-            self.mock_http_request(
-                request_kwargs=dict(
-                    method="POST",
-                    headers="",
-                    version="",
-                    url=DEFAULT_WHITELIST_URL,
-                ),
-                response_kwargs=dict(
-                    version="",
-                    status_code=kwargs.get("status_code"),
-                    status_text="",
-                    headers="",
-                    body=b"",
-                ),
-            )
-
-        self.behaviour.act_wrapper()
         self.mock_a2a_transaction()
         self._test_done_flag_set()
         self.end_round(done_event=test_case.event)
@@ -699,26 +679,6 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
                 open(Path(self.image_dir, f"{test_code}.png"), "w").close()
 
             self.fast_forward(test_case.initial_data)
-            self.behaviour.act_wrapper()
-
-            # Mock the IPFS whitelisting
-            for _ in range(2):
-                self.mock_http_request(
-                    request_kwargs=dict(
-                        method="POST",
-                        headers="",
-                        version="",
-                        url=DEFAULT_WHITELIST_URL,
-                    ),
-                    response_kwargs=dict(
-                        version="",
-                        status_code=200,
-                        status_text="",
-                        headers="",
-                        body=b"",
-                    ),
-                )
-
             self.behaviour.act_wrapper()
             self.mock_a2a_transaction()
             self._test_done_flag_set()
@@ -789,26 +749,6 @@ class TestImageGenerationErrorBehaviour(BaseDynamicNFTTest):
 
         self.fast_forward(test_case.initial_data)
         self.behaviour.act_wrapper()
-
-        # Mock the IPFS whitelisting
-        # In this case, we only use the first file/hash as we will fail on the first image
-        self.mock_http_request(
-            request_kwargs=dict(
-                method="POST",
-                headers="",
-                version="",
-                url=DEFAULT_WHITELIST_URL,
-            ),
-            response_kwargs=dict(
-                version="",
-                status_code=kwargs.get("status_code"),
-                status_text="",
-                headers="",
-                body=b"",
-            ),
-        )
-
-        self.behaviour.act_wrapper()
         self.mock_a2a_transaction()
         self._test_done_flag_set()
         self.end_round(done_event=test_case.event)
@@ -836,26 +776,6 @@ class TestImageGenerationErrorBehaviour(BaseDynamicNFTTest):
             open(Path(self.image_dir, f"{test_code}.png"), "w").close()
 
         self.fast_forward(test_case.initial_data)
-        self.behaviour.act_wrapper()
-
-        # Mock the IPFS whitelisting
-        # In this case, we only use the first file/hash as we will fail on the first image
-        self.mock_http_request(
-            request_kwargs=dict(
-                method="POST",
-                headers="",
-                version="",
-                url=DEFAULT_WHITELIST_URL,
-            ),
-            response_kwargs=dict(
-                version="",
-                status_code=200,
-                status_text="",
-                headers="",
-                body=b"",
-            ),
-        )
-
         self.behaviour.act_wrapper()
         self.mock_a2a_transaction()
         self._test_done_flag_set()
