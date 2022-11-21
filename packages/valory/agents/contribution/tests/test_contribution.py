@@ -85,15 +85,9 @@ MOCK_API_PORT = _DEFAULT_JSON_SERVER_PORT
 MOCK_WHITELIST_ADDRESS = _DEFAULT_JSON_SERVER_ADDR
 
 
-@pytest.mark.e2e
-@pytest.mark.parametrize("nb_nodes", (1,))
 @pytest.mark.usefixtures("ipfs_daemon")
-class TestABCIPriceEstimationSingleAgent(
-    BaseTestEnd2EndExecution,
-    UseMockGoogleSheetsApiBaseTest,
-    UseHardHatContributionBaseTest,
-):
-    """Test the contribution skill with only one agent."""
+class BaseTestEnd2EndContributionNormalExecution(BaseTestEnd2EndExecution):
+    """Base class for the contribution service e2e tests."""
 
     agent_package = "valory/contribution:0.1.0"
     skill_package = "valory/contribution_skill_abci:0.1.0"
@@ -122,3 +116,13 @@ class TestABCIPriceEstimationSingleAgent(
             "value": f"{MOCK_WHITELIST_ADDRESS}:{MOCK_API_PORT}/mock_whitelist",
         },
     ]
+
+
+@pytest.mark.e2e
+@pytest.mark.parametrize("nb_nodes", (1,))
+class TestABCIPriceEstimationSingleAgent(
+    BaseTestEnd2EndContributionNormalExecution,
+    UseMockGoogleSheetsApiBaseTest,
+    UseHardHatContributionBaseTest,
+):
+    """Test the contribution skill with only one agent."""
