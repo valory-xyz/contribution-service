@@ -51,7 +51,6 @@ from packages.valory.skills.dynamic_nft_abci.behaviours import (
     ImageGenerationBehaviour,
     LeaderboardObservationBehaviour,
     NewMembersBehaviour,
-    SYNDICATE_CONTRACT_ADDRESS,
 )
 from packages.valory.skills.dynamic_nft_abci.rounds import (
     Event,
@@ -73,6 +72,8 @@ def ipfs_daemon() -> Iterator[bool]:
 
 
 use_ipfs_daemon = pytest.mark.usefixtures("ipfs_daemon")
+
+SYNDICATE_CONTRACT_ADDRESS = "0x9A676e781A523b5d0C0e43731313A708CB607508"
 
 
 DUMMY_LEADERBOARD = {
@@ -103,7 +104,11 @@ DUMMY_LAYERS = {
     },
 }
 
-DUMMY_THRESHOLDS = {"classes": [], "frames": [1000, 2000, 3000], "bars": [200, 500]}
+DUMMY_THRESHOLDS = {
+    "classes": [0],
+    "frames": [0, 1000, 2000, 3000],
+    "bars": [0, 200, 500],
+}
 
 DUMMY_API_DATA = {"leaderboard": DUMMY_LEADERBOARD, "layers": DUMMY_LAYERS}
 
@@ -162,10 +167,10 @@ IMAGE_PATH = Path(
 def get_dummy_updates(error: bool = False) -> Dict:
     """Dummy updates"""
     if error:
-        return {"dummy_member_1": {"points": 100, "image_code": "error_code"}}
+        return {"dummy_member_1": {"points": 1000, "image_code": "error_code"}}
     return {
-        "dummy_member_1": {"points": 100, "image_code": "000100"},
-        "dummy_member_2": {"points": 200, "image_code": "000102"},
+        "dummy_member_1": {"points": 1000, "image_code": "000100"},
+        "dummy_member_2": {"points": 2000, "image_code": "000200"},
     }
 
 
@@ -493,7 +498,7 @@ class TestImageCodeCalculationBehaviour(BaseDynamicNFTTest):
         [
             (0, "000000"),
             (150, "000000"),
-            (999, "000000"),
+            (999, "000002"),
             (1000, "000100"),
             (1999, "000102"),
             (2000, "000200"),
@@ -510,8 +515,30 @@ class TestImageCodeCalculationBehaviour(BaseDynamicNFTTest):
 
     def test_points_to_code_negative(self) -> None:
         """Test the points_to_code function"""
+
+        # Points must be positive
         with pytest.raises(ValueError):
             assert ImageCodeCalculationBehaviour.points_to_code(-100, DUMMY_THRESHOLDS)
+
+        THRESHOLDS = {
+            "classes": [100],
+            "frames": [100, 1000, 2000, 3000],
+            "bars": [100, 200, 500],
+        }
+
+        # Points must be higher than thresholds[0]
+        with pytest.raises(ValueError):
+            assert ImageCodeCalculationBehaviour.points_to_code(0, THRESHOLDS)
+
+        THRESHOLDS = {
+            "classes": [],
+            "frames": [],
+            "bars": [],
+        }
+
+        # Thresholds can't be empty
+        with pytest.raises(ValueError):
+            assert ImageCodeCalculationBehaviour.points_to_code(0, THRESHOLDS)
 
 
 @use_ipfs_daemon

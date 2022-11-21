@@ -20,17 +20,20 @@
 """This package contains the rounds of DynamicNFTAbciApp."""
 
 import json
+from abc import ABC
 from enum import Enum
 from typing import Dict, List, Optional, Set, Tuple, cast
 
 from packages.valory.skills.abstract_round_abci.base import (
     AbciApp,
     AbciAppTransitionFunction,
+    AbstractRound,
     AppState,
     BaseSynchronizedData,
     CollectSameUntilThresholdRound,
     DegenerateRound,
     EventToTimeout,
+    TransactionType,
 )
 from packages.valory.skills.dynamic_nft_abci.payloads import (
     DBUpdatePayload,
@@ -85,7 +88,16 @@ class SynchronizedData(BaseSynchronizedData):
         return cast(Dict, self.db.get_strict("most_voted_member_updates"))
 
 
-class NewMembersRound(CollectSameUntilThresholdRound):
+class ContributionAbstractRound(AbstractRound[Event, TransactionType], ABC):
+    """Abstract round for the APY estimation skill."""
+
+    @property
+    def synchronized_data(self) -> SynchronizedData:
+        """Return the synchronized data."""
+        return cast(SynchronizedData, super().synchronized_data)
+
+
+class NewMembersRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
     """NewMemberListRound"""
 
     round_id: str = "new_members"
@@ -104,11 +116,19 @@ class NewMembersRound(CollectSameUntilThresholdRound):
             if new_members == NewMembersRound.ERROR_PAYLOAD:
                 return self.synchronized_data, Event.CONTRACT_ERROR
 
-            members = {
-                **new_members,
-                **self.synchronized_data.members,
-            }
+            # TOFIX: synchronized_data is not usable on the first round/behaviour
+            try:
+                members = {
+                    **new_members,
+                    **self.synchronized_data.members,
+                }
+            except AttributeError:
+                members = {
+                    **new_members,
+                }
+
             synchronized_data = self.synchronized_data.update(
+                synchronized_data_class=SynchronizedData,
                 members=members,
                 most_voted_new_members=new_members,
             )
@@ -120,7 +140,9 @@ class NewMembersRound(CollectSameUntilThresholdRound):
         return None
 
 
-class LeaderboardObservationRound(CollectSameUntilThresholdRound):
+class LeaderboardObservationRound(
+    ContributionAbstractRound, CollectSameUntilThresholdRound
+):
     """LeaderboardObservationRound"""
 
     round_id = "leaderboard_observation"
@@ -136,6 +158,7 @@ class LeaderboardObservationRound(CollectSameUntilThresholdRound):
                 return self.synchronized_data, Event.API_ERROR
 
             synchronized_data = self.synchronized_data.update(
+                synchronized_data_class=SynchronizedData,
                 most_voted_api_data=payload,
             )
             return synchronized_data, Event.DONE
@@ -146,7 +169,9 @@ class LeaderboardObservationRound(CollectSameUntilThresholdRound):
         return None
 
 
-class ImageCodeCalculationRound(CollectSameUntilThresholdRound):
+class ImageCodeCalculationRound(
+    ContributionAbstractRound, CollectSameUntilThresholdRound
+):
     """ImageCodeCalculationRound"""
 
     round_id: str = "image_code_calculation"
@@ -158,6 +183,7 @@ class ImageCodeCalculationRound(CollectSameUntilThresholdRound):
         """Process the end of the block."""
         if self.threshold_reached:
             synchronized_data = self.synchronized_data.update(
+                synchronized_data_class=SynchronizedData,
                 most_voted_member_updates=json.loads(self.most_voted_payload),
             )
             return synchronized_data, Event.DONE
@@ -168,7 +194,7 @@ class ImageCodeCalculationRound(CollectSameUntilThresholdRound):
         return None
 
 
-class ImageGenerationRound(CollectSameUntilThresholdRound):
+class ImageGenerationRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
     """ImageGenerationRound"""
 
     round_id: str = "image_generation"
@@ -188,6 +214,7 @@ class ImageGenerationRound(CollectSameUntilThresholdRound):
                     **payload["new_image_code_to_hashes"],
                 }
                 synchronized_data = self.synchronized_data.update(
+                    synchronized_data_class=SynchronizedData,
                     images=images,
                 )
                 return synchronized_data, Event.DONE
@@ -198,7 +225,7 @@ class ImageGenerationRound(CollectSameUntilThresholdRound):
         return None
 
 
-class DBUpdateRound(CollectSameUntilThresholdRound):
+class DBUpdateRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
     """DBUpdateRound"""
 
     round_id: str = "db_update"
@@ -213,11 +240,12 @@ class DBUpdateRound(CollectSameUntilThresholdRound):
             members = self.synchronized_data.members
             images = self.synchronized_data.images
             redirects = self.synchronized_data.redirects
+            updates = self.synchronized_data.most_voted_member_updates
 
             for (
                 member,
                 data,
-            ) in self.synchronized_data.most_voted_member_updates.items():
+            ) in updates.items():
                 members[member]["points"] = data["points"]
                 members[member]["image_code"] = data["image_code"]
 
@@ -225,6 +253,7 @@ class DBUpdateRound(CollectSameUntilThresholdRound):
                 redirects[uri] = images[data["image_code"]]
 
             synchronized_data = self.synchronized_data.update(
+                synchronized_data_class=SynchronizedData,
                 members=members,
                 redirects=redirects,
             )
@@ -236,7 +265,7 @@ class DBUpdateRound(CollectSameUntilThresholdRound):
         return None
 
 
-class FinishedDBUpdateRound(DegenerateRound):
+class FinishedDBUpdateRound(DegenerateRound, ABC):
     """FinishedDBUpdateRound"""
 
     round_id: str = "finished_db_update"

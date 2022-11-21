@@ -25,6 +25,7 @@ import shutil
 from logging import Logger
 from pathlib import Path
 from typing import Any, Generator, List, Optional, Set, Tuple, Type, cast
+from urllib.parse import urlparse
 
 from PIL import Image
 from aea.configurations.constants import DEFAULT_LEDGER
@@ -45,6 +46,7 @@ from packages.valory.skills.dynamic_nft_abci.io_.store import (
 )
 from packages.valory.skills.dynamic_nft_abci.models import Params
 from packages.valory.skills.dynamic_nft_abci.payloads import (
+    DBUpdatePayload,
     ImageCodeCalculationPayload,
     ImageGenerationPayload,
     LeaderboardObservationPayload,
@@ -61,9 +63,6 @@ from packages.valory.skills.dynamic_nft_abci.rounds import (
 )
 
 
-TOKEN_URI_BASE = "https://pfp.autonolas.network/series/1/"  # nosec
-
-SYNDICATE_CONTRACT_ADDRESS = "DUMMY_ADDRESS"  # nosec
 NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
 
 
@@ -105,10 +104,15 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
                 )
             else:
                 member_to_nft_uri = {
-                    member: f"{TOKEN_URI_BASE}/{token_id}"
-                    for member, token_id in member_to_token_id.values()
+                    member: f"{self.params.token_uri_base}/{token_id}"
+                    for member, token_id in member_to_token_id.items()
                 }
-                old_members = set(self.synchronized_data.members.keys())
+                # TOFIX: synchronized_data is not usable on the first round/behaviour
+                try:
+                    old_members = set(self.synchronized_data.members.keys())
+                except AttributeError:
+                    old_members = {}
+
                 new_member_to_uri = json.dumps(
                     {
                         member: {"uri": uri, "points": None, "image_code": None}
@@ -134,7 +138,7 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
         """Get member to token id data."""
         contract_api_msg = yield from self.get_contract_api_response(
             performative=ContractApiMessage.Performative.GET_STATE,  # type: ignore
-            contract_address=SYNDICATE_CONTRACT_ADDRESS,
+            contract_address=self.params.syndicate_contract_address,
             contract_id=str(ERC721CollectiveContract.contract_id),
             contract_callable="get_all_erc721_transfers",
             from_address=NULL_ADDRESS,
@@ -177,9 +181,22 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
         :yield: HttpMessage object
         :return: return the data retrieved from the Leaderboard API, in case something goes wrong we return "{}".
         """
+        leaderboard_endpoint = self.params.leaderboard_endpoint
+
+        # While running e2e tests, the mock api server does not work
+        # if parameters are sent in the url, so we remove them here.
+        if "mock_sheet_id" in leaderboard_endpoint:
+            parsed_endpoint = urlparse(leaderboard_endpoint)
+            leaderboard_endpoint = "{uri.scheme}://{uri.netloc}{uri.path}".format(
+                uri=parsed_endpoint
+            )
+
+        self.context.logger.info(
+            f"Sending leaderboard request to: {leaderboard_endpoint}"
+        )
         response = yield from self.get_http_response(
             method="GET",
-            url=self.params.leaderboard_endpoint,
+            url=leaderboard_endpoint,
         )
         if response.status_code != 200:
             self.context.logger.error(
@@ -261,6 +278,25 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
         deterministic_body = json.dumps(response_body, sort_keys=True)
         return deterministic_body
 
+    @staticmethod
+    def validate_api_data(data):
+        """Fixes format problems derived from serialization and de-serialization.
+
+        :param data: the source data
+        :returns: the fixed data
+        """
+
+        fixed_layer_data = {}
+        for layer_name, layer_data in data["layers"].items():
+            fixed_layer_data[layer_name] = {}
+            for threshold, hash_ in layer_data.items():
+                # Integer keys must be int, not str
+                fixed_layer_data[layer_name][int(threshold)] = hash_
+
+        data["layers"] = fixed_layer_data
+
+        return data
+
 
 class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
     """ImageCodeCalculationBehaviour"""
@@ -279,19 +315,28 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
         with self.context.benchmark_tool.measure(
             self.behaviour_id,
         ).local():
-            leaderboard = self.synchronized_data.most_voted_api_data["leaderboard"]
-            layer_data = self.synchronized_data.most_voted_api_data["layers"]
+            api_data = LeaderboardObservationBehaviour.validate_api_data(
+                self.synchronized_data.most_voted_api_data
+            )
+            leaderboard = api_data["leaderboard"]
+            layer_data = api_data["layers"]
             thresholds = {k: list(v.keys()) for k, v in layer_data.items()}
             members = self.synchronized_data.members
 
             member_updates = {}
             for member, new_points in leaderboard.items():
                 if member not in members or members[member]["points"] != new_points:
+                    self.context.logger.info(
+                        f"Calculating image code for member {member}: points={new_points} thresholds={thresholds}"
+                    )
                     image_code = self.points_to_code(new_points, thresholds)
                     member_updates[member] = {
                         "points": new_points,
                         "image_code": image_code,
                     }
+                    self.context.logger.info(
+                        f"Image code for member {member} is {image_code}"
+                    )
 
             member_updates_serialized = json.dumps(member_updates, sort_keys=True)
             self.context.logger.info(
@@ -319,12 +364,27 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
         :param thresholds: layer thresholds that mark the points at which images change
         :returns: the layer code and the remainder points
         """
+        if len(thresholds) < 1:
+            raise ValueError(
+                f"Threshold list must contain at least one value: {thresholds}"
+            )
+
+        if points < thresholds[0]:
+            raise ValueError(
+                f"Points for this layer must be greater than {thresholds[0]}, got {points}"
+            )
+
+        code = None
+        remaining_points = None
+
         for i, threshold in enumerate(thresholds):
-            if points < threshold:
-                prev_threshold = thresholds[i - 1] if i >= 1 else thresholds[0]
-                return f"{i:02}", points - prev_threshold
-        prev_threshold = thresholds[-1] if thresholds else 0
-        return f"{len(thresholds):02}", points - prev_threshold
+            if points >= threshold:
+                code = i
+                remaining_points = points - threshold
+            else:
+                break
+
+        return f"{code:02}", remaining_points
 
     @staticmethod
     def points_to_code(points: float, thresholds: dict) -> str:
@@ -383,11 +443,17 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
             new_image_code_to_images = {}
             for update in self.synchronized_data.most_voted_member_updates.values():
                 if update["image_code"] not in self.synchronized_data.images:
+                    self.context.logger.info(
+                        f"Image {update['image_code']} does not exist. Generating..."
+                    )
                     new_image_code_to_images[
                         update["image_code"]
                     ] = img_manager.generate(update["image_code"])
 
             if None in new_image_code_to_images.values():
+                self.context.logger.info(
+                    "An error happened while generating the new images"
+                )
                 status = "error"
                 new_image_code_to_hashes = {}
             else:
@@ -399,20 +465,43 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                         img_manager.out_path, f"{image_code}.{img_manager.PNG_EXT}"
                     )
                     # Whitelist the image
+                    self.context.logger.info(
+                        f"Getting hash for image at {image_path}..."
+                    )
                     image_hash = IPFSHashOnly.get(str(image_path))
+                    self.context.logger.info(
+                        f"Hash is for {image_path} is {image_hash}. Trying to whitelist..."
+                    )
                     whitelist_success = yield from self.whitelist_hash(image_hash)
                     if not whitelist_success:
+                        self.context.logger.info(
+                            f"Error whitelisting image with hash {image_hash}"
+                        )
                         status = "error"
                         break
 
+                    self.context.logger.info(
+                        f"Image with hash {image_hash} was whitelisted"
+                    )
+
                     # Send
+                    self.context.logger.info(
+                        f"Trying to whitelist image with hash {image_hash}..."
+                    )
                     image_hash = self.send_to_ipfs(
                         image_path, image, filetype=ExtendedSupportedFiletype.PNG
                     )
 
                     if not image_hash:
+                        self.context.logger.info(
+                            f"Error pushing image with hash {image_hash} to IPFS"
+                        )
                         status = "error"
                         break
+
+                    self.context.logger.info(
+                        f"Image with hash {image_hash} was pushed to IPFS"
+                    )
 
                     new_image_code_to_hashes[image_code] = image_hash
 
@@ -440,7 +529,10 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
 
     def update_layers(self):
         """Updates local layer if they dont match the ones from the leaderboard API"""
-        api_layer_data = self.synchronized_data.most_voted_api_data["layers"]
+        api_data = LeaderboardObservationBehaviour.validate_api_data(
+            self.synchronized_data.most_voted_api_data
+        )
+        api_layer_data = api_data["layers"]
 
         for layer_name in self.ImageManager.LAYER_NAMES:
 
@@ -450,6 +542,8 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                 self.ImageManager.IMAGE_ROOT, self.ImageManager.LAYERS_DIR, layer_name
             )
 
+            self.context.logger.info(f"Checking local image hashes from: {layer_path}")
+
             local_layer_hashes = set(
                 IPFSHashOnly.get(image_file)
                 for image_file in layer_path.rglob(f"*.{self.ImageManager.PNG_EXT}")
@@ -457,6 +551,9 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
 
             # Check if some image has changed and re-download images
             if api_layer_hashes != local_layer_hashes:
+                self.context.logger.info(
+                    f"Layer '{layer_name}' is out of date. Local={local_layer_hashes}, API={api_layer_hashes} Re-downloading."
+                )
                 # Remove local images
                 if os.path.isdir(layer_path):
                     shutil.rmtree(layer_path)
@@ -471,6 +568,8 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                         filename=str(i),
                         filetype=ExtendedSupportedFiletype.PNG,
                     )
+            else:
+                self.context.logger.info(f"Layer {layer_name} is already up to date")
 
     def whitelist_hash(self, image_hash: str) -> Generator[None, None, bool]:
         """Send a whitelist request to the whitelist server
@@ -488,7 +587,8 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
         if response.status_code != 200:
             self.context.logger.error(
                 f"Could not whitelist the hash {image_hash}. "
-                f"Received status code {response.status_code}."
+                f"Received status code {response.status_code} "
+                f"from {self.params.whitelist_endpoint}"
             )
             return False
 
@@ -509,6 +609,8 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
             self.logger = logger
             self.image_root = image_root
             self.layers = self._load_layers()
+
+            self.logger.info(f"ImageManager: loaded layer images: {self.layers}")
 
             # Create the output directory if it does not exist
             self.out_path = Path(self.image_root, self.IMAGES_DIR)
@@ -556,6 +658,14 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
             # Combine layers
             img_layers[0].paste(img_layers[1], (0, 0), mask=img_layers[1])
             img_layers[0].paste(img_layers[2], (0, 0), mask=img_layers[2])
+
+            # Save image
+            img_path = Path(self.out_path, f"{image_code}.{self.PNG_EXT}")
+            img_layers[0].save(str(img_path))
+            self.logger.info(
+                f"Image {image_code} has been generated and saved at {img_path}"
+            )
+
             return img_layers[0]
 
 
@@ -581,7 +691,7 @@ class DBUpdateBehaviour(DynamicNFTBaseBehaviour):
         with self.context.benchmark_tool.measure(
             self.behaviour_id,
         ).consensus():
-            payload = ImageGenerationPayload(
+            payload = DBUpdatePayload(
                 self.context.agent_address,
                 json.dumps(
                     {},  # empty payload for now
