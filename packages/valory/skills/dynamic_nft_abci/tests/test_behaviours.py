@@ -156,6 +156,8 @@ DEFAULT_SHEET_API_URL = (
     f"ranges={DEFAULT_CELL_RANGE_POINTS}&ranges={DEFAULT_CELL_RANGE_LAYERS}&key={GOOGLE_API_KEY}"
 )
 
+MOCK_SHEET_API_URL = "http://localhost:3000/mock_sheet_id"
+
 DEFAULT_WHITELIST_URL = "http://localhost"
 
 IMAGE_PATH = Path(
@@ -470,6 +472,62 @@ class TestLeaderboardObservationErrorBehaviour(BaseDynamicNFTTest):
                 ),
             )
             self.complete(test_case.event)
+
+
+class TestLeaderboardObservationURLMockBehaviour(BaseDynamicNFTTest):
+    """Tests LeaderboardObservationBehaviour"""
+
+    behaviour_class = LeaderboardObservationBehaviour
+    next_behaviour_class = ImageCodeCalculationBehaviour
+
+    @classmethod
+    def setup_class(cls, **kwargs: Any) -> None:
+        """Set up the test class."""
+        super().setup_class(
+            param_overrides={
+                "leaderboard_base_endpoint": MOCK_SHEET_API_URL,
+            }
+        )
+
+    @pytest.mark.parametrize(
+        "test_case, kwargs",
+        [
+            (
+                BehaviourTestCase(
+                    "Happy path with mocked e2e api url",
+                    initial_data=dict(),
+                    event=Event.DONE,
+                ),
+                {
+                    "body": json.dumps(
+                        DUMMY_API_RESPONSE,
+                    ),
+                    "status_code": 200,
+                    "api_url": MOCK_SHEET_API_URL,
+                },
+            ),
+        ],
+    )
+    def test_run(self, test_case: BehaviourTestCase, kwargs: Any) -> None:
+        """Run tests."""
+        self.fast_forward(test_case.initial_data)
+        self.behaviour.act_wrapper()
+        self.mock_http_request(
+            request_kwargs=dict(
+                method="GET",
+                headers="",
+                version="",
+                url=kwargs.get("api_url"),
+            ),
+            response_kwargs=dict(
+                version="",
+                status_code=kwargs.get("status_code"),
+                status_text="",
+                headers="",
+                body=kwargs.get("body").encode(),
+            ),
+        )
+        self.complete(test_case.event)
 
 
 class TestImageCodeCalculationBehaviour(BaseDynamicNFTTest):
