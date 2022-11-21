@@ -515,8 +515,30 @@ class TestImageCodeCalculationBehaviour(BaseDynamicNFTTest):
 
     def test_points_to_code_negative(self) -> None:
         """Test the points_to_code function"""
+
+        # Points must be positive
         with pytest.raises(ValueError):
             assert ImageCodeCalculationBehaviour.points_to_code(-100, DUMMY_THRESHOLDS)
+
+        THRESHOLDS = {
+            "classes": [100],
+            "frames": [100, 1000, 2000, 3000],
+            "bars": [100, 200, 500],
+        }
+
+        # Points must be higher than thresholds[0]
+        with pytest.raises(ValueError):
+            assert ImageCodeCalculationBehaviour.points_to_code(0, THRESHOLDS)
+
+        THRESHOLDS = {
+            "classes": [],
+            "frames": [],
+            "bars": [],
+        }
+
+        # Thresholds can't be empty
+        with pytest.raises(ValueError):
+            assert ImageCodeCalculationBehaviour.points_to_code(0, THRESHOLDS)
 
 
 @use_ipfs_daemon
