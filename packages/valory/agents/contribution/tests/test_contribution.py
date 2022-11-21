@@ -120,7 +120,7 @@ class BaseTestEnd2EndContributionNormalExecution(BaseTestEnd2EndExecution):
 
 @pytest.mark.e2e
 @pytest.mark.parametrize("nb_nodes", (1,))
-class TestABCIPriceEstimationSingleAgent(
+class TestEnd2EndContributionSingleAgent(
     BaseTestEnd2EndContributionNormalExecution,
     UseMockGoogleSheetsApiBaseTest,
     UseHardHatContributionBaseTest,
@@ -130,7 +130,7 @@ class TestABCIPriceEstimationSingleAgent(
 
 @pytest.mark.e2e
 @pytest.mark.parametrize("nb_nodes", (2,))
-class TestABCIPriceEstimationTwoAgents(
+class TestEnd2EndContributionTwoAgents(
     BaseTestEnd2EndContributionNormalExecution,
     UseMockGoogleSheetsApiBaseTest,
     UseHardHatContributionBaseTest,
@@ -140,7 +140,7 @@ class TestABCIPriceEstimationTwoAgents(
 
 @pytest.mark.e2e
 @pytest.mark.parametrize("nb_nodes", (4,))
-class TestABCIPriceEstimationFourAgents(
+class TestEnd2EndContributionFourAgents(
     BaseTestEnd2EndContributionNormalExecution,
     UseMockGoogleSheetsApiBaseTest,
     UseHardHatContributionBaseTest,
