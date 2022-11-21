@@ -309,4 +309,4 @@ jobs:
 
       - name: e2e tests
         run: |
-          tox -e py${{ matrix.python-version }} -- -m 'e2e'
+          tox -e e2e-py${{ matrix.python-version }}-linux
