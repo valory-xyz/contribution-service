@@ -39,7 +39,7 @@ fingerprint:
   tests/test_io/test_store.py: bafybeih72breobvnw7m4t5ds3ludx7e3mgki6falajofqbanu4gohkirx4
   tests/test_models.py: bafybeidqf7caad3zke6xzefmfoufce6bfn5bqgbiy4racghm5w67yddrea
   tests/test_payloads.py: bafybeicfbuq74j7qjzcw5o3m5yf5cskzbtuvodindijrlowhzi67y76lmq
-  tests/test_rounds.py: bafybeibx4zbd77poaeon5gq3vwqelf7sk3fes7yx26v2io7d4zfzhpaggu
+  tests/test_rounds.py: bafybeig2dg5svqqhr66ycr5yeag4dmhjvyflbm3puvihif3nzqr4udd2yy
 fingerprint_ignore_patterns: []
 connections: []
 contracts:
@@ -48,7 +48,7 @@ protocols:
 - valory/contract_api:1.0.0:bafybeiaxbrvgtbdrh4lslskuxyp4awyr4whcx3nqq5yrr6vimzsxg5dy64
 - valory/http:1.0.0:bafybeigzqo2zaakcjtzzsm6dh4x73v72xg6ctk6muyp5uq5ueb7y34fbxy
 skills:
-- valory/abstract_round_abci:0.1.0:bafybeiegpewio6lkpikfnohjqmlwkqtxdmjbky4dphof4jvrixlvkiqixi
+- valory/abstract_round_abci:0.1.0:bafybeid3sx66tzs6mmwu52tlaqdycfszzpetgybzu34gagfocg5bmivh7e
 behaviours:
   main:
     args: {}

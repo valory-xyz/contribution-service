@@ -50,7 +50,7 @@ from packages.valory.skills.dynamic_nft_abci.tests.test_behaviours import (
 )
 
 
-TOKEN_URI_BASE = "https://pfp.autonolas.network/series/1/"
+TOKEN_URI_BASE = "https://pfp.autonolas.network/series/1/"  # nosec
 
 DUMMY_MEMBER_TO_NFT_URI = {
     "0x54EfA9b1865FFE8c528fb375A7A606149598932A": f"{TOKEN_URI_BASE}/1",
