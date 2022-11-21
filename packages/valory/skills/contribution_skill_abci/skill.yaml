@@ -8,9 +8,9 @@ aea_version: '>=1.0.0, <2.0.0'
 fingerprint:
   __init__.py: bafybeihrdde2hozs5v5nwwwf3vvinneyxtdyni4bbqlxp7r222sqajlaai
   behaviours.py: bafybeicezipgftkdnvvsccc7pdlwdbhxoddz4ojphaqtu52jfhsvmjreoq
-  composition.py: bafybeiflhu5sd7zli22asvkjno7ymjkwsz4akmrldy2igmzeticr3noamu
+  composition.py: bafybeibyizxv3lhtfp5atshgwvwtoyehxot2akng25zgjicets7r3iadtq
   dialogues.py: bafybeih3x4egnkh7xwnlawqbu6fpqyqbaum7ivdhqm6r6557dyy2rhzneq
-  fsm_specification.yaml: bafybeibocimdxnffs24js7lgjnst2aucms6yewilhiaayp4z3pdtyquo4y
+  fsm_specification.yaml: bafybeidoaqcaa5egcpvshcb56jdas4h2thtxql4mguty62uuuqglon6n54
   handlers.py: bafybeibeeb3oafle3fc6no5oklimj36uwnuk7pp6hxzpjwrty2jglsgy4u
   models.py: bafybeiauejymqcxe6mw5x5dcmmjkewfioickdxvusvalkzcvqfpjsqx7la
   tests/__init__.py: bafybeicukkp7ajzvqtmpedzwo23azuorvy5qtftadsxbwmv5zhk2tktjc4
@@ -23,10 +23,10 @@ connections: []
 contracts: []
 protocols: []
 skills:
-- valory/abstract_round_abci:0.1.0:bafybeiegpewio6lkpikfnohjqmlwkqtxdmjbky4dphof4jvrixlvkiqixi
-- valory/dynamic_nft_abci:0.1.0:bafybeicezzcf34a7eskjrwhhgrdlftdiugidfu6supzpcf6xfspnj6isoa
-- valory/registration_abci:0.1.0:bafybeigck3gb5tvm5tilzii7kvzqpryxrmxu2meck5empgl7lhuz66mbgq
-- valory/reset_pause_abci:0.1.0:bafybeid65rpcwq3rzxijwrpsbirersuwk2sdtcwnpkplczbszzoq2tbitu
+- valory/abstract_round_abci:0.1.0:bafybeid3sx66tzs6mmwu52tlaqdycfszzpetgybzu34gagfocg5bmivh7e
+- valory/dynamic_nft_abci:0.1.0:bafybeiejua6mhmztsbnc542l4xop4uvzhyzyv6sseeevhuctzaprhatevm
+- valory/registration_abci:0.1.0:bafybeifxquhkccygjawoqyj26b3k6rxizaa7geoef7oyet2baojjk4gy2q
+- valory/reset_pause_abci:0.1.0:bafybeibnziujsv7toespbguradspw52rfrhhgdojcbznckqia2jwm2jvwm
 behaviours:
   main:
     args: {}
@@ -128,5 +128,5 @@ models:
     class_name: SharedState
 dependencies:
   open-aea-cli-ipfs:
-    version: <2.0.0,>=1.20.0
+    version: <2.0.0,>=1.24.0
 is_abstract: false

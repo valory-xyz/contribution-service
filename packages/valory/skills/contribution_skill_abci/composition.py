@@ -41,7 +41,7 @@ ContributionSkillAbciApp = chain(
     (
         RegistrationAbci.AgentRegistrationAbciApp,
         DynamicNFTAbci.DynamicNFTAbciApp,
-        ResetAndPauseAbci.ResetPauseABCIApp,
+        ResetAndPauseAbci.ResetPauseAbciApp,
     ),
     abci_app_transition_mapping,
 )
