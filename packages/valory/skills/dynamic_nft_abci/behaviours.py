@@ -25,6 +25,7 @@ import shutil
 from logging import Logger
 from pathlib import Path
 from typing import Any, Generator, List, Optional, Set, Tuple, Type, cast
+from urllib.parse import urlparse
 
 from PIL import Image
 from aea.configurations.constants import DEFAULT_LEDGER
@@ -180,7 +181,10 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
         # While running e2e tests, the mock api server does not work
         # if parameters are sent in the url, so we remove them here.
         if "mock_sheet_id" in leaderboard_endpoint:
-            leaderboard_endpoint = leaderboard_endpoint.split("?")[0]
+            parsed_endpoint = urlparse(leaderboard_endpoint)
+            leaderboard_endpoint = "{uri.scheme}://{uri.netloc}{uri.path}".format(
+                uri=parsed_endpoint
+            )
 
         self.context.logger.info(
             f"Sending leaderboard request to: {leaderboard_endpoint}"
