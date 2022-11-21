@@ -108,8 +108,10 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
                     for member, token_id in member_to_token_id.items()
                 }
                 # TOFIX: synchronized_data is not usable on the first round/behaviour
-                # old_members = set(self.synchronized_data.members.keys())  # noqa: E800
-                old_members = {}
+                try:
+                    old_members = set(self.synchronized_data.members.keys())
+                except AttributeError:
+                    old_members = {}
 
                 new_member_to_uri = json.dumps(
                     {
