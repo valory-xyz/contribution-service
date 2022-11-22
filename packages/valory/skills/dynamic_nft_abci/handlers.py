@@ -101,7 +101,7 @@ class HttpHandler(BaseHttpHandler):
         :param http_dialogue: the http dialogue
         """
         self.context.logger.info(
-            "received http request with method={}, url={} and body={!r}".format(
+            "Received http request with method={}, url={} and body={!r}".format(
                 http_msg.method,
                 http_msg.url,
                 http_msg.body,
@@ -149,7 +149,7 @@ class HttpHandler(BaseHttpHandler):
             )
 
         # Send response
-        self.context.logger.info("responding with: {}".format(http_response))
+        self.context.logger.info("Responding with: {}".format(http_response))
         self.context.outbox.put_message(message=http_response)
 
     def _handle_non_get(
@@ -172,5 +172,5 @@ class HttpHandler(BaseHttpHandler):
         )
 
         # Send response
-        self.context.logger.info("responding with: {}".format(http_response))
+        self.context.logger.info("Responding with: {}".format(http_response))
         self.context.outbox.put_message(message=http_response)
