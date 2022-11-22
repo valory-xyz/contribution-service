@@ -113,6 +113,7 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
                 except AttributeError:
                     old_members = {}
 
+                # Add new members only
                 new_member_to_uri = json.dumps(
                     {
                         member: {"uri": uri, "points": None, "image_code": None}
