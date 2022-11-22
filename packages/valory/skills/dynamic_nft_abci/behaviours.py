@@ -104,7 +104,7 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
                 )
             else:
                 member_to_nft_uri = {
-                    member: f"{self.params.token_uri_base}/{token_id}"
+                    member: f"{self.params.token_uri_base}{token_id}"
                     for member, token_id in member_to_token_id.items()
                 }
                 # TOFIX: synchronized_data is not usable on the first round/behaviour
