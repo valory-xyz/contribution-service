@@ -50,7 +50,7 @@
             ]
          },
          {
-            "range":"Layers!B1:Z3",
+            "range":"Layers!B1:Z2",
             "majorDimension":"ROWS",
             "values":[
                [

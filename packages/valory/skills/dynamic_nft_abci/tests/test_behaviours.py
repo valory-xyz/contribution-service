@@ -127,7 +127,7 @@ DUMMY_API_RESPONSE = {
             ],
         },
         {
-            "range": "Layers!B1:Z3",
+            "range": "Layers!B1:Z2",
             "majorDimension": "ROWS",
             "values": [
                 ["0:dummy_class_hash_0"],
@@ -149,7 +149,7 @@ SHEET_ID = "1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc"
 GOOGLE_API_KEY = None
 GOOGLE_SHEETS_ENDPOINT = "https://sheets.googleapis.com/v4/spreadsheets"
 DEFAULT_CELL_RANGE_POINTS = "Leaderboard!A2:B102"
-DEFAULT_CELL_RANGE_LAYERS = "Layers!B1:Z3"
+DEFAULT_CELL_RANGE_LAYERS = "Layers!B1:Z2"
 
 DEFAULT_SHEET_API_URL = (
     f"{GOOGLE_SHEETS_ENDPOINT}/{SHEET_ID}/values:batchGet?"
