@@ -97,17 +97,11 @@ DUMMY_LAYERS = {
         1000: "bafybeige2swjq6fq6yvbvdhylkvfl7r3kv6nzwzqmkgb5g27ifziro342q",
         2000: "bafybeigyzhrhiybdsg3z7qn2nbqiyk52u4ytd6ndl6ixrdg3tk5g6owtsi",
     },
-    "bars": {
-        0: "bafybeig4corsme52qixcirhwuh6yquzd3bou3mgvjebspqxl2sh7jfpftq",
-        200: "bafybeifrhbjmou67wn4uelixqxg732nhjmvgeb2w26czedsr4w2htactxy",
-        500: "bafybeif3hvmq7rltk5hxucfnnazcwm4b2nuggquonaxhyx7rgsc3uhimye",
-    },
 }
 
 DUMMY_THRESHOLDS = {
     "classes": [0],
-    "frames": [0, 1000, 2000, 3000],
-    "bars": [0, 200, 500],
+    "frames": [0, 50000, 100000, 150000],
 }
 
 DUMMY_API_DATA = {"leaderboard": DUMMY_LEADERBOARD, "layers": DUMMY_LAYERS}
@@ -554,14 +548,14 @@ class TestImageCodeCalculationBehaviour(BaseDynamicNFTTest):
     @pytest.mark.parametrize(
         "points, expected_code",
         [
-            (0, "000000"),
-            (150, "000000"),
-            (999, "000002"),
-            (1000, "000100"),
-            (1999, "000102"),
-            (2000, "000200"),
-            (3750, "000302"),
-            (10000, "000302"),
+            (0, "0000"),
+            (150, "0000"),
+            (51000, "0001"),
+            (99999, "0001"),
+            (120000, "0002"),
+            (145000, "0002"),
+            (150000, "0003"),
+            (200000, "0003"),
         ],
     )
     def test_points_to_code(self, points: float, expected_code: str) -> None:
