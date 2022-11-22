@@ -97,7 +97,7 @@ models:
       leaderboard_base_endpoint: https://sheets.googleapis.com/v4/spreadsheets
       leaderboard_layers_range: Layers!B1:Z3
       leaderboard_points_range: Leaderboard!A2:B102
-      leaderboard_sheet_id: 1JYR9kfj_Zxd9xHX5AWSlO5X6HusFnb7p9amEUGU55Cg
+      leaderboard_sheet_id: 1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc
       max_healthcheck: 120
       observation_interval: 10
       on_chain_service_id: null

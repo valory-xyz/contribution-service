@@ -113,7 +113,7 @@ DUMMY_THRESHOLDS = {
 DUMMY_API_DATA = {"leaderboard": DUMMY_LEADERBOARD, "layers": DUMMY_LAYERS}
 
 DUMMY_API_RESPONSE = {
-    "spreadsheetId": "1JYR9kfj_Zxd9xHX5AWSlO5X6HusFnb7p9amEUGU55Cg",
+    "spreadsheetId": "1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc",
     "valueRanges": [
         {
             "range": "Leaderboard!A2:B102",
@@ -145,7 +145,7 @@ DUMMY_API_RESPONSE = {
 
 DUMMY_BAD_API_RESPONSE = {}
 
-SHEET_ID = "1JYR9kfj_Zxd9xHX5AWSlO5X6HusFnb7p9amEUGU55Cg"
+SHEET_ID = "1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc"
 GOOGLE_API_KEY = None
 GOOGLE_SHEETS_ENDPOINT = "https://sheets.googleapis.com/v4/spreadsheets"
 DEFAULT_CELL_RANGE_POINTS = "Leaderboard!A2:B102"
