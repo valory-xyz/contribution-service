@@ -161,8 +161,8 @@ def get_dummy_updates(error: bool = False) -> Dict:
     if error:
         return {"dummy_member_1": {"points": 1000, "image_code": "error_code"}}
     return {
-        "dummy_member_1": {"points": 1000, "image_code": "000100"},
-        "dummy_member_2": {"points": 2000, "image_code": "000200"},
+        "dummy_member_1": {"points": 55000, "image_code": "0001"},
+        "dummy_member_2": {"points": 105000, "image_code": "0002"},
     }
 
 
