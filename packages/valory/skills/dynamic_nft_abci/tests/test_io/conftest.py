@@ -39,7 +39,7 @@ def dummy_obj() -> StoredPNGType:
             ImageGenerationBehaviour.ImageManager.IMAGE_ROOT,
             "layers",
             "classes",
-            "Gli.png",
+            "0.png",
         )
     )
 

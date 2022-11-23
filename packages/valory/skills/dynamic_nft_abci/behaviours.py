@@ -104,7 +104,7 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
                 )
             else:
                 member_to_nft_uri = {
-                    member: f"{self.params.token_uri_base}/{token_id}"
+                    member: f"{self.params.token_uri_base}{token_id}"
                     for member, token_id in member_to_token_id.items()
                 }
                 # TOFIX: synchronized_data is not usable on the first round/behaviour
@@ -113,6 +113,7 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
                 except AttributeError:
                     old_members = {}
 
+                # Add new members only
                 new_member_to_uri = json.dumps(
                     {
                         member: {"uri": uri, "points": None, "image_code": None}
@@ -212,7 +213,10 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
             # We retrieve both leaderboard and layer data in the same call
             # so we need to iterate it and identify each one by its "valueRanges" field
             response_body = {}
+
             for data in response_json["valueRanges"]:
+
+                # Score data
                 if data["range"] == self.params.leaderboard_points_range:
                     leaderboard_raw = data["values"]
 
@@ -236,6 +240,7 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
                     response_body["leaderboard"] = leaderboard
                     continue
 
+                # Layers data
                 if data["range"] == self.params.leaderboard_layers_range:
                     layers_raw = data["values"]
 
@@ -407,11 +412,8 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
         fr_code, points = ImageCodeCalculationBehaviour.get_layer_code(
             points, thresholds[ImageGenerationBehaviour.ImageManager.LAYER_NAMES[1]]
         )
-        bar_code, points = ImageCodeCalculationBehaviour.get_layer_code(
-            points, thresholds[ImageGenerationBehaviour.ImageManager.LAYER_NAMES[2]]
-        )
 
-        return cls_code + fr_code + bar_code
+        return cls_code + fr_code
 
 
 class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
@@ -586,9 +588,9 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
         IMAGE_ROOT = Path(Path(__file__).parent, "data")
         LAYERS_DIR = "layers"
         IMAGES_DIR = "images"
-        LAYER_NAMES = ("classes", "frames", "bars")
+        LAYER_NAMES = ("classes", "frames")
         PNG_EXT = "png"
-        CODE_LEN = 6
+        CODE_LEN = 4
 
         def __init__(self, logger: Logger, image_root: Path = IMAGE_ROOT):
             """Load images"""
@@ -625,7 +627,9 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                 )
                 return None
 
-            img_layer_codes = [int(image_code[i : i + 2]) for i in range(0, 6, 2)]
+            img_layer_codes = [
+                int(image_code[i : i + 2]) for i in range(0, len(image_code), 2)
+            ]
 
             # Check that code indices do not reference non-existent images
             for layer_index, layer_code in enumerate(img_layer_codes):
@@ -641,9 +645,9 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                 for layer_index, layer_code in enumerate(img_layer_codes)
             ]
 
-            # Combine layers
-            img_layers[0].paste(img_layers[1], (0, 0), mask=img_layers[1])
-            img_layers[0].paste(img_layers[2], (0, 0), mask=img_layers[2])
+            # Combine all other layers on top of the first one
+            for i in range(1, len(img_layers)):
+                img_layers[0].paste(img_layers[i], (0, 0), mask=img_layers[i])
 
             # Save image
             img_path = Path(self.out_path, f"{image_code}.{self.PNG_EXT}")

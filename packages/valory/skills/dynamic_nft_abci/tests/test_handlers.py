@@ -125,7 +125,7 @@ class TestHttpHandler(BaseSkillTestCase):
         # after
         mock_logger.assert_any_call(
             logging.INFO,
-            f"received invalid http message={incoming_message}, unidentified dialogue.",
+            f"Received invalid http message={incoming_message}, unidentified dialogue.",
         )
 
     @pytest.mark.parametrize(
@@ -182,7 +182,7 @@ class TestHttpHandler(BaseSkillTestCase):
 
         mock_logger.assert_any_call(
             logging.INFO,
-            "received http request with method={}, url={} and body={!r}".format(
+            "Received http request with method={}, url={} and body={!r}".format(
                 incoming_message.method, incoming_message.url, incoming_message.body
             ),
         )
@@ -205,7 +205,7 @@ class TestHttpHandler(BaseSkillTestCase):
 
         mock_logger.assert_any_call(
             logging.INFO,
-            f"responding with: {message}",
+            f"Responding with: {message}",
         )
 
     def test_handle_request_post(self):
@@ -235,7 +235,7 @@ class TestHttpHandler(BaseSkillTestCase):
 
         mock_logger.assert_any_call(
             logging.INFO,
-            "received http request with method={}, url={} and body={!r}".format(
+            "Received http request with method={}, url={} and body={!r}".format(
                 incoming_message.method, incoming_message.url, incoming_message.body
             ),
         )
@@ -258,7 +258,7 @@ class TestHttpHandler(BaseSkillTestCase):
 
         mock_logger.assert_any_call(
             logging.INFO,
-            f"responding with: {message}",
+            f"Responding with: {message}",
         )
 
     def test_teardown(self):

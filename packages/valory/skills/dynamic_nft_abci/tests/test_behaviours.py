@@ -86,34 +86,25 @@ DUMMY_LEADERBOARD = {
 
 DUMMY_LAYERS = {
     "classes": {
-        0: "bafybeiauzyxtnahzul5gk27az7cb3evq5ttfwnxoi366lbrww3pcpthcmi",
-        1000: "bafybeiay7owbbggi4nz4l4aeimzixia3v542iqcuaaiwd4kwsayu54aiqq",
-        2000: "bafybeig35zr5r4e2gyc3c2ifkxnc43thyipmtgkauly7fxscut5r7zin2a",
-        3000: "bafybeiea4in45zhx644yq4mzwrzjtqzzdgp7xv4ngv3ljttiwpgwldonl4",
-        4000: "bafybeif6oacd3pkbpn4ij4daqpopjdehv2dv2tejpazwkdcs4cfvedlrvy",
+        0: "bafybeiggubspktr3ujvsj32esaspnqojf4ukvhjdsvl2ko3tg5bfmuq5ju",
     },
     "frames": {
-        0: "bafybeifg2owpyplscve2sr4yjcjg6rxsooif2jqt4qmwvrbu36n5ehancm",
-        1000: "bafybeige2swjq6fq6yvbvdhylkvfl7r3kv6nzwzqmkgb5g27ifziro342q",
-        2000: "bafybeigyzhrhiybdsg3z7qn2nbqiyk52u4ytd6ndl6ixrdg3tk5g6owtsi",
-    },
-    "bars": {
-        0: "bafybeig4corsme52qixcirhwuh6yquzd3bou3mgvjebspqxl2sh7jfpftq",
-        200: "bafybeifrhbjmou67wn4uelixqxg732nhjmvgeb2w26czedsr4w2htactxy",
-        500: "bafybeif3hvmq7rltk5hxucfnnazcwm4b2nuggquonaxhyx7rgsc3uhimye",
+        0: "bafybeiaotq73a2cceb5ywdvu63haww65c24l3mnbxg3ensoa3gting5ilm",
+        50000: "bafybeig5jxzpl4ruhry3kkno47fcagwwze7ynlj2jnhjmmxpxrh4iyqyiu",
+        100000: "bafybeidtjvtpioqekbt7clp6gohuoa2mah5oxytntji6ayqt3t6tsouzqi",
+        150000: "bafybeia7gneqv72nwhmomccdxzizc2kgtqhllxpn3y3nfakoc3uvzvqh7y",
     },
 }
 
 DUMMY_THRESHOLDS = {
     "classes": [0],
-    "frames": [0, 1000, 2000, 3000],
-    "bars": [0, 200, 500],
+    "frames": [0, 50000, 100000, 150000],
 }
 
 DUMMY_API_DATA = {"leaderboard": DUMMY_LEADERBOARD, "layers": DUMMY_LAYERS}
 
 DUMMY_API_RESPONSE = {
-    "spreadsheetId": "1JYR9kfj_Zxd9xHX5AWSlO5X6HusFnb7p9amEUGU55Cg",
+    "spreadsheetId": "1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc",
     "valueRanges": [
         {
             "range": "Leaderboard!A2:B102",
@@ -127,7 +118,7 @@ DUMMY_API_RESPONSE = {
             ],
         },
         {
-            "range": "Layers!B1:Z3",
+            "range": "Layers!B1:Z2",
             "majorDimension": "ROWS",
             "values": [
                 ["0:dummy_class_hash_0"],
@@ -137,7 +128,6 @@ DUMMY_API_RESPONSE = {
                     "2000:dummy_frame_hash_2",
                     "3000:dummy_frame_hash_3",
                 ],
-                ["0:dummy_bar_hash_0", "200:dummy_bar_hash_1", "500:dummy_bar_hash_2"],
             ],
         },
     ],
@@ -145,11 +135,11 @@ DUMMY_API_RESPONSE = {
 
 DUMMY_BAD_API_RESPONSE = {}
 
-SHEET_ID = "1JYR9kfj_Zxd9xHX5AWSlO5X6HusFnb7p9amEUGU55Cg"
+SHEET_ID = "1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc"
 GOOGLE_API_KEY = None
 GOOGLE_SHEETS_ENDPOINT = "https://sheets.googleapis.com/v4/spreadsheets"
 DEFAULT_CELL_RANGE_POINTS = "Leaderboard!A2:B102"
-DEFAULT_CELL_RANGE_LAYERS = "Layers!B1:Z3"
+DEFAULT_CELL_RANGE_LAYERS = "Layers!B1:Z2"
 
 DEFAULT_SHEET_API_URL = (
     f"{GOOGLE_SHEETS_ENDPOINT}/{SHEET_ID}/values:batchGet?"
@@ -171,8 +161,8 @@ def get_dummy_updates(error: bool = False) -> Dict:
     if error:
         return {"dummy_member_1": {"points": 1000, "image_code": "error_code"}}
     return {
-        "dummy_member_1": {"points": 1000, "image_code": "000100"},
-        "dummy_member_2": {"points": 2000, "image_code": "000200"},
+        "dummy_member_1": {"points": 55000, "image_code": "0001"},
+        "dummy_member_2": {"points": 105000, "image_code": "0002"},
     }
 
 
@@ -554,14 +544,14 @@ class TestImageCodeCalculationBehaviour(BaseDynamicNFTTest):
     @pytest.mark.parametrize(
         "points, expected_code",
         [
-            (0, "000000"),
-            (150, "000000"),
-            (999, "000002"),
-            (1000, "000100"),
-            (1999, "000102"),
-            (2000, "000200"),
-            (3750, "000302"),
-            (10000, "000302"),
+            (0, "0000"),
+            (150, "0000"),
+            (51000, "0001"),
+            (99999, "0001"),
+            (120000, "0002"),
+            (145000, "0002"),
+            (150000, "0003"),
+            (200000, "0003"),
         ],
     )
     def test_points_to_code(self, points: float, expected_code: str) -> None:
@@ -825,7 +815,7 @@ class TestImageManager:
 
     def test_generate_invalid_code_non_existent(self) -> None:
         """test_generate_invalid_code_non_existent"""
-        assert not self.manager.generate("090909")  # image does not exist
+        assert not self.manager.generate("0909")  # image does not exist
 
     def teardown_class(self) -> None:
         """Teardown class"""
