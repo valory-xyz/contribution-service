@@ -84,6 +84,11 @@ DUMMY_LEADERBOARD = {
     "0x7B394CD0B75f774c6808cc681b26aC3E5DF96E27": 3500,  # this one does not appear in the dummy members
 }
 
+DUMMY_MEMBER_TO_TOKEN_ID = {
+    member: i
+    for i, member in enumerate(DUMMY_LEADERBOARD)
+}
+
 DUMMY_LAYERS = {
     "classes": {
         0: "bafybeiggubspktr3ujvsj32esaspnqojf4ukvhjdsvl2ko3tg5bfmuq5ju",
@@ -263,7 +268,7 @@ class TestNewMembersBehaviour(BaseDynamicNFTTest):
                     event=Event.DONE,
                 ),
                 {
-                    "mock_response_data": dict(member_to_token_id={}),
+                    "mock_response_data": dict(member_to_token_id=DUMMY_MEMBER_TO_TOKEN_ID),
                     "mock_response_performative": ContractApiMessage.Performative.STATE,
                 },
             ),
