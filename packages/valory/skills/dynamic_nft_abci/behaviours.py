@@ -472,6 +472,13 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                         img_manager.out_path, f"{image_code}.{img_manager.PNG_EXT}"
                     )
                     # Get image hash
+                    # We first save the image as IPFSHashOnly.get() needs an existing file
+                    # Once the image is pushed, it will be deleted
+                    image.save(image_path)
+                    self.context.logger.info(
+                        f"Image {image_code} has been generated and saved at {image_path}"
+                    )
+
                     self.context.logger.info(
                         f"Getting hash for image at {image_path}..."
                     )
@@ -653,13 +660,6 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
             # Combine all other layers on top of the first one
             for i in range(1, len(img_layers)):
                 img_layers[0].paste(img_layers[i], (0, 0), mask=img_layers[i])
-
-            # Save image
-            img_path = Path(self.out_path, f"{image_code}.{self.PNG_EXT}")
-            img_layers[0].save(str(img_path))
-            self.logger.info(
-                f"Image {image_code} has been generated and saved at {img_path}"
-            )
 
             return img_layers[0]
 
