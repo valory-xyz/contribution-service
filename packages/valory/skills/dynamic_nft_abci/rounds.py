@@ -111,19 +111,30 @@ class NewMembersRound(ContributionAbstractRound, CollectSameUntilThresholdRound)
         """Process the end of the block."""
         if self.threshold_reached:
             # Add the new members to the members table. Note that the new members have no points or image_code fields
-            new_members = json.loads(self.most_voted_payload)
+            new_member_to_uri = json.loads(self.most_voted_payload)
 
-            if new_members == NewMembersRound.ERROR_PAYLOAD:
+            if new_member_to_uri == NewMembersRound.ERROR_PAYLOAD:
                 return self.synchronized_data, Event.CONTRACT_ERROR
 
             members = {
-                **new_members,
+                **new_member_to_uri,
                 **self.synchronized_data.members,
+            }
+
+            # Create redirects for new members
+            new_redirects = {}
+            for uri in new_member_to_uri.values():
+                new_redirects[uri] = uri
+
+            redirects = {
+                **new_redirects,
+                **self.synchronized_data.redirects,
             }
 
             synchronized_data = self.synchronized_data.update(
                 synchronized_data_class=SynchronizedData,
                 members=members,
+                redirects=redirects,
             )
             return synchronized_data, Event.DONE
         if not self.is_majority_possible(
