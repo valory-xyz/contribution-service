@@ -815,7 +815,7 @@ class TestImageManager:
 
     def test_generate_invalid_code_non_existent(self) -> None:
         """test_generate_invalid_code_non_existent"""
-        assert not self.manager.generate("090909")  # image does not exist
+        assert not self.manager.generate("0909")  # image does not exist
 
     def teardown_class(self) -> None:
         """Teardown class"""
