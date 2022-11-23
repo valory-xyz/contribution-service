@@ -128,7 +128,6 @@ DUMMY_API_RESPONSE = {
                     "2000:dummy_frame_hash_2",
                     "3000:dummy_frame_hash_3",
                 ],
-                ["0:dummy_bar_hash_0", "200:dummy_bar_hash_1", "500:dummy_bar_hash_2"],
             ],
         },
     ],
