@@ -82,7 +82,7 @@ class HttpHandler(BaseHttpHandler):
             http_dialogue = cast(HttpDialogue, http_dialogues.update(http_msg))
             if http_dialogue is None:
                 self.context.logger.info(
-                    "received invalid http message={}, unidentified dialogue.".format(
+                    "Received invalid http message={}, unidentified dialogue.".format(
                         http_msg
                     )
                 )
