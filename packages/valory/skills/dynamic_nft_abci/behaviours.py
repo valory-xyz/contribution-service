@@ -627,7 +627,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                 )
                 return None
 
-            img_layer_codes = [int(image_code[i : i + 2]) for i in range(0, 6, 2)]
+            img_layer_codes = [int(image_code[i : i + 2]) for i in range(0, len(image_code), 2)]
 
             # Check that code indices do not reference non-existent images
             for layer_index, layer_code in enumerate(img_layer_codes):
