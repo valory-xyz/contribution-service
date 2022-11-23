@@ -112,7 +112,7 @@ DUMMY_API_RESPONSE = {
     "spreadsheetId": "1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc",
     "valueRanges": [
         {
-            "range": "Leaderboard!A2:B102",
+            "range": "Leaderboard!A2:B302",
             "majorDimension": "ROWS",
             "values": [
                 ["0x54EfA9b1865FFE8c528fb375A7A606149598932A", "1500"],
@@ -143,7 +143,7 @@ DUMMY_BAD_API_RESPONSE = {}
 SHEET_ID = "1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc"
 GOOGLE_API_KEY = None
 GOOGLE_SHEETS_ENDPOINT = "https://sheets.googleapis.com/v4/spreadsheets"
-DEFAULT_CELL_RANGE_POINTS = "Leaderboard!A2:B102"
+DEFAULT_CELL_RANGE_POINTS = "Leaderboard!A2:B302"
 DEFAULT_CELL_RANGE_LAYERS = "Layers!B1:Z2"
 
 DEFAULT_SHEET_API_URL = (
