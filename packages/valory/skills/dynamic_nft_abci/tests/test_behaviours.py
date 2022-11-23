@@ -86,16 +86,13 @@ DUMMY_LEADERBOARD = {
 
 DUMMY_LAYERS = {
     "classes": {
-        0: "bafybeiauzyxtnahzul5gk27az7cb3evq5ttfwnxoi366lbrww3pcpthcmi",
-        1000: "bafybeiay7owbbggi4nz4l4aeimzixia3v542iqcuaaiwd4kwsayu54aiqq",
-        2000: "bafybeig35zr5r4e2gyc3c2ifkxnc43thyipmtgkauly7fxscut5r7zin2a",
-        3000: "bafybeiea4in45zhx644yq4mzwrzjtqzzdgp7xv4ngv3ljttiwpgwldonl4",
-        4000: "bafybeif6oacd3pkbpn4ij4daqpopjdehv2dv2tejpazwkdcs4cfvedlrvy",
+        0: "bafybeiggubspktr3ujvsj32esaspnqojf4ukvhjdsvl2ko3tg5bfmuq5ju",
     },
     "frames": {
-        0: "bafybeifg2owpyplscve2sr4yjcjg6rxsooif2jqt4qmwvrbu36n5ehancm",
-        1000: "bafybeige2swjq6fq6yvbvdhylkvfl7r3kv6nzwzqmkgb5g27ifziro342q",
-        2000: "bafybeigyzhrhiybdsg3z7qn2nbqiyk52u4ytd6ndl6ixrdg3tk5g6owtsi",
+        0: "bafybeiaotq73a2cceb5ywdvu63haww65c24l3mnbxg3ensoa3gting5ilm",
+        50000: "bafybeig5jxzpl4ruhry3kkno47fcagwwze7ynlj2jnhjmmxpxrh4iyqyiu",
+        100000: "bafybeidtjvtpioqekbt7clp6gohuoa2mah5oxytntji6ayqt3t6tsouzqi",
+        150000: "bafybeia7gneqv72nwhmomccdxzizc2kgtqhllxpn3y3nfakoc3uvzvqh7y",
     },
 }
 
