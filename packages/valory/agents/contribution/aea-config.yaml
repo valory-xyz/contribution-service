@@ -9,7 +9,7 @@ fingerprint:
   tests/__init__.py: bafybeicmv3jjcqcdnmubfmrgdgeyic3nkm77z4mutsyuo34hpddwupofre
   tests/helpers/__init__.py: bafybeiauwuw4a4wxqacqqkkk52ktps2qedadhypvh3ex7uqs7qaqrpygmy
   tests/helpers/constants.py: bafybeibf5wsgz3wt3dc7hm3pk3cyz3y7e6q22ymwlkli3d5ixvrjdafpzq
-  tests/helpers/data/json_server/data.json: bafybeigyny6z7gkmvoolvz4bhsighz5rrwsxs5vtr2gaeb3tsfi53cfqku
+  tests/helpers/data/json_server/data.json: bafybeiebfpjkla27d5pcgrwv5p4npubr33ts64qy6o5v4p7nrmly7vtes4
   tests/helpers/docker.py: bafybeiddzj7nqnsr2zegeu7mf7wlsyeierr7wr5hv3lucbjbwgbandpywq
   tests/helpers/fixtures.py: bafybeibbzank7chfncg6ifb4r3lvnttahixu2cq7cs6nnglbeolwlbrsvm
   tests/test_contribution.py: bafybeiggwemedzugchqc4byjamszoz7mjtbdsvowjz6zvdhulfwmtsbjgi
@@ -27,11 +27,11 @@ protocols:
 - valory/http:1.0.0:bafybeigzqo2zaakcjtzzsm6dh4x73v72xg6ctk6muyp5uq5ueb7y34fbxy
 skills:
 - valory/abstract_abci:0.1.0:bafybeicog4eierjad4f542ubhe3ez7sxgrsna7t2e5pci2hncpq5vckw4e
-- valory/abstract_round_abci:0.1.0:bafybeid3sx66tzs6mmwu52tlaqdycfszzpetgybzu34gagfocg5bmivh7e
-- valory/contribution_skill_abci:0.1.0:bafybeicfetfzpj56nhkq4ewxxk7ygefewofrnfuacde6rsyqw7hyrbbmn4
-- valory/dynamic_nft_abci:0.1.0:bafybeidocruvjkgwg4skyqlfmtzqr6l2gmtvcdtirfl6vc7ubxfvlg5cqa
-- valory/registration_abci:0.1.0:bafybeifxquhkccygjawoqyj26b3k6rxizaa7geoef7oyet2baojjk4gy2q
-- valory/reset_pause_abci:0.1.0:bafybeibnziujsv7toespbguradspw52rfrhhgdojcbznckqia2jwm2jvwm
+- valory/abstract_round_abci:0.1.0:bafybeia5meor4p77p62khoddlqj4vg5rxiwi3djxc7feusgein6adi7t7m
+- valory/contribution_skill_abci:0.1.0:bafybeigm4muuvvu53zhpuhcoulpa6nuccgrl3zd63hghiumvexlvpcdpci
+- valory/dynamic_nft_abci:0.1.0:bafybeiaijlshh5gwnkqa4tesxw4gcc2obpb75qyxovrd6eqc457rxjxbrm
+- valory/registration_abci:0.1.0:bafybeib2cr65zmunztkr3miy4sa2pwlsj2dsi4pz7rwtgg75xczc7hrj3q
+- valory/reset_pause_abci:0.1.0:bafybeie3qy5v3ggc54bmrubd27kbofrkw6srgbggo3b6ewssw3pbxjuvla
 default_ledger: ethereum
 required_ledgers:
 - ethereum
