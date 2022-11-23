@@ -457,6 +457,8 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                         update["image_code"]
                     ] = img_manager.generate(update["image_code"])
 
+            # If a single image fails to be generated we set this round as failed
+            # This could have to do with corrupted API data so we do this to stay on the safe side
             if None in new_image_code_to_images.values():
                 self.context.logger.info(
                     "An error happened while generating the new images"
