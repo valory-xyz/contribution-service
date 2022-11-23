@@ -116,16 +116,10 @@ class NewMembersRound(ContributionAbstractRound, CollectSameUntilThresholdRound)
             if new_members == NewMembersRound.ERROR_PAYLOAD:
                 return self.synchronized_data, Event.CONTRACT_ERROR
 
-            # TOFIX: synchronized_data is not usable on the first round/behaviour
-            try:
-                members = {
-                    **new_members,
-                    **self.synchronized_data.members,
-                }
-            except AttributeError:
-                members = {
-                    **new_members,
-                }
+            members = {
+                **new_members,
+                **self.synchronized_data.members,
+            }
 
             synchronized_data = self.synchronized_data.update(
                 synchronized_data_class=SynchronizedData,
