@@ -7,21 +7,15 @@ license: Apache-2.0
 aea_version: '>=1.0.0, <2.0.0'
 fingerprint:
   __init__.py: bafybeif56b2yk2pzo6njoexydkvwkl5tiaj7p76542ljnrijm3urhtnsxq
-  behaviours.py: bafybeibbqca2nu2ujxvtyucxedmoirndcehb7icjvtefhjvisxejzis26y
-  data/layers/bars/100.png: bafybeigoziwjitryao5nexnffiqaeheeng6ghhc334ev5twc2oeyf6f5ty
-  data/layers/bars/1000.png: bafybeiczopqs3f2mrxkf4jrlhcu7sszx45qcchbm23gdz2awoi6afgfpgi
-  data/layers/bars/10000.png: bafybeifvzrholq2qyu5pb4nj7lxvqjkpmbda2i6bfd7dcuf7jsmbfvlfmu
-  data/layers/classes/Determinnd.png: bafybeidq3dslr742cgu2stwx5bbsnni4mjojtlkzowymy2662b4p5yk3y4
-  data/layers/classes/Gli.png: bafybeibijhqc22lmmzkacpheeyj2jgqzwm5fzvvg6pba7izglsmi35s4sy
-  data/layers/classes/Kiyoas-16.png: bafybeiamt63gmci573josdswuo5uxhcp6padclopfek7wxcldl2owgzx4a
-  data/layers/classes/Rrhets.png: bafybeie4uj7cn4p5u4axqlcax2hkippoaiucyky4q6mt7hdipejbuxbqpi
-  data/layers/classes/Toyotrs.png: bafybeid5v36zpxkxbk7l2cv3sxollt55xc7n3vfsv5qg3mkqkxqrji5i24
-  data/layers/frames/01.png: bafybeicgg6m7j3eu5akua55mlxohsbqvgonkmk2qqflslrtcdlec6m6ty4
-  data/layers/frames/02.png: bafybeia6thhn2qc3rmj2dnlhy5oov7bvtpjlosesu54ybnuavtl2725h7i
-  data/layers/frames/03.png: bafybeigstc52zkvx3mwzw2dwc3726amgpolwbdxfoylpupnk6ut5ya357a
+  behaviours.py: bafybeigymsrkefio74urjmyvb35fzvrxoontyj5wzkdp6lxcmsquhdjo6e
+  data/layers/classes/0.png: bafybeidq3dslr742cgu2stwx5bbsnni4mjojtlkzowymy2662b4p5yk3y4
+  data/layers/frames/0.png: bafybeicy22hgzs7kwuw7wswht2q3gmv4daxyoga2mvr5f644lgzfconpn4
+  data/layers/frames/100000.png: bafybeia6thhn2qc3rmj2dnlhy5oov7bvtpjlosesu54ybnuavtl2725h7i
+  data/layers/frames/150000.png: bafybeigstc52zkvx3mwzw2dwc3726amgpolwbdxfoylpupnk6ut5ya357a
+  data/layers/frames/50000.png: bafybeicgg6m7j3eu5akua55mlxohsbqvgonkmk2qqflslrtcdlec6m6ty4
   dialogues.py: bafybeifxlkz47umd63ojgydccujs4j2kwhfh32bdhxcjdodm5brvc25fjq
   fsm_specification.yaml: bafybeicyqbndd5bzjsdckjbpb2qhkjfwa4leovfofm5ugvikttp56tygey
-  handlers.py: bafybeifxbw4xd7klttdc2mcpcmnpz6rvtnkfcf3si6hipc6np4wjoul54u
+  handlers.py: bafybeicjfb6ffh4fkl6eyprhfmbclnt72biir3eay4ngp6kbmvjw6ntr24
   io_/__init__.py: bafybeidxth2otiyp5gfk2l3zjvnfktgrtpwzsknihkef3v2lhwbkgum3ea
   io_/load.py: bafybeifd7ib4lktvgv6rphk6sblkndn3klmzd5js62h2gzxlubjcmlf6jy
   io_/store.py: bafybeih3wa6quhstymsqcsy7jejpj4fx6crq6gs72dzs6svjklu7wushtq
@@ -29,12 +23,12 @@ fingerprint:
   payloads.py: bafybeiaeibgx4faww6sjrqxcehq5a3h54upqqifkbptr6eq57jvlyohxsa
   rounds.py: bafybeietpzib6f6c24anr62i7ixmd3pieurzoxihv2hfmpdnhygchsq3jm
   tests/__init__.py: bafybeia2xqlacp44lylwlkf7f7ci6m3yshppv3vusgcdjpj4bbcbnuhvla
-  tests/test_behaviours.py: bafybeifv4b4ndxvceqsmcjjlew7j65bxwp7gqwjn5swhye46vj2mjmv2uu
+  tests/test_behaviours.py: bafybeidjwegdmcfpwzl52xg7jtnk35gd5me22px45f5gf5z2tr2pr67ow4
   tests/test_dialogues.py: bafybeibfzhpyz2kdokjkz76oxz4sc6nw26dw5pgx5fwvloyfyl2inixwdi
   tests/test_dummy_e2e.py: bafybeidrzn2wzng62jptkf2zjtlhup7bu74ptrlwmdwh7lgwuubk5dbm4q
-  tests/test_handlers.py: bafybeiahzg4ir7lvbl3duuvghbtn4tny7nsq2wz4fxjqhmet7rw4l4ih6u
+  tests/test_handlers.py: bafybeic7pccmoh34ltoae4m2gezc3hakylqr6heumgt7yp7chppk7ohdd4
   tests/test_io/__init__.py: bafybeid3sssvbbyju4snrdssxyafleuo57sqyuepl25btxcbuj3p5oonsm
-  tests/test_io/conftest.py: bafybeicnntywbba52xbsurlj55s7ppjqm7p3ngj3u5dsehwijm5veegywi
+  tests/test_io/conftest.py: bafybeid6tmrx6nogml5dlqkqwtmuqjsqwaejskthj7avxjt5mkbbajpf4u
   tests/test_io/test_load.py: bafybeidljwrzoadvpbxbyiesdjmw6a26t4lyidu2wmyy4pjqdrrpqq6ajq
   tests/test_io/test_store.py: bafybeih72breobvnw7m4t5ds3ludx7e3mgki6falajofqbanu4gohkirx4
   tests/test_models.py: bafybeidqf7caad3zke6xzefmfoufce6bfn5bqgbiy4racghm5w67yddrea
