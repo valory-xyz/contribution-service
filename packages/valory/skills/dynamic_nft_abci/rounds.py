@@ -124,7 +124,6 @@ class NewMembersRound(ContributionAbstractRound, CollectSameUntilThresholdRound)
             synchronized_data = self.synchronized_data.update(
                 synchronized_data_class=SynchronizedData,
                 members=members,
-                most_voted_new_members=new_members,
             )
             return synchronized_data, Event.DONE
         if not self.is_majority_possible(
