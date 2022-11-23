@@ -7,7 +7,7 @@ license: Apache-2.0
 aea_version: '>=1.0.0, <2.0.0'
 fingerprint:
   __init__.py: bafybeif56b2yk2pzo6njoexydkvwkl5tiaj7p76542ljnrijm3urhtnsxq
-  behaviours.py: bafybeiagbc2xovtjygfv2gzm427axn2qgpcp5x3q4bwdgyienq3bseulwi
+  behaviours.py: bafybeibs5azzk2vduwxy4ipwkyle2mhefjlf4shaoddslotqazrgqm6574
   data/layers/classes/0.png: bafybeidq3dslr742cgu2stwx5bbsnni4mjojtlkzowymy2662b4p5yk3y4
   data/layers/frames/0.png: bafybeicy22hgzs7kwuw7wswht2q3gmv4daxyoga2mvr5f644lgzfconpn4
   data/layers/frames/100000.png: bafybeia6thhn2qc3rmj2dnlhy5oov7bvtpjlosesu54ybnuavtl2725h7i
@@ -19,9 +19,9 @@ fingerprint:
   io_/__init__.py: bafybeidxth2otiyp5gfk2l3zjvnfktgrtpwzsknihkef3v2lhwbkgum3ea
   io_/load.py: bafybeifd7ib4lktvgv6rphk6sblkndn3klmzd5js62h2gzxlubjcmlf6jy
   io_/store.py: bafybeih3wa6quhstymsqcsy7jejpj4fx6crq6gs72dzs6svjklu7wushtq
-  models.py: bafybeifngg4hykvzvtoephdd4tj7ejd7dtgbrbwwryj3ag3xknsvysht6e
+  models.py: bafybeifevmikxr723bjy4yk7uff3catyo2o3wtoegqvorvkrv54dxnuoei
   payloads.py: bafybeiaeibgx4faww6sjrqxcehq5a3h54upqqifkbptr6eq57jvlyohxsa
-  rounds.py: bafybeia6qzat33fxa26p2teo5g5aiyqqrdgrn5kunpikfw7m7vopxd5u74
+  rounds.py: bafybeihhubmtangem4fgfwz23juwyciexpgsa3r2haz7p22ufpehmdubwi
   tests/__init__.py: bafybeia2xqlacp44lylwlkf7f7ci6m3yshppv3vusgcdjpj4bbcbnuhvla
   tests/test_behaviours.py: bafybeigdn2d2kpo5qe5xsfd5nwxyvm7mm7dfnr5txagsko5fcomh4zswla
   tests/test_dialogues.py: bafybeibfzhpyz2kdokjkz76oxz4sc6nw26dw5pgx5fwvloyfyl2inixwdi
@@ -85,6 +85,7 @@ models:
     class_name: LedgerApiDialogues
   params:
     args:
+      basic_image_cid: bafybeicpygo4r6qk4ypckeur7v6gnmghli4wglevgldgpimkvl27i7gwqq
       cleanup_history_depth: 1
       cleanup_history_depth_current: null
       consensus:
@@ -108,6 +109,7 @@ models:
           version: {}
         voting_power: '10'
       ipfs_domain_name: /dns/registry.autonolas.tech/tcp/443/https
+      ipfs_gateway_base_url: https://gateway.ipfs.io/ipfs/
       keeper_timeout: 30.0
       leaderboard_api_key: null
       leaderboard_base_endpoint: https://sheets.googleapis.com/v4/spreadsheets

@@ -99,9 +99,7 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
             member_to_token_id = yield from self.get_member_to_token_id()
 
             if member_to_token_id == NewMembersRound.ERROR_PAYLOAD:
-                new_member_to_uri = json.dumps(
-                    NewMembersRound.ERROR_PAYLOAD, sort_keys=True
-                )
+                payload_data = json.dumps(NewMembersRound.ERROR_PAYLOAD, sort_keys=True)
             else:
                 member_to_nft_uri = {
                     member: f"{self.params.token_uri_base}{token_id}"
@@ -110,22 +108,33 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
                 old_members = set(self.synchronized_data.members.keys())
 
                 # Add new members only
-                new_member_to_uri = json.dumps(
-                    {
-                        member: {"uri": uri, "points": None, "image_code": None}
-                        for member, uri in member_to_nft_uri.items()
-                        if member not in old_members
-                    },
-                    sort_keys=True,
-                )
+                new_member_to_uri = {
+                    member: {"uri": uri, "points": None, "image_code": None}
+                    for member, uri in member_to_nft_uri.items()
+                    if member not in old_members
+                }
                 self.context.logger.info(
                     f"Got the new member list: {new_member_to_uri}"
+                )
+
+                # Add new redirects
+                basic_image_url = f"{self.context.params.ipfs_gateway_base_url}{self.context.params.basic_image_cid}/0000.png"
+                new_redirects = {}
+                for uri in new_member_to_uri.values():
+                    new_redirects[uri] = basic_image_url
+
+                payload_data = json.dumps(
+                    {
+                        "new_member_to_uri": new_member_to_uri,
+                        "new_redirects": new_redirects,
+                    },
+                    sort_keys=True,
                 )
 
         with self.context.benchmark_tool.measure(
             self.behaviour_id,
         ).consensus():
-            payload = NewMembersPayload(self.context.agent_address, new_member_to_uri)
+            payload = NewMembersPayload(self.context.agent_address, payload_data)
             yield from self.send_a2a_transaction(payload)
             yield from self.wait_until_round_end()
 
