@@ -115,12 +115,12 @@ class NewMembersRound(ContributionAbstractRound, CollectSameUntilThresholdRound)
             if payload == NewMembersRound.ERROR_PAYLOAD:
                 return self.synchronized_data, Event.CONTRACT_ERROR
 
-            new_member_to_uri = payload["new_member_to_uri"]
+            new_member_to_data = payload["new_member_to_data"]
             new_redirects = payload["new_redirects"]
 
             # Add the new members to the members table. Note that the new members have no points or image_code fields
             members = {
-                **new_member_to_uri,
+                **new_member_to_data,
                 **self.synchronized_data.members,
             }
 
