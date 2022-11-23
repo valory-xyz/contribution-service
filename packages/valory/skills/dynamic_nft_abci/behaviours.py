@@ -24,7 +24,7 @@ import os
 import shutil
 from logging import Logger
 from pathlib import Path
-from typing import Any, Generator, List, Optional, Set, Tuple, Type, cast
+from typing import Any, Dict, Generator, List, Optional, Set, Tuple, Type, cast
 from urllib.parse import urlparse
 
 from PIL import Image
@@ -171,16 +171,26 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
             data = yield from self.get_data()
             self.context.logger.info(f"Received points from Leaderboard API: {data}")
 
+            # We dump the json into a string, notice the sort_keys=True.
+            # We MUST ensure that they keys are ordered in the same way,
+            # otherwise the payload MAY end up being different on different
+            # agents. This can happen in case the API responds with keys
+            # in different order, which can happen since there is no requirement
+            # against this.
+            deterministic_body = json.dumps(data, sort_keys=True)
+
         with self.context.benchmark_tool.measure(
             self.behaviour_id,
         ).consensus():
-            payload = LeaderboardObservationPayload(self.context.agent_address, data)
+            payload = LeaderboardObservationPayload(
+                self.context.agent_address, deterministic_body
+            )
             yield from self.send_a2a_transaction(payload)
             yield from self.wait_until_round_end()
 
         self.set_done()
 
-    def get_data(self) -> Generator[None, None, str]:
+    def get_data(self) -> Generator[None, None, Dict]:
         """
         Get the data from the Leaderboard API.
 
@@ -209,11 +219,15 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
                 f"Could not retrieve data from the Leaderboard API. "
                 f"Received status code {response.status_code}."
             )
-            return "{}"
+            return LeaderboardObservationRound.ERROR_PAYLOAD
 
         try:
             # Parse the response bytes into a dict
             response_json = json.loads(response.body)
+
+            if not self.validate_api_data(response_json):
+                self.context.logger.error("API data is not valid.")
+                return LeaderboardObservationRound.ERROR_PAYLOAD
 
             # We retrieve both leaderboard and layer data in the same call
             # so we need to iterate it and identify each one by its "valueRanges" field
@@ -270,26 +284,19 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
                 f"Could not parse response from the Leaderboard API, "
                 f"the following error was encountered {type(e).__name__}: {e}"
             )
-            return "{}"
+            return LeaderboardObservationRound.ERROR_PAYLOAD
 
         except Exception as e:  # pylint: disable=broad-except
             self.context.logger.error(
                 f"An unexpected error was encountered while parsing the Leaderboard response "
                 f"{type(e).__name__}: {e}"
             )
-            return "{}"
+            return LeaderboardObservationRound.ERROR_PAYLOAD
 
-        # We dump the json into a string, notice the sort_keys=True.
-        # We MUST ensure that they keys are ordered in the same way,
-        # otherwise the payload MAY end up being different on different
-        # agents. This can happen in case the API responds with keys
-        # in different order, which can happen since there is no requirement
-        # against this.
-        deterministic_body = json.dumps(response_body, sort_keys=True)
-        return deterministic_body
+        return response_body
 
     @staticmethod
-    def validate_api_data(data):
+    def fix_api_data(data: Dict) -> Dict:
         """Fixes format problems derived from serialization and de-serialization.
 
         :param data: the source data
@@ -306,6 +313,16 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
         data["layers"] = fixed_layer_data
 
         return data
+
+    @staticmethod
+    def validate_api_data(data: Dict) -> bool:
+        """Validates the API data format.
+
+        :param data: the source data
+        :returns: True on valid data, False otherwise
+        """
+
+        return True
 
 
 class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
@@ -325,7 +342,7 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
         with self.context.benchmark_tool.measure(
             self.behaviour_id,
         ).local():
-            api_data = LeaderboardObservationBehaviour.validate_api_data(
+            api_data = LeaderboardObservationBehaviour.fix_api_data(
                 self.synchronized_data.most_voted_api_data
             )
             leaderboard = api_data["leaderboard"]
@@ -531,7 +548,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
 
     def update_layers(self):
         """Updates local layer if they dont match the ones from the leaderboard API"""
-        api_data = LeaderboardObservationBehaviour.validate_api_data(
+        api_data = LeaderboardObservationBehaviour.fix_api_data(
             self.synchronized_data.most_voted_api_data
         )
         api_layer_data = api_data["layers"]
