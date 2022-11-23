@@ -9,7 +9,7 @@ fingerprint:
   tests/__init__.py: bafybeicmv3jjcqcdnmubfmrgdgeyic3nkm77z4mutsyuo34hpddwupofre
   tests/helpers/__init__.py: bafybeiauwuw4a4wxqacqqkkk52ktps2qedadhypvh3ex7uqs7qaqrpygmy
   tests/helpers/constants.py: bafybeibf5wsgz3wt3dc7hm3pk3cyz3y7e6q22ymwlkli3d5ixvrjdafpzq
-  tests/helpers/data/json_server/data.json: bafybeicfau2zdt5jhpwdguutf5nxyxbtyrf3xqegdyyxemifcyurup6se4
+  tests/helpers/data/json_server/data.json: bafybeigyny6z7gkmvoolvz4bhsighz5rrwsxs5vtr2gaeb3tsfi53cfqku
   tests/helpers/docker.py: bafybeiddzj7nqnsr2zegeu7mf7wlsyeierr7wr5hv3lucbjbwgbandpywq
   tests/helpers/fixtures.py: bafybeibbzank7chfncg6ifb4r3lvnttahixu2cq7cs6nnglbeolwlbrsvm
   tests/test_contribution.py: bafybeiggwemedzugchqc4byjamszoz7mjtbdsvowjz6zvdhulfwmtsbjgi
