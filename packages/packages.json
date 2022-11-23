@@ -1,10 +1,10 @@
 {
     "dev": {
         "contract/valory/ERC721Collective/0.1.0": "bafybeibbfvoexfmsp6vr6kvvfn4yddhunhtlhu2z2brzt3an7wuljc7vja",
-        "skill/valory/dynamic_nft_abci/0.1.0": "bafybeidocruvjkgwg4skyqlfmtzqr6l2gmtvcdtirfl6vc7ubxfvlg5cqa",
-        "skill/valory/contribution_skill_abci/0.1.0": "bafybeicfetfzpj56nhkq4ewxxk7ygefewofrnfuacde6rsyqw7hyrbbmn4",
-        "agent/valory/contribution/0.1.0": "bafybeiayaahuzifjjyooc42c3w6g2niahgmfwikwh7qftomoffv63e3mhq",
-        "service/valory/contribution/0.1.0": "bafybeig36i7gzu2ofek37tmqmfrz2d6u5znjaycnb5y42odx5lviodwosy"
+        "skill/valory/dynamic_nft_abci/0.1.0": "bafybeidwdmhlkfmvv72fbk5oop4axrgaiekgh6cxxsu7tllnk4ampu52mi",
+        "skill/valory/contribution_skill_abci/0.1.0": "bafybeicpihozbnbiv42xamozxhne7yb34h3poj7h5z6ptoj3otbpkeescu",
+        "agent/valory/contribution/0.1.0": "bafybeide2cx7wwon5yxp5vtpfid2zzsng5avmn2ehvfmzokcgiqgssnmom",
+        "service/valory/contribution/0.1.0": "bafybeiecwag7zwkxapkzh6knj2rligjqc22tzelkblhlgqgufr2ba7aj3u"
     },
     "third_party": {
         "protocol/open_aea/signing/1.0.0": "bafybeiambqptflge33eemdhis2whik67hjplfnqwieoa6wblzlaf7vuo44",
@@ -15,9 +15,9 @@
         "protocol/valory/acn/1.1.0": "bafybeifontek6tvaecatoauiule3j3id6xoktpjubvuqi3h2jkzqg7zh7a",
         "protocol/valory/tendermint/0.1.0": "bafybeihcnjhovvyyfbkuw5sjyfx2lfd4soeocfqzxz54g67333m6nk5gxq",
         "skill/valory/abstract_abci/0.1.0": "bafybeicog4eierjad4f542ubhe3ez7sxgrsna7t2e5pci2hncpq5vckw4e",
-        "skill/valory/reset_pause_abci/0.1.0": "bafybeibnziujsv7toespbguradspw52rfrhhgdojcbznckqia2jwm2jvwm",
-        "skill/valory/registration_abci/0.1.0": "bafybeifxquhkccygjawoqyj26b3k6rxizaa7geoef7oyet2baojjk4gy2q",
-        "skill/valory/abstract_round_abci/0.1.0": "bafybeid3sx66tzs6mmwu52tlaqdycfszzpetgybzu34gagfocg5bmivh7e",
+        "skill/valory/reset_pause_abci/0.1.0": "bafybeie3qy5v3ggc54bmrubd27kbofrkw6srgbggo3b6ewssw3pbxjuvla",
+        "skill/valory/registration_abci/0.1.0": "bafybeib2cr65zmunztkr3miy4sa2pwlsj2dsi4pz7rwtgg75xczc7hrj3q",
+        "skill/valory/abstract_round_abci/0.1.0": "bafybeia5meor4p77p62khoddlqj4vg5rxiwi3djxc7feusgein6adi7t7m",
         "contract/valory/service_registry/0.1.0": "bafybeihs42gbxnncxyh5wygbfgz3ulkjzojse4wznylzczt5neksba7tfq",
         "connection/valory/abci/0.1.0": "bafybeics24v7csn2xwyrkdgthrzdbuqutssx3mn572z2tavyr33banqz6u",
         "connection/valory/http_client/0.23.0": "bafybeihz3tubwado7j3wlivndzzuj3c6fdsp4ra5r3nqixn3ufawzo3wii",
