@@ -179,6 +179,15 @@ IMAGE_PATH = Path(
     ImageGenerationBehaviour.ImageManager.IMAGES_DIR,
 )
 
+IPFS_GATEWAY_BASE_URL = "https://gateway.ipfs.io/ipfs/"
+
+IMAGE_CODE_TO_HASHES = {
+    "0000": "bafybeid7qdbwj4rpyqtb33zjpniopaq5e5phdl7kkv6qjbsak73de6lf2y",
+    "0001": "bafybeign6bfqbpeukak5q7koai52dtjill3mu5pewnmtkn7g2d5ivwyuyy",
+    "0002": "bafybeidsqg5oidpi556vfsgdpqc6olj4ftmrlg46qzasan4beidrw5z77m",
+    "0003": "bafybeidsqu4tlo5vnyvtdczpvh43mdhphfo5jwm7r5rwbpshbp4ukk3kri",
+}
+
 
 def get_dummy_updates(error: bool = False) -> Dict:
     """Dummy updates"""
@@ -672,7 +681,20 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
                 {
                     "status_code": 200,
                 },
-            )
+            ),
+            (
+                BehaviourTestCase(
+                    "Happy path: images not in registry",
+                    initial_data=dict(
+                        most_voted_member_updates=get_dummy_updates(),
+                        most_voted_api_data=DUMMY_API_DATA,
+                    ),
+                    event=Event.DONE,
+                ),
+                {
+                    "status_code": 404,
+                },
+            ),
         ],
     )
     def test_run(self, test_case: BehaviourTestCase, kwargs: Any) -> None:
@@ -684,6 +706,31 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
             open(Path(self.image_dir, f"{test_code}.png"), "w").close()
 
         self.fast_forward(test_case.initial_data)
+        self.behaviour.act_wrapper()
+
+        # Mock the IPFS checks
+        for img_code in test_codes:
+
+            img_hash = IMAGE_CODE_TO_HASHES[img_code]
+
+            url = f"{IPFS_GATEWAY_BASE_URL}{img_hash}/{img_code}.png"
+
+            self.mock_http_request(
+                request_kwargs=dict(
+                    method="GET",
+                    headers="",
+                    version="",
+                    url=url,
+                ),
+                response_kwargs=dict(
+                    version="",
+                    status_code=kwargs.get("status_code"),
+                    status_text="",
+                    headers="",
+                    body=b"",
+                ),
+            )
+
         self.behaviour.act_wrapper()
         self.mock_a2a_transaction()
         self._test_done_flag_set()
@@ -724,6 +771,31 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
 
             self.fast_forward(test_case.initial_data)
             self.behaviour.act_wrapper()
+
+            # Mock the IPFS checks
+            for img_code in test_codes:
+
+                img_hash = IMAGE_CODE_TO_HASHES[img_code]
+
+                url = f"{IPFS_GATEWAY_BASE_URL}{img_hash}/{img_code}.png"
+
+                self.mock_http_request(
+                    request_kwargs=dict(
+                        method="GET",
+                        headers="",
+                        version="",
+                        url=url,
+                    ),
+                    response_kwargs=dict(
+                        version="",
+                        status_code=200,
+                        status_text="",
+                        headers="",
+                        body=b"",
+                    ),
+                )
+            self.behaviour.act_wrapper()
+
             self.mock_a2a_transaction()
             self._test_done_flag_set()
             self.end_round(done_event=test_case.event)
@@ -793,6 +865,31 @@ class TestImageGenerationErrorBehaviour(BaseDynamicNFTTest):
 
         self.fast_forward(test_case.initial_data)
         self.behaviour.act_wrapper()
+
+        # Mock the IPFS checks
+        for img_code in test_codes:
+
+            img_hash = IMAGE_CODE_TO_HASHES[img_code]
+
+            url = f"{IPFS_GATEWAY_BASE_URL}{img_hash}/{img_code}.png"
+
+            self.mock_http_request(
+                request_kwargs=dict(
+                    method="GET",
+                    headers="",
+                    version="",
+                    url=url,
+                ),
+                response_kwargs=dict(
+                    version="",
+                    status_code=200,
+                    status_text="",
+                    headers="",
+                    body=b"",
+                ),
+            )
+        self.behaviour.act_wrapper()
+
         self.mock_a2a_transaction()
         self._test_done_flag_set()
         self.end_round(done_event=test_case.event)
@@ -821,6 +918,31 @@ class TestImageGenerationErrorBehaviour(BaseDynamicNFTTest):
 
         self.fast_forward(test_case.initial_data)
         self.behaviour.act_wrapper()
+
+        # Mock the IPFS checks
+        for img_code in test_codes[:1]:  # We'll fail on the first try
+
+            img_hash = IMAGE_CODE_TO_HASHES[img_code]
+
+            url = f"{IPFS_GATEWAY_BASE_URL}{img_hash}/{img_code}.png"
+
+            self.mock_http_request(
+                request_kwargs=dict(
+                    method="GET",
+                    headers="",
+                    version="",
+                    url=url,
+                ),
+                response_kwargs=dict(
+                    version="",
+                    status_code=404,
+                    status_text="",
+                    headers="",
+                    body=b"",
+                ),
+            )
+        # self.behaviour.act_wrapper()
+
         self.mock_a2a_transaction()
         self._test_done_flag_set()
         self.end_round(done_event=test_case.event)

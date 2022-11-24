@@ -537,7 +537,10 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                     self.context.logger.info(
                         f"Checking if image already exists in the IPFS registry"
                     )
-                    if self.check_ipfs_image(image_hash, image_code):
+                    image_in_ipfs = yield from self.check_ipfs_image(
+                        image_hash, image_code
+                    )
+                    if image_in_ipfs:
                         continue
 
                     # Send
