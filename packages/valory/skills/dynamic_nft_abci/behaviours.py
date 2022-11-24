@@ -492,13 +492,17 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
             # Get the image codes that have been never generated
             new_image_code_to_images = {}
             for update in self.synchronized_data.most_voted_member_updates.values():
-                if update["image_code"] not in self.synchronized_data.images:
-                    self.context.logger.info(
-                        f"Image {update['image_code']} does not exist. Generating..."
-                    )
-                    new_image_code_to_images[
-                        update["image_code"]
-                    ] = img_manager.generate(update["image_code"])
+
+                # Image already exists in the database
+                if update["image_code"] in self.synchronized_data.images:
+                    continue
+
+                self.context.logger.info(
+                    f"Image {update['image_code']} does not exist. Generating..."
+                )
+                new_image_code_to_images[update["image_code"]] = img_manager.generate(
+                    update["image_code"]
+                )
 
             # If a single image fails to be generated we set this round as failed
             # This could have to do with corrupted API data so we do this to stay on the safe side
@@ -528,6 +532,13 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                         f"Getting hash for image at {image_path}..."
                     )
                     image_hash = IPFSHashOnly.get(str(image_path))
+
+                    # Check whether the image is already present in the registry
+                    self.context.logger.info(
+                        f"Checking if image already exists in the IPFS registry"
+                    )
+                    if self.check_ipfs_image(image_hash, image_code):
+                        continue
 
                     # Send
                     self.context.logger.info(
@@ -637,6 +648,30 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
             )
             return False
 
+        return True
+
+    def check_ipfs_image(
+        self, img_hash: str, img_code: str
+    ) -> Generator[None, None, bool]:
+        """Check that the given ipfs hash exists in the registry
+
+        :param img_hash: the image hash
+        :param img_code: the image code
+        :returns: True if image is present in the registry, False otherwise
+        """
+        img_url = f"{self.params.ipfs_gateway_base_url}{img_hash}/{img_code}.{self.ImageManager.PNG_EXT}"
+
+        response = yield from self.get_http_response(
+            method="GET",
+            url=img_url,
+        )
+        if response.status_code != 200:
+            self.context.logger.error(
+                f"Could not check image at {img_url}, code={response.status_code}"
+            )
+            return False
+
+        self.context.logger.error(f"Image already exists at {img_url}")
         return True
 
     class ImageManager:
