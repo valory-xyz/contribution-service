@@ -151,4 +151,6 @@ models:
 dependencies:
   Pillow:
     version: ==9.2.0
+  jsonschema:
+    version: ==3.2.0
 is_abstract: true
