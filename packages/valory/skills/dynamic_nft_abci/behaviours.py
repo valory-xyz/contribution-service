@@ -27,6 +27,7 @@ from pathlib import Path
 from typing import Any, Dict, Generator, List, Optional, Set, Tuple, Type, cast
 from urllib.parse import urlparse
 
+import jsonschema
 from PIL import Image
 from aea.configurations.constants import DEFAULT_LEDGER
 from aea.crypto.ledger_apis import LedgerApis
@@ -61,6 +62,7 @@ from packages.valory.skills.dynamic_nft_abci.rounds import (
     NewMembersRound,
     SynchronizedData,
 )
+from packages.valory.skills.dynamic_nft_abci.tools import SHEET_API_SCHEMA
 
 
 NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
@@ -226,7 +228,7 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
             response_json = json.loads(response.body)
 
             if not self.validate_api_data(response_json):
-                self.context.logger.error("API data is not valid.")
+                self.context.logger.error(f"API data is not valid:\n{response_json}")
                 return LeaderboardObservationRound.ERROR_PAYLOAD
 
             # We retrieve both leaderboard and layer data in the same call
@@ -279,13 +281,6 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
 
                     response_body["layers"] = layers
 
-        except (KeyError, ValueError, TypeError) as e:
-            self.context.logger.error(
-                f"Could not parse response from the Leaderboard API, "
-                f"the following error was encountered {type(e).__name__}: {e}"
-            )
-            return LeaderboardObservationRound.ERROR_PAYLOAD
-
         except Exception as e:  # pylint: disable=broad-except
             self.context.logger.error(
                 f"An unexpected error was encountered while parsing the Leaderboard response "
@@ -314,13 +309,30 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
 
         return data
 
-    @staticmethod
-    def validate_api_data(data: Dict) -> bool:
+    def validate_api_data(self, data: Dict) -> bool:
         """Validates the API data format.
 
         :param data: the source data
         :returns: True on valid data, False otherwise
         """
+
+        # Schema validation
+        try:
+            jsonschema.validate(
+                instance=data,
+                schema=SHEET_API_SCHEMA,
+            )
+        except jsonschema.exceptions.ValidationError:
+            return False
+
+        # Cell ranges match the configured ones
+        data_ranges = set(i["range"] for i in data["valueRanges"])
+        required_ranges = set(
+            (self.params.leaderboard_points_range, self.params.leaderboard_layers_range)
+        )
+
+        if data_ranges != required_ranges:
+            return False
 
         return True
 
