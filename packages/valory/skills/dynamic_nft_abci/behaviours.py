@@ -338,7 +338,7 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
             if i["range"] == self.params.leaderboard_layers_range:
                 for threshold_data in i["values"]:
                     thresholds = [
-                        int(img_data.strip(":")[0]) for img_data in threshold_data
+                        int(img_data.split(":")[0]) for img_data in threshold_data
                     ]
 
                     # Strictly increasing
