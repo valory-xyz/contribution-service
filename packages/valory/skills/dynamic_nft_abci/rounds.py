@@ -316,4 +316,4 @@ class DynamicNFTAbciApp(AbciApp[Event]):
     event_to_timeout: EventToTimeout = {
         Event.ROUND_TIMEOUT: 30.0,
     }
-    cross_period_persisted_keys: List[str] = []
+    cross_period_persisted_keys: List[str] = ["members", "images", "redirects"]
