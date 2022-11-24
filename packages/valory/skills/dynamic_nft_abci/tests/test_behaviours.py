@@ -76,12 +76,27 @@ use_ipfs_daemon = pytest.mark.usefixtures("ipfs_daemon")
 
 SYNDICATE_CONTRACT_ADDRESS = "0x9A676e781A523b5d0C0e43731313A708CB607508"
 
+DUMMY_MEMBERS = {
+    "0x54EfA9b1865FFE8c528fb375A7A606149598932A": {
+        "points": 1600,
+        "image_code": "0001",
+    },
+    "0x3c03a080638b3c176aB7D9ed56E25bC416dFf525": {
+        "points": 1000,
+        "image_code": "0001",
+    },
+    "0x44704AE66f0B9FF08a7b0584B49FE941AdD1bAE7": {"points": 600, "image_code": "0001"},
+    "0x19B043aD06C48aeCb2028B0f10503422BD0E0918": {
+        "points": 100,
+        "image_code": "0001",
+    },  # this one does not appear in the dummy leaderboard
+}
+
 
 DUMMY_LEADERBOARD = {
     "0x54EfA9b1865FFE8c528fb375A7A606149598932A": 1500,
     "0x3c03a080638b3c176aB7D9ed56E25bC416dFf525": 900,
     "0x44704AE66f0B9FF08a7b0584B49FE941AdD1bAE7": 575,
-    "0x19B043aD06C48aeCb2028B0f10503422BD0E0918": 100,
     "0x7B394CD0B75f774c6808cc681b26aC3E5DF96E27": 3500,  # this one does not appear in the dummy members
 }
 
@@ -568,7 +583,9 @@ class TestImageCodeCalculationBehaviour(BaseDynamicNFTTest):
         [
             BehaviourTestCase(
                 "Happy path",
-                initial_data=dict(most_voted_api_data=DUMMY_API_DATA),
+                initial_data=dict(
+                    members=DUMMY_MEMBERS, most_voted_api_data=DUMMY_API_DATA
+                ),
                 event=Event.DONE,
             ),
         ],

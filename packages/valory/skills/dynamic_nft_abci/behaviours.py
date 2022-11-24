@@ -375,7 +375,11 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
 
             member_updates = {}
             for member, new_points in leaderboard.items():
-                if member not in members or members[member]["points"] != new_points:
+                # Skip members in the leaderboard that have not minted an NFT
+                # import pdb;pdb.set_trace()
+                if member not in members:
+                    continue
+                if members[member]["points"] != new_points:
                     self.context.logger.info(
                         f"Calculating image code for member {member}: points={new_points} thresholds={thresholds}"
                     )
