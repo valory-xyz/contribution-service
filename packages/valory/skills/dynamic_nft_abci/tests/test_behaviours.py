@@ -19,6 +19,7 @@
 
 """This package contains round behaviours of DynamicNFTAbciApp."""
 
+import copy
 import json
 import os
 import shutil
@@ -136,6 +137,8 @@ DUMMY_API_RESPONSE = {
 }
 
 DUMMY_BAD_API_RESPONSE = {}
+DUMMY_BAD_API_RESPONSE_WRONG_RANGES = copy.deepcopy(DUMMY_API_RESPONSE)
+DUMMY_BAD_API_RESPONSE_WRONG_RANGES["valueRanges"][0]["range"] = "wrong_range"
 
 SHEET_ID = "1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc"
 GOOGLE_API_KEY = None
@@ -389,13 +392,26 @@ class TestLeaderboardObservationErrorBehaviour(BaseDynamicNFTTest):
             ),
             (
                 BehaviourTestCase(
-                    "Happy path",
+                    "Wrong API response: empty dict",
                     initial_data=dict(),
                     event=Event.API_ERROR,
                 ),
                 {
                     "body": json.dumps(
                         DUMMY_BAD_API_RESPONSE,
+                    ),
+                    "status_code": 200,
+                },
+            ),
+            (
+                BehaviourTestCase(
+                    "Wrong API response: wrong range",
+                    initial_data=dict(),
+                    event=Event.API_ERROR,
+                ),
+                {
+                    "body": json.dumps(
+                        DUMMY_BAD_API_RESPONSE_WRONG_RANGES,
                     ),
                     "status_code": 200,
                 },
