@@ -108,9 +108,9 @@ DUMMY_LAYERS = {
     },
     "frames": {
         0: "bafybeiaotq73a2cceb5ywdvu63haww65c24l3mnbxg3ensoa3gting5ilm",
-        50000: "bafybeig5jxzpl4ruhry3kkno47fcagwwze7ynlj2jnhjmmxpxrh4iyqyiu",
-        100000: "bafybeidtjvtpioqekbt7clp6gohuoa2mah5oxytntji6ayqt3t6tsouzqi",
-        150000: "bafybeia7gneqv72nwhmomccdxzizc2kgtqhllxpn3y3nfakoc3uvzvqh7y",
+        50000: "bafybeihfvqegnqt4bllchoiwzuceo2naktnyr6tyajbaff432iu5ugiswu",
+        100000: "bafybeifbmyacqrah25k3aqpg6psimwpzc5axr3a63iww5xvegnjqiwaufm",
+        150000: "bafybeicukhvlxmpxl576slrxjvad7zev2ldadre7lk5eeltmdjeooafwbm",
     },
 }
 
