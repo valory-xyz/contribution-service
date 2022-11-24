@@ -139,6 +139,10 @@ DUMMY_API_RESPONSE = {
 DUMMY_BAD_API_RESPONSE = {}
 DUMMY_BAD_API_RESPONSE_WRONG_RANGES = copy.deepcopy(DUMMY_API_RESPONSE)
 DUMMY_BAD_API_RESPONSE_WRONG_RANGES["valueRanges"][0]["range"] = "wrong_range"
+DUMMY_BAD_API_RESPONSE_WRONG_THRESHOLDS = copy.deepcopy(DUMMY_API_RESPONSE)
+DUMMY_BAD_API_RESPONSE_WRONG_THRESHOLDS["valueRanges"][1]["values"][1][
+    0
+] = "10000:dummy_frame_hash_0"
 
 SHEET_ID = "1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc"
 GOOGLE_API_KEY = None
@@ -412,6 +416,19 @@ class TestLeaderboardObservationErrorBehaviour(BaseDynamicNFTTest):
                 {
                     "body": json.dumps(
                         DUMMY_BAD_API_RESPONSE_WRONG_RANGES,
+                    ),
+                    "status_code": 200,
+                },
+            ),
+            (
+                BehaviourTestCase(
+                    "Wrong API response: wrong thresholds",
+                    initial_data=dict(),
+                    event=Event.API_ERROR,
+                ),
+                {
+                    "body": json.dumps(
+                        DUMMY_BAD_API_RESPONSE_WRONG_THRESHOLDS,
                     ),
                     "status_code": 200,
                 },

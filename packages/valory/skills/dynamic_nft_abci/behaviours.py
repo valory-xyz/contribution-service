@@ -330,9 +330,20 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
         required_ranges = set(
             (self.params.leaderboard_points_range, self.params.leaderboard_layers_range)
         )
-
         if data_ranges != required_ranges:
             return False
+
+        # Score thresholds are monotonic increasing
+        for i in data["valueRanges"]:
+            if i["range"] == self.params.leaderboard_layers_range:
+                for threshold_data in i["values"]:
+                    thresholds = [
+                        int(img_data.strip(":")[0]) for img_data in threshold_data
+                    ]
+
+                    # Strictly increasing
+                    if not all(x < y for x, y in zip(thresholds, thresholds[1:])):
+                        return False
 
         return True
 
