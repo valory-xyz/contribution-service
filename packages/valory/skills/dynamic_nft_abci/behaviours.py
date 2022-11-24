@@ -376,7 +376,6 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
             member_updates = {}
             for member, new_points in leaderboard.items():
                 # Skip members in the leaderboard that have not minted an NFT
-                # import pdb;pdb.set_trace()
                 if member not in members:
                     continue
                 if members[member]["points"] != new_points:
