@@ -4,7 +4,7 @@
       "spreadsheetId":"1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc",
       "valueRanges":[
          {
-            "range":"Leaderboard!A2:B102",
+            "range":"Leaderboard!A2:B302",
             "majorDimension":"ROWS",
             "values":[
                [

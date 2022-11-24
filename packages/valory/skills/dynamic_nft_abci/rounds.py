@@ -110,21 +110,30 @@ class NewMembersRound(ContributionAbstractRound, CollectSameUntilThresholdRound)
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:
         """Process the end of the block."""
         if self.threshold_reached:
-            # Add the new members to the members table. Note that the new members have no points or image_code fields
-            new_members = json.loads(self.most_voted_payload)
+            payload = json.loads(self.most_voted_payload)
 
-            if new_members == NewMembersRound.ERROR_PAYLOAD:
+            if payload == NewMembersRound.ERROR_PAYLOAD:
                 return self.synchronized_data, Event.CONTRACT_ERROR
 
+            new_member_to_data = payload["new_member_to_data"]
+            new_redirects = payload["new_redirects"]
+
+            # Add the new members to the members table. Note that the new members have no points or image_code fields
             members = {
-                **new_members,
+                **new_member_to_data,
                 **self.synchronized_data.members,
+            }
+
+            # Add redirects for new members
+            redirects = {
+                **new_redirects,
+                **self.synchronized_data.redirects,
             }
 
             synchronized_data = self.synchronized_data.update(
                 synchronized_data_class=SynchronizedData,
                 members=members,
-                most_voted_new_members=new_members,
+                redirects=redirects,
             )
             return synchronized_data, Event.DONE
         if not self.is_majority_possible(

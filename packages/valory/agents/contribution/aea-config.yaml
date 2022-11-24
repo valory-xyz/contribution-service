@@ -9,7 +9,7 @@ fingerprint:
   tests/__init__.py: bafybeicmv3jjcqcdnmubfmrgdgeyic3nkm77z4mutsyuo34hpddwupofre
   tests/helpers/__init__.py: bafybeiauwuw4a4wxqacqqkkk52ktps2qedadhypvh3ex7uqs7qaqrpygmy
   tests/helpers/constants.py: bafybeibf5wsgz3wt3dc7hm3pk3cyz3y7e6q22ymwlkli3d5ixvrjdafpzq
-  tests/helpers/data/json_server/data.json: bafybeigyny6z7gkmvoolvz4bhsighz5rrwsxs5vtr2gaeb3tsfi53cfqku
+  tests/helpers/data/json_server/data.json: bafybeiebfpjkla27d5pcgrwv5p4npubr33ts64qy6o5v4p7nrmly7vtes4
   tests/helpers/docker.py: bafybeiddzj7nqnsr2zegeu7mf7wlsyeierr7wr5hv3lucbjbwgbandpywq
   tests/helpers/fixtures.py: bafybeibbzank7chfncg6ifb4r3lvnttahixu2cq7cs6nnglbeolwlbrsvm
   tests/test_contribution.py: bafybeiggwemedzugchqc4byjamszoz7mjtbdsvowjz6zvdhulfwmtsbjgi
@@ -28,8 +28,8 @@ protocols:
 skills:
 - valory/abstract_abci:0.1.0:bafybeicog4eierjad4f542ubhe3ez7sxgrsna7t2e5pci2hncpq5vckw4e
 - valory/abstract_round_abci:0.1.0:bafybeia5meor4p77p62khoddlqj4vg5rxiwi3djxc7feusgein6adi7t7m
-- valory/contribution_skill_abci:0.1.0:bafybeicpihozbnbiv42xamozxhne7yb34h3poj7h5z6ptoj3otbpkeescu
-- valory/dynamic_nft_abci:0.1.0:bafybeidwdmhlkfmvv72fbk5oop4axrgaiekgh6cxxsu7tllnk4ampu52mi
+- valory/contribution_skill_abci:0.1.0:bafybeidvipiyuqggy2t7oqpgylljp5q4qb2afkq4n7olzodtoyowmu54ue
+- valory/dynamic_nft_abci:0.1.0:bafybeidvllgkzr6yy7own6nzenc7dx4udyca565ze57qfmky3j5hpdx4zq
 - valory/registration_abci:0.1.0:bafybeib2cr65zmunztkr3miy4sa2pwlsj2dsi4pz7rwtgg75xczc7hrj3q
 - valory/reset_pause_abci:0.1.0:bafybeie3qy5v3ggc54bmrubd27kbofrkw6srgbggo3b6ewssw3pbxjuvla
 default_ledger: ethereum
@@ -106,6 +106,7 @@ type: skill
 models:
   params:
     args:
+      basic_image_cid: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_BASIC_IMAGE_CID:str:bafybeicpygo4r6qk4ypckeur7v6gnmghli4wglevgldgpimkvl27i7gwqq}
       cleanup_history_depth: 1
       cleanup_history_depth_current: null
       consensus:
@@ -129,11 +130,12 @@ models:
           version: {}
         voting_power: '10'
       ipfs_domain_name: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_IPFS_DOMAIN_NAME:str:/dns/registry.autonolas.tech/tcp/443/https}
+      ipfs_gateway_base_url: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_IPFS_GATEWAY_BASE_URL:str:https://gateway.ipfs.io/ipfs/}
       keeper_timeout: 30.0
       leaderboard_api_key: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_LEADERBOARD_API_KEY:str:null}
       leaderboard_base_endpoint: https://sheets.googleapis.com/v4/spreadsheets
       leaderboard_layers_range: Layers!B1:Z2
-      leaderboard_points_range: Leaderboard!A2:B102
+      leaderboard_points_range: Leaderboard!A2:B302
       leaderboard_sheet_id: 1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc
       max_healthcheck: 120
       observation_interval: 10
