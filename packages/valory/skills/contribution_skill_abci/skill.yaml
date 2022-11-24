@@ -24,7 +24,7 @@ contracts: []
 protocols: []
 skills:
 - valory/abstract_round_abci:0.1.0:bafybeia5meor4p77p62khoddlqj4vg5rxiwi3djxc7feusgein6adi7t7m
-- valory/dynamic_nft_abci:0.1.0:bafybeidvllgkzr6yy7own6nzenc7dx4udyca565ze57qfmky3j5hpdx4zq
+- valory/dynamic_nft_abci:0.1.0:bafybeibndvibty4auq6vcfi6pdlj4cn2verq7kiah6tzam6gny76w5hj2m
 - valory/registration_abci:0.1.0:bafybeib2cr65zmunztkr3miy4sa2pwlsj2dsi4pz7rwtgg75xczc7hrj3q
 - valory/reset_pause_abci:0.1.0:bafybeie3qy5v3ggc54bmrubd27kbofrkw6srgbggo3b6ewssw3pbxjuvla
 behaviours:
@@ -98,7 +98,7 @@ models:
       leaderboard_api_key: null
       leaderboard_base_endpoint: https://sheets.googleapis.com/v4/spreadsheets
       leaderboard_layers_range: Layers!B1:Z2
-      leaderboard_points_range: Leaderboard!A2:B302
+      leaderboard_points_range: Ranking!B2:C302
       leaderboard_sheet_id: 1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc
       max_healthcheck: 120
       observation_interval: 10

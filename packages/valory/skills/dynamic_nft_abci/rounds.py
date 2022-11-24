@@ -153,11 +153,13 @@ class LeaderboardObservationRound(
     payload_attribute = "content"
     synchronized_data_class = SynchronizedData
 
+    ERROR_PAYLOAD = {}
+
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:
         """Process the end of the block."""
         if self.threshold_reached:
             payload = json.loads(self.most_voted_payload)
-            if payload == {}:
+            if payload == LeaderboardObservationRound.ERROR_PAYLOAD:
                 return self.synchronized_data, Event.API_ERROR
 
             synchronized_data = self.synchronized_data.update(
