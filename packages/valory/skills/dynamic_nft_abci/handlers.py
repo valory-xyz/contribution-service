@@ -19,7 +19,6 @@
 
 """This module contains the handlers for the skill of DynamicNFTAbciApp."""
 
-import json
 from typing import cast
 
 from aea.protocols.base import Message
