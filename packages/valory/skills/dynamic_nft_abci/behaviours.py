@@ -769,7 +769,10 @@ class DBUpdateBehaviour(DynamicNFTBaseBehaviour):
         Redirect table: must be updated now to reflect the new redirects (if it applies).
         """
         self.context.logger.info(
-            "Updating database tables",
+            f"Current members: {self.synchronized_data.members}\n"
+            f"Current images: {self.synchronized_data.images}\n"
+            f"Current redirects: {self.synchronized_data.redirects}\n"
+            f"Updating database tables. Updates: {self.synchronized_data.most_voted_member_updates}\n"
         )
 
         with self.context.benchmark_tool.measure(
