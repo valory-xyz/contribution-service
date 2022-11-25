@@ -3,8 +3,8 @@
         "contract/valory/ERC721Collective/0.1.0": "bafybeibbfvoexfmsp6vr6kvvfn4yddhunhtlhu2z2brzt3an7wuljc7vja",
         "skill/valory/dynamic_nft_abci/0.1.0": "bafybeifncb5bdpqj3qjrbvk2djr52pw6fn6lgcupas3rw5prdxyijewpx4",
         "skill/valory/contribution_skill_abci/0.1.0": "bafybeievr7qqqq37atiappasct4yzzjx2c56iusi5e7hemlldoei3ky4j4",
-        "agent/valory/contribution/0.1.0": "bafybeifmpnci5clytmb27s2a3r5mvgd3oegdwlvszo5ioqqtatizj2exsy",
-        "service/valory/contribution/0.1.0": "bafybeifnrs2hhv4wrwyp7jqcjtkxr5c5yiwrmlga5dbsojcy6c4bhxt4je"
+        "agent/valory/contribution/0.1.0": "bafybeianny67np5rclrg25knhmwkyopyiejiepgxhxb5ulwa2mmfkj47l4",
+        "service/valory/contribution/0.1.0": "bafybeih4wevtokm3xmnyefewjelcop3lwyzccs2enillhci5iu3vd4kxzq"
     },
     "third_party": {
         "protocol/open_aea/signing/1.0.0": "bafybeiambqptflge33eemdhis2whik67hjplfnqwieoa6wblzlaf7vuo44",
