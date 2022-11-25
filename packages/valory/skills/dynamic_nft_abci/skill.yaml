@@ -36,7 +36,8 @@ fingerprint:
   tests/test_rounds.py: bafybeiammnvfiba5ftdssisuljbavr7avnlvnirr2ja6hnxborqvzvq5f4
   tools.py: bafybeigjmtp6ngs2d54i5obbynwqj26vztes3s3h2pdaqxklulevjq5xjm
 fingerprint_ignore_patterns: []
-connections: []
+connections:
+- valory/http_server:0.1.0:bafybeicblltx7ha3ulthg7bzfccuqqyjmihhrvfeztlgrlcoxhr7kf6nbq
 contracts:
 - valory/ERC721Collective:0.1.0:bafybeibbfvoexfmsp6vr6kvvfn4yddhunhtlhu2z2brzt3an7wuljc7vja
 protocols:

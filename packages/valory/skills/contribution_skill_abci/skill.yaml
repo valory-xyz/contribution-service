@@ -19,7 +19,8 @@ fingerprint:
   tests/test_handlers.py: bafybeiaomqulgu76t37hqdb5cjqbl6gqj7epekadbxjmoiszgcuzbeujsi
   tests/test_models.py: bafybeiaxapvzgj44jnd6vautsex47w5npsoznadvvwb4isph55qgbz7rua
 fingerprint_ignore_patterns: []
-connections: []
+connections:
+- valory/http_server:0.1.0:bafybeicblltx7ha3ulthg7bzfccuqqyjmihhrvfeztlgrlcoxhr7kf6nbq
 contracts: []
 protocols: []
 skills:
