@@ -963,7 +963,6 @@ class TestImageGenerationErrorBehaviour(BaseDynamicNFTTest):
                     body=b"",
                 ),
             )
-        # self.behaviour.act_wrapper()
 
         self.mock_a2a_transaction()
         self._test_done_flag_set()
