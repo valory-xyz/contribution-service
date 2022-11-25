@@ -24,7 +24,7 @@ contracts: []
 protocols: []
 skills:
 - valory/abstract_round_abci:0.1.0:bafybeia5meor4p77p62khoddlqj4vg5rxiwi3djxc7feusgein6adi7t7m
-- valory/dynamic_nft_abci:0.1.0:bafybeifgtejsas2kyu626qd44s5hi44ck2h6qdpukugf2hwfjcn3kqmzfy
+- valory/dynamic_nft_abci:0.1.0:bafybeicl45izemrouedmf7tvqjgvnvjhcoo67fss47nyfdmluprs3dixfu
 - valory/registration_abci:0.1.0:bafybeib2cr65zmunztkr3miy4sa2pwlsj2dsi4pz7rwtgg75xczc7hrj3q
 - valory/reset_pause_abci:0.1.0:bafybeie3qy5v3ggc54bmrubd27kbofrkw6srgbggo3b6ewssw3pbxjuvla
 behaviours:
@@ -74,6 +74,7 @@ models:
       cleanup_history_depth_current: null
       consensus:
         max_participants: 1
+      contribution_contract_address: '0x9A676e781A523b5d0C0e43731313A708CB607508'
       drand_public_key: 868f005eb8e6e4ca0a47c8a77ceaa5309a47978a7c71bc5cce96366b5d7a569937c529eeda66c7293784a9402801af31
       genesis_config:
         genesis_time: '2022-09-26T00:00:00.000000000Z'
@@ -110,7 +111,6 @@ models:
       service_id: contribution_service
       service_registry_address: null
       sleep_time: 1
-      contribution_contract_address: '0x9A676e781A523b5d0C0e43731313A708CB607508'
       tendermint_check_sleep_delay: 3
       tendermint_com_url: http://localhost:8080
       tendermint_max_retries: 5

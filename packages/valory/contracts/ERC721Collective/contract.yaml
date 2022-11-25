@@ -7,7 +7,7 @@ license: Apache-2.0
 aea_version: '>=1.0.0, <2.0.0'
 fingerprint:
   __init__.py: bafybeigsysq5bmm6gmtghakad5rvqgjxfrdi22b53oyjfwrpiuyhkugm4y
-  build/ERC721Collective.json: bafybeicvmaiph4mgjajavodxohoottomzfbefv4cd7y7eem3qchugin5ki
+  build/ERC721Collective.json: bafybeigitky5lilbnfa3ddrps6mcyanfnm6tvsx364ufibcp235arsguru
   contract.py: bafybeiervfamuo7ebp3jlackyi2hpcqfhdkcjkb7g626xgbkjfdi6n6tnm
 fingerprint_ignore_patterns: []
 class_name: ERC721CollectiveContract
