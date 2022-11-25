@@ -24,6 +24,9 @@ from typing import cast
 
 from aea.protocols.base import Message
 
+from packages.valory.connections.http_server.connection import (
+    PUBLIC_ID as HTTP_SERVER_PUBLIC_ID,
+)
 from packages.valory.protocols.http.message import HttpMessage
 from packages.valory.skills.abstract_round_abci.handlers import (
     ABCIRoundHandler as BaseABCIRoundHandler,
@@ -47,7 +50,6 @@ from packages.valory.skills.dynamic_nft_abci.dialogues import (
     HttpDialogue,
     HttpDialogues,
 )
-from packages.valory.connections.http_server.connection import PUBLIC_ID as HTTP_SERVER_PUBLIC_ID
 
 
 ABCIRoundHandler = BaseABCIRoundHandler
