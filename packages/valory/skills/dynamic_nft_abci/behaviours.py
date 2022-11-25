@@ -33,7 +33,9 @@ from aea.configurations.constants import DEFAULT_LEDGER
 from aea.crypto.ledger_apis import LedgerApis
 from aea.helpers.ipfs.base import IPFSHashOnly
 
-from packages.valory.contracts.ERC721Collective.contract import ERC721CollectiveContract
+from packages.valory.contracts.ERC721Contribution.contract import (
+    ERC721ContributionContract,
+)
 from packages.valory.protocols.contract_api import ContractApiMessage
 from packages.valory.skills.abstract_round_abci.base import AbstractRound
 from packages.valory.skills.abstract_round_abci.behaviours import (
@@ -147,7 +149,7 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
         contract_api_msg = yield from self.get_contract_api_response(
             performative=ContractApiMessage.Performative.GET_STATE,  # type: ignore
             contract_address=self.params.contribution_contract_address,
-            contract_id=str(ERC721CollectiveContract.contract_id),
+            contract_id=str(ERC721ContributionContract.contract_id),
             contract_callable="get_all_erc721_transfers",
             from_address=NULL_ADDRESS,
         )

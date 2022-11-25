@@ -34,7 +34,9 @@ import pytest
 from aea.crypto.ledger_apis import LedgerApis
 from aea_cli_ipfs.ipfs_utils import IPFSDaemon
 
-from packages.valory.contracts.ERC721Collective.contract import ERC721CollectiveContract
+from packages.valory.contracts.ERC721Contribution.contract import (
+    ERC721ContributionContract,
+)
 from packages.valory.protocols.contract_api import ContractApiMessage
 from packages.valory.protocols.contract_api.custom_types import State
 from packages.valory.skills.abstract_round_abci.base import AbciAppDB
@@ -277,7 +279,7 @@ class TestNewMembersBehaviour(BaseDynamicNFTTest):
     ) -> None:
         """Mock the WeightedPoolContract."""
         self.mock_contract_api_request(
-            contract_id=str(ERC721CollectiveContract.contract_id),
+            contract_id=str(ERC721ContributionContract.contract_id),
             request_kwargs=dict(
                 performative=ContractApiMessage.Performative.GET_STATE,
                 contract_address=contribution_contract_address,

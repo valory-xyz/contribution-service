@@ -17,4 +17,4 @@
 #
 # ------------------------------------------------------------------------------
 
-"""This module contains the support resources for the ERC721Collective contract."""
+"""This module contains the support resources for the ERC721Contribution contract."""

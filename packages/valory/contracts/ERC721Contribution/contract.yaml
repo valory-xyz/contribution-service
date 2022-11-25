@@ -1,0 +1,21 @@
+name: ERC721Contribution
+author: valory
+version: 0.1.0
+type: contract
+description: ERC721Contribution contract
+license: Apache-2.0
+aea_version: '>=1.0.0, <2.0.0'
+fingerprint:
+  __init__.py: bafybeibcw7h6opzjoe23ewtixqpjvtkocouwlge6ww3nheo53yfvdp5zy4
+  build/ERC721Contribution.json: bafybeigitky5lilbnfa3ddrps6mcyanfnm6tvsx364ufibcp235arsguru
+  contract.py: bafybeie6k6oklk3dgcfprknebseuf4jag23emm6ualbs7cuyk6mqrqygp4
+fingerprint_ignore_patterns: []
+class_name: ERC721ContributionContract
+contract_interface_paths:
+  ethereum: build/ERC721Contribution.json
+dependencies:
+  open-aea-ledger-ethereum:
+    version: ==1.24.0
+  web3:
+    version: ==5.25.0
+contracts: []

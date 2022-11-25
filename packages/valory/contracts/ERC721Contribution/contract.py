@@ -17,7 +17,7 @@
 #
 # ------------------------------------------------------------------------------
 
-"""This module contains the ERC721Collective contract definition."""
+"""This module contains the ERC721Contribution contract definition."""
 
 from typing import Any, cast
 
@@ -29,10 +29,10 @@ from aea_ledger_ethereum import EthereumApi
 from web3.types import BlockIdentifier
 
 
-class ERC721CollectiveContract(Contract):
+class ERC721ContributionContract(Contract):
     """The scaffold contract class for a smart contract."""
 
-    contract_id = PublicId.from_str("valory/ERC721Collective:0.1.0")
+    contract_id = PublicId.from_str("valory/ERC721Contribution:0.1.0")
 
     @classmethod
     def get_raw_transaction(
