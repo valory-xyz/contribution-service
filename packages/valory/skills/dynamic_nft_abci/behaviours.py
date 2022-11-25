@@ -146,7 +146,7 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
         """Get member to token id data."""
         contract_api_msg = yield from self.get_contract_api_response(
             performative=ContractApiMessage.Performative.GET_STATE,  # type: ignore
-            contract_address=self.params.syndicate_contract_address,
+            contract_address=self.params.contribution_contract_address,
             contract_id=str(ERC721CollectiveContract.contract_id),
             contract_callable="get_all_erc721_transfers",
             from_address=NULL_ADDRESS,

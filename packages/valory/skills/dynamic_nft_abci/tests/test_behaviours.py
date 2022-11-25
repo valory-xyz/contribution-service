@@ -74,7 +74,7 @@ def ipfs_daemon() -> Iterator[bool]:
 
 use_ipfs_daemon = pytest.mark.usefixtures("ipfs_daemon")
 
-SYNDICATE_CONTRACT_ADDRESS = "0x9A676e781A523b5d0C0e43731313A708CB607508"
+contribution_contract_address = "0x9A676e781A523b5d0C0e43731313A708CB607508"
 
 DUMMY_MEMBERS = {
     "0x54EfA9b1865FFE8c528fb375A7A606149598932A": {
@@ -270,7 +270,7 @@ class TestNewMembersBehaviour(BaseDynamicNFTTest):
     behaviour_class = NewMembersBehaviour
     next_behaviour_class = LeaderboardObservationBehaviour
 
-    def _mock_syndicate_contract_request(
+    def _mock_contribution_contract_request(
         self,
         response_body: Dict,
         response_performative: ContractApiMessage.Performative,
@@ -280,7 +280,7 @@ class TestNewMembersBehaviour(BaseDynamicNFTTest):
             contract_id=str(ERC721CollectiveContract.contract_id),
             request_kwargs=dict(
                 performative=ContractApiMessage.Performative.GET_STATE,
-                contract_address=SYNDICATE_CONTRACT_ADDRESS,
+                contract_address=contribution_contract_address,
             ),
             response_kwargs=dict(
                 performative=response_performative,
@@ -313,7 +313,7 @@ class TestNewMembersBehaviour(BaseDynamicNFTTest):
         """Run tests."""
         self.fast_forward(test_case.initial_data)
         self.behaviour.act_wrapper()
-        self._mock_syndicate_contract_request(
+        self._mock_contribution_contract_request(
             response_body=kwargs.get("mock_response_data"),
             response_performative=kwargs.get("mock_response_performative"),
         )
@@ -348,7 +348,7 @@ class TestNewMembersBehaviourContractError(TestNewMembersBehaviour):
         """Run tests."""
         self.fast_forward(test_case.initial_data)
         self.behaviour.act_wrapper()
-        self._mock_syndicate_contract_request(
+        self._mock_contribution_contract_request(
             response_body=kwargs.get("mock_response_data"),
             response_performative=kwargs.get("mock_response_performative"),
         )

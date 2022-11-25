@@ -128,7 +128,7 @@ models:
       service_id: contribution_service
       service_registry_address: null
       sleep_time: 1
-      syndicate_contract_address: '0x9A676e781A523b5d0C0e43731313A708CB607508'
+      contribution_contract_address: '0x9A676e781A523b5d0C0e43731313A708CB607508'
       tendermint_check_sleep_delay: 3
       tendermint_com_url: http://localhost:8080
       tendermint_max_retries: 5

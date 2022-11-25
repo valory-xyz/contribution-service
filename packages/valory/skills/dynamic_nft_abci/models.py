@@ -57,8 +57,8 @@ class Params(BaseParams):
         )
         self.whitelist_api_key = kwargs.pop("whitelist_api_key", None)
         self.whitelist_endpoint = self._ensure("whitelist_endpoint", kwargs)
-        self.syndicate_contract_address = self._ensure(
-            "syndicate_contract_address", kwargs
+        self.contribution_contract_address = self._ensure(
+            "contribution_contract_address", kwargs
         )
         self.token_uri_base = self._ensure("token_uri_base", kwargs)
         self.ipfs_gateway_base_url = self._ensure("ipfs_gateway_base_url", kwargs)

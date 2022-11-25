@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
-  "contractName": "Syndicate",
-  "sourceName": "contracts/Syndicate.sol",
+  "contractName": "DynamicContribution",
+  "sourceName": "contracts/DynamicContribution.sol",
   "abi": [
     {
       "inputs": [],
