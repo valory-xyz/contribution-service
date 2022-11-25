@@ -536,8 +536,8 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                     image_hash = IPFSHashOnly.get(str(image_path))
 
                     # Check whether the image is already present in the registry
-                    img_url = f"{self.params.ipfs_gateway_base_url}{img_hash}/{img_code}.{self.ImageManager.PNG_EXT}"
-                    image_in_ipfs = yield from self.check_ipfs_image(img_url)
+                    image_url = f"{self.params.ipfs_gateway_base_url}{image_hash}/{image_code}.{self.ImageManager.PNG_EXT}"
+                    image_in_ipfs = yield from self.check_ipfs_image(image_url)
                     if image_in_ipfs:
                         images_in_ipfs[image_code] = image_url
                         continue
