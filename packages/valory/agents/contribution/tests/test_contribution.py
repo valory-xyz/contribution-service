@@ -127,12 +127,12 @@ class BaseTestEnd2EndContributionNormalExecution(BaseTestEnd2EndExecution):
         "value": 8000,
     }
 
-    def __set_extra_configs(self) -> None:
+    def _BaseTestEnd2End__set_extra_configs(self) -> None:
         """Set the current agent's extra config overrides that are skill specific."""
         for config in self.extra_configs:
             self.set_config(**config)
 
-        self.set_config(**http_server_port_config)
+        self.set_config(**self.http_server_port_config)
         self.http_server_port_config["value"] += 1  # port number increment
 
 
