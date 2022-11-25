@@ -534,9 +534,6 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                     image_hash = IPFSHashOnly.get(str(image_path))
 
                     # Check whether the image is already present in the registry
-                    self.context.logger.info(
-                        f"Checking if image already exists in the IPFS registry"
-                    )
                     image_in_ipfs = yield from self.check_ipfs_image(
                         image_hash, image_code
                     )
@@ -663,6 +660,10 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
         :returns: True if image is present in the registry, False otherwise
         """
         img_url = f"{self.params.ipfs_gateway_base_url}{img_hash}/{img_code}.{self.ImageManager.PNG_EXT}"
+
+        self.context.logger.info(
+            f"Checking if image already exists in the IPFS registry: {img_url}"
+        )
 
         response = yield from self.get_http_response(
             method="GET",
