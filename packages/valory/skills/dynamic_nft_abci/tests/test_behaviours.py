@@ -984,7 +984,7 @@ class TestDBUpdateBehaviour(BaseDynamicNFTTest):
         [
             BehaviourTestCase(
                 "Happy path",
-                initial_data={},
+                initial_data={"most_voted_member_updates": {}},
                 event=Event.DONE,
             ),
         ],
