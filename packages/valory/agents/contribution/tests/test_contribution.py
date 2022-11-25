@@ -83,6 +83,7 @@ PACKAGES_DIR = Path(__file__).parent.parent.parent.parent.parent
 MOCK_API_ADDRESS = _DEFAULT_JSON_SERVER_ADDR
 MOCK_API_PORT = _DEFAULT_JSON_SERVER_PORT
 MOCK_WHITELIST_ADDRESS = _DEFAULT_JSON_SERVER_ADDR
+MOCK_IPFS_ADDRESS = _DEFAULT_JSON_SERVER_ADDR
 
 
 @pytest.mark.usefixtures("ipfs_daemon")
@@ -114,6 +115,10 @@ class BaseTestEnd2EndContributionNormalExecution(BaseTestEnd2EndExecution):
         {
             "dotted_path": f"{__args_prefix}.whitelist_endpoint",
             "value": f"{MOCK_WHITELIST_ADDRESS}:{MOCK_API_PORT}/mock_whitelist",
+        },
+        {
+            "dotted_path": f"{__args_prefix}.ipfs_gateway_base_url",
+            "value": f"{MOCK_IPFS_ADDRESS}:{MOCK_API_PORT}/mock_ipfs",
         },
     ]
 

@@ -165,6 +165,7 @@ def get_image_generation_payload_serialized(status: str = "success") -> str:
         {
             "new_image_code_to_hashes": DUMMY_NEW_IMAGE_CODE_TO_HASHES,
             "status": status,
+            "images_in_ipfs": {},
         },
         sort_keys=True,
     )

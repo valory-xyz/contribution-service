@@ -29,4 +29,4 @@ A dynamic NFT service built with the open-autonomy framework
 
 - Pull packages:
 
-      autonomy packages sync
+      autonomy packages sync --update-packages

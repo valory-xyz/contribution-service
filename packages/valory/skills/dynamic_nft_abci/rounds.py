@@ -217,6 +217,7 @@ class ImageGenerationRound(ContributionAbstractRound, CollectSameUntilThresholdR
                 images = {
                     **self.synchronized_data.images,
                     **payload["new_image_code_to_hashes"],
+                    **payload["images_in_ipfs"],
                 }
                 synchronized_data = self.synchronized_data.update(
                     synchronized_data_class=SynchronizedData,
@@ -316,4 +317,4 @@ class DynamicNFTAbciApp(AbciApp[Event]):
     event_to_timeout: EventToTimeout = {
         Event.ROUND_TIMEOUT: 30.0,
     }
-    cross_period_persisted_keys: List[str] = []
+    cross_period_persisted_keys: List[str] = ["members", "images", "redirects"]
