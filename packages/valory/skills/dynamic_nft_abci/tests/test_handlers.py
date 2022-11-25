@@ -77,7 +77,7 @@ class TestHttpHandler(BaseSkillTestCase):
         cls.version = "some_version"
         cls.headers = "some_headers"
         cls.body = b"some_body/nft_id"
-        cls.sender = "valory/http_server:0.1.0"
+        cls.sender = "fetchai/http_server:0.22.0"
         cls.skill_id = str(cls._skill.skill_context.skill_id)
 
         cls.status_code = 100
@@ -116,7 +116,7 @@ class TestHttpHandler(BaseSkillTestCase):
             version=self.version,
             headers=self.headers,
             body=self.body,
-            sender="valory/http_server:0.1.0",
+            sender="fetchai/http_server:0.22.0",
         )
 
         # operation

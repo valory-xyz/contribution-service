@@ -24,7 +24,7 @@ from typing import cast
 
 from aea.protocols.base import Message
 
-from packages.valory.connections.http_server.connection import (
+from packages.fetchai.connections.http_server.connection import (
     PUBLIC_ID as HTTP_SERVER_PUBLIC_ID,
 )
 from packages.valory.protocols.http.message import HttpMessage

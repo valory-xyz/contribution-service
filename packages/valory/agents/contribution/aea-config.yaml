@@ -15,9 +15,9 @@ fingerprint:
   tests/test_contribution.py: bafybeih6mhevfvuz7yzymqrpotblsvgdurl3ow27b2dfookb5lcj376bsa
 fingerprint_ignore_patterns: []
 connections:
+- fetchai/http_server:0.22.0:bafybeiaf2w3jfemqu4zrtfzewexh5ttqytvhv4tqfzcrv6qxsqnxrv7eu4
 - valory/abci:0.1.0:bafybeics24v7csn2xwyrkdgthrzdbuqutssx3mn572z2tavyr33banqz6u
 - valory/http_client:0.23.0:bafybeihz3tubwado7j3wlivndzzuj3c6fdsp4ra5r3nqixn3ufawzo3wii
-- valory/http_server:0.1.0:bafybeicblltx7ha3ulthg7bzfccuqqyjmihhrvfeztlgrlcoxhr7kf6nbq
 - valory/ledger:0.19.0:bafybeiadc25se7dgnn4mufztwpzdono4xsfs45qknzdqyi3gckn6ccuv44
 - valory/p2p_libp2p_client:0.1.0:bafybeidkk33xbga54szmitk6uwsi3ef56hbbdbuasltqtiyki34hgfpnxa
 contracts:
@@ -29,8 +29,8 @@ protocols:
 skills:
 - valory/abstract_abci:0.1.0:bafybeicog4eierjad4f542ubhe3ez7sxgrsna7t2e5pci2hncpq5vckw4e
 - valory/abstract_round_abci:0.1.0:bafybeia5meor4p77p62khoddlqj4vg5rxiwi3djxc7feusgein6adi7t7m
-- valory/contribution_skill_abci:0.1.0:bafybeicwa4vblkgpe2vysa3jmciidnaroks4ab72aaxuq7tma4d4gmbnie
-- valory/dynamic_nft_abci:0.1.0:bafybeie5lz224fegszkm2d7t3nqudlt3bpxgul3gcpqdfbc5isi6mnbzpe
+- valory/contribution_skill_abci:0.1.0:bafybeibb3rgkaodfayzgqh63pipqqbetpied7ltc6szp4auzgiqahonoem
+- valory/dynamic_nft_abci:0.1.0:bafybeid6jp5wxglypycuerazyj5z3cadlyavpc2gwuvtmn3bxr3jebrd6i
 - valory/registration_abci:0.1.0:bafybeib2cr65zmunztkr3miy4sa2pwlsj2dsi4pz7rwtgg75xczc7hrj3q
 - valory/reset_pause_abci:0.1.0:bafybeie3qy5v3ggc54bmrubd27kbofrkw6srgbggo3b6ewssw3pbxjuvla
 default_ledger: ethereum
@@ -157,7 +157,7 @@ models:
       whitelist_api_key: null
       whitelist_endpoint: http://localhost
 ---
-public_id: valory/http_server:0.1.0:bafybeicblltx7ha3ulthg7bzfccuqqyjmihhrvfeztlgrlcoxhr7kf6nbq
+public_id: fetchai/http_server:0.22.0:bafybeicblltx7ha3ulthg7bzfccuqqyjmihhrvfeztlgrlcoxhr7kf6nbq
 type: connection
 config:
   host: 0.0.0.0
