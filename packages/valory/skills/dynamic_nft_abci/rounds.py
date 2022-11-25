@@ -217,6 +217,7 @@ class ImageGenerationRound(ContributionAbstractRound, CollectSameUntilThresholdR
                 images = {
                     **self.synchronized_data.images,
                     **payload["new_image_code_to_hashes"],
+                    **payload["images_in_ipfs"],
                 }
                 synchronized_data = self.synchronized_data.update(
                     synchronized_data_class=SynchronizedData,

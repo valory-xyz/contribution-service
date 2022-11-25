@@ -512,10 +512,12 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                 )
                 status = "error"
                 new_image_code_to_hashes = {}
+                images_in_ipfs = {}
             else:
                 status = "success"
                 # Push to IPFS
                 new_image_code_to_hashes = {}
+                images_in_ipfs = {}
                 for image_code, image in new_image_code_to_images.items():
                     image_path = Path(
                         img_manager.out_path, f"{image_code}.{img_manager.PNG_EXT}"
@@ -534,10 +536,10 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                     image_hash = IPFSHashOnly.get(str(image_path))
 
                     # Check whether the image is already present in the registry
-                    image_in_ipfs = yield from self.check_ipfs_image(
-                        image_hash, image_code
-                    )
+                    img_url = f"{self.params.ipfs_gateway_base_url}{img_hash}/{img_code}.{self.ImageManager.PNG_EXT}"
+                    image_in_ipfs = yield from self.check_ipfs_image(img_url)
                     if image_in_ipfs:
+                        images_in_ipfs[image_code] = image_url
                         continue
 
                     # Send
@@ -562,7 +564,8 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                     new_image_code_to_hashes[image_code] = image_hash
 
             self.context.logger.info(
-                f"Generated the following new images: {new_image_code_to_hashes}"
+                f"Generated the following new images: {new_image_code_to_hashes}\n"
+                f"Found the following images already in IPFS: {images_in_ipfs}"
             )
 
         with self.context.benchmark_tool.measure(
@@ -574,6 +577,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                     {
                         "status": status,
                         "new_image_code_to_hashes": new_image_code_to_hashes,
+                        "images_in_ipfs": images_in_ipfs,
                     },
                     sort_keys=True,
                 ),
@@ -650,16 +654,13 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
 
         return True
 
-    def check_ipfs_image(
-        self, img_hash: str, img_code: str
-    ) -> Generator[None, None, bool]:
+    def check_ipfs_image(self, img_url: str) -> Generator[None, None, bool]:
         """Check that the given ipfs hash exists in the registry
 
         :param img_hash: the image hash
         :param img_code: the image code
         :returns: True if image is present in the registry, False otherwise
         """
-        img_url = f"{self.params.ipfs_gateway_base_url}{img_hash}/{img_code}.{self.ImageManager.PNG_EXT}"
 
         # We just call to the mock url if this is an e2e test.
         # We need to figure a better way to avoid having this conditional here.
@@ -680,7 +681,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
             )
             return False
 
-        self.context.logger.error(f"Image already exists at {img_url}")
+        self.context.logger.info(f"Image already exists at {img_url}")
         return True
 
     class ImageManager:
