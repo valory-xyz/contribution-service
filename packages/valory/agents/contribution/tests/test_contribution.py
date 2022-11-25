@@ -122,6 +122,19 @@ class BaseTestEnd2EndContributionNormalExecution(BaseTestEnd2EndExecution):
         },
     ]
 
+    http_server_port_config = {
+        "dotted_path": "vendor.fetchai.connections.http_server.config.port",
+        "value": 8000,
+    }
+
+    def __set_extra_configs(self) -> None:
+        """Set the current agent's extra config overrides that are skill specific."""
+        for config in self.extra_configs:
+            self.set_config(**config)
+
+        self.set_config(**http_server_port_config)
+        self.http_server_port_config["value"] += 1  # port number increment
+
 
 @pytest.mark.e2e
 @pytest.mark.parametrize("nb_nodes", (1,))
