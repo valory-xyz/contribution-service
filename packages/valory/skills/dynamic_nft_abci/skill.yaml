@@ -15,7 +15,7 @@ fingerprint:
   data/layers/frames/3.png: bafybeigstc52zkvx3mwzw2dwc3726amgpolwbdxfoylpupnk6ut5ya357a
   dialogues.py: bafybeifxlkz47umd63ojgydccujs4j2kwhfh32bdhxcjdodm5brvc25fjq
   fsm_specification.yaml: bafybeicyqbndd5bzjsdckjbpb2qhkjfwa4leovfofm5ugvikttp56tygey
-  handlers.py: bafybeigrwcbgdtwasvq4dqczoxuhnj5hrrqcghra76ti332ys7uyokcryu
+  handlers.py: bafybeif47smw7ivagmjq7negdnbds5wcn7ewwtbqtls6474nqys5szd6le
   io_/__init__.py: bafybeidxth2otiyp5gfk2l3zjvnfktgrtpwzsknihkef3v2lhwbkgum3ea
   io_/load.py: bafybeifd7ib4lktvgv6rphk6sblkndn3klmzd5js62h2gzxlubjcmlf6jy
   io_/store.py: bafybeih3wa6quhstymsqcsy7jejpj4fx6crq6gs72dzs6svjklu7wushtq
@@ -36,7 +36,8 @@ fingerprint:
   tests/test_rounds.py: bafybeihwmkhzlfx2v2sxpgvad2ywukx6lxltan5xps45lkqflptx5ak4ky
   tools.py: bafybeigjmtp6ngs2d54i5obbynwqj26vztes3s3h2pdaqxklulevjq5xjm
 fingerprint_ignore_patterns: []
-connections: []
+connections:
+- fetchai/http_server:0.22.0:bafybeiaf2w3jfemqu4zrtfzewexh5ttqytvhv4tqfzcrv6qxsqnxrv7eu4
 contracts:
 - valory/ERC721Collective:0.1.0:bafybeibbfvoexfmsp6vr6kvvfn4yddhunhtlhu2z2brzt3an7wuljc7vja
 protocols:

@@ -19,12 +19,13 @@ fingerprint:
   tests/test_handlers.py: bafybeiaomqulgu76t37hqdb5cjqbl6gqj7epekadbxjmoiszgcuzbeujsi
   tests/test_models.py: bafybeiaxapvzgj44jnd6vautsex47w5npsoznadvvwb4isph55qgbz7rua
 fingerprint_ignore_patterns: []
-connections: []
+connections:
+- fetchai/http_server:0.22.0:bafybeiaf2w3jfemqu4zrtfzewexh5ttqytvhv4tqfzcrv6qxsqnxrv7eu4
 contracts: []
 protocols: []
 skills:
 - valory/abstract_round_abci:0.1.0:bafybeia5meor4p77p62khoddlqj4vg5rxiwi3djxc7feusgein6adi7t7m
-- valory/dynamic_nft_abci:0.1.0:bafybeid6jp5wxglypycuerazyj5z3cadlyavpc2gwuvtmn3bxr3jebrd6i
+- valory/dynamic_nft_abci:0.1.0:bafybeiem5dgvesiau76zv3pm74ukx7avys2ldpnoea6nowuqlflnn2vple
 - valory/registration_abci:0.1.0:bafybeib2cr65zmunztkr3miy4sa2pwlsj2dsi4pz7rwtgg75xczc7hrj3q
 - valory/reset_pause_abci:0.1.0:bafybeie3qy5v3ggc54bmrubd27kbofrkw6srgbggo3b6ewssw3pbxjuvla
 behaviours:
