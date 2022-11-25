@@ -6,7 +6,6 @@ description: The contribution agent.
 aea_version: '>=1.19.0, <2.0.0'
 fingerprint:
   __init__.py: bafybeihg57xcq4tc5wjymsj3mx2zfp7oxc6fmboh56epajeqfj4vlygmnu
-  keys.json: bafybeigna34jgvujpejnnswgqhkrvs2fhl7k3udet4buv7psq7xfqiauiq
   tests/__init__.py: bafybeicmv3jjcqcdnmubfmrgdgeyic3nkm77z4mutsyuo34hpddwupofre
   tests/helpers/__init__.py: bafybeiauwuw4a4wxqacqqkkk52ktps2qedadhypvh3ex7uqs7qaqrpygmy
   tests/helpers/constants.py: bafybeihounhfhgvqrpps47ozlnw5mrrxz5uevwms2k7w5j4xbfmioetjpy

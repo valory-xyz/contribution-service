@@ -2,3 +2,4 @@
 df690e8ab6086514de8bf9613997dfa23dc08bda:packages/valory/skills/contribution_skill_abci/skill.yaml:generic-api-key:76
 9a5b96de17f6d1674678e6d248b188fbbb8df26d:packages/valory/agents/contribution/tests/helpers/constants.py:generic-api-key:46
 62354f83e125ded60fc13a8d4ee88f0eb1ca257c:packages/valory/agents/contribution/aea-config.yaml:generic-api-key:109
+a8e28883e82612bbe123ec3fe021ee7eeab4e7a0:packages/valory/agents/contribution/aea-config.yaml:generic-api-key:9
