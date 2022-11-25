@@ -199,6 +199,11 @@ def get_dummy_updates(error: bool = False) -> Dict:
     }
 
 
+def get_dummy_images() -> Dict:
+    """Dummy updates"""
+    return {i["image_code"]: "dummy_cid" for i in get_dummy_updates().values()}
+
+
 @dataclass
 class BehaviourTestCase:
     """BehaviourTestCase"""
@@ -680,6 +685,7 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
                 ),
                 {
                     "status_code": 200,
+                    "mock_http": True,
                 },
             ),
             (
@@ -693,6 +699,22 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
                 ),
                 {
                     "status_code": 404,
+                    "mock_http": True,
+                },
+            ),
+            (
+                BehaviourTestCase(
+                    "Happy path: images already in database",
+                    initial_data=dict(
+                        most_voted_member_updates=get_dummy_updates(),
+                        most_voted_api_data=DUMMY_API_DATA,
+                        images=get_dummy_images(),
+                    ),
+                    event=Event.DONE,
+                ),
+                {
+                    "status_code": 200,
+                    "mock_http": False,
                 },
             ),
         ],
@@ -709,29 +731,29 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
         self.behaviour.act_wrapper()
 
         # Mock the IPFS checks
-        for img_code in test_codes:
+        if kwargs.get("mock_http"):
+            for img_code in test_codes:
 
-            img_hash = IMAGE_CODE_TO_HASHES[img_code]
+                img_hash = IMAGE_CODE_TO_HASHES[img_code]
 
-            url = f"{IPFS_GATEWAY_BASE_URL}{img_hash}/{img_code}.png"
+                url = f"{IPFS_GATEWAY_BASE_URL}{img_hash}/{img_code}.png"
 
-            self.mock_http_request(
-                request_kwargs=dict(
-                    method="GET",
-                    headers="",
-                    version="",
-                    url=url,
-                ),
-                response_kwargs=dict(
-                    version="",
-                    status_code=kwargs.get("status_code"),
-                    status_text="",
-                    headers="",
-                    body=b"",
-                ),
-            )
+                self.mock_http_request(
+                    request_kwargs=dict(
+                        method="GET",
+                        headers="",
+                        version="",
+                        url=url,
+                    ),
+                    response_kwargs=dict(
+                        version="",
+                        status_code=kwargs.get("status_code"),
+                        status_text="",
+                        headers="",
+                        body=b"",
+                    ),
+                )
 
-        self.behaviour.act_wrapper()
         self.mock_a2a_transaction()
         self._test_done_flag_set()
         self.end_round(done_event=test_case.event)
