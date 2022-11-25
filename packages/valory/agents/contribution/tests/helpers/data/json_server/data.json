@@ -69,5 +69,8 @@
   },
   "/mock_whitelist": {
     "post": {}
-  }
+  },
+  "/mock_ipfs": {
+   "get": {}
+ }
 }

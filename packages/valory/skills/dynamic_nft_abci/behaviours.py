@@ -661,6 +661,11 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
         """
         img_url = f"{self.params.ipfs_gateway_base_url}{img_hash}/{img_code}.{self.ImageManager.PNG_EXT}"
 
+        # We just call to the mock url if this is an e2e test.
+        # We need to figure a better way to avoid having this conditional here.
+        if "mock_ipfs" in img_url:
+            img_url = f"{self.params.ipfs_gateway_base_url}"
+
         self.context.logger.info(
             f"Checking if image already exists in the IPFS registry: {img_url}"
         )
