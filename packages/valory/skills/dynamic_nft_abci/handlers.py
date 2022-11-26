@@ -23,6 +23,9 @@ from typing import cast
 
 from aea.protocols.base import Message
 
+from packages.fetchai.connections.http_server.connection import (
+    PUBLIC_ID as HTTP_SERVER_PUBLIC_ID,
+)
 from packages.valory.protocols.http.message import HttpMessage
 from packages.valory.skills.abstract_round_abci.handlers import (
     ABCIRoundHandler as BaseABCIRoundHandler,
@@ -75,21 +78,31 @@ class HttpHandler(BaseHttpHandler):
         """
         http_msg = cast(HttpMessage, message)
 
-        # handle message
-        if http_msg.performative == HttpMessage.Performative.REQUEST:
-            # recover dialogue
-            http_dialogues = cast(HttpDialogues, self.context.http_dialogues)
-            http_dialogue = cast(HttpDialogue, http_dialogues.update(http_msg))
-            if http_dialogue is None:
-                self.context.logger.info(
-                    "Received invalid http message={}, unidentified dialogue.".format(
-                        http_msg
-                    )
-                )
-                return
-            self._handle_request(http_msg, http_dialogue)
-        else:
+        # Check if this message is for this skill. If not, send to super()
+        # We expect requests to https://pfp.autonolas.network/nft_id/{token_id}
+        if (
+            http_msg.performative != HttpMessage.Performative.REQUEST
+            or message.sender != str(HTTP_SERVER_PUBLIC_ID.without_hash())
+            or "nft_id" not in message.body.decode()
+        ):
             super().handle(message)
+            return
+
+        # Retrieve dialogues
+        http_dialogues = cast(HttpDialogues, self.context.http_dialogues)
+        http_dialogue = cast(HttpDialogue, http_dialogues.update(http_msg))
+
+        # Invalid message
+        if http_dialogue is None:
+            self.context.logger.info(
+                "Received invalid http message={}, unidentified dialogue.".format(
+                    http_msg
+                )
+            )
+            return
+
+        # Handle message
+        self._handle_request(http_msg, http_dialogue)
 
     def _handle_request(
         self, http_msg: HttpMessage, http_dialogue: HttpDialogue

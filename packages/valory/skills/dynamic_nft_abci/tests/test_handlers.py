@@ -76,8 +76,8 @@ class TestHttpHandler(BaseSkillTestCase):
         cls.url_redirect = "some_url_redirect"
         cls.version = "some_version"
         cls.headers = "some_headers"
-        cls.body = b"some_body"
-        cls.sender = "fetchai/some_skill:0.1.0"
+        cls.body = b"some_body/nft_id"
+        cls.sender = "fetchai/http_server:0.22.0"
         cls.skill_id = str(cls._skill.skill_context.skill_id)
 
         cls.status_code = 100
@@ -116,6 +116,7 @@ class TestHttpHandler(BaseSkillTestCase):
             version=self.version,
             headers=self.headers,
             body=self.body,
+            sender="fetchai/http_server:0.22.0",
         )
 
         # operation

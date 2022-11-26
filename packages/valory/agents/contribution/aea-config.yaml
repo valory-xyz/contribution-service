@@ -12,9 +12,10 @@ fingerprint:
   tests/helpers/data/json_server/data.json: bafybeidtoxunppfrj5zspurhxvxonl6oeazz6ebpfeo4zmmxcmkb64novu
   tests/helpers/docker.py: bafybeiddzj7nqnsr2zegeu7mf7wlsyeierr7wr5hv3lucbjbwgbandpywq
   tests/helpers/fixtures.py: bafybeibbzank7chfncg6ifb4r3lvnttahixu2cq7cs6nnglbeolwlbrsvm
-  tests/test_contribution.py: bafybeih6mhevfvuz7yzymqrpotblsvgdurl3ow27b2dfookb5lcj376bsa
+  tests/test_contribution.py: bafybeih2fmlvs26tgdopriqz2goykniece3pzzxylwhswq22prohtu7dle
 fingerprint_ignore_patterns: []
 connections:
+- fetchai/http_server:0.22.0:bafybeiaf2w3jfemqu4zrtfzewexh5ttqytvhv4tqfzcrv6qxsqnxrv7eu4
 - valory/abci:0.1.0:bafybeics24v7csn2xwyrkdgthrzdbuqutssx3mn572z2tavyr33banqz6u
 - valory/http_client:0.23.0:bafybeihz3tubwado7j3wlivndzzuj3c6fdsp4ra5r3nqixn3ufawzo3wii
 - valory/ledger:0.19.0:bafybeiadc25se7dgnn4mufztwpzdono4xsfs45qknzdqyi3gckn6ccuv44
@@ -28,8 +29,8 @@ protocols:
 skills:
 - valory/abstract_abci:0.1.0:bafybeicog4eierjad4f542ubhe3ez7sxgrsna7t2e5pci2hncpq5vckw4e
 - valory/abstract_round_abci:0.1.0:bafybeia5meor4p77p62khoddlqj4vg5rxiwi3djxc7feusgein6adi7t7m
-- valory/contribution_skill_abci:0.1.0:bafybeihnvudbaln5lekwkhiy3fgzcjefzngtkdhzb7lxonie4tb3d4tnlq
-- valory/dynamic_nft_abci:0.1.0:bafybeifhbrk5vecrnd6jbs2s67rcl66dwadbo3gvaqoxsbjd2xdl46opza
+- valory/contribution_skill_abci:0.1.0:bafybeibvnagaz6nbjp7whvy2iyandcrs5ysfu4nitcast2vsqbf3olb4ja
+- valory/dynamic_nft_abci:0.1.0:bafybeifgtejsas2kyu626qd44s5hi44ck2h6qdpukugf2hwfjcn3kqmzfy
 - valory/registration_abci:0.1.0:bafybeib2cr65zmunztkr3miy4sa2pwlsj2dsi4pz7rwtgg75xczc7hrj3q
 - valory/reset_pause_abci:0.1.0:bafybeie3qy5v3ggc54bmrubd27kbofrkw6srgbggo3b6ewssw3pbxjuvla
 default_ledger: ethereum
@@ -152,6 +153,12 @@ models:
       tendermint_com_url: ${TENDERMINT_COM_URL:str:http://localhost:8080}
       tendermint_max_retries: 5
       tendermint_url: ${TENDERMINT_URL:str:http://localhost:26657}
-      token_uri_base: https://pfp.autonolas.network/series/1/
+      token_uri_base: https://pfp.autonolas.network/nft_id/
       whitelist_api_key: null
       whitelist_endpoint: http://localhost
+---
+public_id: fetchai/http_server:0.22.0:bafybeicblltx7ha3ulthg7bzfccuqqyjmihhrvfeztlgrlcoxhr7kf6nbq
+type: connection
+config:
+  host: 0.0.0.0
+  target_skill_id: valory/contribution_skill_abci:0.1.0
