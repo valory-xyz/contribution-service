@@ -79,11 +79,11 @@ class HttpHandler(BaseHttpHandler):
         http_msg = cast(HttpMessage, message)
 
         # Check if this message is for this skill. If not, send to super()
-        # We expect requests to https://pfp.autonolas.network/nft_id/{token_id}
+        # We expect requests to https://pfp.autonolas.network/{token_id}
         if (
             http_msg.performative != HttpMessage.Performative.REQUEST
             or message.sender != str(HTTP_SERVER_PUBLIC_ID.without_hash())
-            or "nft_id" not in message.body.decode()
+            or "nft_id" not in http_msg.url
         ):
             super().handle(message)
             return
@@ -134,10 +134,15 @@ class HttpHandler(BaseHttpHandler):
         """
         # Get the requested uri and the redirects table
         request_uri = http_msg.url
+        token_id = int(request_uri.split("/")[-1])
         redirects = self.context.state.round_sequence.latest_synchronized_data.redirects
 
         # Check if the uri exists in the redirect table
         if request_uri not in redirects:
+            self.context.logger.info(
+                f"Requested URL {request_uri} is not present in redirect table"
+            )
+
             http_response = http_dialogue.reply(
                 performative=HttpMessage.Performative.RESPONSE,
                 target_message=http_msg,
@@ -148,6 +153,10 @@ class HttpHandler(BaseHttpHandler):
                 body=b"",
             )
         else:
+            self.context.logger.info(
+                f"Requested URL {request_uri} is present in redirect table"
+            )
+
             redirect_uri = redirects[request_uri]
             location_headers = f"Location: {redirect_uri}\n"
 
