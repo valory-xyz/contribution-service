@@ -161,7 +161,7 @@ class HttpHandler(BaseHttpHandler):
                 f"Requested URL {request_uri} is present in redirect table"
             )
 
-            redirect_uri = redirects[request_uri]
+            redirect_uri = redirects[token_id]
             location_headers = f"Location: {redirect_uri}\n"
 
             http_response = http_dialogue.reply(
