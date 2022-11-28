@@ -117,7 +117,11 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
                 )
 
                 # Add new redirects
-                basic_image_url = f"{self.context.params.ipfs_gateway_base_url}{self.context.params.basic_image_cid}/0000.png"
+                if "staging" in self.context.params.ipfs_gateway_base_url:
+                    basic_image_url = f"{self.context.params.ipfs_gateway_base_url}{self.context.params.basic_image_cid}/0000.png"
+                else:
+                    basic_image_url = f"{self.context.params.ipfs_gateway_base_url}{self.context.params.basic_image_cid}"
+
                 new_redirects = {}
                 for data in new_member_to_data.values():
                     new_redirects[data["token_id"]] = basic_image_url
@@ -532,12 +536,22 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                     self.context.logger.info(
                         f"Getting hash for image at {image_path}..."
                     )
-                    image_hash = IPFSHashOnly.get(str(image_path))
+
+                    wrap_content = (
+                        "staging" in self.context.params.ipfs_gateway_base_url
+                    )
+                    image_hash = IPFSHashOnly.get(
+                        str(image_path), cid_v1=True, wrap=wrap_content
+                    )
 
                     self.context.logger.info(f"Image hash is {image_hash}...")
 
                     # Check whether the image is already present in the registry
-                    image_url = f"{self.params.ipfs_gateway_base_url}{image_hash}/{image_code}.{self.ImageManager.PNG_EXT}"
+                    if "staging" in self.params.ipfs_gateway_base_url:
+                        image_url = f"{self.params.ipfs_gateway_base_url}{image_hash}/{image_code}.{self.ImageManager.PNG_EXT}"
+                    else:
+                        image_url = f"{self.params.ipfs_gateway_base_url}{image_hash}"
+
                     image_in_ipfs = yield from self.check_ipfs_image(image_url)
                     if image_in_ipfs:
                         images_in_ipfs[image_code] = image_url
@@ -605,8 +619,10 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
 
             self.context.logger.info(f"Checking local image hashes from: {layer_path}")
 
+            wrap_content = "staging" in self.context.params.ipfs_gateway_base_url
+
             local_layer_hashes = set(
-                IPFSHashOnly.get(image_file)
+                IPFSHashOnly.get(image_file, cid_v1=True, wrap=wrap_content)
                 for image_file in layer_path.rglob(f"*.{self.ImageManager.PNG_EXT}")
             )
 
