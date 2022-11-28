@@ -103,16 +103,12 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
             if member_to_token_id == NewMembersRound.ERROR_PAYLOAD:
                 payload_data = json.dumps(NewMembersRound.ERROR_PAYLOAD, sort_keys=True)
             else:
-                member_to_nft_uri = {
-                    member: f"{self.params.token_uri_base}{token_id}"
-                    for member, token_id in member_to_token_id.items()
-                }
                 old_members = set(self.synchronized_data.members.keys())
 
                 # Add new members only
                 new_member_to_data = {
-                    member: {"uri": uri, "points": None, "image_code": None}
-                    for member, uri in member_to_nft_uri.items()
+                    member: {"token_id": token_id, "points": None, "image_code": None}
+                    for member, token_id in member_to_token_id.items()
                     if member not in old_members
                 }
                 self.context.logger.info(
@@ -123,7 +119,7 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
                 basic_image_url = f"{self.context.params.ipfs_gateway_base_url}{self.context.params.basic_image_cid}/0000.png"
                 new_redirects = {}
                 for data in new_member_to_data.values():
-                    new_redirects[data["uri"]] = basic_image_url
+                    new_redirects[data["token_id"]] = basic_image_url
 
                 payload_data = json.dumps(
                     {
