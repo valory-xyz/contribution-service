@@ -29,6 +29,9 @@ import pytest
 from aea.protocols.dialogue.base import DialogueMessage
 from aea.test_tools.test_skill import BaseSkillTestCase
 
+from packages.fetchai.connections.http_server.connection import (
+    PUBLIC_ID as HTTP_SERVER_PUBLIC_ID,
+)
 from packages.valory.protocols.http.message import HttpMessage
 from packages.valory.skills.dynamic_nft_abci.dialogues import HttpDialogues
 from packages.valory.skills.dynamic_nft_abci.handlers import (
@@ -40,6 +43,8 @@ from packages.valory.skills.dynamic_nft_abci.handlers import (
 
 
 PACKAGE_DIR = Path(__file__).parent.parent
+
+HTTP_SERVER_SENDER = str(HTTP_SERVER_PUBLIC_ID.without_hash())
 
 
 @dataclass
@@ -77,7 +82,7 @@ class TestHttpHandler(BaseSkillTestCase):
         cls.version = "some_version"
         cls.headers = "some_headers"
         cls.body = b"some_body/nft_id"
-        cls.sender = "fetchai/http_server:0.22.0"
+        cls.sender = HTTP_SERVER_SENDER
         cls.skill_id = str(cls._skill.skill_context.skill_id)
 
         cls.status_code = 100
@@ -116,7 +121,7 @@ class TestHttpHandler(BaseSkillTestCase):
             version=self.version,
             headers=self.headers,
             body=self.body,
-            sender="fetchai/http_server:0.22.0",
+            sender=HTTP_SERVER_SENDER,
         )
 
         # operation
