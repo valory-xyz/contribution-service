@@ -137,10 +137,6 @@ class HttpHandler(BaseHttpHandler):
         token_id = request_uri.split("/")[-1]
         redirects = self.context.state.round_sequence.latest_synchronized_data.redirects
 
-        self.context.logger.info(
-            f"Check token_id: {token_id} in {list(redirects.keys())}"
-        )
-
         # Check if the uri exists in the redirect table
         if token_id not in redirects:
             self.context.logger.info(
