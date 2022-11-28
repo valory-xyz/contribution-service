@@ -49,6 +49,7 @@ from packages.valory.skills.dynamic_nft_abci.dialogues import (
     HttpDialogue,
     HttpDialogues,
 )
+from packages.valory.skills.dynamic_nft_abci.rounds import SynchronizedData
 
 
 ABCIRoundHandler = BaseABCIRoundHandler
@@ -135,7 +136,9 @@ class HttpHandler(BaseHttpHandler):
         # Get the requested uri and the redirects table
         request_uri = http_msg.url
         token_id = request_uri.split("/")[-1]
-        redirects = self.context.state.round_sequence.latest_synchronized_data.redirects
+        redirects = cast(
+            SynchronizedData, self.context.state.round_sequence.latest_synchronized_data
+        ).redirects
 
         # Check if the uri exists in the redirect table
         if token_id not in redirects:

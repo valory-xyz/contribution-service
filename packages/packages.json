@@ -1,10 +1,10 @@
 {
     "dev": {
         "contract/valory/ERC721Collective/0.1.0": "bafybeihu33q57id2gppzkowrbv2eljjyz4abxzvk6gisvl7xqksp5lr4nq",
-        "skill/valory/dynamic_nft_abci/0.1.0": "bafybeievtqxp3oizb755astcfiycmm5mcb2rohhsxbxlnqf454p6tmxwqi",
-        "skill/valory/contribution_skill_abci/0.1.0": "bafybeihxvcpr6wa4bxjv7t2spc2arekfae5a3qo7dw7llixfmynnxwp64i",
-        "agent/valory/contribution/0.1.0": "bafybeihyho3cdgyrkantdbncaxpse4htko44yyfevrsen6e64ucy3oqx6u",
-        "service/valory/contribution/0.1.0": "bafybeiga5efyf5s5ymgy5dcqvulctqnjvkmrmpskrtltrizjtaau2eezke"
+        "skill/valory/dynamic_nft_abci/0.1.0": "bafybeige7u36jzcmej3sz2yaowb5jukrbzkthhgdqrxmi7ody2ku35ja7q",
+        "skill/valory/contribution_skill_abci/0.1.0": "bafybeifb3oqrf3nw33vvojc2o7ancqqi5wszwkrrlbmb6f6nbps5i42hlu",
+        "agent/valory/contribution/0.1.0": "bafybeighrf3mhjpspceutaijrfkbxo6ruo5mffe3ltrgncrcpcmtrbpqca",
+        "service/valory/contribution/0.1.0": "bafybeiaiddzftyeh44joacdodixqhjcujla3kfzhilr5p3jlkpbkarwpl4"
     },
     "third_party": {
         "protocol/open_aea/signing/1.0.0": "bafybeiambqptflge33eemdhis2whik67hjplfnqwieoa6wblzlaf7vuo44",
