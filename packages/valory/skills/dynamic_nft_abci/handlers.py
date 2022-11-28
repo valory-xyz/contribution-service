@@ -120,7 +120,7 @@ class HttpHandler(BaseHttpHandler):
                 http_msg.body,
             )
         )
-        if http_msg.method == "get":
+        if http_msg.method in ("get", "head"):
             self._handle_get(http_msg, http_dialogue)
         else:
             self._handle_non_get(http_msg, http_dialogue)  # reject other methods

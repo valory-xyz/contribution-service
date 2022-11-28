@@ -9,7 +9,7 @@ fingerprint:
   README.md: bafybeiaeysyipptsieavfpyfkrfl3n37klu3ux7o2rtks2w4k2nnr2hshu
   keys.json: bafybeigna34jgvujpejnnswgqhkrvs2fhl7k3udet4buv7psq7xfqiauiq
 fingerprint_ignore_patterns: []
-agent: valory/contribution:0.1.0:bafybeia7ho7vzhuphbprc4wg2lhxwhnopidagmxkrmztdhblzlu452t6oe
+agent: valory/contribution:0.1.0:bafybeidiuhavexgv6nj4cpvdligkp7k5edaanrwdypg3ncpvyumzkyefam
 number_of_agents: 1
 ---
 public_id: valory/contribution_skill_abci:0.1.0
