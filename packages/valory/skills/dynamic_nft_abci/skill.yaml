@@ -7,7 +7,7 @@ license: Apache-2.0
 aea_version: '>=1.0.0, <2.0.0'
 fingerprint:
   __init__.py: bafybeif56b2yk2pzo6njoexydkvwkl5tiaj7p76542ljnrijm3urhtnsxq
-  behaviours.py: bafybeicv57ytj5euje4yxn37nm4ltfmo2d7f4p7vilds47py44prs7k4v4
+  behaviours.py: bafybeie45c2wlmh6bnga5dchxn5q7c6tqt2k6ews6wavfqb6dar6och5bq
   data/layers/classes/0.png: bafybeidq3dslr742cgu2stwx5bbsnni4mjojtlkzowymy2662b4p5yk3y4
   data/layers/frames/0.png: bafybeicy22hgzs7kwuw7wswht2q3gmv4daxyoga2mvr5f644lgzfconpn4
   data/layers/frames/1.png: bafybeicgg6m7j3eu5akua55mlxohsbqvgonkmk2qqflslrtcdlec6m6ty4
@@ -15,13 +15,13 @@ fingerprint:
   data/layers/frames/3.png: bafybeigstc52zkvx3mwzw2dwc3726amgpolwbdxfoylpupnk6ut5ya357a
   dialogues.py: bafybeifxlkz47umd63ojgydccujs4j2kwhfh32bdhxcjdodm5brvc25fjq
   fsm_specification.yaml: bafybeicyqbndd5bzjsdckjbpb2qhkjfwa4leovfofm5ugvikttp56tygey
-  handlers.py: bafybeicsd4fcwefanywcbepc36jstu645uqkgcj7lfbjmyj2fl7np3zjom
+  handlers.py: bafybeifk3iw7ogn5wct2fqt76fz4nfutfrtsbkew6ebsmikdidqhooyvlq
   io_/__init__.py: bafybeidxth2otiyp5gfk2l3zjvnfktgrtpwzsknihkef3v2lhwbkgum3ea
   io_/load.py: bafybeifd7ib4lktvgv6rphk6sblkndn3klmzd5js62h2gzxlubjcmlf6jy
   io_/store.py: bafybeih3wa6quhstymsqcsy7jejpj4fx6crq6gs72dzs6svjklu7wushtq
   models.py: bafybeifevmikxr723bjy4yk7uff3catyo2o3wtoegqvorvkrv54dxnuoei
   payloads.py: bafybeiaeibgx4faww6sjrqxcehq5a3h54upqqifkbptr6eq57jvlyohxsa
-  rounds.py: bafybeieq423dtypgou62pq5jqwbmkjyjplgceb4ebpq5b6esoblm6hzzgm
+  rounds.py: bafybeiajclirf3dwslwca3oppsi7ze2orecmhbvqqzzev5jazuk34dphjq
   tests/__init__.py: bafybeia2xqlacp44lylwlkf7f7ci6m3yshppv3vusgcdjpj4bbcbnuhvla
   tests/test_behaviours.py: bafybeihykyjdi6x242t56gv5zs2oixcekd7fklq6kjx5fcsqlcgnffpeiy
   tests/test_dialogues.py: bafybeibfzhpyz2kdokjkz76oxz4sc6nw26dw5pgx5fwvloyfyl2inixwdi
@@ -39,7 +39,7 @@ fingerprint_ignore_patterns: []
 connections:
 - fetchai/http_server:0.22.0:bafybeiaf2w3jfemqu4zrtfzewexh5ttqytvhv4tqfzcrv6qxsqnxrv7eu4
 contracts:
-- valory/ERC721Collective:0.1.0:bafybeibbfvoexfmsp6vr6kvvfn4yddhunhtlhu2z2brzt3an7wuljc7vja
+- valory/ERC721Collective:0.1.0:bafybeihu33q57id2gppzkowrbv2eljjyz4abxzvk6gisvl7xqksp5lr4nq
 protocols:
 - valory/contract_api:1.0.0:bafybeiaxbrvgtbdrh4lslskuxyp4awyr4whcx3nqq5yrr6vimzsxg5dy64
 - valory/http:1.0.0:bafybeigzqo2zaakcjtzzsm6dh4x73v72xg6ctk6muyp5uq5ueb7y34fbxy
