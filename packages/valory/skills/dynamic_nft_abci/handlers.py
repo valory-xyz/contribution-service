@@ -134,11 +134,15 @@ class HttpHandler(BaseHttpHandler):
         """
         # Get the requested uri and the redirects table
         request_uri = http_msg.url
-        token_id = int(request_uri.split("/")[-1])
+        token_id = request_uri.split("/")[-1]
         redirects = self.context.state.round_sequence.latest_synchronized_data.redirects
 
+        self.context.logger.info(
+            f"Check token_id: {token_id} in {list(redirects.keys())}"
+        )
+
         # Check if the uri exists in the redirect table
-        if request_uri not in redirects:
+        if token_id not in redirects:
             self.context.logger.info(
                 f"Requested URL {request_uri} is not present in redirect table"
             )

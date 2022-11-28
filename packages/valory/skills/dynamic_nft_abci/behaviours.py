@@ -130,6 +130,8 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
                     sort_keys=True,
                 )
 
+                self.context.logger.info(f"Payload data={payload_data}")
+
         with self.context.benchmark_tool.measure(
             self.behaviour_id,
         ).consensus():
