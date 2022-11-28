@@ -66,6 +66,7 @@ from packages.valory.skills.dynamic_nft_abci.tools import SHEET_API_SCHEMA
 
 
 NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
+HTTP_TIMEOUT = 10
 
 
 class DynamicNFTBaseBehaviour(BaseBehaviour):
@@ -669,10 +670,15 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
             f"Checking if image already exists in the IPFS registry: {img_url}"
         )
 
-        response = yield from self.get_http_response(
-            method="GET",
-            url=img_url,
+        request_message, http_dialogue = self._build_http_request_message(
+            method="GET", url=img_url
         )
+        response = yield from self._do_request(
+            request_message=request_message,
+            http_dialogue=http_dialogue,
+            timeout=HTTP_TIMEOUT,
+        )
+
         if response.status_code != 200:
             self.context.logger.error(
                 f"Could not check image at {img_url}, code={response.status_code}"
