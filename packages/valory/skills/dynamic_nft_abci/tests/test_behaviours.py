@@ -179,7 +179,7 @@ IMAGE_PATH = Path(
     ImageGenerationBehaviour.ImageManager.IMAGES_DIR,
 )
 
-IPFS_GATEWAY_BASE_URL = "https://gateway.ipfs.io/ipfs/"
+IPFS_GATEWAY_BASE_URL = "https://gateway.staging.autonolas.tech/ipfs/"
 
 IMAGE_CODE_TO_HASHES = {
     "0000": "bafybeid7qdbwj4rpyqtb33zjpniopaq5e5phdl7kkv6qjbsak73de6lf2y",

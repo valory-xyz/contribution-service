@@ -29,8 +29,8 @@ protocols:
 skills:
 - valory/abstract_abci:0.1.0:bafybeicog4eierjad4f542ubhe3ez7sxgrsna7t2e5pci2hncpq5vckw4e
 - valory/abstract_round_abci:0.1.0:bafybeia5meor4p77p62khoddlqj4vg5rxiwi3djxc7feusgein6adi7t7m
-- valory/contribution_skill_abci:0.1.0:bafybeicomlp7a5zf5nndsfpqctilurk26iiokdbewilozwrj7auefoy6ai
-- valory/dynamic_nft_abci:0.1.0:bafybeifu4yodpumknvz4by25prrcr4lsi3vkgziifl2nhgi324lo2naw3e
+- valory/contribution_skill_abci:0.1.0:bafybeihxvcpr6wa4bxjv7t2spc2arekfae5a3qo7dw7llixfmynnxwp64i
+- valory/dynamic_nft_abci:0.1.0:bafybeievtqxp3oizb755astcfiycmm5mcb2rohhsxbxlnqf454p6tmxwqi
 - valory/registration_abci:0.1.0:bafybeib2cr65zmunztkr3miy4sa2pwlsj2dsi4pz7rwtgg75xczc7hrj3q
 - valory/reset_pause_abci:0.1.0:bafybeie3qy5v3ggc54bmrubd27kbofrkw6srgbggo3b6ewssw3pbxjuvla
 default_ledger: ethereum
@@ -131,7 +131,7 @@ models:
           version: {}
         voting_power: '10'
       ipfs_domain_name: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_IPFS_DOMAIN_NAME:str:/dns/registry.autonolas.tech/tcp/443/https}
-      ipfs_gateway_base_url: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_IPFS_GATEWAY_BASE_URL:str:https://gateway.ipfs.io/ipfs/}
+      ipfs_gateway_base_url: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_IPFS_GATEWAY_BASE_URL:str:https://gateway.staging.autonolas.tech/ipfs/}
       keeper_timeout: 30.0
       leaderboard_api_key: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_LEADERBOARD_API_KEY:str:null}
       leaderboard_base_endpoint: https://sheets.googleapis.com/v4/spreadsheets
