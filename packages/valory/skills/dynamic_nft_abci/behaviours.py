@@ -80,7 +80,7 @@ class DynamicNFTBaseBehaviour(BaseBehaviour):
     @property
     def synchronized_data(self) -> SynchronizedData:
         """Return the synchronized data."""
-        return SynchronizedData(db=super().synchronized_data.db)
+        return cast(SynchronizedData, super().synchronized_data)
 
     @property
     def params(self) -> Params:
