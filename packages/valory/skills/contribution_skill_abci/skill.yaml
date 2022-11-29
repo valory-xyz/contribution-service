@@ -24,7 +24,7 @@ contracts: []
 protocols: []
 skills:
 - valory/abstract_round_abci:0.1.0:bafybeia5meor4p77p62khoddlqj4vg5rxiwi3djxc7feusgein6adi7t7m
-- valory/dynamic_nft_abci:0.1.0:bafybeidw7xoavjusjm2pzs3g5ekmbfs33e3rsrmn32fkqk42tssmvufb6y
+- valory/dynamic_nft_abci:0.1.0:bafybeigemvuzq3axhli7wkppl35cezl4rjtguq5r6o55evjasaosol7usy
 - valory/registration_abci:0.1.0:bafybeib2cr65zmunztkr3miy4sa2pwlsj2dsi4pz7rwtgg75xczc7hrj3q
 - valory/reset_pause_abci:0.1.0:bafybeie3qy5v3ggc54bmrubd27kbofrkw6srgbggo3b6ewssw3pbxjuvla
 behaviours:
@@ -69,8 +69,7 @@ models:
     class_name: LedgerApiDialogues
   params:
     args:
-      basic_image_cid_prod: bafybeig6tvnwaw4lfcth5e4g2ggro2df6i5np5ed3h3w5jt3f4dc4otlf4
-      basic_image_cid_staging: bafybeid7qdbwj4rpyqtb33zjpniopaq5e5phdl7kkv6qjbsak73de6lf2y
+      basic_image_cid: bafybeig6tvnwaw4lfcth5e4g2ggro2df6i5np5ed3h3w5jt3f4dc4otlf4
       cleanup_history_depth: 1
       cleanup_history_depth_current: null
       consensus:

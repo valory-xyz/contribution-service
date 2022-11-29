@@ -118,10 +118,7 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
                 )
 
                 # Add new redirects
-                if "staging" in self.context.params.ipfs_gateway_base_url:
-                    basic_image_url = f"{self.context.params.ipfs_gateway_base_url}{self.context.params.basic_image_cid_staging}/0000.png"
-                else:
-                    basic_image_url = f"{self.context.params.ipfs_gateway_base_url}{self.context.params.basic_image_cid_prod}"
+                basic_image_url = f"{self.context.params.ipfs_gateway_base_url}{self.context.params.basic_image_cid}"
 
                 new_redirects = {}
                 for data in new_member_to_data.values():
@@ -538,21 +535,14 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                         f"Getting hash for image at {image_path}..."
                     )
 
-                    wrap_content = (
-                        "staging" in self.context.params.ipfs_gateway_base_url
-                        or "mock" in self.context.params.ipfs_gateway_base_url
-                    )
                     image_hash = IPFSHashOnly.get(
-                        str(image_path), cid_v1=True, wrap=wrap_content
+                        str(image_path), cid_v1=True, wrap=False
                     )
 
                     self.context.logger.info(f"Image hash is {image_hash}...")
 
                     # Check whether the image is already present in the registry
-                    if "staging" in self.params.ipfs_gateway_base_url:
-                        image_url = f"{self.params.ipfs_gateway_base_url}{image_hash}/{image_code}.{self.ImageManager.PNG_EXT}"
-                    else:
-                        image_url = f"{self.params.ipfs_gateway_base_url}{image_hash}"
+                    image_url = f"{self.params.ipfs_gateway_base_url}{image_hash}"
 
                     image_in_ipfs = yield from self.check_ipfs_image(image_url)
                     if image_in_ipfs:
@@ -621,13 +611,8 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
 
             self.context.logger.info(f"Checking local image hashes from: {layer_path}")
 
-            wrap_content = (
-                "staging" in self.context.params.ipfs_gateway_base_url
-                or "mock" in self.context.params.ipfs_gateway_base_url
-            )
-
             local_layer_hashes = set(
-                IPFSHashOnly.get(image_file, cid_v1=True, wrap=wrap_content)
+                IPFSHashOnly.get(image_file, cid_v1=True, wrap=False)
                 for image_file in layer_path.rglob(f"*.{self.ImageManager.PNG_EXT}")
             )
 

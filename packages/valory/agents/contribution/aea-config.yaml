@@ -29,8 +29,8 @@ protocols:
 skills:
 - valory/abstract_abci:0.1.0:bafybeicog4eierjad4f542ubhe3ez7sxgrsna7t2e5pci2hncpq5vckw4e
 - valory/abstract_round_abci:0.1.0:bafybeia5meor4p77p62khoddlqj4vg5rxiwi3djxc7feusgein6adi7t7m
-- valory/contribution_skill_abci:0.1.0:bafybeibk7j25i5o7ttnvhl5nlsttfz6733wyqrovg2taswidr5to4insom
-- valory/dynamic_nft_abci:0.1.0:bafybeidw7xoavjusjm2pzs3g5ekmbfs33e3rsrmn32fkqk42tssmvufb6y
+- valory/contribution_skill_abci:0.1.0:bafybeiafhb7krt6gvacs6chro25i4k5yrxqzsf6iiwu5ige4eeg3hca4ai
+- valory/dynamic_nft_abci:0.1.0:bafybeigemvuzq3axhli7wkppl35cezl4rjtguq5r6o55evjasaosol7usy
 - valory/registration_abci:0.1.0:bafybeib2cr65zmunztkr3miy4sa2pwlsj2dsi4pz7rwtgg75xczc7hrj3q
 - valory/reset_pause_abci:0.1.0:bafybeie3qy5v3ggc54bmrubd27kbofrkw6srgbggo3b6ewssw3pbxjuvla
 default_ledger: ethereum
@@ -107,8 +107,7 @@ type: skill
 models:
   params:
     args:
-      basic_image_cid_staging: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_BASIC_IMAGE_CID_STAGING:str:bafybeid7qdbwj4rpyqtb33zjpniopaq5e5phdl7kkv6qjbsak73de6lf2y}
-      basic_image_cid_prod: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_BASIC_IMAGE_PROD:str:bafybeig6tvnwaw4lfcth5e4g2ggro2df6i5np5ed3h3w5jt3f4dc4otlf4}
+      basic_image_cid: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_BASIC_IMAGE_CID:str:bafybeig6tvnwaw4lfcth5e4g2ggro2df6i5np5ed3h3w5jt3f4dc4otlf4}
       cleanup_history_depth: 1
       cleanup_history_depth_current: null
       consensus:
