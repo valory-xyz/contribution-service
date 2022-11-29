@@ -173,9 +173,9 @@ class TestHttpHandler(BaseSkillTestCase):
             with patch.object(
                 self.http_handler.context.state, "_round_sequence"
             ) as mock_round_sequence:
-                mock_round_sequence.latest_synchronized_data.redirects = (
-                    test_case.redirects
-                )
+                mock_round_sequence.latest_synchronized_data.db = {
+                    "redirects": test_case.redirects
+                }
                 self.http_handler.handle(incoming_message)
 
         # after

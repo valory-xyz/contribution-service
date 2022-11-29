@@ -104,13 +104,13 @@ DUMMY_MEMBER_TO_TOKEN_ID = {member: i for i, member in enumerate(DUMMY_LEADERBOA
 
 DUMMY_LAYERS = {
     "classes": {
-        0: "bafybeiggubspktr3ujvsj32esaspnqojf4ukvhjdsvl2ko3tg5bfmuq5ju",
+        0: "bafybeidq3dslr742cgu2stwx5bbsnni4mjojtlkzowymy2662b4p5yk3y4",
     },
     "frames": {
-        0: "bafybeiaotq73a2cceb5ywdvu63haww65c24l3mnbxg3ensoa3gting5ilm",
-        50000: "bafybeihfvqegnqt4bllchoiwzuceo2naktnyr6tyajbaff432iu5ugiswu",
-        100000: "bafybeifbmyacqrah25k3aqpg6psimwpzc5axr3a63iww5xvegnjqiwaufm",
-        150000: "bafybeicukhvlxmpxl576slrxjvad7zev2ldadre7lk5eeltmdjeooafwbm",
+        0: "bafybeicy22hgzs7kwuw7wswht2q3gmv4daxyoga2mvr5f644lgzfconpn4",
+        50000: "bafybeicgg6m7j3eu5akua55mlxohsbqvgonkmk2qqflslrtcdlec6m6ty4",
+        100000: "bafybeia6thhn2qc3rmj2dnlhy5oov7bvtpjlosesu54ybnuavtl2725h7i",
+        150000: "bafybeigstc52zkvx3mwzw2dwc3726amgpolwbdxfoylpupnk6ut5ya357a",
     },
 }
 
@@ -182,10 +182,10 @@ IMAGE_PATH = Path(
 IPFS_GATEWAY_BASE_URL = "https://gateway.staging.autonolas.tech/ipfs/"
 
 IMAGE_CODE_TO_HASHES = {
-    "0000": "bafybeid7qdbwj4rpyqtb33zjpniopaq5e5phdl7kkv6qjbsak73de6lf2y",
-    "0001": "bafybeign6bfqbpeukak5q7koai52dtjill3mu5pewnmtkn7g2d5ivwyuyy",
-    "0002": "bafybeidsqg5oidpi556vfsgdpqc6olj4ftmrlg46qzasan4beidrw5z77m",
-    "0003": "bafybeidsqu4tlo5vnyvtdczpvh43mdhphfo5jwm7r5rwbpshbp4ukk3kri",
+    "0000": "bafybeig6tvnwaw4lfcth5e4g2ggro2df6i5np5ed3h3w5jt3f4dc4otlf4",
+    "0001": "bafybeihlilxztmopjfh7wf4o6loht3ezn4fnt2jpllqwcahid4xzkoccoi",
+    "0002": "bafybeihxmk2lqghnlbjuml453z7sihuuewjjd2skpjmhrmz72r5xlvsvju",
+    "0003": "bafybeib6xutso6jzf5xgzqw7eonje7x72wagpbkc5t6xhl6cltsb3wae6y",
 }
 
 
@@ -736,7 +736,7 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
 
                 img_hash = IMAGE_CODE_TO_HASHES[img_code]
 
-                url = f"{IPFS_GATEWAY_BASE_URL}{img_hash}/{img_code}.png"
+                url = f"{IPFS_GATEWAY_BASE_URL}{img_hash}"
 
                 self.mock_http_request(
                     request_kwargs=dict(
@@ -799,7 +799,7 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
 
                 img_hash = IMAGE_CODE_TO_HASHES[img_code]
 
-                url = f"{IPFS_GATEWAY_BASE_URL}{img_hash}/{img_code}.png"
+                url = f"{IPFS_GATEWAY_BASE_URL}{img_hash}"
 
                 self.mock_http_request(
                     request_kwargs=dict(
@@ -893,7 +893,7 @@ class TestImageGenerationErrorBehaviour(BaseDynamicNFTTest):
 
             img_hash = IMAGE_CODE_TO_HASHES[img_code]
 
-            url = f"{IPFS_GATEWAY_BASE_URL}{img_hash}/{img_code}.png"
+            url = f"{IPFS_GATEWAY_BASE_URL}{img_hash}"
 
             self.mock_http_request(
                 request_kwargs=dict(
@@ -946,7 +946,7 @@ class TestImageGenerationErrorBehaviour(BaseDynamicNFTTest):
 
             img_hash = IMAGE_CODE_TO_HASHES[img_code]
 
-            url = f"{IPFS_GATEWAY_BASE_URL}{img_hash}/{img_code}.png"
+            url = f"{IPFS_GATEWAY_BASE_URL}{img_hash}"
 
             self.mock_http_request(
                 request_kwargs=dict(
