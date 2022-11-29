@@ -118,9 +118,9 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
 
                 # Add new redirects
                 if "staging" in self.context.params.ipfs_gateway_base_url:
-                    basic_image_url = f"{self.context.params.ipfs_gateway_base_url}{self.context.params.basic_image_cid}/0000.png"
+                    basic_image_url = f"{self.context.params.ipfs_gateway_base_url}{self.context.params.basic_image_cid_staging}/0000.png"
                 else:
-                    basic_image_url = f"{self.context.params.ipfs_gateway_base_url}{self.context.params.basic_image_cid}"
+                    basic_image_url = f"{self.context.params.ipfs_gateway_base_url}{self.context.params.basic_image_cid_prod}"
 
                 new_redirects = {}
                 for data in new_member_to_data.values():

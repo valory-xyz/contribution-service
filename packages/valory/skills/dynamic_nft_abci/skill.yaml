@@ -7,7 +7,7 @@ license: Apache-2.0
 aea_version: '>=1.0.0, <2.0.0'
 fingerprint:
   __init__.py: bafybeif56b2yk2pzo6njoexydkvwkl5tiaj7p76542ljnrijm3urhtnsxq
-  behaviours.py: bafybeiczp52xol2w5dwtrhrvjlu456nuck4qhfkbsyrk3hr3hy6awqrve4
+  behaviours.py: bafybeicvste2pa24qg4cjedpziawofdq6s2f5lde5whsg2tdlsekldw2je
   data/layers/classes/0.png: bafybeidq3dslr742cgu2stwx5bbsnni4mjojtlkzowymy2662b4p5yk3y4
   data/layers/frames/0.png: bafybeicy22hgzs7kwuw7wswht2q3gmv4daxyoga2mvr5f644lgzfconpn4
   data/layers/frames/1.png: bafybeicgg6m7j3eu5akua55mlxohsbqvgonkmk2qqflslrtcdlec6m6ty4
@@ -19,7 +19,7 @@ fingerprint:
   io_/__init__.py: bafybeidxth2otiyp5gfk2l3zjvnfktgrtpwzsknihkef3v2lhwbkgum3ea
   io_/load.py: bafybeifd7ib4lktvgv6rphk6sblkndn3klmzd5js62h2gzxlubjcmlf6jy
   io_/store.py: bafybeih3wa6quhstymsqcsy7jejpj4fx6crq6gs72dzs6svjklu7wushtq
-  models.py: bafybeifevmikxr723bjy4yk7uff3catyo2o3wtoegqvorvkrv54dxnuoei
+  models.py: bafybeiaukdkhurp4xrt2h6iub3ar5fjkxnprjyy35jg26uqvepiruzcx6a
   payloads.py: bafybeiaeibgx4faww6sjrqxcehq5a3h54upqqifkbptr6eq57jvlyohxsa
   rounds.py: bafybeiajclirf3dwslwca3oppsi7ze2orecmhbvqqzzev5jazuk34dphjq
   tests/__init__.py: bafybeia2xqlacp44lylwlkf7f7ci6m3yshppv3vusgcdjpj4bbcbnuhvla
@@ -87,7 +87,8 @@ models:
     class_name: LedgerApiDialogues
   params:
     args:
-      basic_image_cid: bafybeicpygo4r6qk4ypckeur7v6gnmghli4wglevgldgpimkvl27i7gwqq
+      basic_image_cid_prod: bafybeig6tvnwaw4lfcth5e4g2ggro2df6i5np5ed3h3w5jt3f4dc4otlf4
+      basic_image_cid_staging: bafybeid7qdbwj4rpyqtb33zjpniopaq5e5phdl7kkv6qjbsak73de6lf2y
       cleanup_history_depth: 1
       cleanup_history_depth_current: null
       consensus:

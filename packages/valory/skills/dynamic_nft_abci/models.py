@@ -62,7 +62,8 @@ class Params(BaseParams):
         )
         self.token_uri_base = self._ensure("token_uri_base", kwargs)
         self.ipfs_gateway_base_url = self._ensure("ipfs_gateway_base_url", kwargs)
-        self.basic_image_cid = self._ensure("basic_image_cid", kwargs)
+        self.basic_image_cid_staging = self._ensure("basic_image_cid_staging", kwargs)
+        self.basic_image_cid_prod = self._ensure("basic_image_cid_prod", kwargs)
 
         super().__init__(*args, **kwargs)
 
