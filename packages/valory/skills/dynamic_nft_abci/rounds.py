@@ -255,8 +255,8 @@ class DBUpdateRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
                 members[member]["points"] = data["points"]
                 members[member]["image_code"] = data["image_code"]
 
-                uri = members[member]["uri"]
-                redirects[uri] = images[data["image_code"]]
+                token_id = members[member]["token_id"]
+                redirects[token_id] = images[data["image_code"]]
 
             synchronized_data = self.synchronized_data.update(
                 synchronized_data_class=SynchronizedData,

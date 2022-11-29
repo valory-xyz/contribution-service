@@ -113,7 +113,7 @@ class ERC721CollectiveContract(Contract):
         ).get_all_entries()  # limited to 10k entries for now: https://github.com/valory-xyz/contribution-service/issues/13
 
         member_to_token_id = {
-            entry["args"]["to"]: entry["args"]["tokenId"] for entry in entries
+            entry["args"]["to"]: int(entry["args"]["tokenId"]) for entry in entries
         }
 
         return dict(member_to_token_id=member_to_token_id)

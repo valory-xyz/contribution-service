@@ -36,6 +36,7 @@ from aea.helpers.ipfs.base import IPFSHashOnly
 from packages.valory.contracts.ERC721Collective.contract import ERC721CollectiveContract
 from packages.valory.protocols.contract_api import ContractApiMessage
 from packages.valory.skills.abstract_round_abci.base import AbstractRound
+from packages.valory.skills.abstract_round_abci.behaviour_utils import TimeoutException
 from packages.valory.skills.abstract_round_abci.behaviours import (
     AbstractRoundBehaviour,
     BaseBehaviour,
@@ -66,6 +67,7 @@ from packages.valory.skills.dynamic_nft_abci.tools import SHEET_API_SCHEMA
 
 
 NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
+HTTP_TIMEOUT = 10
 
 
 class DynamicNFTBaseBehaviour(BaseBehaviour):
@@ -103,16 +105,12 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
             if member_to_token_id == NewMembersRound.ERROR_PAYLOAD:
                 payload_data = json.dumps(NewMembersRound.ERROR_PAYLOAD, sort_keys=True)
             else:
-                member_to_nft_uri = {
-                    member: f"{self.params.token_uri_base}{token_id}"
-                    for member, token_id in member_to_token_id.items()
-                }
                 old_members = set(self.synchronized_data.members.keys())
 
                 # Add new members only
                 new_member_to_data = {
-                    member: {"uri": uri, "points": None, "image_code": None}
-                    for member, uri in member_to_nft_uri.items()
+                    member: {"token_id": token_id, "points": None, "image_code": None}
+                    for member, token_id in member_to_token_id.items()
                     if member not in old_members
                 }
                 self.context.logger.info(
@@ -120,10 +118,11 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
                 )
 
                 # Add new redirects
-                basic_image_url = f"{self.context.params.ipfs_gateway_base_url}{self.context.params.basic_image_cid}/0000.png"
+                basic_image_url = f"{self.context.params.ipfs_gateway_base_url}{self.context.params.basic_image_cid}"
+
                 new_redirects = {}
                 for data in new_member_to_data.values():
-                    new_redirects[data["uri"]] = basic_image_url
+                    new_redirects[data["token_id"]] = basic_image_url
 
                 payload_data = json.dumps(
                     {
@@ -132,6 +131,8 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
                     },
                     sort_keys=True,
                 )
+
+                self.context.logger.info(f"Payload data={payload_data}")
 
         with self.context.benchmark_tool.measure(
             self.behaviour_id,
@@ -533,10 +534,16 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                     self.context.logger.info(
                         f"Getting hash for image at {image_path}..."
                     )
-                    image_hash = IPFSHashOnly.get(str(image_path))
+
+                    image_hash = IPFSHashOnly.get(
+                        str(image_path), cid_v1=True, wrap=False
+                    )
+
+                    self.context.logger.info(f"Image hash is {image_hash}...")
 
                     # Check whether the image is already present in the registry
-                    image_url = f"{self.params.ipfs_gateway_base_url}{image_hash}/{image_code}.{self.ImageManager.PNG_EXT}"
+                    image_url = f"{self.params.ipfs_gateway_base_url}{image_hash}"
+
                     image_in_ipfs = yield from self.check_ipfs_image(image_url)
                     if image_in_ipfs:
                         images_in_ipfs[image_code] = image_url
@@ -605,7 +612,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
             self.context.logger.info(f"Checking local image hashes from: {layer_path}")
 
             local_layer_hashes = set(
-                IPFSHashOnly.get(image_file)
+                IPFSHashOnly.get(image_file, cid_v1=True, wrap=False)
                 for image_file in layer_path.rglob(f"*.{self.ImageManager.PNG_EXT}")
             )
 
@@ -671,14 +678,23 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
             f"Checking if image already exists in the IPFS registry: {img_url}"
         )
 
-        response = yield from self.get_http_response(
-            method="GET",
-            url=img_url,
+        request_message, http_dialogue = self._build_http_request_message(
+            method="GET", url=img_url
         )
-        if response.status_code != 200:
-            self.context.logger.error(
-                f"Could not check image at {img_url}, code={response.status_code}"
+        try:
+            response = yield from self._do_request(
+                request_message=request_message,
+                http_dialogue=http_dialogue,
+                timeout=HTTP_TIMEOUT,
             )
+
+            if response.status_code != 200:
+                self.context.logger.error(
+                    f"Could not check image at {img_url}, code={response.status_code}"
+                )
+                return False
+
+        except TimeoutException:
             return False
 
         self.context.logger.info(f"Image already exists at {img_url}")

@@ -118,7 +118,7 @@ class BaseTestEnd2EndContributionNormalExecution(BaseTestEnd2EndExecution):
         },
         {
             "dotted_path": f"{__args_prefix}.ipfs_gateway_base_url",
-            "value": f"{MOCK_IPFS_ADDRESS}:{MOCK_API_PORT}/mock_ipfs",
+            "value": f"{MOCK_IPFS_ADDRESS}:{MOCK_API_PORT}/mock_ipfs/",
         },
     ]
 

@@ -49,6 +49,7 @@ from packages.valory.skills.dynamic_nft_abci.dialogues import (
     HttpDialogue,
     HttpDialogues,
 )
+from packages.valory.skills.dynamic_nft_abci.rounds import SynchronizedData
 
 
 ABCIRoundHandler = BaseABCIRoundHandler
@@ -70,6 +71,13 @@ class HttpHandler(BaseHttpHandler):
     def setup(self) -> None:
         """Implement the setup."""
 
+    @property
+    def synchronized_data(self) -> SynchronizedData:
+        """Return the synchronized data."""
+        return SynchronizedData(
+            db=self.context.state.round_sequence.latest_synchronized_data.db
+        )
+
     def handle(self, message: Message) -> None:
         """
         Implement the reaction to an envelope.
@@ -79,11 +87,11 @@ class HttpHandler(BaseHttpHandler):
         http_msg = cast(HttpMessage, message)
 
         # Check if this message is for this skill. If not, send to super()
-        # We expect requests to https://pfp.autonolas.network/nft_id/{token_id}
+        # We expect requests to https://pfp.autonolas.network/{token_id}
         if (
             http_msg.performative != HttpMessage.Performative.REQUEST
             or message.sender != str(HTTP_SERVER_PUBLIC_ID.without_hash())
-            or "nft_id" not in message.body.decode()
+            or "nft_id" not in http_msg.url
         ):
             super().handle(message)
             return
@@ -120,7 +128,7 @@ class HttpHandler(BaseHttpHandler):
                 http_msg.body,
             )
         )
-        if http_msg.method == "get":
+        if http_msg.method in ("get", "head"):
             self._handle_get(http_msg, http_dialogue)
         else:
             self._handle_non_get(http_msg, http_dialogue)  # reject other methods
@@ -134,10 +142,14 @@ class HttpHandler(BaseHttpHandler):
         """
         # Get the requested uri and the redirects table
         request_uri = http_msg.url
-        redirects = self.context.state.round_sequence.latest_synchronized_data.redirects
+        token_id = request_uri.split("/")[-1]
+        redirects = self.synchronized_data.redirects
 
-        # Check if the uri exists in the redirect table
-        if request_uri not in redirects:
+        if token_id not in redirects:
+            self.context.logger.info(
+                f"Requested URL {request_uri} is not present in redirect table"
+            )
+
             http_response = http_dialogue.reply(
                 performative=HttpMessage.Performative.RESPONSE,
                 target_message=http_msg,
@@ -148,7 +160,11 @@ class HttpHandler(BaseHttpHandler):
                 body=b"",
             )
         else:
-            redirect_uri = redirects[request_uri]
+            self.context.logger.info(
+                f"Requested URL {request_uri} is present in redirect table"
+            )
+
+            redirect_uri = redirects[token_id]
             location_headers = f"Location: {redirect_uri}\n"
 
             http_response = http_dialogue.reply(

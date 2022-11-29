@@ -24,7 +24,7 @@ contracts: []
 protocols: []
 skills:
 - valory/abstract_round_abci:0.1.0:bafybeia5meor4p77p62khoddlqj4vg5rxiwi3djxc7feusgein6adi7t7m
-- valory/dynamic_nft_abci:0.1.0:bafybeifgtejsas2kyu626qd44s5hi44ck2h6qdpukugf2hwfjcn3kqmzfy
+- valory/dynamic_nft_abci:0.1.0:bafybeiae6ypm67fb754beeecdny3jmdkyqb4vspt2vlmonfbkvyg4ncrqy
 - valory/registration_abci:0.1.0:bafybeib2cr65zmunztkr3miy4sa2pwlsj2dsi4pz7rwtgg75xczc7hrj3q
 - valory/reset_pause_abci:0.1.0:bafybeie3qy5v3ggc54bmrubd27kbofrkw6srgbggo3b6ewssw3pbxjuvla
 behaviours:
@@ -69,7 +69,7 @@ models:
     class_name: LedgerApiDialogues
   params:
     args:
-      basic_image_cid: bafybeicpygo4r6qk4ypckeur7v6gnmghli4wglevgldgpimkvl27i7gwqq
+      basic_image_cid: bafybeig6tvnwaw4lfcth5e4g2ggro2df6i5np5ed3h3w5jt3f4dc4otlf4
       cleanup_history_depth: 1
       cleanup_history_depth_current: null
       consensus:
@@ -93,7 +93,7 @@ models:
           version: {}
         voting_power: '10'
       ipfs_domain_name: /dns/registry.autonolas.tech/tcp/443/https
-      ipfs_gateway_base_url: https://gateway.ipfs.io/ipfs/
+      ipfs_gateway_base_url: https://gateway.staging.autonolas.tech/ipfs/
       keeper_timeout: 30.0
       leaderboard_api_key: null
       leaderboard_base_endpoint: https://sheets.googleapis.com/v4/spreadsheets

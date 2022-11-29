@@ -54,13 +54,13 @@
             "majorDimension":"ROWS",
             "values":[
                [
-                  "0:bafybeiggubspktr3ujvsj32esaspnqojf4ukvhjdsvl2ko3tg5bfmuq5ju"
+                  "0:bafybeidq3dslr742cgu2stwx5bbsnni4mjojtlkzowymy2662b4p5yk3y4"
                ],
                [
-                  "0:bafybeiaotq73a2cceb5ywdvu63haww65c24l3mnbxg3ensoa3gting5ilm",
-                  "50000:bafybeihfvqegnqt4bllchoiwzuceo2naktnyr6tyajbaff432iu5ugiswu",
-                  "100000:bafybeifbmyacqrah25k3aqpg6psimwpzc5axr3a63iww5xvegnjqiwaufm",
-                  "150000:bafybeicukhvlxmpxl576slrxjvad7zev2ldadre7lk5eeltmdjeooafwbm"
+                  "0:bafybeicy22hgzs7kwuw7wswht2q3gmv4daxyoga2mvr5f644lgzfconpn4",
+                  "50000:bafybeicgg6m7j3eu5akua55mlxohsbqvgonkmk2qqflslrtcdlec6m6ty4",
+                  "100000:bafybeia6thhn2qc3rmj2dnlhy5oov7bvtpjlosesu54ybnuavtl2725h7i",
+                  "150000:bafybeigstc52zkvx3mwzw2dwc3726amgpolwbdxfoylpupnk6ut5ya357a"
                ]
             ]
          }
@@ -70,7 +70,7 @@
   "/mock_whitelist": {
     "post": {}
   },
-  "/mock_ipfs": {
+  "/mock_ipfs/": {
    "get": {}
  }
 }
