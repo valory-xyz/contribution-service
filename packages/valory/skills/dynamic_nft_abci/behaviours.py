@@ -36,6 +36,7 @@ from aea.helpers.ipfs.base import IPFSHashOnly
 from packages.valory.contracts.ERC721Collective.contract import ERC721CollectiveContract
 from packages.valory.protocols.contract_api import ContractApiMessage
 from packages.valory.skills.abstract_round_abci.base import AbstractRound
+from packages.valory.skills.abstract_round_abci.behaviour_utils import TimeoutException
 from packages.valory.skills.abstract_round_abci.behaviours import (
     AbstractRoundBehaviour,
     BaseBehaviour,
@@ -691,16 +692,20 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
         request_message, http_dialogue = self._build_http_request_message(
             method="GET", url=img_url
         )
-        response = yield from self._do_request(
-            request_message=request_message,
-            http_dialogue=http_dialogue,
-            timeout=HTTP_TIMEOUT,
-        )
-
-        if response.status_code != 200:
-            self.context.logger.error(
-                f"Could not check image at {img_url}, code={response.status_code}"
+        try:
+            response = yield from self._do_request(
+                request_message=request_message,
+                http_dialogue=http_dialogue,
+                timeout=HTTP_TIMEOUT,
             )
+
+            if response.status_code != 200:
+                self.context.logger.error(
+                    f"Could not check image at {img_url}, code={response.status_code}"
+                )
+                return False
+
+        except TimeoutException:
             return False
 
         self.context.logger.info(f"Image already exists at {img_url}")
