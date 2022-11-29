@@ -71,6 +71,13 @@ class HttpHandler(BaseHttpHandler):
     def setup(self) -> None:
         """Implement the setup."""
 
+    @property
+    def synchronized_data(self) -> SynchronizedData:
+        """Return the synchronized data."""
+        return SynchronizedData(
+            db=self.context.state.round_sequence.latest_synchronized_data.db
+        )
+
     def handle(self, message: Message) -> None:
         """
         Implement the reaction to an envelope.
@@ -139,10 +146,7 @@ class HttpHandler(BaseHttpHandler):
         id_not_found = False
 
         try:
-            redirects = cast(
-                SynchronizedData,
-                self.context.state.round_sequence.latest_synchronized_data,
-            ).redirects
+            redirects = self.synchronized_data.redirects
 
             # Check if the uri exists in the redirect table
             id_not_found = token_id not in redirects
