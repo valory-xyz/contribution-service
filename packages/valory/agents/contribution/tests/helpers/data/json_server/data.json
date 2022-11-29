@@ -70,7 +70,7 @@
   "/mock_whitelist": {
     "post": {}
   },
-  "/mock_ipfs": {
+  "/mock_ipfs/": {
    "get": {}
  }
 }

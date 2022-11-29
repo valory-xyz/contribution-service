@@ -540,6 +540,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
 
                     wrap_content = (
                         "staging" in self.context.params.ipfs_gateway_base_url
+                        or "mock" in self.context.params.ipfs_gateway_base_url
                     )
                     image_hash = IPFSHashOnly.get(
                         str(image_path), cid_v1=True, wrap=wrap_content
@@ -620,7 +621,10 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
 
             self.context.logger.info(f"Checking local image hashes from: {layer_path}")
 
-            wrap_content = "staging" in self.context.params.ipfs_gateway_base_url
+            wrap_content = (
+                "staging" in self.context.params.ipfs_gateway_base_url
+                or "mock" in self.context.params.ipfs_gateway_base_url
+            )
 
             local_layer_hashes = set(
                 IPFSHashOnly.get(image_file, cid_v1=True, wrap=wrap_content)
