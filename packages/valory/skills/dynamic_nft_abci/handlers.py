@@ -136,12 +136,22 @@ class HttpHandler(BaseHttpHandler):
         # Get the requested uri and the redirects table
         request_uri = http_msg.url
         token_id = request_uri.split("/")[-1]
-        redirects = cast(
-            SynchronizedData, self.context.state.round_sequence.latest_synchronized_data
-        ).redirects
+        id_not_found = False
 
-        # Check if the uri exists in the redirect table
-        if token_id not in redirects:
+        try:
+            redirects = cast(
+                SynchronizedData,
+                self.context.state.round_sequence.latest_synchronized_data,
+            ).redirects
+
+            # Check if the uri exists in the redirect table
+            id_not_found = token_id not in redirects
+
+        except AttributeError:
+            self.context.logger.info(f"AttributeError: could not get redirect table")
+            id_not_found = True
+
+        if id_not_found:
             self.context.logger.info(
                 f"Requested URL {request_uri} is not present in redirect table"
             )
