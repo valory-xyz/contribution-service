@@ -136,9 +136,9 @@ def get_image_code_calculation_payload_serialized() -> str:
 def get_dummy_members() -> str:
     """Dummy members table"""
     data = {
-        "member_a": {"points": 100, "image_code": "dummy_image_code_a", "uri": "uri_1"},
-        "member_b": {"points": 200, "image_code": "dummy_image_code_b", "uri": "uri_2"},
-        "member_c": {"points": 300, "image_code": "dummy_image_code_c", "uri": "uri_3"},
+        "member_a": {"points": 100, "image_code": "dummy_image_code_a", "token_id": 0},
+        "member_b": {"points": 200, "image_code": "dummy_image_code_b", "token_id": 1},
+        "member_c": {"points": 300, "image_code": "dummy_image_code_c", "token_id": 2},
     }
     return json.dumps(data, sort_keys=True)
 

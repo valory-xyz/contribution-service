@@ -72,7 +72,7 @@ class TestHttpHandler(BaseSkillTestCase):
 
         cls.get_method = "get"
         cls.post_method = "post"
-        cls.url = "some_url"
+        cls.url = "some_url/nft_id/0"
         cls.url_redirect = "some_url_redirect"
         cls.version = "some_version"
         cls.headers = "some_headers"
@@ -134,15 +134,15 @@ class TestHttpHandler(BaseSkillTestCase):
         [
             HandlerTestCase(
                 name="uri in redirects",
-                request_url="some_url",
-                redirects={"some_url": "some_url_redirect"},
+                request_url="some_url/nft_id/0",
+                redirects={"0": "some_url_redirect"},
                 response_status_code=TEMPORARY_REDIRECT_CODE,
                 response_status_text="Temporary redirect",
                 response_headers="Location: some_url_redirect\nsome_headers",
             ),
             HandlerTestCase(
                 name="uri not in redirects",
-                request_url="some_url",
+                request_url="some_url/nft_id/1",
                 redirects={},
                 response_status_code=NOT_FOUND_CODE,
                 response_status_text="Not found",
