@@ -17,7 +17,7 @@
 #
 # ------------------------------------------------------------------------------
 
-"""This module contains the ERC721Collective contract definition."""
+"""This module contains the dynamic_contribution contract definition."""
 
 from typing import Any, cast
 
@@ -29,10 +29,10 @@ from aea_ledger_ethereum import EthereumApi
 from web3.types import BlockIdentifier
 
 
-class ERC721CollectiveContract(Contract):
+class DynamicContributionContract(Contract):
     """The scaffold contract class for a smart contract."""
 
-    contract_id = PublicId.from_str("valory/ERC721Collective:0.1.0")
+    contract_id = PublicId.from_str("valory/dynamic_contribution:0.1.0")
 
     @classmethod
     def get_raw_transaction(
@@ -113,7 +113,7 @@ class ERC721CollectiveContract(Contract):
         ).get_all_entries()  # limited to 10k entries for now: https://github.com/valory-xyz/contribution-service/issues/13
 
         member_to_token_id = {
-            entry["args"]["to"]: int(entry["args"]["tokenId"]) for entry in entries
+            entry["args"]["to"]: int(entry["args"]["id"]) for entry in entries
         }
 
         return dict(member_to_token_id=member_to_token_id)

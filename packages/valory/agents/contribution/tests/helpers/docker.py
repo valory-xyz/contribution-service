@@ -32,7 +32,7 @@ from docker.models.containers import Container
 
 from packages.valory.agents.contribution import PACKAGE_DIR
 from packages.valory.agents.contribution.tests.helpers.constants import (
-    SYNDICATE_CONTRACT,
+    DYNAMIC_CONTRIBUTION_CONTRACT_ADDRESS,
 )
 
 
@@ -41,7 +41,7 @@ DEFAULT_HARDHAT_PORT = 8545
 
 
 class ContributionNetworkDockerImage(DockerImage):
-    """Spawn a local network with the Autonolas registries, Gnosis Safe, Syndicate contract and some NFTs minted."""
+    """Spawn a local network with the Autonolas registries, Gnosis Safe, dynamic contribution contract and some NFTs minted."""
 
     _CONTAINER_PORT = DEFAULT_HARDHAT_PORT
 
@@ -105,7 +105,7 @@ class ContributionNetworkDockerImage(DockerImage):
                 body = {
                     "jsonrpc": "2.0",
                     "method": "eth_getCode",
-                    "params": [SYNDICATE_CONTRACT],
+                    "params": [DYNAMIC_CONTRIBUTION_CONTRACT_ADDRESS],
                     "id": 1,
                 }
                 response = requests.post(
