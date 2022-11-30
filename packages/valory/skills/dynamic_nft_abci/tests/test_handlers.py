@@ -79,7 +79,7 @@ class TestHttpHandler(BaseSkillTestCase):
 
         cls.get_method = "get"
         cls.post_method = "post"
-        cls.url = f"{TOKEN_URI_BASE}/0"
+        cls.url = f"{TOKEN_URI_BASE}0"
         cls.url_redirect = "some_url_redirect"
         cls.version = "some_version"
         cls.headers = "some_headers"
@@ -141,7 +141,7 @@ class TestHttpHandler(BaseSkillTestCase):
         [
             HandlerTestCase(
                 name="uri in redirects",
-                request_url=f"{TOKEN_URI_BASE}/0",
+                request_url=f"{TOKEN_URI_BASE}0",
                 redirects={"0": "some_url_redirect"},
                 response_status_code=TEMPORARY_REDIRECT_CODE,
                 response_status_text="Temporary redirect",
@@ -149,7 +149,7 @@ class TestHttpHandler(BaseSkillTestCase):
             ),
             HandlerTestCase(
                 name="uri not in redirects",
-                request_url=f"{TOKEN_URI_BASE}/1",
+                request_url=f"{TOKEN_URI_BASE}1",
                 redirects={},
                 response_status_code=NOT_FOUND_CODE,
                 response_status_text="Not found",

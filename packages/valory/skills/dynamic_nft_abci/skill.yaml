@@ -15,7 +15,7 @@ fingerprint:
   data/layers/frames/3.png: bafybeigstc52zkvx3mwzw2dwc3726amgpolwbdxfoylpupnk6ut5ya357a
   dialogues.py: bafybeifxlkz47umd63ojgydccujs4j2kwhfh32bdhxcjdodm5brvc25fjq
   fsm_specification.yaml: bafybeicyqbndd5bzjsdckjbpb2qhkjfwa4leovfofm5ugvikttp56tygey
-  handlers.py: bafybeif2u2a5ya5zhtts6sg6fdmuqf3cjw5rp2y27a65dmbpyjenhn432i
+  handlers.py: bafybeidkth4pmizgwprbe5lmoytj6vb3ef3ka7f6pxnukpnzd2onczwj5u
   io_/__init__.py: bafybeidxth2otiyp5gfk2l3zjvnfktgrtpwzsknihkef3v2lhwbkgum3ea
   io_/load.py: bafybeifd7ib4lktvgv6rphk6sblkndn3klmzd5js62h2gzxlubjcmlf6jy
   io_/store.py: bafybeih3wa6quhstymsqcsy7jejpj4fx6crq6gs72dzs6svjklu7wushtq
@@ -26,7 +26,7 @@ fingerprint:
   tests/test_behaviours.py: bafybeiewxng5vrcpwx6zmeeekbsughqxebcthaebzanyftxnvpj5klzlaa
   tests/test_dialogues.py: bafybeibfzhpyz2kdokjkz76oxz4sc6nw26dw5pgx5fwvloyfyl2inixwdi
   tests/test_dummy_e2e.py: bafybeidrzn2wzng62jptkf2zjtlhup7bu74ptrlwmdwh7lgwuubk5dbm4q
-  tests/test_handlers.py: bafybeia5gm3idugxuavnz7kzeyr2fbrxssr5xqsoqdu4airga4lskrog3m
+  tests/test_handlers.py: bafybeiguwpzhuzysmvwsubjjtqgcejjb2khq2lkpn62hrac35qxc4n5l4e
   tests/test_io/__init__.py: bafybeid3sssvbbyju4snrdssxyafleuo57sqyuepl25btxcbuj3p5oonsm
   tests/test_io/conftest.py: bafybeid6tmrx6nogml5dlqkqwtmuqjsqwaejskthj7avxjt5mkbbajpf4u
   tests/test_io/test_load.py: bafybeidljwrzoadvpbxbyiesdjmw6a26t4lyidu2wmyy4pjqdrrpqq6ajq

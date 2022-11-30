@@ -19,7 +19,9 @@
 
 """This module contains the handlers for the skill of DynamicNFTAbciApp."""
 
+import re
 from typing import cast
+from urllib.parse import urlparse
 
 from aea.protocols.base import Message
 
@@ -81,14 +83,29 @@ class HttpHandler(BaseHttpHandler):
     def check_url(self, url) -> bool:
         """Check if an url is meant to be handled in this handler
 
+        We expect url to match the pattern {hostname}/{token_id},
+        where hostname is allowed to be localhost, 127.0.0.1 or the token_uri_base's hostname.
+        Examples:
+
+            localhost:8000/0
+            127.0.0.1:8000/100
+            https://pfp.autonolas.network/45
+            http://pfp.autonolas.network/120
+
         :param url: the url to check
-        :returns: True if the messageis intended to be handled by this handler
+        :returns: True if the message is intended to be handled by this handler
         """
-        return (
-            self.context.params.token_uri_base in url
-            or "localhost" in url
-            or "127.0.0.1" in url
-        )
+        uri_base_hostname = urlparse(self.context.params.token_uri_base).hostname
+        HANDLER_URL = rf".*({uri_base_hostname}|localhost|127.0.0.1)(:\d+)?\/\d+"
+        match = re.match(HANDLER_URL, url)
+
+        if not match:
+            self.context.logger.info(
+                f"The url {url} does not match the DynamicNFT HttpHandler's pattern"
+            )
+            return False
+
+        return True
 
     def handle(self, message: Message) -> None:
         """
