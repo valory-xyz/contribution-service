@@ -78,6 +78,18 @@ class HttpHandler(BaseHttpHandler):
             db=self.context.state.round_sequence.latest_synchronized_data.db
         )
 
+    def check_url(self, url) -> bool:
+        """Check if an url is meant to be handled in this handler
+
+        :param url: the url to check
+        :returns: True if the messageis intended to be handled by this handler
+        """
+        return (
+            self.context.params.token_uri_base in url
+            or "localhost" in url
+            or "127.0.0.1" in url
+        )
+
     def handle(self, message: Message) -> None:
         """
         Implement the reaction to an envelope.
@@ -91,7 +103,7 @@ class HttpHandler(BaseHttpHandler):
         if (
             http_msg.performative != HttpMessage.Performative.REQUEST
             or message.sender != str(HTTP_SERVER_PUBLIC_ID.without_hash())
-            or self.context.params.token_uri_base not in http_msg.url
+            or not self.check_url(http_msg.url)
         ):
             super().handle(message)
             return
