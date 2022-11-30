@@ -1,0 +1,21 @@
+name: dynamic_contribution
+author: valory
+version: 0.1.0
+type: contract
+description: dynamic_contribution contract
+license: Apache-2.0
+aea_version: '>=1.0.0, <2.0.0'
+fingerprint:
+  __init__.py: bafybeignr47lv3yghipgo25c5hwuax3gsnbdktdljy5n3htdindifydkza
+  build/DynamicContribution.json: bafybeicq5ee4hba3h6tsluzvdrtyvzllpqsseqys66e24bfrpjlegnxome
+  contract.py: bafybeigtki2brw3fqguneh4isgwftsz5uqz6jdiob3doiut52mzzhejchu
+fingerprint_ignore_patterns: []
+class_name: DynamicContributionContract
+contract_interface_paths:
+  ethereum: build/DynamicContribution.json
+dependencies:
+  open-aea-ledger-ethereum:
+    version: ==1.24.0
+  web3:
+    version: ==5.25.0
+contracts: []

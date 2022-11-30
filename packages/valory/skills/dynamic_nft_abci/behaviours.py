@@ -33,7 +33,9 @@ from aea.configurations.constants import DEFAULT_LEDGER
 from aea.crypto.ledger_apis import LedgerApis
 from aea.helpers.ipfs.base import IPFSHashOnly
 
-from packages.valory.contracts.ERC721Collective.contract import ERC721CollectiveContract
+from packages.valory.contracts.dynamic_contribution.contract import (
+    DynamicContributionContract,
+)
 from packages.valory.protocols.contract_api import ContractApiMessage
 from packages.valory.skills.abstract_round_abci.base import AbstractRound
 from packages.valory.skills.abstract_round_abci.behaviour_utils import TimeoutException
@@ -147,8 +149,8 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
         """Get member to token id data."""
         contract_api_msg = yield from self.get_contract_api_response(
             performative=ContractApiMessage.Performative.GET_STATE,  # type: ignore
-            contract_address=self.params.syndicate_contract_address,
-            contract_id=str(ERC721CollectiveContract.contract_id),
+            contract_address=self.params.dynamic_contribution_contract_address,
+            contract_id=str(DynamicContributionContract.contract_id),
             contract_callable="get_all_erc721_transfers",
             from_address=NULL_ADDRESS,
         )
