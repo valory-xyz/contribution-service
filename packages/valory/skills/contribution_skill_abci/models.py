@@ -61,7 +61,7 @@ class SharedState(BaseSharedState):
         ] = self.context.params.round_timeout_seconds
         ContributionSkillAbciApp.event_to_timeout[
             ResetPauseEvent.ROUND_TIMEOUT
-        ] = self.context.params.observation_interval
+        ] = self.context.params.round_timeout_seconds
 
 
 class Params(DynamicNFTParams):
