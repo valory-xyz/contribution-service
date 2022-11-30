@@ -46,7 +46,7 @@ PACKAGE_DIR = Path(__file__).parent.parent
 
 HTTP_SERVER_SENDER = str(HTTP_SERVER_PUBLIC_ID.without_hash())
 
-TOKEN_URI_BASE = "https://pfp.autonolas.network/"
+TOKEN_URI_BASE = "https://pfp.autonolas.network/"  # nosec
 
 
 @dataclass
