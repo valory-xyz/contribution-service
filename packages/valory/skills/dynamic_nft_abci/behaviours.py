@@ -486,7 +486,8 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
             self.behaviour_id,
         ).local():
             # Get new layers from IPFS if needed
-            self.update_layers()
+            # Ignored for now until it is tested further
+            # self.update_layers()  # noqa: E800
 
             # In the current implementation, the image manager will be instanced every time the behaviour is run.
             # This is not ideal: a singleton or another pattern that avoids this might be more suited to our usecase.
