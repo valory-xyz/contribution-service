@@ -45,6 +45,8 @@ DynamicNFTParams = DynamicNFTAbciParams
 Requests = BaseRequests
 BenchmarkTool = BaseBenchmarkTool
 
+MARGIN = 5
+
 
 class SharedState(BaseSharedState):
     """Keep the current shared state of the skill."""
@@ -62,6 +64,9 @@ class SharedState(BaseSharedState):
         ContributionSkillAbciApp.event_to_timeout[
             ResetPauseEvent.ROUND_TIMEOUT
         ] = self.context.params.round_timeout_seconds
+        ContributionSkillAbciApp.event_to_timeout[
+            ResetPauseEvent.RESET_AND_PAUSE_TIMEOUT
+        ] = (self.context.params.observation_interval + MARGIN)
 
 
 class Params(DynamicNFTParams):
