@@ -86,7 +86,6 @@ class HttpHandler(BaseHttpHandler):
         We expect url to match the pattern {hostname}/{token_id},
         where hostname is allowed to be localhost, 127.0.0.1 or the token_uri_base's hostname.
         Examples:
-
             localhost:8000/0
             127.0.0.1:8000/100
             https://pfp.autonolas.network/45
