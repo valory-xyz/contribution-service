@@ -24,7 +24,7 @@ contracts: []
 protocols: []
 skills:
 - valory/abstract_round_abci:0.1.0:bafybeia5meor4p77p62khoddlqj4vg5rxiwi3djxc7feusgein6adi7t7m
-- valory/dynamic_nft_abci:0.1.0:bafybeianvd3yyixbynvcml3xvlfukrgx73o6wvx2vyjpesnyc543beuwva
+- valory/dynamic_nft_abci:0.1.0:bafybeigfnjlejz5w4bk5kqyl7jkk6fn73nkzexiessntciqstovquez6j4
 - valory/registration_abci:0.1.0:bafybeib2cr65zmunztkr3miy4sa2pwlsj2dsi4pz7rwtgg75xczc7hrj3q
 - valory/reset_pause_abci:0.1.0:bafybeie3qy5v3ggc54bmrubd27kbofrkw6srgbggo3b6ewssw3pbxjuvla
 behaviours:
@@ -115,7 +115,7 @@ models:
       tendermint_com_url: http://localhost:8080
       tendermint_max_retries: 5
       tendermint_url: http://localhost:26657
-      token_uri_base: https://pfp.autonolas.network/nft_id/
+      token_uri_base: https://pfp.autonolas.network/
       whitelist_api_key: null
       whitelist_endpoint: http://localhost
     class_name: Params

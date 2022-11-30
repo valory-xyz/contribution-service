@@ -46,6 +46,8 @@ PACKAGE_DIR = Path(__file__).parent.parent
 
 HTTP_SERVER_SENDER = str(HTTP_SERVER_PUBLIC_ID.without_hash())
 
+TOKEN_URI_BASE = "https://pfp.autonolas.network/"
+
 
 @dataclass
 class HandlerTestCase:
@@ -77,11 +79,11 @@ class TestHttpHandler(BaseSkillTestCase):
 
         cls.get_method = "get"
         cls.post_method = "post"
-        cls.url = "some_url/nft_id/0"
+        cls.url = f"{TOKEN_URI_BASE}/0"
         cls.url_redirect = "some_url_redirect"
         cls.version = "some_version"
         cls.headers = "some_headers"
-        cls.body = b"some_body/nft_id"
+        cls.body = b"some_body/"
         cls.sender = HTTP_SERVER_SENDER
         cls.skill_id = str(cls._skill.skill_context.skill_id)
 
@@ -139,7 +141,7 @@ class TestHttpHandler(BaseSkillTestCase):
         [
             HandlerTestCase(
                 name="uri in redirects",
-                request_url="some_url/nft_id/0",
+                request_url=f"{TOKEN_URI_BASE}/0",
                 redirects={"0": "some_url_redirect"},
                 response_status_code=TEMPORARY_REDIRECT_CODE,
                 response_status_text="Temporary redirect",
@@ -147,7 +149,7 @@ class TestHttpHandler(BaseSkillTestCase):
             ),
             HandlerTestCase(
                 name="uri not in redirects",
-                request_url="some_url/nft_id/1",
+                request_url=f"{TOKEN_URI_BASE}/1",
                 redirects={},
                 response_status_code=NOT_FOUND_CODE,
                 response_status_text="Not found",

@@ -91,7 +91,7 @@ class HttpHandler(BaseHttpHandler):
         if (
             http_msg.performative != HttpMessage.Performative.REQUEST
             or message.sender != str(HTTP_SERVER_PUBLIC_ID.without_hash())
-            or "nft_id" not in http_msg.url
+            or self.context.params.token_uri_base not in http_msg.url
         ):
             super().handle(message)
             return
