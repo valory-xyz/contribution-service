@@ -206,13 +206,15 @@ class HttpHandler(BaseHttpHandler):
 
             self.context.logger.info(f"Responding with token metadata={metadata}")
 
+            content_header = f"Content-Type: application/json\n"
+
             http_response = http_dialogue.reply(
                 performative=HttpMessage.Performative.RESPONSE,
                 target_message=http_msg,
                 version=http_msg.version,
                 status_code=OK_CODE,
                 status_text="Success",
-                headers=http_msg.headers,
+                headers=f"{content_header}{http_msg.headers}",
                 body=json.dumps(metadata).encode("utf-8"),
             )
 

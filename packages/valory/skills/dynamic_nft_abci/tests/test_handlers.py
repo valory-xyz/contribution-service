@@ -159,7 +159,7 @@ class TestHttpHandler(BaseSkillTestCase):
                 redirects={"0": "some_url_redirect"},
                 response_status_code=OK_CODE,
                 response_status_text="Success",
-                response_headers="some_headers",
+                response_headers="Content-Type: application/json\nsome_headers",
                 body=json.dumps(get_dummy_metadata(0, "some_url_redirect")).encode(
                     "utf-8"
                 ),
