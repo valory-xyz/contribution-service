@@ -48,6 +48,9 @@ from packages.valory.skills.abstract_round_abci.handlers import (
 from packages.valory.skills.abstract_round_abci.handlers import (
     TendermintHandler as BaseTendermintHandler,
 )
+from packages.valory.skills.dynamic_nft_abci.behaviours import (
+    LeaderboardObservationBehaviour,
+)
 from packages.valory.skills.dynamic_nft_abci.dialogues import (
     HttpDialogue,
     HttpDialogues,
@@ -193,14 +196,18 @@ class HttpHandler(BaseHttpHandler):
             )
 
             redirect_uri = redirects[token_id]
+            image_hash = redirect_uri.split("/")[-1]  # get the hash only
 
             # Build token metadata
             metadata = {
-                "name": str(token_id),
-                "description": "Autonolas Community Contribution NFT",
-                "image": redirect_uri,
-                "attributes": [{"trait_type": "version", "value": "1"}],
+                "title": "Autonolas Community Dynamic Contribution NFT",
+                "name": f"Autonolas Community Dynamic Contribution NFT {token_id}",
+                "description": "This NFT recognizes the contributions made by the holder to the Autonolas Community.",
+                "image": f"ipfs://{image_hash}",
+                "attributes": [],  # TODO: add attributes
             }
+
+            self.context.logger.info(f"Responding with token metadata={metadata}")
 
             http_response = http_dialogue.reply(
                 performative=HttpMessage.Performative.RESPONSE,
