@@ -153,7 +153,7 @@ models:
       tendermint_com_url: ${TENDERMINT_COM_URL:str:http://localhost:8080}
       tendermint_max_retries: 5
       tendermint_url: ${TENDERMINT_URL:str:http://localhost:26657}
-      token_uri_base: https://pfp.autonolas.network/
+      token_uri_base: https://pfp.staging.autonolas.tech/
       whitelist_api_key: null
       whitelist_endpoint: http://localhost
 ---
