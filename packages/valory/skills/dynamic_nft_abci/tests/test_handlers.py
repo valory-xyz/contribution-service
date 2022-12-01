@@ -52,11 +52,13 @@ TOKEN_URI_BASE = "https://pfp.autonolas.network/"  # nosec
 
 def get_dummy_metadata(token_id, redirect_uri):
     """Get the dummy token metadata"""
+    image_hash = redirect_uri.split("/")[-1]  # get the hash only
     return {
-        "name": str(token_id),
-        "description": "Autonolas Community Contribution NFT",
-        "image": redirect_uri,
-        "attributes": [{"trait_type": "version", "value": "1"}],
+        "title": "Autonolas Community Dynamic Contribution NFT",
+        "name": f"Autonolas Community Dynamic Contribution NFT {token_id}",
+        "description": "This NFT recognizes the contributions made by the holder to the Autonolas Community.",
+        "image": f"ipfs://{image_hash}",
+        "attributes": [],  # TODO: add attributes
     }
 
 
