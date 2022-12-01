@@ -124,7 +124,7 @@ DUMMY_THRESHOLDS = {
 DUMMY_API_DATA = {"leaderboard": DUMMY_LEADERBOARD, "layers": DUMMY_LAYERS}
 
 DUMMY_API_RESPONSE = {
-    "spreadsheetId": "1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc",
+    "spreadsheetId": "1XuDTpR68FvgEV_DN6lzZfQpi0M8rs5OzEBOSUFTWS1A",
     "valueRanges": [
         {
             "range": "Ranking!B2:C302",
@@ -161,7 +161,7 @@ DUMMY_BAD_API_RESPONSE_WRONG_THRESHOLDS["valueRanges"][1]["values"][1][
     0
 ] = "10000:dummy_frame_hash_0"
 
-SHEET_ID = "1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc"
+SHEET_ID = "1XuDTpR68FvgEV_DN6lzZfQpi0M8rs5OzEBOSUFTWS1A"
 GOOGLE_API_KEY = None
 GOOGLE_SHEETS_ENDPOINT = "https://sheets.googleapis.com/v4/spreadsheets"
 DEFAULT_CELL_RANGE_POINTS = "Ranking!B2:C302"

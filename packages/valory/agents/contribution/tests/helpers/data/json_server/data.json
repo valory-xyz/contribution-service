@@ -1,7 +1,7 @@
 {
   "/mock_sheet_id/values:batchGet": {
     "get": {
-      "spreadsheetId":"1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc",
+      "spreadsheetId":"1XuDTpR68FvgEV_DN6lzZfQpi0M8rs5OzEBOSUFTWS1A",
       "valueRanges":[
          {
             "range":"Ranking!B2:C302",
