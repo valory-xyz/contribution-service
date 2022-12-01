@@ -19,6 +19,7 @@
 
 """This module contains the handlers for the skill of DynamicNFTAbciApp."""
 
+import json
 import re
 from typing import cast
 from urllib.parse import urlparse
@@ -59,8 +60,7 @@ SigningHandler = BaseSigningHandler
 LedgerApiHandler = BaseLedgerApiHandler
 ContractApiHandler = BaseContractApiHandler
 TendermintHandler = BaseTendermintHandler
-
-TEMPORARY_REDIRECT_CODE = 307
+OK_CODE = 200
 NOT_FOUND_CODE = 404
 BAD_REQUEST_CODE = 400
 
@@ -193,16 +193,23 @@ class HttpHandler(BaseHttpHandler):
             )
 
             redirect_uri = redirects[token_id]
-            location_headers = f"Location: {redirect_uri}\n"
+
+            # Build token metadata
+            metadata = {
+                "name": str(token_id),
+                "description": "Autonolas Community Contribution NFT",
+                "image": redirect_uri,
+                "attributes": [{"trait_type": "version", "value": "1"}],
+            }
 
             http_response = http_dialogue.reply(
                 performative=HttpMessage.Performative.RESPONSE,
                 target_message=http_msg,
                 version=http_msg.version,
-                status_code=TEMPORARY_REDIRECT_CODE,
-                status_text="Temporary redirect",
-                headers=f"{location_headers}{http_msg.headers}",
-                body=b"",
+                status_code=OK_CODE,
+                status_text="Success",
+                headers=http_msg.headers,
+                body=json.dumps(metadata).encode("utf-8"),
             )
 
         # Send response
