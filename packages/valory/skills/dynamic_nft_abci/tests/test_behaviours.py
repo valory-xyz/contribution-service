@@ -110,7 +110,7 @@ DUMMY_LAYERS = {
     },
     "frames": {
         0: "bafybeicy22hgzs7kwuw7wswht2q3gmv4daxyoga2mvr5f644lgzfconpn4",
-        50000: "bafybeicgg6m7j3eu5akua55mlxohsbqvgonkmk2qqflslrtcdlec6m6ty4",
+        100: "bafybeicgg6m7j3eu5akua55mlxohsbqvgonkmk2qqflslrtcdlec6m6ty4",
         100000: "bafybeia6thhn2qc3rmj2dnlhy5oov7bvtpjlosesu54ybnuavtl2725h7i",
         150000: "bafybeigstc52zkvx3mwzw2dwc3726amgpolwbdxfoylpupnk6ut5ya357a",
     },
@@ -118,7 +118,7 @@ DUMMY_LAYERS = {
 
 DUMMY_THRESHOLDS = {
     "classes": [0],
-    "frames": [0, 50000, 100000, 150000],
+    "frames": list(sorted(DUMMY_LAYERS["frames"].keys())),
 }
 
 DUMMY_API_DATA = {"leaderboard": DUMMY_LEADERBOARD, "layers": DUMMY_LAYERS}
@@ -615,7 +615,8 @@ class TestImageCodeCalculationBehaviour(BaseDynamicNFTTest):
         "points, expected_code",
         [
             (0, "0000"),
-            (150, "0000"),
+            (99, "0000"),
+            (100, "0001"),
             (51000, "0001"),
             (99999, "0001"),
             (120000, "0002"),
