@@ -48,9 +48,6 @@ from packages.valory.skills.abstract_round_abci.handlers import (
 from packages.valory.skills.abstract_round_abci.handlers import (
     TendermintHandler as BaseTendermintHandler,
 )
-from packages.valory.skills.dynamic_nft_abci.behaviours import (
-    LeaderboardObservationBehaviour,
-)
 from packages.valory.skills.dynamic_nft_abci.dialogues import (
     HttpDialogue,
     HttpDialogues,
