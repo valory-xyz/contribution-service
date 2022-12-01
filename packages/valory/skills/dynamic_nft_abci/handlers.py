@@ -25,7 +25,6 @@ from typing import cast
 from urllib.parse import urlparse
 
 from aea.protocols.base import Message
-from attr import attributes
 
 from packages.fetchai.connections.http_server.connection import (
     PUBLIC_ID as HTTP_SERVER_PUBLIC_ID,
