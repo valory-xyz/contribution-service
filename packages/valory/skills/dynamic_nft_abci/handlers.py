@@ -25,7 +25,6 @@ from typing import cast
 from urllib.parse import urlparse
 
 from aea.protocols.base import Message
-from attr import attributes
 
 from packages.fetchai.connections.http_server.connection import (
     PUBLIC_ID as HTTP_SERVER_PUBLIC_ID,
@@ -48,9 +47,6 @@ from packages.valory.skills.abstract_round_abci.handlers import (
 )
 from packages.valory.skills.abstract_round_abci.handlers import (
     TendermintHandler as BaseTendermintHandler,
-)
-from packages.valory.skills.dynamic_nft_abci.behaviours import (
-    LeaderboardObservationBehaviour,
 )
 from packages.valory.skills.dynamic_nft_abci.dialogues import (
     HttpDialogue,
