@@ -197,8 +197,8 @@ class HttpHandler(BaseHttpHandler):
 
             # Build token metadata
             metadata = {
-                "title": "Autonolas Community Dynamic Contribution NFT",
-                "name": f"Autonolas Community Dynamic Contribution NFT {token_id}",
+                "title": "Autonolas Dynamic Contribution",
+                "name": f"Autonolas Dynamic Contribution {token_id}",
                 "description": "This NFT recognizes the contributions made by the holder to the Autonolas Community.",
                 "image": f"ipfs://{image_hash}",
                 "attributes": [],  # TODO: add attributes
