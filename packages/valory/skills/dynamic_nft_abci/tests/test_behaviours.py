@@ -121,8 +121,8 @@ DUMMY_LAYERS = {
 }
 
 DUMMY_THRESHOLDS = {
-    "classes": [0],
-    "frames": list(sorted(DUMMY_LAYERS["frames"].keys())),
+    k: list(sorted(DUMMY_LAYERS[k].keys()))
+    for k in DUMMY_LAYERS.keys()
 }
 
 DUMMY_API_DATA = {"leaderboard": DUMMY_LEADERBOARD, "layers": DUMMY_LAYERS}
@@ -188,10 +188,11 @@ IMAGE_PATH = Path(
 IPFS_GATEWAY_BASE_URL = "https://gateway.staging.autonolas.tech/ipfs/"
 
 IMAGE_CODE_TO_HASHES = {
-    "0000": "bafybeihhi5mgl5cfwyl7zwuaqutpehh4jka2jc6un3cxuwoflhmznzpbs4",
-    "0001": "bafybeihlilxztmopjfh7wf4o6loht3ezn4fnt2jpllqwcahid4xzkoccoi",
-    "0002": "bafybeihxmk2lqghnlbjuml453z7sihuuewjjd2skpjmhrmz72r5xlvsvju",
-    "0003": "bafybeib6xutso6jzf5xgzqw7eonje7x72wagpbkc5t6xhl6cltsb3wae6y",
+    "000000": "bafybeic4zlb6avnshb4nayqyv6blxfqbjeum5ie66jfj3gf7oex2ps4xiu",
+    "000100": "bafybeiaaeeabbybzkq7wgpt4m4hc7p5j6lblrw2bwub5ujiv4gh5puoddm",
+    "000101": "bafybeibew7slhqtnpa472ijccsuqr5bkl4sbgcdfp6oa2xt35quqjt3ydy",
+    "000102": "bafybeid4ao4okeum4qg4po6q3hznhhg3txweq55xuiv7ozyefm6tzojorq",
+    "000103": "bafybeibkpascvrtitbsby2eljr7mng7qu6krykiodqpyjnmcrw5qklpt6y",
 }
 
 
@@ -620,20 +621,19 @@ class TestImageCodeCalculationBehaviour(BaseDynamicNFTTest):
         [
             (0, "000000"),
             (150, "000100"),
-            (51000, "000100"),
-            (99999, "000100"),
-            (120000, "000101"),
-            (145000, "000101"),
-            (150000, "000102"),
+            (50000, "000101"),
+            (100000, "000102"),
+            (120000, "000102"),
+            (145000, "000102"),
+            (150000, "000103"),
             (200000, "000103"),
+            (205000, "000103"),
         ],
     )
     def test_points_to_code(self, points: float, expected_code: str) -> None:
         """Test the points_to_code function"""
-        assert (
-            ImageCodeCalculationBehaviour.points_to_code(points, DUMMY_THRESHOLDS)
-            == expected_code
-        )
+        code = ImageCodeCalculationBehaviour.points_to_code(points, DUMMY_THRESHOLDS)
+        assert code  == expected_code, f"Expected {expected_code}, got {code}"
 
     def test_points_to_code_negative(self) -> None:
         """Test the points_to_code function"""
