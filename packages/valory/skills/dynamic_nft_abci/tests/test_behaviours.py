@@ -110,7 +110,7 @@ DUMMY_LAYERS = {
     },
     "activation": {
         0: "bafybeicy22hgzs7kwuw7wswht2q3gmv4daxyoga2mvr5f644lgzfconpn4",
-        100: "bafybeiaknbh3zta4b76bh4afy6syuo2jbpqhzgli6e5qh5jvv6oi52ydvu",
+        100: "bafybeibhfdzlez66uyeofhz3z4sq6an64i6b2cvadvzahb5iygqyq4gscu",
     },
     "frames": {
         0: "bafybeicy22hgzs7kwuw7wswht2q3gmv4daxyoga2mvr5f644lgzfconpn4",
@@ -188,10 +188,10 @@ IPFS_GATEWAY_BASE_URL = "https://gateway.staging.autonolas.tech/ipfs/"
 
 IMAGE_CODE_TO_HASHES = {
     "000000": "bafybeic4zlb6avnshb4nayqyv6blxfqbjeum5ie66jfj3gf7oex2ps4xiu",
-    "000100": "bafybeiaaeeabbybzkq7wgpt4m4hc7p5j6lblrw2bwub5ujiv4gh5puoddm",
-    "000101": "bafybeibew7slhqtnpa472ijccsuqr5bkl4sbgcdfp6oa2xt35quqjt3ydy",
-    "000102": "bafybeid4ao4okeum4qg4po6q3hznhhg3txweq55xuiv7ozyefm6tzojorq",
-    "000103": "bafybeibkpascvrtitbsby2eljr7mng7qu6krykiodqpyjnmcrw5qklpt6y",
+    "000100": "bafybeifshmcrpex3aaanem3sozmid47cpdgrdujxf2mbwon7i4opdyleom",
+    "000101": "bafybeiagmb4cjm7t5pljhniabvjhiiuhzhulmtzz7bkno73bc6pbjwks3e",
+    "000102": "bafybeibvhxsf2sm63gkzhrgf5u3sqnzduhtwooy45nz3dymskxfuofeske",
+    "000103": "bafybeidb2563guf6epbnskldj3sfoou5dmdzv6kzr7lspvc5raf5xz7xyu",
 }
 
 
