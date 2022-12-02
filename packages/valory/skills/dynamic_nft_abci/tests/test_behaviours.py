@@ -121,8 +121,7 @@ DUMMY_LAYERS = {
 }
 
 DUMMY_THRESHOLDS = {
-    k: list(sorted(DUMMY_LAYERS[k].keys()))
-    for k in DUMMY_LAYERS.keys()
+    k: list(sorted(DUMMY_LAYERS[k].keys())) for k in DUMMY_LAYERS.keys()
 }
 
 DUMMY_API_DATA = {"leaderboard": DUMMY_LEADERBOARD, "layers": DUMMY_LAYERS}
@@ -633,7 +632,7 @@ class TestImageCodeCalculationBehaviour(BaseDynamicNFTTest):
     def test_points_to_code(self, points: float, expected_code: str) -> None:
         """Test the points_to_code function"""
         code = ImageCodeCalculationBehaviour.points_to_code(points, DUMMY_THRESHOLDS)
-        assert code  == expected_code, f"Expected {expected_code}, got {code}"
+        assert code == expected_code, f"Expected {expected_code}, got {code}"
 
     def test_points_to_code_negative(self) -> None:
         """Test the points_to_code function"""
