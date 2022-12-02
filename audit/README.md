@@ -7,7 +7,7 @@ https://github.com/valory-xyz/contribution-service <br>
 commit: `f0f33622d1e3c3598d38091626de8a60cc1d5c1f`  or `tag: v0.1.0-pre-audit`
 
 ## Objectives
-The audit is focused on [packages/balancer](https://github.com/valory-xyz/contribution-service/tree/main/packages/valory/) in this repo.
+The audit is focused on [packages/valory](https://github.com/valory-xyz/contribution-service/tree/main/packages/valory/) in this repo.
 
 ## Checks on quick start guides
 These checks were made on the basis of the following existing documentation:
