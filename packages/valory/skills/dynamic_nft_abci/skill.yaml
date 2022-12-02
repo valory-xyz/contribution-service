@@ -87,7 +87,7 @@ models:
     class_name: LedgerApiDialogues
   params:
     args:
-      basic_image_cid: bafybeig6tvnwaw4lfcth5e4g2ggro2df6i5np5ed3h3w5jt3f4dc4otlf4
+      basic_image_cid: bafybeihhi5mgl5cfwyl7zwuaqutpehh4jka2jc6un3cxuwoflhmznzpbs4
       cleanup_history_depth: 1
       cleanup_history_depth_current: null
       consensus:
@@ -116,7 +116,7 @@ models:
       keeper_timeout: 30.0
       leaderboard_api_key: null
       leaderboard_base_endpoint: https://sheets.googleapis.com/v4/spreadsheets
-      leaderboard_layers_range: Layers!B1:Z2
+      leaderboard_layers_range: Layers!B1:Z3
       leaderboard_points_range: Ranking!B2:C302
       leaderboard_sheet_id: 1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc
       max_healthcheck: 120

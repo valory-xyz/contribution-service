@@ -106,13 +106,17 @@ DUMMY_MEMBER_TO_TOKEN_ID = {member: i for i, member in enumerate(DUMMY_LEADERBOA
 
 DUMMY_LAYERS = {
     "classes": {
-        0: "bafybeidq3dslr742cgu2stwx5bbsnni4mjojtlkzowymy2662b4p5yk3y4",
+        0: "bafybeihhi5mgl5cfwyl7zwuaqutpehh4jka2jc6un3cxuwoflhmznzpbs4",
+    },
+    "activation": {
+        0: "bafybeicy22hgzs7kwuw7wswht2q3gmv4daxyoga2mvr5f644lgzfconpn4",
+        100: "bafybeiaknbh3zta4b76bh4afy6syuo2jbpqhzgli6e5qh5jvv6oi52ydvu",
     },
     "frames": {
         0: "bafybeicy22hgzs7kwuw7wswht2q3gmv4daxyoga2mvr5f644lgzfconpn4",
-        100: "bafybeicgg6m7j3eu5akua55mlxohsbqvgonkmk2qqflslrtcdlec6m6ty4",
-        100000: "bafybeia6thhn2qc3rmj2dnlhy5oov7bvtpjlosesu54ybnuavtl2725h7i",
-        150000: "bafybeigstc52zkvx3mwzw2dwc3726amgpolwbdxfoylpupnk6ut5ya357a",
+        49900: "bafybeih67y7g5qstirprambfsqd7dbunyyjlktpfqpukabp4fkrt4ziuba",
+        99900: "bafybeibiyqmsjgp7ofqktthkgi6up77w4mzrgyzii2mtiodic6h7v2h6de",
+        149900: "bafybeiheikuwkkwaygtssfkumzhursxh6a76546spakmr6wwrw6v3heb2a",
     },
 }
 
@@ -138,7 +142,7 @@ DUMMY_API_RESPONSE = {
             ],
         },
         {
-            "range": "Layers!B1:Z2",
+            "range": "Layers!B1:Z3",
             "majorDimension": "ROWS",
             "values": [
                 ["0:dummy_class_hash_0"],
@@ -165,7 +169,7 @@ SHEET_ID = "1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc"
 GOOGLE_API_KEY = None
 GOOGLE_SHEETS_ENDPOINT = "https://sheets.googleapis.com/v4/spreadsheets"
 DEFAULT_CELL_RANGE_POINTS = "Ranking!B2:C302"
-DEFAULT_CELL_RANGE_LAYERS = "Layers!B1:Z2"
+DEFAULT_CELL_RANGE_LAYERS = "Layers!B1:Z3"
 
 DEFAULT_SHEET_API_URL = (
     f"{GOOGLE_SHEETS_ENDPOINT}/{SHEET_ID}/values:batchGet?"
@@ -184,7 +188,7 @@ IMAGE_PATH = Path(
 IPFS_GATEWAY_BASE_URL = "https://gateway.staging.autonolas.tech/ipfs/"
 
 IMAGE_CODE_TO_HASHES = {
-    "0000": "bafybeig6tvnwaw4lfcth5e4g2ggro2df6i5np5ed3h3w5jt3f4dc4otlf4",
+    "0000": "bafybeihhi5mgl5cfwyl7zwuaqutpehh4jka2jc6un3cxuwoflhmznzpbs4",
     "0001": "bafybeihlilxztmopjfh7wf4o6loht3ezn4fnt2jpllqwcahid4xzkoccoi",
     "0002": "bafybeihxmk2lqghnlbjuml453z7sihuuewjjd2skpjmhrmz72r5xlvsvju",
     "0003": "bafybeib6xutso6jzf5xgzqw7eonje7x72wagpbkc5t6xhl6cltsb3wae6y",
@@ -196,8 +200,8 @@ def get_dummy_updates(error: bool = False) -> Dict:
     if error:
         return {"dummy_member_1": {"points": 1000, "image_code": "error_code"}}
     return {
-        "dummy_member_1": {"points": 55000, "image_code": "0001"},
-        "dummy_member_2": {"points": 105000, "image_code": "0002"},
+        "dummy_member_1": {"points": 55000, "image_code": "000101"},
+        "dummy_member_2": {"points": 105000, "image_code": "000102"},
     }
 
 
@@ -614,15 +618,14 @@ class TestImageCodeCalculationBehaviour(BaseDynamicNFTTest):
     @pytest.mark.parametrize(
         "points, expected_code",
         [
-            (0, "0000"),
-            (99, "0000"),
-            (100, "0001"),
-            (51000, "0001"),
-            (99999, "0001"),
-            (120000, "0002"),
-            (145000, "0002"),
-            (150000, "0003"),
-            (200000, "0003"),
+            (0, "000000"),
+            (150, "000100"),
+            (51000, "000100"),
+            (99999, "000100"),
+            (120000, "000101"),
+            (145000, "000101"),
+            (150000, "000102"),
+            (200000, "000103"),
         ],
     )
     def test_points_to_code(self, points: float, expected_code: str) -> None:
@@ -1015,7 +1018,7 @@ class TestImageManager:
 
     def test_generate_invalid_code_non_existent(self) -> None:
         """test_generate_invalid_code_non_existent"""
-        assert not self.manager.generate("0909")  # image does not exist
+        assert not self.manager.generate("090909")  # image does not exist
 
     def teardown_class(self) -> None:
         """Teardown class"""
