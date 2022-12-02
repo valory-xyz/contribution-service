@@ -460,11 +460,14 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
         cls_code, points = ImageCodeCalculationBehaviour.get_layer_code(
             points, thresholds[ImageGenerationBehaviour.ImageManager.LAYER_NAMES[0]]
         )
-        fr_code, points = ImageCodeCalculationBehaviour.get_layer_code(
+        act_code, points = ImageCodeCalculationBehaviour.get_layer_code(
             points, thresholds[ImageGenerationBehaviour.ImageManager.LAYER_NAMES[1]]
         )
+        fr_code, points = ImageCodeCalculationBehaviour.get_layer_code(
+            points, thresholds[ImageGenerationBehaviour.ImageManager.LAYER_NAMES[2]]
+        )
 
-        return cls_code + fr_code
+        return cls_code + act_code + fr_code
 
 
 class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
@@ -709,9 +712,9 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
         IMAGE_ROOT = Path(Path(__file__).parent, "data")
         LAYERS_DIR = "layers"
         IMAGES_DIR = "images"
-        LAYER_NAMES = ("classes", "frames")
+        LAYER_NAMES = ("classes", "activation", "frames")
         PNG_EXT = "png"
-        CODE_LEN = 4
+        CODE_LEN = 6
 
         def __init__(self, logger: Logger, image_root: Path = IMAGE_ROOT):
             """Load images"""
