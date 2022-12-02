@@ -19,6 +19,7 @@
 
 """Test the handlers.py module of the DynamicNFT skill."""
 
+import json
 import logging
 from dataclasses import dataclass
 from pathlib import Path
@@ -38,7 +39,7 @@ from packages.valory.skills.dynamic_nft_abci.handlers import (
     BAD_REQUEST_CODE,
     HttpHandler,
     NOT_FOUND_CODE,
-    TEMPORARY_REDIRECT_CODE,
+    OK_CODE,
 )
 
 
@@ -47,6 +48,18 @@ PACKAGE_DIR = Path(__file__).parent.parent
 HTTP_SERVER_SENDER = str(HTTP_SERVER_PUBLIC_ID.without_hash())
 
 TOKEN_URI_BASE = "https://pfp.autonolas.network/"  # nosec
+
+
+def get_dummy_metadata(token_id, redirect_uri):
+    """Get the dummy token metadata"""
+    image_hash = redirect_uri.split("/")[-1]  # get the hash only
+    return {
+        "title": "Autonolas Community Dynamic Contribution NFT",
+        "name": f"Autonolas Community Dynamic Contribution NFT {token_id}",
+        "description": "This NFT recognizes the contributions made by the holder to the Autonolas Community.",
+        "image": f"ipfs://{image_hash}",
+        "attributes": [],  # TODO: add attributes
+    }
 
 
 @dataclass
@@ -59,6 +72,7 @@ class HandlerTestCase:
     response_status_code: int
     response_status_text: str
     response_headers: str
+    body: bytes
 
 
 class TestHttpHandler(BaseSkillTestCase):
@@ -143,9 +157,12 @@ class TestHttpHandler(BaseSkillTestCase):
                 name="uri in redirects",
                 request_url=f"{TOKEN_URI_BASE}0",
                 redirects={"0": "some_url_redirect"},
-                response_status_code=TEMPORARY_REDIRECT_CODE,
-                response_status_text="Temporary redirect",
-                response_headers="Location: some_url_redirect\nsome_headers",
+                response_status_code=OK_CODE,
+                response_status_text="Success",
+                response_headers="Content-Type: application/json\nsome_headers",
+                body=json.dumps(get_dummy_metadata(0, "some_url_redirect")).encode(
+                    "utf-8"
+                ),
             ),
             HandlerTestCase(
                 name="uri not in redirects",
@@ -154,6 +171,7 @@ class TestHttpHandler(BaseSkillTestCase):
                 response_status_code=NOT_FOUND_CODE,
                 response_status_text="Not found",
                 response_headers="some_headers",
+                body=b"",
             ),
         ],
     )
@@ -207,7 +225,7 @@ class TestHttpHandler(BaseSkillTestCase):
             status_code=test_case.response_status_code,
             status_text=test_case.response_status_text,
             headers=test_case.response_headers,
-            body=b"",
+            body=test_case.body,
         )
         assert has_attributes, error_str
 

@@ -19,6 +19,7 @@
 
 """This module contains the handlers for the skill of DynamicNFTAbciApp."""
 
+import json
 import re
 from typing import cast
 from urllib.parse import urlparse
@@ -59,8 +60,7 @@ SigningHandler = BaseSigningHandler
 LedgerApiHandler = BaseLedgerApiHandler
 ContractApiHandler = BaseContractApiHandler
 TendermintHandler = BaseTendermintHandler
-
-TEMPORARY_REDIRECT_CODE = 307
+OK_CODE = 200
 NOT_FOUND_CODE = 404
 BAD_REQUEST_CODE = 400
 
@@ -193,16 +193,29 @@ class HttpHandler(BaseHttpHandler):
             )
 
             redirect_uri = redirects[token_id]
-            location_headers = f"Location: {redirect_uri}\n"
+            image_hash = redirect_uri.split("/")[-1]  # get the hash only
+
+            # Build token metadata
+            metadata = {
+                "title": "Autonolas Community Dynamic Contribution NFT",
+                "name": f"Autonolas Community Dynamic Contribution NFT {token_id}",
+                "description": "This NFT recognizes the contributions made by the holder to the Autonolas Community.",
+                "image": f"ipfs://{image_hash}",
+                "attributes": [],  # TODO: add attributes
+            }
+
+            self.context.logger.info(f"Responding with token metadata={metadata}")
+
+            content_header = "Content-Type: application/json\n"
 
             http_response = http_dialogue.reply(
                 performative=HttpMessage.Performative.RESPONSE,
                 target_message=http_msg,
                 version=http_msg.version,
-                status_code=TEMPORARY_REDIRECT_CODE,
-                status_text="Temporary redirect",
-                headers=f"{location_headers}{http_msg.headers}",
-                body=b"",
+                status_code=OK_CODE,
+                status_text="Success",
+                headers=f"{content_header}{http_msg.headers}",
+                body=json.dumps(metadata).encode("utf-8"),
             )
 
         # Send response
