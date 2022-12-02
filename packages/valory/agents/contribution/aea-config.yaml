@@ -29,8 +29,8 @@ protocols:
 skills:
 - valory/abstract_abci:0.1.0:bafybeicog4eierjad4f542ubhe3ez7sxgrsna7t2e5pci2hncpq5vckw4e
 - valory/abstract_round_abci:0.1.0:bafybeia5meor4p77p62khoddlqj4vg5rxiwi3djxc7feusgein6adi7t7m
-- valory/contribution_skill_abci:0.1.0:bafybeiffkjyoiwpz5xcoccmxcczn4lonh4lnsyf27m5vzlk2wom4dyaqbi
-- valory/dynamic_nft_abci:0.1.0:bafybeias23kzwhp5svp3bo3j3t2k4jnhmzvn325il6ektj36lpqlkwu2ku
+- valory/contribution_skill_abci:0.1.0:bafybeidcjp2o4434pg6eokshc76yf2ybscuzdmhyl6hqaw2jt5ka75ckqm
+- valory/dynamic_nft_abci:0.1.0:bafybeibvn2f525agr7qmxygonab22put4cnqufio3njnpi66zr6uxw7zie
 - valory/registration_abci:0.1.0:bafybeib2cr65zmunztkr3miy4sa2pwlsj2dsi4pz7rwtgg75xczc7hrj3q
 - valory/reset_pause_abci:0.1.0:bafybeie3qy5v3ggc54bmrubd27kbofrkw6srgbggo3b6ewssw3pbxjuvla
 default_ledger: ethereum
@@ -153,7 +153,7 @@ models:
       tendermint_com_url: ${TENDERMINT_COM_URL:str:http://localhost:8080}
       tendermint_max_retries: 5
       tendermint_url: ${TENDERMINT_URL:str:http://localhost:26657}
-      token_uri_base: https://pfp.autonolas.network/
+      token_uri_base: https://pfp.staging.autonolas.tech/
       whitelist_api_key: null
       whitelist_endpoint: http://localhost
 ---

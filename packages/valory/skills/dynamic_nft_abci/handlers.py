@@ -88,8 +88,8 @@ class HttpHandler(BaseHttpHandler):
         Examples:
             localhost:8000/0
             127.0.0.1:8000/100
-            https://pfp.autonolas.network/45
-            http://pfp.autonolas.network/120
+            https://pfp.staging.autonolas.tech/45
+            http://pfp.staging.autonolas.tech/120
 
         :param url: the url to check
         :returns: True if the message is intended to be handled by this handler
@@ -115,7 +115,7 @@ class HttpHandler(BaseHttpHandler):
         http_msg = cast(HttpMessage, message)
 
         # Check if this message is for this skill. If not, send to super()
-        # We expect requests to https://pfp.autonolas.network/{token_id}
+        # We expect requests to https://pfp.staging.autonolas.tech/{token_id}
         if (
             http_msg.performative != HttpMessage.Performative.REQUEST
             or message.sender != str(HTTP_SERVER_PUBLIC_ID.without_hash())
