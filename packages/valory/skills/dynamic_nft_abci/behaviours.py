@@ -147,12 +147,17 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
 
     def get_member_to_token_id(self) -> Generator[None, None, dict]:
         """Get member to token id data."""
+        self.context.logger.info(
+            f"Retrieving Transfer events later than block {self.params.earliest_block_to_monitor}"
+            f" for contract at {self.params.dynamic_contribution_contract_address}"
+        )
         contract_api_msg = yield from self.get_contract_api_response(
             performative=ContractApiMessage.Performative.GET_STATE,  # type: ignore
             contract_address=self.params.dynamic_contribution_contract_address,
             contract_id=str(DynamicContributionContract.contract_id),
             contract_callable="get_all_erc721_transfers",
             from_address=NULL_ADDRESS,
+            from_block=self.params.earliest_block_to_monitor,
         )
         if contract_api_msg.performative != ContractApiMessage.Performative.STATE:
             self.context.logger.info("Error retrieving the member to token_id data")
