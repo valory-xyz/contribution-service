@@ -268,6 +268,7 @@ https://gist.github.com/Chmarusso/045ee79fa9a1fae55928a613044c9067
 
 Add your metadata file to IPFS: <br>
 https://blog.chain.link/build-deploy-and-sell-your-own-dynamic-nft/
+https://github.com/PatrickAlphaC/dungeons-and-dragons-nft/blob/master/scripts/set-token-uri.js
 
 ### Review of `packages/valory/`
 A quick code review with short notes for each file in the project can be found in the file <br>
@@ -277,7 +278,12 @@ packages/balancer: [packages_valory.md](packages_valory.md).
 Update: 05-12-22. <br>
 * So far, the code has been reviewed up to
 ```
+    │   └── tests (ok)
+    │       ├── __init__.py
+    │       ├── test_behaviours.py
+    │       ├── test_dialogues.py
+    │       ├── test_handlers.py
+    │       └── test_models.py
 
-├── contracts (WIP)
-│   ├── dynamic_contribution
+    ├── dynamic_nft_abci
 ```

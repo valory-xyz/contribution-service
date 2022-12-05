@@ -23,189 +23,48 @@
 │   │   ├── build
 │   │   │   └── DynamicContribution.json
 │   │   ├── contract.py
+get_all_erc721_transfers()
+https://github.com/transmissions11/solmate/blob/8d910d876f51c3b2585c9109409d601f600e68e1/src/tokens/ERC721.sol#L11
+so, factory_contract.events.Transfer.createFilter(... "from": from_address) is correct.
+
+maybe these ideas will be useful
+https://coinsbench.com/web3-py-fetching-all-transfer-events-on-single-tokens-from-a-given-timestamp-90bd6ec08e33
+https://ethereum.stackexchange.com/questions/87676/infura-returns-strange-error-query-returned-more-than-10000-results
+https://community.infura.io/t/getlogs-error-query-returned-more-than-1000-results/358/4
+│   │   └── __init__.py
 │   │   ├── contract.yaml
 │   │   └── __init__.py
 │   ├── __init__.py
-│   └── service_registry
-│       ├── build
-│       │   └── ServiceRegistry.json
-│       ├── contract.py
-│       ├── contract.yaml
-│       ├── __init__.py
-│       └── tests
-│           ├── __init__.py
-│           └── test_contract.py
+│   └── service_registry (out of scope)
+...
 ├── __init__.py
-├── protocols
-│   ├── abci
-│   │   ├── abci_pb2.py
-│   │   ├── abci.proto
-│   │   ├── custom_types.py
-│   │   ├── dialogues.py
-│   │   ├── __init__.py
-│   │   ├── message.py
-│   │   ├── protocol.yaml
-│   │   ├── README.md
-│   │   ├── serialization.py
-│   │   └── tests
-│   │       ├── conftest.py
-│   │       ├── __init__.py
-│   │       └── test_abci.py
-│   ├── acn
-│   │   ├── acn_pb2.py
-│   │   ├── acn.proto
-│   │   ├── custom_types.py
-│   │   ├── dialogues.py
-│   │   ├── __init__.py
-│   │   ├── message.py
-│   │   ├── protocol.yaml
-│   │   ├── README.md
-│   │   ├── serialization.py
-│   │   └── tests
-│   │       ├── __init__.py
-│   │       └── test_acn.py
-│   ├── contract_api
-│   │   ├── contract_api_pb2.py
-│   │   ├── contract_api.proto
-│   │   ├── custom_types.py
-│   │   ├── dialogues.py
-│   │   ├── __init__.py
-│   │   ├── message.py
-│   │   ├── protocol.yaml
-│   │   ├── README.md
-│   │   ├── serialization.py
-│   │   └── tests
-│   │       ├── __init__.py
-│   │       └── test_contract_api.py
-│   ├── http
-│   │   ├── dialogues.py
-│   │   ├── http_pb2.py
-│   │   ├── http.proto
-│   │   ├── __init__.py
-│   │   ├── message.py
-│   │   ├── protocol.yaml
-│   │   ├── README.md
-│   │   ├── serialization.py
-│   │   └── tests
-│   │       ├── __init__.py
-│   │       └── test_http.py
-│   ├── __init__.py
-│   ├── ledger_api
-│   │   ├── custom_types.py
-│   │   ├── dialogues.py
-│   │   ├── __init__.py
-│   │   ├── ledger_api_pb2.py
-│   │   ├── ledger_api.proto
-│   │   ├── message.py
-│   │   ├── protocol.yaml
-│   │   ├── README.md
-│   │   ├── serialization.py
-│   │   └── tests
-│   │       ├── __init__.py
-│   │       └── test_ledger_api.py
-│   └── tendermint
-│       ├── custom_types.py
-│       ├── dialogues.py
-│       ├── __init__.py
-│       ├── message.py
-│       ├── protocol.yaml
-│       ├── README.md
-│       ├── serialization.py
-│       ├── tendermint_pb2.py
-│       └── tendermint.proto
-├── services
+├── protocols (out of scope)
+...
+├── services (ok, no codebase)
 │   └── contribution
 │       ├── README.md
 │       └── service.yaml
 └── skills
-    ├── abstract_abci
-    │   ├── dialogues.py
-    │   ├── handlers.py
-    │   ├── __init__.py
-    │   ├── README.md
-    │   ├── skill.yaml
-    │   └── tests
-    │       ├── __init__.py
-    │       ├── test_dialogues.py
-    │       └── test_handlers.py
-    ├── abstract_round_abci
-    │   ├── abci_app_chain.py
-    │   ├── base.py
-    │   ├── behaviours.py
-    │   ├── behaviour_utils.py
-    │   ├── common.py
-    │   ├── dialogues.py
-    │   ├── handlers.py
-    │   ├── __init__.py
-    │   ├── io_
-    │   │   ├── __init__.py
-    │   │   ├── ipfs.py
-    │   │   ├── load.py
-    │   │   ├── paths.py
-    │   │   └── store.py
-    │   ├── models.py
-    │   ├── README.md
-    │   ├── serializer.py
-    │   ├── skill.yaml
-    │   ├── tests
-    │   │   ├── data
-    │   │   │   ├── dummy_abci
-    │   │   │   │   ├── behaviours.py
-    │   │   │   │   ├── dialogues.py
-    │   │   │   │   ├── handlers.py
-    │   │   │   │   ├── __init__.py
-    │   │   │   │   ├── models.py
-    │   │   │   │   ├── payloads.py
-    │   │   │   │   ├── rounds.py
-    │   │   │   │   └── skill.yaml
-    │   │   │   └── __init__.py
-    │   │   ├── __init__.py
-    │   │   ├── test_abci_app_chain.py
-    │   │   ├── test_base.py
-    │   │   ├── test_base_rounds.py
-    │   │   ├── test_behaviours.py
-    │   │   ├── test_behaviours_utils.py
-    │   │   ├── test_common.py
-    │   │   ├── test_dialogues.py
-    │   │   ├── test_handlers.py
-    │   │   ├── test_io
-    │   │   │   ├── conftest.py
-    │   │   │   ├── __init__.py
-    │   │   │   ├── test_ipfs.py
-    │   │   │   ├── test_load.py
-    │   │   │   └── test_store.py
-    │   │   ├── test_models.py
-    │   │   ├── test_serializer.py
-    │   │   ├── test_tools
-    │   │   │   ├── __init__.py
-    │   │   │   ├── test_base.py
-    │   │   │   ├── test_common.py
-    │   │   │   ├── test_integration.py
-    │   │   │   └── test_rounds.py
-    │   │   └── test_utils.py
-    │   ├── test_tools
-    │   │   ├── abci_app.py
-    │   │   ├── base.py
-    │   │   ├── common.py
-    │   │   ├── __init__.py
-    │   │   ├── integration.py
-    │   │   └── rounds.py
-    │   └── utils.py
+    ├── abstract_abci (out of scope)
+...
+    ├── abstract_round_abci (out of scope)
+...
     ├── contribution_skill_abci
-    │   ├── behaviours.py
-    │   ├── composition.py
-    │   ├── dialogues.py
-    │   ├── fsm_specification.yaml
-    │   ├── handlers.py
+    │   ├── behaviours.py (ok)
+    │   ├── composition.py (ok)
+    │   ├── dialogues.py (ok)
+    │   ├── fsm_specification.yaml 
+    │   ├── handlers.py (ok)
     │   ├── __init__.py
-    │   ├── models.py
+    │   ├── models.py (ok)
     │   ├── skill.yaml
-    │   └── tests
+    │   └── tests (ok)
     │       ├── __init__.py
     │       ├── test_behaviours.py
     │       ├── test_dialogues.py
     │       ├── test_handlers.py
     │       └── test_models.py
+
     ├── dynamic_nft_abci
     │   ├── behaviours.py
     │   ├── data
