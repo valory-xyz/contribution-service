@@ -107,7 +107,7 @@ type: skill
 models:
   params:
     args:
-      basic_image_cid: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_BASIC_IMAGE_CID:str:bafybeihhi5mgl5cfwyl7zwuaqutpehh4jka2jc6un3cxuwoflhmznzpbs4}
+      basic_image_cid: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_BASIC_IMAGE_CID:str:bafybeiabtdl53v2a3irrgrg7eujzffjallpymli763wvhv6gceurfmcemm}
       cleanup_history_depth: 1
       cleanup_history_depth_current: null
       consensus:
