@@ -106,7 +106,7 @@ DUMMY_MEMBER_TO_TOKEN_ID = {member: i for i, member in enumerate(DUMMY_LEADERBOA
 
 DUMMY_LAYERS = {
     "classes": {
-        0: "bafybeihhi5mgl5cfwyl7zwuaqutpehh4jka2jc6un3cxuwoflhmznzpbs4",
+        0: "bafybeif4dtvtnqjss4dhmwenxzhbyao6reqoxx5imlzxgxeh4bajnz444u",
     },
     "activation": {
         0: "bafybeicy22hgzs7kwuw7wswht2q3gmv4daxyoga2mvr5f644lgzfconpn4",
@@ -187,11 +187,11 @@ IMAGE_PATH = Path(
 IPFS_GATEWAY_BASE_URL = "https://gateway.staging.autonolas.tech/ipfs/"
 
 IMAGE_CODE_TO_HASHES = {
-    "000000": "bafybeic4zlb6avnshb4nayqyv6blxfqbjeum5ie66jfj3gf7oex2ps4xiu",
-    "000100": "bafybeifshmcrpex3aaanem3sozmid47cpdgrdujxf2mbwon7i4opdyleom",
-    "000101": "bafybeiagmb4cjm7t5pljhniabvjhiiuhzhulmtzz7bkno73bc6pbjwks3e",
-    "000102": "bafybeibvhxsf2sm63gkzhrgf5u3sqnzduhtwooy45nz3dymskxfuofeske",
-    "000103": "bafybeidb2563guf6epbnskldj3sfoou5dmdzv6kzr7lspvc5raf5xz7xyu",
+    "000000": "bafybeiabtdl53v2a3irrgrg7eujzffjallpymli763wvhv6gceurfmcemm",
+    "000100": "bafybeid46w6yzbehir7ackcnsyuasdkun5aq7jnckt4sknvmiewpph776q",
+    "000101": "bafybeigbxlwzljbxnlwteupmt6c6k7k2m4bbhunvxxa53dc7niuedilnr4",
+    "000102": "bafybeiawxpq4mqckbau3mjwzd3ic2o7ywlhp6zqo7jnaft26zeqm3xsjjy",
+    "000103": "bafybeie6k53dupf7rf6622rzfxu3dmlv36hytqrmzs5yrilxwcrlhrml2m",
 }
 
 
