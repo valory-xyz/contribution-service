@@ -8,7 +8,7 @@ license: Apache-2.0
 fingerprint:
   README.md: bafybeiaeysyipptsieavfpyfkrfl3n37klu3ux7o2rtks2w4k2nnr2hshu
 fingerprint_ignore_patterns: []
-agent: valory/contribution:0.1.0:bafybeidlels64ugu7xxebpjfyuwqmr32orm5ci2fv5bjfejsjl7brwqthm
+agent: valory/contribution:0.1.0:bafybeidp2zbnv5s6ygzdwlqw4gdhukf2prcrzmnvmjuttzq2bh3nq4jj4m
 number_of_agents: 1
 ---
 public_id: valory/contribution_skill_abci:0.1.0
@@ -17,10 +17,11 @@ models:
   params:
     args:
       broadcast_to_server: true
+      dynamic_contribution_contract_address: ${DYNAMIC_CONTRIBUTION_CONTRACT_ADDRESS:str:0x5FbDB2315678afecb367f032d93F642f64180aa3}
       earliest_block_to_monitor: ${EARLIEST_BLOCK_TO_MONITOR:int:8053690}
       history_end: null
       ipfs_domain_name: /dns/registry.autonolas.tech/tcp/443/https
-      ipfs_gateway_base_url: https://gateway.staging.autonolas.tech/ipfs/
+      ipfs_gateway_base_url: ${IPFS_GATEWAY_BASE_URL:str:https://gateway.staging.autonolas.tech/ipfs/}
       leaderboard_api_key: ${LEADERBOARD_API_KEY:str:null}
       observation_interval: ${OBSERVATION_INTERVAL:int:300}
 ---
