@@ -267,7 +267,7 @@ Hold all metadata and SVG images on-chain: <br>
 https://gist.github.com/Chmarusso/045ee79fa9a1fae55928a613044c9067
 
 Add your metadata file to IPFS: <br>
-https://blog.chain.link/build-deploy-and-sell-your-own-dynamic-nft/
+https://blog.chain.link/build-deploy-and-sell-your-own-dynamic-nft/ <br>
 https://github.com/PatrickAlphaC/dungeons-and-dragons-nft/blob/master/scripts/set-token-uri.js
 
 ### Review of `packages/valory/`
