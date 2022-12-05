@@ -149,7 +149,7 @@ models:
       service_id: contribution_service
       service_registry_address: null
       sleep_time: 1
-      dynamic_contribution_contract_address: ${DYNAMIC_CONTRIBUTION_CONTRACT_ADDRESS:str:0x5FbDB2315678afecb367f032d93F642f64180aa3}
+      dynamic_contribution_contract_address: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_DYNAMIC_CONTRIBUTION_CONTRACT_ADDRESS:str:0x5FbDB2315678afecb367f032d93F642f64180aa3}
       tendermint_check_sleep_delay: 3
       tendermint_com_url: ${TENDERMINT_COM_URL:str:http://localhost:8080}
       tendermint_max_retries: 5
