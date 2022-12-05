@@ -106,7 +106,7 @@ DUMMY_MEMBER_TO_TOKEN_ID = {member: i for i, member in enumerate(DUMMY_LEADERBOA
 
 DUMMY_LAYERS = {
     "classes": {
-        0: "bafybeihhi5mgl5cfwyl7zwuaqutpehh4jka2jc6un3cxuwoflhmznzpbs4",
+        0: "bafybeif4dtvtnqjss4dhmwenxzhbyao6reqoxx5imlzxgxeh4bajnz444u",
     },
     "activation": {
         0: "bafybeicy22hgzs7kwuw7wswht2q3gmv4daxyoga2mvr5f644lgzfconpn4",
