@@ -135,10 +135,10 @@ models:
       ipfs_gateway_base_url: ${IPFS_GATEWAY_BASE_URL:str:https://gateway.staging.autonolas.tech/ipfs/}
       keeper_timeout: 30.0
       leaderboard_api_key: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_LEADERBOARD_API_KEY:str:null}
-      leaderboard_base_endpoint: https://sheets.googleapis.com/v4/spreadsheets
-      leaderboard_layers_range: Layers!B1:Z3
-      leaderboard_points_range: Ranking!B2:C302
-      leaderboard_sheet_id: 1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc
+      leaderboard_base_endpoint: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_LEADERBOARD_BASE_ENDPOINT:str:https://sheets.googleapis.com/v4/spreadsheets}
+      leaderboard_layers_range: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_LEADERBOARD_LAYERS_RANGE:str:Layers!B1:Z3}
+      leaderboard_points_range: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_LEADERBOARD_POINTS_RANGE:str:Ranking!B2:C302}
+      leaderboard_sheet_id: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_LEADERBOARD_SHEET_ID:str:1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc}
       max_healthcheck: 120
       observation_interval: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_OBSERVATION_INTERVAL:int:300}
       on_chain_service_id: null
