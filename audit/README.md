@@ -178,14 +178,103 @@ Not 100% coverage is a minor issue. <br>
 It would be good to pay attention to lines of code not covered by tests. <br>
 
 ### Review of diagram. Possible attack vectors
-WIP
+Possible vectors of attacks on the system are shown in the diagram [Contribution_Service_Diagram_Attacks](https://github.com/valory-xyz/contribution-service/tree/main/audit/Contribution_Service_Diagram_Attacks.drawio.png)
+
+```
+List of terms:
+dns spoofing/hijacking https://www.imperva.com/learn/application-security/dns-spoofing/
+
+List of vectors attack:
+- ddos to BaseURI
+- dns hijacking
+- http/https MiTM
+- MiTM in communications
+- lost or stolen private key (wallet)
+- lost or stolen API key
+
+Countermeasures:
+- Attack #1. ddos to BaseURI
+Protection at the level of the service provider.
+The choice of a service provider such as Amazon provides a sufficient level of protection. In the case of constant and massive attacks, can be buying an additional service.
+https://expertinsights.com/compare/aws-shield-vs-cloudflare-advanced-ddos-protection
+https://www.gartner.com/reviews/market/ddos-mitigation-services
+
+Non-traditional way of protection:
+- Move metadata JSON object to IPFS. Details in Ref: List of useful links. Possibly an interesting solution.  
+- Move metadata JSON to on-chain. Details in Ref: List of useful links. An very expensive solution in terms of gas. Only for networks with very cheap gas.
+
+- Attack #2. dns hijacking
+The direct hijacking of a DNS server is only possible if an attacker gains access to accounts. Use multi-factor authentication (MFA) with each account.
+https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/data-protection.html
+
+DNS spoofing. Despite its attractiveness, the technology DNSSEC is still quite controversial.
+https://www.infoblox.com/dns-security-resource-center/dns-security-faq/what-is-the-purpose-of-dnssec/
+https://web.mit.edu/6.033/www/papers/dnssec.pdf
+
+Here is a common practical problem related to the use DNSSEC. You can block some users whose requests go through firewall of ISP/DC. 
+It is a common occurrence for some security technologies to conflict with other security technologies. 
+Example: https://community.cisco.com/t5/network-security/ios-firewall-dnssec/td-p/1368306
+I do not recommend to use DNSSEC.
+
+- Attack #3. http/https MiTM
+Traditional protection with the TLS/SSL protocol. Pay attention to the current issue. Ref: DevOps issue.
+
+- Attack #4. MiTM in communications
+It means the interception of messages between 'community member' and 'community manager'. Use proven messengers/communication tools. Preferably with end-to-end encryption (E2EE).
+Try to strike a balance between convenience ("communications as a service") and security ("client-side encryption"). 
+
+- Attack #5. lost or stolen private key (wallet)
+Not your keys, not your coins (c)
+The traditional recommendation is to use hardware wallet. 
+In this case, avoid using gnosis_safe. This is not supported on OpenSea.
+https://www.reddit.com/r/opensea/comments/t4ax9h/opensea_and_gnosis_safe_via_wallet_connect/
+https://levelup.gitconnected.com/how-to-allow-multi-sig-wallets-to-authenticate-with-your-dapp-8f8a74e145ea
+
+- Attack #6. lost or stolen API key/account
+General recommendations should be followed for google accounts (2FA)
+https://support.google.com/answer/2451907?hl=en
+https://support.google.com/a/answer/175197?hl=en
+https://handsondataviz.org/google-sheets-api-key.html
+```
+
+#### DevOps issue.
+Self-signed certificate in "web-server" pfp.autonolas.tech
+```
+https://etherscan.io/address/0x02c26437b292d86c5f4f21bbcce0771948274f84#readContract
+baseURI: https://pfp.autonolas.tech/ 
+
+The certificate is self-signed. Users will receive a warning when accessing this site unless the certificate is manually added as a trusted certificate to their web browser.
+None of the common names in the certificate match the name that was entered (pfp.autonolas.tech). You may receive an error when accessing this site in a web browser.
+ 
+openssl s_client -connect pfp.autonolas.tech:443
+CONNECTED(00000003)
+depth=0 O = Acme Co, CN = Kubernetes Ingress Controller Fake Certificate
+verify error:num=18:self-signed certificate
+verify return:1
+depth=0 O = Acme Co, CN = Kubernetes Ingress Controller Fake Certificate
+verify return:1
+
+https://security.stackexchange.com/questions/184969/how-mitm-attack-got-performed-on-self-signed-certificate-while-private-keys-is-g
+https://security.stackexchange.com/questions/56389/ssl-certificate-framework-101-how-does-the-browser-actually-verify-the-validity?noredirect=1&lq=1
+
+Self-signed certificates make automatic verification impossible and make MiTM much easier. If possible, avoid this in public projects (public web site).
+```
+#### List of useful links
+OpenSea Metadata structure: <br>
+https://docs.opensea.io/docs/metadata-standards
+
+Hold all metadata and SVG images on-chain: <br>
+https://gist.github.com/Chmarusso/045ee79fa9a1fae55928a613044c9067
+
+Add your metadata file to IPFS: <br>
+https://blog.chain.link/build-deploy-and-sell-your-own-dynamic-nft/
 
 ### Review of `packages/valory/`
 A quick code review with short notes for each file in the project can be found in the file <br>
 packages/balancer: [packages_valory.md](packages_valory.md).
 
 
-Update: 02-12-22. <br>
+Update: 05-12-22. <br>
 * So far, the code has been reviewed up to
 ```
 
