@@ -153,6 +153,7 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
             contract_id=str(DynamicContributionContract.contract_id),
             contract_callable="get_all_erc721_transfers",
             from_address=NULL_ADDRESS,
+            from_block=self.params.earliest_block_to_monitor,
         )
         if contract_api_msg.performative != ContractApiMessage.Performative.STATE:
             self.context.logger.info("Error retrieving the member to token_id data")
