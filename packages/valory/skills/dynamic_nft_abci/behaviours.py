@@ -256,7 +256,7 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
                     #     ...
                     # }                     # noqa: E800
                     leaderboard = {
-                        entry[0]: int(entry[1])
+                        entry[1]: int(entry[0])
                         for entry in leaderboard_raw
                         if LedgerApis.is_valid_address(DEFAULT_LEDGER, entry[0])
                     }
