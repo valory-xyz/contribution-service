@@ -133,11 +133,11 @@ DUMMY_API_RESPONSE = {
             "range": "Ranking!B2:C302",
             "majorDimension": "ROWS",
             "values": [
-                ["0x54EfA9b1865FFE8c528fb375A7A606149598932A", "1500"],
-                ["0x3c03a080638b3c176aB7D9ed56E25bC416dFf525", "900"],
-                ["0x44704AE66f0B9FF08a7b0584B49FE941AdD1bAE7", "575"],
-                ["0x19B043aD06C48aeCb2028B0f10503422BD0E0918", "100"],
-                ["not_valid_address", "3500"],
+                ["1500", "0x54EfA9b1865FFE8c528fb375A7A606149598932A"],
+                ["900", "0x3c03a080638b3c176aB7D9ed56E25bC416dFf525"],
+                ["575", "0x44704AE66f0B9FF08a7b0584B49FE941AdD1bAE7"],
+                ["100", "0x19B043aD06C48aeCb2028B0f10503422BD0E0918"],
+                ["3500", "not_valid_address"],
             ],
         },
         {
