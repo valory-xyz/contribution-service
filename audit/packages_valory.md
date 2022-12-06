@@ -18,7 +18,7 @@
 │   └── __init__.py
 ├── connections (out of scope)
 ...
-├── contracts (WIP)
+├── contracts (ok)
 │   ├── dynamic_contribution
 │   │   ├── build
 │   │   │   └── DynamicContribution.json
