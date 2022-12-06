@@ -189,17 +189,17 @@ List of attack vectors: <br>
 - lost or stolen API key
 
 Countermeasures: <br>
-- Attack #1. ddos to BaseURI
+#### Attack #1. ddos to BaseURI
 Protection at the level of the service provider. <br>
 The choice of a service provider such as Amazon provides a sufficient level of protection. In the case of constant and massive attacks, can be buying an additional service. <br>
 https://expertinsights.com/compare/aws-shield-vs-cloudflare-advanced-ddos-protection <br>
 https://www.gartner.com/reviews/market/ddos-mitigation-services
 
 Non-traditional way of protection: <br>
-- Move metadata JSON object to IPFS. Details in Ref: List of useful links. Possibly an interesting solution.   
-- Move metadata JSON to on-chain. Details in Ref: List of useful links. An very expensive solution in terms of gas. Only for networks with very cheap gas.
+- Move metadata JSON object to IPFS. Possibly an interesting solution. [List of useful links](#list-of-useful-links)   
+- Move metadata JSON to on-chain. An very expensive solution in terms of gas. Only for networks with very cheap gas. [List of useful links](#list-of-useful-links)
 
-- Attack #2. dns hijacking 
+#### Attack #2. dns hijacking 
 The direct hijacking of a DNS server is only possible if an attacker gains access to accounts. Use multi-factor authentication (MFA) with each account. <br>
 https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/data-protection.html
 
@@ -212,26 +212,25 @@ It is a common occurrence for some security technologies to conflict with other 
 Example: https://community.cisco.com/t5/network-security/ios-firewall-dnssec/td-p/1368306
 I do not recommend to use DNSSEC.
 
-- Attack #3. http/https MiTM
+#### Attack #3. http/https MiTM
 Traditional protection with the TLS/SSL protocol. Pay attention to the current issue. [DevOps issue](#devops-issue)
 
-- Attack #4. MiTM in communications
+#### Attack #4. MiTM in communications
 It means the interception of messages between 'community member' and 'community manager'. Use proven messengers/communication tools. Preferably with end-to-end encryption (E2EE). <br>
 Try to find a balance between convenience ("communications as a service") and security ("client-side encryption"). <br>
 
-- Attack #5. lost or stolen private key (wallet)
+#### Attack #5. lost or stolen private key (wallet)
 Not your keys, not your coins (c) <br>
 The traditional recommendation is to use hardware wallet. <br> 
 In this case, avoid using gnosis_safe. This is not supported on OpenSea. <br>
 https://www.reddit.com/r/opensea/comments/t4ax9h/opensea_and_gnosis_safe_via_wallet_connect/ <br>
 https://levelup.gitconnected.com/how-to-allow-multi-sig-wallets-to-authenticate-with-your-dapp-8f8a74e145ea
 
-- Attack #6. lost or stolen API key/account
+#### Attack #6. lost or stolen API key/account
 General recommendations should be followed for google accounts (2FA) <br>
 https://support.google.com/answer/2451907?hl=en <br>
 https://support.google.com/a/answer/175197?hl=en <br>
 https://handsondataviz.org/google-sheets-api-key.html <br>
-
 
 #### DevOps issue.
 Self-signed certificate in "web-server" pfp.autonolas.tech
