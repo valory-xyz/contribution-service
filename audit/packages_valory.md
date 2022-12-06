@@ -87,7 +87,6 @@ Timestamp: Dec-02-2022 01:54:35 PM +UTC
 This idea was implemented in the revisions following the commit being checked.
 + from_block=self.params.earliest_block_to_monitor,
 https://github.com/valory-xyz/contribution-service/commit/2aa2c0b4e22f2d0c7fe81a8eb2105c386b46170e
-
     │   ├── data
     │   │   └── layers
     │   │       ├── classes
@@ -123,7 +122,7 @@ https://github.com/valory-xyz/contribution-service/commit/2aa2c0b4e22f2d0c7fe81a
     │   │   ├── test_models.py
     │   │   ├── test_payloads.py
     │   │   └── test_rounds.py
-    │   └── tools.py
+    │   └── tools.py (ok)
     ├── __init__.py
     ├── registration_abci (out of scope)
 ...
