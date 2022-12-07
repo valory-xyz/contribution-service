@@ -65,7 +65,7 @@ dependencies:
   Pillow:
     version: ==9.2.0
   open-aea-ledger-ethereum:
-    version: ==1.24.0
+    version: ==1.25.0
 default_connection: null
 ---
 public_id: valory/abci:0.1.0
