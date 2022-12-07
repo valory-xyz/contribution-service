@@ -102,7 +102,18 @@ DUMMY_LEADERBOARD = {
     "0x7B394CD0B75f774c6808cc681b26aC3E5DF96E27": 3500,  # this one does not appear in the dummy members
 }
 
-DUMMY_MEMBER_TO_TOKEN_ID = {member: i for i, member in enumerate(DUMMY_LEADERBOARD)}
+DUMMY_ADDRESSES = [
+    "0x54EfA9b1865FFE8c528fb375A7A606149598932A",
+    "0x3c03a080638b3c176aB7D9ed56E25bC416dFf525",
+    "0x44704AE66f0B9FF08a7b0584B49FE941AdD1bAE7",
+    "0x7B394CD0B75f774c6808cc681b26aC3E5DF96E27",
+    "0x54EfA9b1865FFE8c528fb375A7A606149598932A",  # addresses are repeated
+    "0x3c03a080638b3c176aB7D9ed56E25bC416dFf525",
+    "0x44704AE66f0B9FF08a7b0584B49FE941AdD1bAE7",
+    "0x7B394CD0B75f774c6808cc681b26aC3E5DF96E27",
+]
+
+DUMMY_TOKEN_ID_TO_MEMBER = {i: member for i, member in enumerate(DUMMY_ADDRESSES)}
 
 DUMMY_LAYERS = {
     "classes": {
@@ -308,7 +319,7 @@ class TestNewMembersBehaviour(BaseDynamicNFTTest):
                 ),
                 {
                     "mock_response_data": dict(
-                        member_to_token_id=DUMMY_MEMBER_TO_TOKEN_ID
+                        token_id_to_member=DUMMY_TOKEN_ID_TO_MEMBER
                     ),
                     "mock_response_performative": ContractApiMessage.Performative.STATE,
                 },
