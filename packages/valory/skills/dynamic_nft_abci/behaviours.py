@@ -102,12 +102,22 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
             self.behaviour_id,
         ).local():
 
-            member_to_token_id = yield from self.get_member_to_token_id()
+            token_id_to_member = yield from self.get_token_id_to_member()
 
-            if member_to_token_id == NewMembersRound.ERROR_PAYLOAD:
+            if token_id_to_member == NewMembersRound.ERROR_PAYLOAD:
                 payload_data = json.dumps(NewMembersRound.ERROR_PAYLOAD, sort_keys=True)
             else:
                 old_members = set(self.synchronized_data.members.keys())
+
+                # Build the inverse mapping: member_to_token_id
+                # Take the first minted token into account only
+                member_to_token_id = {}
+                for token_id, member in token_id_to_member.items():
+                    if (
+                        member not in member_to_token_id
+                        or member_to_token_id[member] > token_id
+                    ):
+                        member_to_token_id[member] = token_id
 
                 # Add new members only
                 new_member_to_data = {
@@ -145,8 +155,8 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
 
         self.set_done()
 
-    def get_member_to_token_id(self) -> Generator[None, None, dict]:
-        """Get member to token id data."""
+    def get_token_id_to_member(self) -> Generator[None, None, dict]:
+        """Get token id to member data."""
         self.context.logger.info(
             f"Retrieving Transfer events later than block {self.params.earliest_block_to_monitor}"
             f" for contract at {self.params.dynamic_contribution_contract_address}"
@@ -160,10 +170,10 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
             from_block=self.params.earliest_block_to_monitor,
         )
         if contract_api_msg.performative != ContractApiMessage.Performative.STATE:
-            self.context.logger.info("Error retrieving the member to token_id data")
+            self.context.logger.info("Error retrieving the token_id to member data")
             return NewMembersRound.ERROR_PAYLOAD
-        data = cast(dict, contract_api_msg.state.body["member_to_token_id"])
-        self.context.logger.info(f"Got member to token_id data: {data}")
+        data = cast(dict, contract_api_msg.state.body["token_id_to_member"])
+        self.context.logger.info(f"Got token_id to member data: {data}")
         return data
 
 
