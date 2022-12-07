@@ -112,8 +112,8 @@ class DynamicContributionContract(Contract):
             argument_filters={"from": from_address},
         ).get_all_entries()  # limited to 10k entries for now: https://github.com/valory-xyz/contribution-service/issues/13
 
-        member_to_token_id = {
-            entry["args"]["to"]: int(entry["args"]["id"]) for entry in entries
+        token_id_to_member = {
+            int(entry["args"]["id"]): entry["args"]["to"] for entry in entries
         }
 
-        return dict(member_to_token_id=member_to_token_id)
+        return dict(token_id_to_member=token_id_to_member)
