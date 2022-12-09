@@ -28,6 +28,16 @@ models:
       leaderboard_points_range: ${LEADERBOARD_POINTS_RANGE:str:Ranking!B2:C302}
       leaderboard_sheet_id: ${LEADERBOARD_SHEET_ID:str:1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc}
       observation_interval: ${OBSERVATION_INTERVAL:int:300}
+  sheet:
+    args:
+      auth_file_path: ${AUTH_FILE_PATH:str:service_auth.json}
+      leaderboard_sheet_id: ${LEADERBOARD_SHEET_ID:str:1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc}
+      leaderboard_sheet_name: ${LEADERBOARD_SHEET_NAME:str:Ranking}
+      name_col: ${NAME_COL:int:1}
+      address_col: ${ADDRESS_COL:int:2}
+      points_col: ${POINTS_COL:int:3}
+      discord_id_col: ${DISCORD_ID_COL:int:4}
+      observation_interval: ${OBSERVATION_INTERVAL:int:300}
 ---
 public_id: valory/ledger:0.19.0
 type: connection

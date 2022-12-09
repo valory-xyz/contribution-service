@@ -143,6 +143,17 @@ models:
   requests:
     args: {}
     class_name: Requests
+  sheet:
+    args:
+      auth_file_path: service_auth.json
+      leaderboard_sheet_id: 1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc
+      leaderboard_sheet_name: Ranking
+      name_col: 1
+      address_col: 2
+      points_col: 3
+      discord_id_col: 4
+      observation_interval: 10
+    class_name: Sheet
   signing_dialogues:
     args: {}
     class_name: SigningDialogues
