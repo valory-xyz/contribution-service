@@ -121,13 +121,23 @@ class Sheet(Model):
 
     def create(self, discord_id, name, address=DEFAULT_ADDRESS):
         """Create a new user."""
-        # Add a new blank line after row 1
-        self.sheet.insert_rows(row=1, number=1)
-        # Add the correct values
-        self.sheet.update_value((INSERT_ROW_INDEX, self.discord_id_col), discord_id)
-        self.sheet.update_value((INSERT_ROW_INDEX, self.address_col), address)
-        self.sheet.update_value((INSERT_ROW_INDEX, self.name_col), name)
-        self.sheet.update_value((INSERT_ROW_INDEX, self.points_col), DEFAULT_POINTS)
+        rows = self.read()
+        last_entry_index = len(rows) + 1 if rows else 1  # Take the heaer into account
+
+        # Build the values in the correct order
+        indexes = [
+            self.discord_id_col,
+            self.address_col,
+            self.name_col,
+            self.points_col,
+        ]
+        values = [discord_id, address, name, DEFAULT_POINTS]
+        ordered_values = [None] * 4
+        for index, value in zip(indexes, values):
+            ordered_values[index - 1] = value
+
+        # Insert the new row after last_entry_index
+        self.sheet.insert_rows(row=last_entry_index, number=1, values=ordered_values)
 
     def row_to_dict(self, row):
         """Returns the data for a specific formatted for the HTTP response"""
