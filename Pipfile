@@ -28,7 +28,7 @@ open-aea = "==1.25.0.post1"
 open-aea-ledger-ethereum = "==1.25.0"
 open-aea-ledger-cosmos = "==1.25.0"
 open-aea-cli-ipfs = "==1.25.0"
-open-aea-test-autonomy = "==0.5.0.0.post1"
+open-aea-test-autonomy = "==0.5.0.post1"
 open-autonomy = {version = "==0.5.0.post1", extras = [ "all"]}
 Pillow = "==9.2.0"
 tomte = {version = "==0.1.5", extras = ["tox", "tests"]}
