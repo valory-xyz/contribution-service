@@ -288,10 +288,10 @@ class HttpHandler(BaseHttpHandler):
         wallet_address = body["wallet_address"]
 
         self.context.sheet.write(discord_id=discord_id, wallet_address=wallet_address)
-        self._send_ok_response(http_msg, http_dialogue)
+        self._send_ok_response(http_msg, http_dialogue, {})
 
     def _send_ok_response(
-        self, http_msg: HttpMessage, http_dialogue: HttpDialogue, data: Dict = {}
+        self, http_msg: HttpMessage, http_dialogue: HttpDialogue, data: Dict
     ) -> None:
         """Send an OK response with the provided data"""
         http_response = http_dialogue.reply(

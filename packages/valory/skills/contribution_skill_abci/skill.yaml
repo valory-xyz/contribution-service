@@ -24,7 +24,7 @@ contracts: []
 protocols: []
 skills:
 - valory/abstract_round_abci:0.1.0:bafybeia5meor4p77p62khoddlqj4vg5rxiwi3djxc7feusgein6adi7t7m
-- valory/dynamic_nft_abci:0.1.0:bafybeighriwfysp35v5chgrv4z7qjvwgcr7bgichqadeaa44lyrg2qhwyi
+- valory/dynamic_nft_abci:0.1.0:bafybeieyqdrzf7qs77ecjmf3s2tnirsjjnx2ez5bjt37wimuywoob7g76u
 - valory/registration_abci:0.1.0:bafybeib2cr65zmunztkr3miy4sa2pwlsj2dsi4pz7rwtgg75xczc7hrj3q
 - valory/reset_pause_abci:0.1.0:bafybeie3qy5v3ggc54bmrubd27kbofrkw6srgbggo3b6ewssw3pbxjuvla
 behaviours:
@@ -125,14 +125,14 @@ models:
     class_name: Requests
   sheet:
     args:
+      address_col: 2
       auth_file_path: service_auth.json
+      discord_id_col: 4
       leaderboard_sheet_id: 1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc
       leaderboard_sheet_name: Ranking
       name_col: 1
-      address_col: 2
-      points_col: 3
-      discord_id_col: 4
       observation_interval: 10
+      points_col: 3
     class_name: Sheet
   signing_dialogues:
     args: {}
