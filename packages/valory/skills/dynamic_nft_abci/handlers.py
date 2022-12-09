@@ -230,14 +230,14 @@ class HttpHandler(BaseHttpHandler):
         redirect_uri = redirects[token_id]
         image_hash = redirect_uri.split("/")[-1]  # get the hash only
 
-            # Build token metadata
-            metadata = {
-                "title": "Autonolas Contribute Badges",
-                "name": f"Badge {token_id}",
-                "description": "This NFT recognizes the contributions made by the holder to the Autonolas Community.",
-                "image": f"ipfs://{image_hash}",
-                "attributes": [],  # TODO: add attributes
-            }
+        # Build token metadata
+        metadata = {
+            "title": "Autonolas Contribute Badges",
+            "name": f"Badge {token_id}",
+            "description": "This NFT recognizes the contributions made by the holder to the Autonolas Community.",
+            "image": f"ipfs://{image_hash}",
+            "attributes": [],  # TODO: add attributes
+        }
 
         self.context.logger.info(f"Responding with token metadata={metadata}")
         self._send_ok_response(http_msg, http_dialogue, metadata)
