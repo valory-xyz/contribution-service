@@ -24,7 +24,7 @@ contracts: []
 protocols: []
 skills:
 - valory/abstract_round_abci:0.1.0:bafybeifh4qtjurq5637ykxexzexca5l4n6t4ujw26tpnern2swajanvhny
-- valory/dynamic_nft_abci:0.1.0:bafybeidbsaqwb5tewln3lkespp2wlurzyqpjwdxpzy75poieev453tqod4
+- valory/dynamic_nft_abci:0.1.0:bafybeigy3wrwezpbph2iuw7nwtapg6ciekydq5qmee2wuhyy3p45abjtfq
 - valory/registration_abci:0.1.0:bafybeicuz3f4tvowd2xwcl5w4ck56rm5abfoyng3cmbprovpch4u6eexge
 - valory/reset_pause_abci:0.1.0:bafybeihlsjhy4dpiulgdof3noh6dlzvr6wkywcwbsrti45labn7htrfg3y
 behaviours:
@@ -134,5 +134,5 @@ models:
     class_name: TendermintDialogues
 dependencies:
   open-aea-cli-ipfs:
-    version: <2.0.0,>=1.24.0
+    version: <2.0.0,>=1.25.0
 is_abstract: false

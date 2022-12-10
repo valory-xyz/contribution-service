@@ -21,7 +21,7 @@ connections:
 - valory/ledger:0.19.0:bafybeiadc25se7dgnn4mufztwpzdono4xsfs45qknzdqyi3gckn6ccuv44
 - valory/p2p_libp2p_client:0.1.0:bafybeidkk33xbga54szmitk6uwsi3ef56hbbdbuasltqtiyki34hgfpnxa
 contracts:
-- valory/dynamic_contribution:0.1.0:bafybeibrwlbahbflnbe72o5x6vfn7qryqyn2mwluqxjvqs4luy5rkiq7fi
+- valory/dynamic_contribution:0.1.0:bafybeiarslnpix5zt6st25ccwvqsmszui4g7c67z5xyui4hgfjfctmce7y
 protocols:
 - open_aea/signing:1.0.0:bafybeiambqptflge33eemdhis2whik67hjplfnqwieoa6wblzlaf7vuo44
 - valory/contract_api:1.0.0:bafybeiaxbrvgtbdrh4lslskuxyp4awyr4whcx3nqq5yrr6vimzsxg5dy64
@@ -29,8 +29,8 @@ protocols:
 skills:
 - valory/abstract_abci:0.1.0:bafybeihkcgjgyoleu6jgwhpffkzvflmybajlz5k2fkxhl3nngbbo6xzlsy
 - valory/abstract_round_abci:0.1.0:bafybeifh4qtjurq5637ykxexzexca5l4n6t4ujw26tpnern2swajanvhny
-- valory/contribution_skill_abci:0.1.0:bafybeid2ijq3urvc2u3sfelyf3zim5l76bmgora3plvmarhpue5okdwnhq
-- valory/dynamic_nft_abci:0.1.0:bafybeidbsaqwb5tewln3lkespp2wlurzyqpjwdxpzy75poieev453tqod4
+- valory/contribution_skill_abci:0.1.0:bafybeid7snbibqio3oopipjwjv2nsah3dyum5j2gsx476ddyjhija77yba
+- valory/dynamic_nft_abci:0.1.0:bafybeigy3wrwezpbph2iuw7nwtapg6ciekydq5qmee2wuhyy3p45abjtfq
 - valory/registration_abci:0.1.0:bafybeicuz3f4tvowd2xwcl5w4ck56rm5abfoyng3cmbprovpch4u6eexge
 - valory/reset_pause_abci:0.1.0:bafybeihlsjhy4dpiulgdof3noh6dlzvr6wkywcwbsrti45labn7htrfg3y
 default_ledger: ethereum
@@ -65,7 +65,7 @@ dependencies:
   Pillow:
     version: ==9.2.0
   open-aea-ledger-ethereum:
-    version: ==1.24.0
+    version: ==1.25.0
 default_connection: null
 ---
 public_id: valory/abci:0.1.0

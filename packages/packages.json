@@ -1,10 +1,10 @@
 {
     "dev": {
-        "contract/valory/dynamic_contribution/0.1.0": "bafybeibrwlbahbflnbe72o5x6vfn7qryqyn2mwluqxjvqs4luy5rkiq7fi",
-        "skill/valory/dynamic_nft_abci/0.1.0": "bafybeidbsaqwb5tewln3lkespp2wlurzyqpjwdxpzy75poieev453tqod4",
-        "skill/valory/contribution_skill_abci/0.1.0": "bafybeid2ijq3urvc2u3sfelyf3zim5l76bmgora3plvmarhpue5okdwnhq",
-        "agent/valory/contribution/0.1.0": "bafybeibl2lc3rpgfdf4zlqzqjqcgo35f7jc3t32ovijkgwjosvxm7h7afm",
-        "service/valory/contribution/0.1.0": "bafybeiapysmpwvls4z5wauh3owyqgtuw4dr5ov2kkufptqhsncqsjshqby"
+        "contract/valory/dynamic_contribution/0.1.0": "bafybeiarslnpix5zt6st25ccwvqsmszui4g7c67z5xyui4hgfjfctmce7y",
+        "skill/valory/dynamic_nft_abci/0.1.0": "bafybeigy3wrwezpbph2iuw7nwtapg6ciekydq5qmee2wuhyy3p45abjtfq",
+        "skill/valory/contribution_skill_abci/0.1.0": "bafybeid7snbibqio3oopipjwjv2nsah3dyum5j2gsx476ddyjhija77yba",
+        "agent/valory/contribution/0.1.0": "bafybeibgywwn7xeck2ct2l2fm7smwc7omzolgdivsabaej74nhbpnphyzi",
+        "service/valory/contribution/0.1.0": "bafybeicq6ystbc56c4cmvpnhjc3u3a546u73ynrdwl2t56ezh6nlcw7g34"
     },
     "third_party": {
         "protocol/open_aea/signing/1.0.0": "bafybeiambqptflge33eemdhis2whik67hjplfnqwieoa6wblzlaf7vuo44",
@@ -14,12 +14,12 @@
         "protocol/valory/ledger_api/1.0.0": "bafybeih7rhi5zvfvwakx5ifgxsz2cfipeecsh7bm3gnudjxtvhrygpcftq",
         "protocol/valory/acn/1.1.0": "bafybeifontek6tvaecatoauiule3j3id6xoktpjubvuqi3h2jkzqg7zh7a",
         "protocol/valory/tendermint/0.1.0": "bafybeihcnjhovvyyfbkuw5sjyfx2lfd4soeocfqzxz54g67333m6nk5gxq",
-        "skill/valory/abstract_abci/0.1.0": "bafybeicog4eierjad4f542ubhe3ez7sxgrsna7t2e5pci2hncpq5vckw4e",
-        "skill/valory/reset_pause_abci/0.1.0": "bafybeie3qy5v3ggc54bmrubd27kbofrkw6srgbggo3b6ewssw3pbxjuvla",
-        "skill/valory/registration_abci/0.1.0": "bafybeib2cr65zmunztkr3miy4sa2pwlsj2dsi4pz7rwtgg75xczc7hrj3q",
-        "skill/valory/abstract_round_abci/0.1.0": "bafybeia5meor4p77p62khoddlqj4vg5rxiwi3djxc7feusgein6adi7t7m",
-        "contract/valory/service_registry/0.1.0": "bafybeihs42gbxnncxyh5wygbfgz3ulkjzojse4wznylzczt5neksba7tfq",
-        "connection/valory/abci/0.1.0": "bafybeics24v7csn2xwyrkdgthrzdbuqutssx3mn572z2tavyr33banqz6u",
+        "skill/valory/abstract_abci/0.1.0": "bafybeihkcgjgyoleu6jgwhpffkzvflmybajlz5k2fkxhl3nngbbo6xzlsy",
+        "skill/valory/reset_pause_abci/0.1.0": "bafybeihlsjhy4dpiulgdof3noh6dlzvr6wkywcwbsrti45labn7htrfg3y",
+        "skill/valory/registration_abci/0.1.0": "bafybeicuz3f4tvowd2xwcl5w4ck56rm5abfoyng3cmbprovpch4u6eexge",
+        "skill/valory/abstract_round_abci/0.1.0": "bafybeifh4qtjurq5637ykxexzexca5l4n6t4ujw26tpnern2swajanvhny",
+        "contract/valory/service_registry/0.1.0": "bafybeiew24hgsjdasaqiikhulfa2rxgnh7pzpv2zzfwnsyfzbnrcj6dvjm",
+        "connection/valory/abci/0.1.0": "bafybeihwpl24rodaaacw5dpsmeazaaelm5j263fqderxm5xn7f5penm2bq",
         "connection/valory/http_client/0.23.0": "bafybeihz3tubwado7j3wlivndzzuj3c6fdsp4ra5r3nqixn3ufawzo3wii",
         "connection/valory/ledger/0.19.0": "bafybeiadc25se7dgnn4mufztwpzdono4xsfs45qknzdqyi3gckn6ccuv44",
         "connection/valory/p2p_libp2p_client/0.1.0": "bafybeidkk33xbga54szmitk6uwsi3ef56hbbdbuasltqtiyki34hgfpnxa",
