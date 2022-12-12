@@ -19,7 +19,11 @@
 
 """This module contains the shared state for the abci skill of DynamicNFTAbciApp."""
 
+from datetime import datetime, timedelta
 from enum import Enum
+from functools import lru_cache, wraps
+from multiprocessing import Manager
+from threading import Lock
 from time import time
 from typing import Any, Dict, Optional
 
@@ -41,6 +45,39 @@ DEFAULT_ADDRESS = "0x0000000000000000000000000000000000000000"
 DEFAULT_POINTS = 0
 VERIFICATION_POINTS = 100
 INSERT_ROW_INDEX = 2  # header is 1
+CACHE_EXPIRATION_SECONDS = 10
+CACHE_MAXSIZE = 128
+
+
+def timed_lru_cache(seconds: int, maxsize: Optional[int] = None):
+    """Timed cache"""
+
+    def wrapper_cache(func):
+        """Wrapper cache"""
+        print("I will use lru_cache")
+        func = lru_cache(maxsize=maxsize)(func)
+        print("I'm setting func.lifetime")
+        func.lifetime = timedelta(seconds=seconds)
+        print("I'm setting func.expiration")
+        func.expiration = datetime.utcnow() + func.lifetime
+
+        @wraps(func)
+        def wrapped_func(*args, **kwargs):
+            """Wrapped func"""
+            print("Check func expiration")
+            print(
+                f"datetime.utcnow(): {datetime.utcnow()}, func.expiration: {func.expiration}"
+            )
+            if datetime.utcnow() >= func.expiration:
+                print("func.expiration lru_cache lifetime expired")
+                func.cache_clear()
+                func.expiration = datetime.utcnow() + func.lifetime
+
+            return func(*args, **kwargs)
+
+        return wrapped_func
+
+    return wrapper_cache
 
 
 class SharedState(BaseSharedState):
@@ -106,7 +143,10 @@ class Sheet(Model):
         self.points_col = self.ensure("points_col", kwargs)
         self.discord_id_col = self.ensure("discord_id_col", kwargs)
         self.observation_interval = self.ensure("observation_interval", kwargs)
-        self.linking_wallets = {}
+
+        self.lock = Lock()
+        manager = Manager()
+        self.linking_wallets = manager.dict(lock=True)
 
         super().__init__(*args, **kwargs)
 
@@ -148,10 +188,19 @@ class Sheet(Model):
             "discord_id": row[self.discord_id_col - 1],
         }
 
+    @timed_lru_cache(seconds=CACHE_EXPIRATION_SECONDS, maxsize=CACHE_MAXSIZE)
+    def _read_sheet(self):
+        """Reads the sheet and returns the sheet as a matrix"""
+        if self.lock.locked():
+            return self.rows, self.sheet
+        with self.lock:
+            self.rows = self.sheet.get_all_values(returnas="matrix")
+        return self.rows
+
     def read(self, discord_id=None, address=None):
         """Read the leaderboard or one specific entry by id or address."""
         # Get the leaderboard
-        rows = self.sheet.get_all_values(returnas="matrix")
+        rows = self._read_sheet()
 
         # Get the whole leaderboard
         if discord_id is None and address is None:
@@ -198,15 +247,16 @@ class Sheet(Model):
     ):
         """Writes an entry to the sheet."""
         user = self.read(discord_id)
-        if not user:
-            self.create(discord_id, name)
-        else:
-            self.update(
-                discord_id=user[self.discord_id_col - 1],
-                address=wallet_address or user[self.address_col - 1],
-            )
-        # Since this data is not subject to consensus we can safely use time() here
-        self.linking_wallets[wallet_address] = time()
+        with self.lock:
+            if not user:
+                self.create(discord_id, name)
+            else:
+                self.update(
+                    discord_id=user[self.discord_id_col - 1],
+                    address=wallet_address or user[self.address_col - 1],
+                )
+            # Since this data is not subject to consensus we can safely use time() here
+            self.linking_wallets[wallet_address] = time()
 
     def get_wallet_status(self, wallet_address: str):
         """Checks the wallet linking status"""
@@ -222,7 +272,8 @@ class Sheet(Model):
         ):
             return self.WalletStatus.LINKING.value
 
-        self.linking_wallets.pop(wallet_address, None)
+        with self.lock:
+            self.linking_wallets.pop(wallet_address, None)
         return self.WalletStatus.LINKED.value
 
 
