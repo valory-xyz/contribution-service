@@ -41,6 +41,7 @@ from packages.valory.skills.dynamic_nft_abci.handlers import (
     NOT_FOUND_CODE,
     OK_CODE,
 )
+from packages.valory.skills.dynamic_nft_abci.models import DEFAULT_ADDRESS
 from packages.valory.skills.dynamic_nft_abci.tests.test_models import DummySheetApi
 
 
@@ -49,6 +50,9 @@ PACKAGE_DIR = Path(__file__).parent.parent
 HTTP_SERVER_SENDER = str(HTTP_SERVER_PUBLIC_ID.without_hash())
 
 TOKEN_URI_BASE = "https://pfp.staging.autonolas.tech/"  # nosec
+LEADERBOARD_URI_BASE = f"{TOKEN_URI_BASE}leaderboard"
+ADDRESS_STATUS_URI_BASE = f"{TOKEN_URI_BASE}address_status"
+LINK_URI_BASE = f"{TOKEN_URI_BASE}link"
 
 
 def get_dummy_metadata(token_id, redirect_uri):
@@ -69,11 +73,13 @@ class HandlerTestCase:
 
     name: str
     request_url: str
+    request_body: bytes
     redirects: Dict[str, str]
     response_status_code: int
     response_status_text: str
     response_headers: str
-    body: bytes
+    response_body: bytes
+    method: str
 
 
 class TestHttpHandler(BaseSkillTestCase):
@@ -125,13 +131,13 @@ class TestHttpHandler(BaseSkillTestCase):
         self.http_handler.setup()
 
     def test_setup(self):
-        """Test the setup method of the http_echo handler."""
+        """Test the setup method of the handler."""
         assert self.http_handler.setup() is None
         self.assert_quantity_in_outbox(0)
 
     @patch("pygsheets.authorize", return_value=DummySheetApi())
     def test_handle_unidentified_dialogue(self, *_mocks: Any):
-        """Test the _handle_unidentified_dialogue method of the http_echo handler."""
+        """Test the _handle_unidentified_dialogue method of the handler."""
         # setup
         incorrect_dialogue_reference = ("", "")
         incoming_message = self.build_incoming_message(
@@ -161,29 +167,33 @@ class TestHttpHandler(BaseSkillTestCase):
         "test_case",
         [
             HandlerTestCase(
-                name="uri in redirects",
+                name="get metadata, uri in redirects",
                 request_url=f"{TOKEN_URI_BASE}0",
+                request_body=b"some_body/",
                 redirects={"0": "some_url_redirect"},
                 response_status_code=OK_CODE,
                 response_status_text="Success",
                 response_headers="Content-Type: application/json\nsome_headers",
-                body=json.dumps(get_dummy_metadata(0, "some_url_redirect")).encode(
-                    "utf-8"
-                ),
+                response_body=json.dumps(
+                    get_dummy_metadata(0, "some_url_redirect")
+                ).encode("utf-8"),
+                method="get",
             ),
             HandlerTestCase(
-                name="uri not in redirects",
+                name="get metadata, uri not in redirects",
                 request_url=f"{TOKEN_URI_BASE}1",
+                request_body=b"some_body/",
                 redirects={},
                 response_status_code=NOT_FOUND_CODE,
                 response_status_text="Not found",
                 response_headers="some_headers",
-                body=b"",
+                response_body=b"",
+                method="get",
             ),
         ],
     )
     def test_handle_request_get(self, test_case):
-        """Test the _handle_request method of the http_echo handler where method is get."""
+        """Test the _handle_request method of the handler where method is get."""
         # setup
         incoming_message = cast(
             HttpMessage,
@@ -192,11 +202,11 @@ class TestHttpHandler(BaseSkillTestCase):
                 performative=HttpMessage.Performative.REQUEST,
                 to=self.skill_id,
                 sender=self.sender,
-                method=self.get_method,
+                method=test_case.method,
                 url=test_case.request_url,
                 version=self.version,
                 headers=self.headers,
-                body=self.body,
+                body=test_case.request_body,
             ),
         )
 
@@ -232,7 +242,7 @@ class TestHttpHandler(BaseSkillTestCase):
             status_code=test_case.response_status_code,
             status_text=test_case.response_status_text,
             headers=test_case.response_headers,
-            body=test_case.body,
+            body=test_case.response_body,
         )
         assert has_attributes, error_str
 
@@ -242,7 +252,7 @@ class TestHttpHandler(BaseSkillTestCase):
         )
 
     def test_handle_request_post(self):
-        """Test the _handle_request method of the http_echo handler where method is post."""
+        """Test the _handle_request method of the handler where method is post."""
         # setup
         incoming_message = cast(
             HttpMessage,
@@ -294,7 +304,150 @@ class TestHttpHandler(BaseSkillTestCase):
             f"Responding with: {message}",
         )
 
+    @pytest.mark.parametrize(
+        "test_case",
+        [
+            HandlerTestCase(
+                name="get leaderboard",
+                request_url=LEADERBOARD_URI_BASE,
+                request_body=b"some_body/",
+                redirects={},
+                response_status_code=OK_CODE,
+                response_status_text="Success",
+                response_headers="Content-Type: application/json\nsome_headers",
+                response_body=json.dumps({"result": {}}).encode("utf-8"),
+                method="get",
+            ),
+            HandlerTestCase(
+                name="get address status",
+                request_url=f"{ADDRESS_STATUS_URI_BASE}/{DEFAULT_ADDRESS}",
+                request_body=b"some_body/",
+                redirects={},
+                response_status_code=OK_CODE,
+                response_status_text="Success",
+                response_headers="Content-Type: application/json\nsome_headers",
+                response_body=json.dumps(
+                    {"address": DEFAULT_ADDRESS, "status": "wallet_status"}
+                ).encode("utf-8"),
+                method="get",
+            ),
+            HandlerTestCase(
+                name="link wallet",
+                request_url=f"{LINK_URI_BASE}/{DEFAULT_ADDRESS}",
+                request_body=json.dumps(
+                    {
+                        "discord_id": "dummy_discord_id",
+                        "wallet_address": "discord_wallet_address",
+                    }
+                ).encode("utf-8"),
+                redirects={},
+                response_status_code=OK_CODE,
+                response_status_text="Success",
+                response_headers="Content-Type: application/json\nsome_headers",
+                response_body=json.dumps({}).encode("utf-8"),
+                method="post",
+            ),
+            HandlerTestCase(
+                name="link wallet, not found",
+                request_url=f"{LINK_URI_BASE}/{DEFAULT_ADDRESS}",
+                request_body=json.dumps({}).encode("utf-8"),
+                redirects={},
+                response_status_code=NOT_FOUND_CODE,
+                response_status_text="Not found",
+                response_headers="some_headers",
+                response_body=b"",
+                method="post",
+            ),
+        ],
+    )
+    def test_handle_sheet_requests(self, test_case):
+        """Test the _handle_request method of the handler."""
+        # setup
+        incoming_message = cast(
+            HttpMessage,
+            self.build_incoming_message(
+                message_type=HttpMessage,
+                performative=HttpMessage.Performative.REQUEST,
+                to=self.skill_id,
+                sender=self.sender,
+                method=test_case.method,
+                url=test_case.request_url,
+                version=self.version,
+                headers=self.headers,
+                body=test_case.request_body,
+            ),
+        )
+
+        # operation
+        with patch.object(self.logger, "log") as mock_logger, patch.object(
+            self.http_handler.context.state, "_round_sequence"
+        ) as mock_round_sequence, patch.object(
+            self.http_handler.context.sheet, "read", return_value={}
+        ), patch.object(
+            self.http_handler.context.sheet,
+            "get_wallet_status",
+            return_value="wallet_status",
+        ):
+            mock_round_sequence.latest_synchronized_data.db = {
+                "redirects": test_case.redirects
+            }
+
+            self.http_handler.handle(incoming_message)
+
+        # after
+        self.assert_quantity_in_outbox(1)
+
+        mock_logger.assert_any_call(
+            logging.INFO,
+            "Received http request with method={}, url={} and body={!r}".format(
+                incoming_message.method, incoming_message.url, incoming_message.body
+            ),
+        )
+
+        # _handle_get
+        message = self.get_message_from_outbox()
+        has_attributes, error_str = self.message_has_attributes(
+            actual_message=message,
+            message_type=HttpMessage,
+            performative=HttpMessage.Performative.RESPONSE,
+            to=incoming_message.sender,
+            sender=incoming_message.to,
+            version=incoming_message.version,
+            status_code=test_case.response_status_code,
+            status_text=test_case.response_status_text,
+            headers=test_case.response_headers,
+            body=test_case.response_body,
+        )
+        assert has_attributes, error_str
+
+        mock_logger.assert_any_call(
+            logging.INFO,
+            f"Responding with: {message}",
+        )
+
     def test_teardown(self):
-        """Test the teardown method of the http_echo handler."""
+        """Test the teardown method of the handler."""
         assert self.http_handler.teardown() is None
         self.assert_quantity_in_outbox(0)
+
+    def test_get_handler(self):
+        """Test the _get_handler method of the handler."""
+        # Url not set
+        assert self.http_handler._get_handler(http_msg=object()) == (None, {})
+
+        # Message not intended for this handler
+        incoming_message = cast(
+            HttpMessage,
+            self.build_incoming_message(
+                message_type=HttpMessage,
+                performative=HttpMessage.Performative.REQUEST,
+                to=self.skill_id,
+                sender=self.sender,
+                method=self.get_method,
+                url="unknown_url",
+                version=self.version,
+                headers=self.headers,
+                body=b"",
+            ),
+        )
+        assert self.http_handler._get_handler(http_msg=incoming_message) == (None, {})

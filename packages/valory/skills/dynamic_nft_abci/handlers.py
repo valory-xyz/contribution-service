@@ -111,7 +111,8 @@ class HttpHandler(BaseHttpHandler):
 
         # hassatr raises here so we need a try-except even for attr checking purposes
         try:
-            hasattr(http_msg, "url")
+            if not hasattr(http_msg, "url"):
+                return None, {}
         except AEAEnforceError:
             return None, {}
 
