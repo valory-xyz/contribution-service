@@ -23,7 +23,12 @@ from typing import Any
 from unittest import mock
 
 from packages.valory.skills.abstract_round_abci.test_tools.base import DummyContext
-from packages.valory.skills.dynamic_nft_abci.models import SharedState, Sheet
+from packages.valory.skills.dynamic_nft_abci.models import (
+    DEFAULT_ADDRESS,
+    SharedState,
+    Sheet,
+    VERIFICATION_POINTS,
+)
 
 
 class TestSharedState:  # pylint: disable=too-few-public-methods
@@ -47,14 +52,29 @@ class TestSheet:
                 ]
 
             def worksheet(self, title, leaderboard_sheet_name):
+                """Dummy worksheet"""
                 return self
 
             def get_all_values(self, returnas="matrix"):
+                """Dummy get_all_values"""
                 return self.values
 
             def insert_rows(self, row, number, values):
+                """Dummy insert_rows"""
                 for i in range(row, row + number):
                     self.values.insert(i, values)
+
+            def delete_rows(self, row_index):
+                """Dummy delete_rows"""
+                row_index = row_index - 1
+                del self.values[row_index]
+
+            def update_value(self, row_col, new_value):
+                """Dummy update_value"""
+                row, col = row_col
+                row -= 1
+                col -= 1
+                self.values[row][col] = new_value
 
         def open_by_key(self, leaderboard_sheet_id):
             return self.DummySheet()
@@ -71,7 +91,7 @@ class TestSheet:
             address_col=2,
             points_col=3,
             discord_id_col=4,
-            observation_interval="dummy_observation_interval",
+            observation_interval=10,
             skill_context=DummyContext(),
         )
 
@@ -92,3 +112,73 @@ class TestSheet:
                 "discord_id": "dummy_discord_id",
             }
         ]
+
+    def test_read(self):
+        """Test read"""
+        assert self.sheet.read() == []
+
+    def test_update(self):
+        """Test update"""
+        self.sheet.create(discord_id="dummy_discord_id", name="dummy_name")
+        self.sheet.update(discord_id="dummy_discord_id", address="new_address")
+        assert self.sheet.read() == [
+            {
+                "name": "dummy_name",
+                "address": "new_address",
+                "points": VERIFICATION_POINTS,
+                "discord_id": "dummy_discord_id",
+            }
+        ]
+
+    def test_delete(self):
+        """Test delete"""
+        self.sheet.create(discord_id="dummy_discord_id", name="dummy_name")
+        self.sheet.delete("dummy_discord_id")
+        assert self.sheet.read() == []
+
+    def test_write(self):
+        """Test write"""
+        self.sheet.write(discord_id="dummy_discord_id", name="dummy_name")
+        assert self.sheet.read() == [
+            {
+                "name": "dummy_name",
+                "address": DEFAULT_ADDRESS,
+                "points": 0,
+                "discord_id": "dummy_discord_id",
+            }
+        ]
+
+    def test_write_with_address(self):
+        """Test write"""
+        self.sheet.create(discord_id="dummy_discord_id", name="dummy_name")
+        self.sheet.write(discord_id="dummy_discord_id", wallet_address="dummy_address")
+        assert self.sheet.read() == [
+            {
+                "name": "dummy_name",
+                "address": "dummy_address",
+                "points": VERIFICATION_POINTS,
+                "discord_id": "dummy_discord_id",
+            }
+        ]
+        assert "dummy_address" in self.sheet.linking_wallets
+
+    def test_get_wallet_status(self):
+        """Test get_wallet_status"""
+        # Empty database
+        assert (
+            self.sheet.get_wallet_status("dummy_wallet_address")
+            == self.sheet.WalletStatus.UNLINKED.value
+        )
+        # Add an entry and check its wallet it is linking
+        self.sheet.write(discord_id="dummy_discord_id", wallet_address=DEFAULT_ADDRESS)
+        assert DEFAULT_ADDRESS in self.sheet.linking_wallets
+        assert (
+            self.sheet.get_wallet_status(DEFAULT_ADDRESS)
+            == self.sheet.WalletStatus.LINKING.value
+        )
+        # Change the wallet's linking time and check it is linked now
+        self.sheet.linking_wallets[DEFAULT_ADDRESS] = 30
+        assert (
+            self.sheet.get_wallet_status(DEFAULT_ADDRESS)
+            == self.sheet.WalletStatus.LINKED.value
+        )
