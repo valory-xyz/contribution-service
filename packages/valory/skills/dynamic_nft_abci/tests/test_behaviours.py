@@ -246,6 +246,7 @@ class BaseDynamicNFTTest(FSMBehaviourBaseCase):
 
     @classmethod
     def setup_class(cls, **kwargs: Any) -> None:
+        """Setup class"""
         with patch("pygsheets.authorize", return_value=DummySheetApi()):
             super().setup_class(**kwargs)
 

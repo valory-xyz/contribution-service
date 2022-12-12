@@ -44,8 +44,13 @@ class TestSharedState:  # pylint: disable=too-few-public-methods
 
 
 class DummySheetApi:
+    """DummySheetApi class"""
+
     class DummySheet:
+        """DummySheet class"""
+
         def __init__(self) -> None:
+            """Initializer"""
             self.values = [
                 ["dummy_header", "dummy_header", "dummy_header", "dummy_header"]
             ]
@@ -76,6 +81,7 @@ class DummySheetApi:
             self.values[row][col] = new_value
 
     def open_by_key(self, leaderboard_sheet_id):
+        """Dummy open_by_key"""
         return self.DummySheet()
 
 

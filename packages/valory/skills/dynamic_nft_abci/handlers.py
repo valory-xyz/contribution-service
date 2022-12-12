@@ -21,7 +21,6 @@
 
 import json
 import re
-import sys
 from typing import Callable, Dict, Optional, Tuple, cast
 from urllib.parse import urlparse
 
