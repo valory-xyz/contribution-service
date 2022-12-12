@@ -53,7 +53,7 @@ from packages.valory.skills.dynamic_nft_abci.dialogues import (
     HttpDialogues,
 )
 from packages.valory.skills.dynamic_nft_abci.rounds import SynchronizedData
-
+import sys
 
 ABCIRoundHandler = BaseABCIRoundHandler
 SigningHandler = BaseSigningHandler

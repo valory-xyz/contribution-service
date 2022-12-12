@@ -41,43 +41,44 @@ class TestSharedState:  # pylint: disable=too-few-public-methods
         SharedState(name="", skill_context=DummyContext())
 
 
+class DummySheetApi:
+    class DummySheet:
+        def __init__(self) -> None:
+            self.values = [
+                ["dummy_header", "dummy_header", "dummy_header", "dummy_header"]
+            ]
+
+        def worksheet(self, title, leaderboard_sheet_name):
+            """Dummy worksheet"""
+            return self
+
+        def get_all_values(self, returnas="matrix"):
+            """Dummy get_all_values"""
+            return self.values
+
+        def insert_rows(self, row, number, values):
+            """Dummy insert_rows"""
+            for i in range(row, row + number):
+                self.values.insert(i, values)
+
+        def delete_rows(self, row_index):
+            """Dummy delete_rows"""
+            row_index = row_index - 1
+            del self.values[row_index]
+
+        def update_value(self, row_col, new_value):
+            """Dummy update_value"""
+            row, col = row_col
+            row -= 1
+            col -= 1
+            self.values[row][col] = new_value
+
+    def open_by_key(self, leaderboard_sheet_id):
+        return self.DummySheet()
+
+
 class TestSheet:
     """Test Sheet of DynamicNFT skill."""
-
-    class DummySheetApi:
-        class DummySheet:
-            def __init__(self) -> None:
-                self.values = [
-                    ["dummy_header", "dummy_header", "dummy_header", "dummy_header"]
-                ]
-
-            def worksheet(self, title, leaderboard_sheet_name):
-                """Dummy worksheet"""
-                return self
-
-            def get_all_values(self, returnas="matrix"):
-                """Dummy get_all_values"""
-                return self.values
-
-            def insert_rows(self, row, number, values):
-                """Dummy insert_rows"""
-                for i in range(row, row + number):
-                    self.values.insert(i, values)
-
-            def delete_rows(self, row_index):
-                """Dummy delete_rows"""
-                row_index = row_index - 1
-                del self.values[row_index]
-
-            def update_value(self, row_col, new_value):
-                """Dummy update_value"""
-                row, col = row_col
-                row -= 1
-                col -= 1
-                self.values[row][col] = new_value
-
-        def open_by_key(self, leaderboard_sheet_id):
-            return self.DummySheet()
 
     @mock.patch("pygsheets.authorize", return_value=DummySheetApi())
     def setup(self, *_mocks: Any, **kwargs: Any) -> None:

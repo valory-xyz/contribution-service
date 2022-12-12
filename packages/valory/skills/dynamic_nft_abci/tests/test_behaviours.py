@@ -61,7 +61,8 @@ from packages.valory.skills.dynamic_nft_abci.rounds import (
     NewMembersRound,
     SynchronizedData,
 )
-
+from unittest.mock import patch
+from packages.valory.skills.dynamic_nft_abci.tests.test_models import DummySheetApi
 
 @pytest.fixture(scope="module")
 def ipfs_daemon() -> Iterator[bool]:
@@ -242,6 +243,11 @@ class BaseDynamicNFTTest(FSMBehaviourBaseCase):
     synchronized_data: SynchronizedData
     done_event = Event.DONE
     image_dir: Path
+
+    @classmethod
+    def setup_class(cls, **kwargs: Any) -> None:
+        with patch("pygsheets.authorize", return_value=DummySheetApi()):
+            super().setup_class()
 
     def setup(self, **kwargs: Any) -> None:
         """Setup test"""

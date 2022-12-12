@@ -23,9 +23,8 @@ import json
 import logging
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, cast
+from typing import Dict, cast, Any
 from unittest.mock import patch
-
 import pytest
 from aea.protocols.dialogue.base import DialogueMessage
 from aea.test_tools.test_skill import BaseSkillTestCase
@@ -41,6 +40,7 @@ from packages.valory.skills.dynamic_nft_abci.handlers import (
     NOT_FOUND_CODE,
     OK_CODE,
 )
+from packages.valory.skills.dynamic_nft_abci.tests.test_models import DummySheetApi
 
 
 PACKAGE_DIR = Path(__file__).parent.parent
@@ -83,7 +83,8 @@ class TestHttpHandler(BaseSkillTestCase):
     @classmethod
     def setup_class(cls):
         """Setup the test class."""
-        super().setup_class()
+        with patch("pygsheets.authorize", return_value=DummySheetApi()):
+            super().setup_class()
         cls.http_handler = cast(HttpHandler, cls._skill.skill_context.handlers.http)
         cls.logger = cls._skill.skill_context.logger
 
@@ -123,7 +124,8 @@ class TestHttpHandler(BaseSkillTestCase):
         assert self.http_handler.setup() is None
         self.assert_quantity_in_outbox(0)
 
-    def test_handle_unidentified_dialogue(self):
+    @patch("pygsheets.authorize", return_value=DummySheetApi())
+    def test_handle_unidentified_dialogue(self, *_mocks: Any):
         """Test the _handle_unidentified_dialogue method of the http_echo handler."""
         # setup
         incorrect_dialogue_reference = ("", "")
@@ -142,6 +144,7 @@ class TestHttpHandler(BaseSkillTestCase):
 
         # operation
         with patch.object(self.logger, "log") as mock_logger:
+            self.http_handler.setup()
             self.http_handler.handle(incoming_message)
 
         # after
@@ -201,6 +204,7 @@ class TestHttpHandler(BaseSkillTestCase):
                 mock_round_sequence.latest_synchronized_data.db = {
                     "redirects": test_case.redirects
                 }
+                self.http_handler.setup()
                 self.http_handler.handle(incoming_message)
 
         # after
@@ -254,6 +258,7 @@ class TestHttpHandler(BaseSkillTestCase):
 
         # operation
         with patch.object(self.logger, "log") as mock_logger:
+            self.http_handler.setup()
             self.http_handler.handle(incoming_message)
 
         # after
