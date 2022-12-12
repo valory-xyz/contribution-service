@@ -54,8 +54,8 @@ def get_dummy_metadata(token_id, redirect_uri):
     """Get the dummy token metadata"""
     image_hash = redirect_uri.split("/")[-1]  # get the hash only
     return {
-        "title": "Autonolas Dynamic Contribution",
-        "name": f"Autonolas Dynamic Contribution {token_id}",
+        "title": "Autonolas Contribute Badges",
+        "name": f"Badge {token_id}",
         "description": "This NFT recognizes the contributions made by the holder to the Autonolas Community.",
         "image": f"ipfs://{image_hash}",
         "attributes": [],  # TODO: add attributes
