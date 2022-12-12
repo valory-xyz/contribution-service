@@ -28,7 +28,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Iterator, Optional, Type
 from unittest import mock
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 from aea.crypto.ledger_apis import LedgerApis
@@ -61,8 +61,8 @@ from packages.valory.skills.dynamic_nft_abci.rounds import (
     NewMembersRound,
     SynchronizedData,
 )
-from unittest.mock import patch
 from packages.valory.skills.dynamic_nft_abci.tests.test_models import DummySheetApi
+
 
 @pytest.fixture(scope="module")
 def ipfs_daemon() -> Iterator[bool]:
@@ -247,13 +247,14 @@ class BaseDynamicNFTTest(FSMBehaviourBaseCase):
     @classmethod
     def setup_class(cls, **kwargs: Any) -> None:
         with patch("pygsheets.authorize", return_value=DummySheetApi()):
-            super().setup_class()
+            super().setup_class(**kwargs)
 
     def setup(self, **kwargs: Any) -> None:
         """Setup test"""
         super().setup(**kwargs)
         self.image_dir = IMAGE_PATH
         Path(self.image_dir).mkdir()
+        self.http_handler.setup()
 
     def teardown(self) -> None:
         """Teardown test"""

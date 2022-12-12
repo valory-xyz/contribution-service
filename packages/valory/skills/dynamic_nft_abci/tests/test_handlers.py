@@ -23,8 +23,9 @@ import json
 import logging
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, cast, Any
+from typing import Any, Dict, cast
 from unittest.mock import patch
+
 import pytest
 from aea.protocols.dialogue.base import DialogueMessage
 from aea.test_tools.test_skill import BaseSkillTestCase
@@ -119,6 +120,10 @@ class TestHttpHandler(BaseSkillTestCase):
             ),
         )
 
+    def setup(self, **kwargs: Any) -> None:
+        """Setup"""
+        self.http_handler.setup()
+
     def test_setup(self):
         """Test the setup method of the http_echo handler."""
         assert self.http_handler.setup() is None
@@ -144,7 +149,6 @@ class TestHttpHandler(BaseSkillTestCase):
 
         # operation
         with patch.object(self.logger, "log") as mock_logger:
-            self.http_handler.setup()
             self.http_handler.handle(incoming_message)
 
         # after
@@ -204,7 +208,6 @@ class TestHttpHandler(BaseSkillTestCase):
                 mock_round_sequence.latest_synchronized_data.db = {
                     "redirects": test_case.redirects
                 }
-                self.http_handler.setup()
                 self.http_handler.handle(incoming_message)
 
         # after
@@ -258,7 +261,6 @@ class TestHttpHandler(BaseSkillTestCase):
 
         # operation
         with patch.object(self.logger, "log") as mock_logger:
-            self.http_handler.setup()
             self.http_handler.handle(incoming_message)
 
         # after

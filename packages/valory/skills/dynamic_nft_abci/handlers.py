@@ -21,9 +21,11 @@
 
 import json
 import re
+import sys
 from typing import Callable, Dict, Optional, Tuple, cast
 from urllib.parse import urlparse
 
+from aea.exceptions import AEAEnforceError
 from aea.protocols.base import Message
 
 from packages.fetchai.connections.http_server.connection import (
@@ -53,7 +55,7 @@ from packages.valory.skills.dynamic_nft_abci.dialogues import (
     HttpDialogues,
 )
 from packages.valory.skills.dynamic_nft_abci.rounds import SynchronizedData
-import sys
+
 
 ABCIRoundHandler = BaseABCIRoundHandler
 SigningHandler = BaseSigningHandler
@@ -107,6 +109,12 @@ class HttpHandler(BaseHttpHandler):
         :param url: the url to check
         :returns: the handling method if the message is intended to be handled by this handler, None otherwise, and the regex captures
         """
+
+        # hassatr raises here so we need a try-except even for attr checking purposes
+        try:
+            hasattr(http_msg, "url")
+        except AEAEnforceError:
+            return None, {}
 
         if not re.match(self.handler_url_regex, http_msg.url):
             self.context.logger.info(

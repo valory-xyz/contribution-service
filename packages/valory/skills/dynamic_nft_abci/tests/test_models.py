@@ -22,6 +22,8 @@
 from typing import Any
 from unittest import mock
 
+import pytest
+
 from packages.valory.skills.abstract_round_abci.test_tools.base import DummyContext
 from packages.valory.skills.dynamic_nft_abci.models import (
     DEFAULT_ADDRESS,
@@ -101,6 +103,15 @@ class TestSheet:
     ) -> None:
         """Test initialization."""
         pass
+
+    def test_ensure(
+        self,
+    ) -> None:
+        """Test ensure."""
+        with pytest.raises(
+            ValueError, match="Value for does_not_exist is required by Sheet."
+        ):
+            self.sheet.ensure("does_not_exist", {})
 
     def test_create(self):
         """Test create"""
