@@ -37,10 +37,7 @@ from packages.valory.contracts.dynamic_contribution.contract import (
     DynamicContributionContract,
 )
 from packages.valory.protocols.contract_api import ContractApiMessage
-from packages.valory.skills.abstract_round_abci.base import (
-    ABCIAppInternalError,
-    AbstractRound,
-)
+from packages.valory.skills.abstract_round_abci.base import AbstractRound
 from packages.valory.skills.abstract_round_abci.behaviour_utils import TimeoutException
 from packages.valory.skills.abstract_round_abci.behaviours import (
     AbstractRoundBehaviour,
@@ -809,15 +806,9 @@ class DBUpdateBehaviour(DynamicNFTBaseBehaviour):
 
         Redirect table: must be updated now to reflect the new redirects (if it applies).
         """
-        last_update_time = None
-
-        # We need a try except here since this will raise even for checking the last_timestamp attribute
-        try:
-            last_update_time = cast(
-                SharedState, self.context.state
-            ).round_sequence.abci_app.last_timestamp.timestamp()
-        except ABCIAppInternalError:
-            self.context.logger.info("Last timetstamp is not yet set")
+        last_update_time = cast(
+            SharedState, self.context.state
+        ).round_sequence.abci_app.last_timestamp.timestamp()
 
         self.context.logger.info(
             f"Current members: {self.synchronized_data.members}\n"
