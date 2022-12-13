@@ -63,9 +63,9 @@ class SynchronizedData(BaseSynchronizedData):
     """
 
     @property
-    def members(self) -> dict:
+    def token_to_data(self) -> dict:
         """Get the member table."""
-        return cast(dict, self.db.get("members", {}))
+        return cast(dict, self.db.get("token_to_data", {}))
 
     @property
     def images(self) -> dict:
@@ -73,19 +73,14 @@ class SynchronizedData(BaseSynchronizedData):
         return cast(dict, self.db.get("images", {}))
 
     @property
-    def redirects(self) -> dict:
-        """Get the redirect table."""
-        return cast(dict, self.db.get("redirects", {}))
-
-    @property
     def most_voted_api_data(self) -> Dict:
         """Get the most_voted_api_data."""
         return cast(Dict, self.db.get_strict("most_voted_api_data"))
 
     @property
-    def most_voted_member_updates(self) -> Dict:
-        """Get the most_voted_member_updates."""
-        return cast(Dict, self.db.get_strict("most_voted_member_updates"))
+    def most_voted_token_updates(self) -> Dict:
+        """Get the most_voted_token_updates."""
+        return cast(Dict, self.db.get_strict("most_voted_token_updates"))
 
 
 class ContributionAbstractRound(AbstractRound[Event, TransactionType], ABC):
@@ -115,25 +110,17 @@ class NewMembersRound(ContributionAbstractRound, CollectSameUntilThresholdRound)
             if payload == NewMembersRound.ERROR_PAYLOAD:
                 return self.synchronized_data, Event.CONTRACT_ERROR
 
-            new_member_to_data = payload["new_member_to_data"]
-            new_redirects = payload["new_redirects"]
+            new_token_to_data = payload["new_token_to_data"]
 
-            # Add the new members to the members table. Note that the new members have no points or image_code fields
-            members = {
-                **new_member_to_data,
-                **self.synchronized_data.members,
-            }
-
-            # Add redirects for new members
-            redirects = {
-                **new_redirects,
-                **self.synchronized_data.redirects,
+            # Add the new tokens to the token table
+            token_to_data = {
+                **new_token_to_data,
+                **self.synchronized_data.token_to_data,
             }
 
             synchronized_data = self.synchronized_data.update(
                 synchronized_data_class=SynchronizedData,
-                members=members,
-                redirects=redirects,
+                token_to_data=token_to_data,
             )
             return synchronized_data, Event.DONE
         if not self.is_majority_possible(
@@ -189,7 +176,7 @@ class ImageCodeCalculationRound(
         if self.threshold_reached:
             synchronized_data = self.synchronized_data.update(
                 synchronized_data_class=SynchronizedData,
-                most_voted_member_updates=json.loads(self.most_voted_payload),
+                most_voted_token_updates=json.loads(self.most_voted_payload),
             )
             return synchronized_data, Event.DONE
         if not self.is_majority_possible(
@@ -243,25 +230,21 @@ class DBUpdateRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
         """Process the end of the block."""
         if self.threshold_reached:
 
-            members = self.synchronized_data.members
+            token_to_data = self.synchronized_data.token_to_data
             images = self.synchronized_data.images
-            redirects = self.synchronized_data.redirects
-            updates = self.synchronized_data.most_voted_member_updates
+            updates = self.synchronized_data.most_voted_token_updates
 
             for (
-                member,
+                token_id,
                 data,
             ) in updates.items():
-                members[member]["points"] = data["points"]
-                members[member]["image_code"] = data["image_code"]
-
-                token_id = str(members[member]["token_id"])
-                redirects[token_id] = images[data["image_code"]]
+                token_to_data[token_id]["points"] = data["points"]
+                token_to_data[token_id]["image_code"] = data["image_code"]
+                token_to_data[token_id]["image_hash"] = images[data["image_code"]]
 
             synchronized_data = self.synchronized_data.update(
                 synchronized_data_class=SynchronizedData,
-                members=members,
-                redirects=redirects,
+                token_to_data=token_to_data,
             )
             return synchronized_data, Event.DONE
         if not self.is_majority_possible(

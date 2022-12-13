@@ -170,10 +170,10 @@ class HttpHandler(BaseHttpHandler):
         """
         # Get the requested uri and the redirects table
         request_uri = http_msg.url
-        token_id = request_uri.split("/")[-1]
-        redirects = self.synchronized_data.redirects
+        token_id = int(request_uri.split("/")[-1])
+        token_to_data = self.synchronized_data.token_to_data
 
-        if token_id not in redirects:
+        if token_id not in token_to_data:
             self.context.logger.info(
                 f"Requested URL {request_uri} is not present in redirect table"
             )
@@ -192,8 +192,7 @@ class HttpHandler(BaseHttpHandler):
                 f"Requested URL {request_uri} is present in redirect table"
             )
 
-            redirect_uri = redirects[token_id]
-            image_hash = redirect_uri.split("/")[-1]  # get the hash only
+            image_hash = token_to_data[token_id]["image_hash"]
 
             # Build token metadata
             metadata = {
