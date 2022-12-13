@@ -48,7 +48,7 @@ from packages.valory.skills.dynamic_nft_abci.io_.store import (
     ExtendedSupportedFiletype,
     Storer,
 )
-from packages.valory.skills.dynamic_nft_abci.models import Params
+from packages.valory.skills.dynamic_nft_abci.models import Params, SharedState
 from packages.valory.skills.dynamic_nft_abci.payloads import (
     DBUpdatePayload,
     ImageCodeCalculationPayload,
@@ -806,11 +806,16 @@ class DBUpdateBehaviour(DynamicNFTBaseBehaviour):
 
         Redirect table: must be updated now to reflect the new redirects (if it applies).
         """
+        last_update_time = cast(
+            SharedState, self.context.state
+        ).round_sequence.abci_app.last_timestamp.timestamp()
+
         self.context.logger.info(
             f"Current members: {self.synchronized_data.members}\n"
             f"Current images: {self.synchronized_data.images}\n"
             f"Current redirects: {self.synchronized_data.redirects}\n"
             f"Updating database tables. Updates: {self.synchronized_data.most_voted_member_updates}\n"
+            f"Last update timestamp: {last_update_time}\n"
         )
 
         with self.context.benchmark_tool.measure(
@@ -819,7 +824,7 @@ class DBUpdateBehaviour(DynamicNFTBaseBehaviour):
             payload = DBUpdatePayload(
                 self.context.agent_address,
                 json.dumps(
-                    {},  # empty payload for now
+                    {"last_update_time": last_update_time},
                     sort_keys=True,
                 ),
             )
