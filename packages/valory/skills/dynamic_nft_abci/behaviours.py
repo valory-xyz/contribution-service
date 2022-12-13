@@ -48,7 +48,7 @@ from packages.valory.skills.dynamic_nft_abci.io_.store import (
     ExtendedSupportedFiletype,
     Storer,
 )
-from packages.valory.skills.dynamic_nft_abci.models import Params
+from packages.valory.skills.dynamic_nft_abci.models import Params, SharedState
 from packages.valory.skills.dynamic_nft_abci.payloads import (
     DBUpdatePayload,
     ImageCodeCalculationPayload,
@@ -813,13 +813,17 @@ class DBUpdateBehaviour(DynamicNFTBaseBehaviour):
             f"Updating database tables. Updates: {self.synchronized_data.most_voted_member_updates}\n"
         )
 
+        last_update_time = cast(
+            SharedState, self.context.state
+        ).round_sequence.abci_app.last_timestamp.timestamp()
+
         with self.context.benchmark_tool.measure(
             self.behaviour_id,
         ).consensus():
             payload = DBUpdatePayload(
                 self.context.agent_address,
                 json.dumps(
-                    {},  # empty payload for now
+                    {"last_update_time": last_update_time},
                     sort_keys=True,
                 ),
             )
