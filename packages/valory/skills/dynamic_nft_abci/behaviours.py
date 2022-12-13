@@ -37,7 +37,10 @@ from packages.valory.contracts.dynamic_contribution.contract import (
     DynamicContributionContract,
 )
 from packages.valory.protocols.contract_api import ContractApiMessage
-from packages.valory.skills.abstract_round_abci.base import AbstractRound
+from packages.valory.skills.abstract_round_abci.base import (
+    ABCIAppInternalError,
+    AbstractRound,
+)
 from packages.valory.skills.abstract_round_abci.behaviour_utils import TimeoutException
 from packages.valory.skills.abstract_round_abci.behaviours import (
     AbstractRoundBehaviour,
@@ -813,9 +816,15 @@ class DBUpdateBehaviour(DynamicNFTBaseBehaviour):
             f"Updating database tables. Updates: {self.synchronized_data.most_voted_member_updates}\n"
         )
 
-        last_update_time = cast(
-            SharedState, self.context.state
-        ).round_sequence.abci_app.last_timestamp.timestamp()
+        last_update_time = None
+
+        # We need a try except here since this will raise even for checking the last_timestamp attribute
+        try:
+            last_update_time = cast(
+                SharedState, self.context.state
+            ).round_sequence.abci_app.last_timestamp.timestamp()
+        except ABCIAppInternalError:
+            self.context.logger.info("Last timetstamp is not yet set")
 
         with self.context.benchmark_tool.measure(
             self.behaviour_id,

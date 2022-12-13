@@ -126,14 +126,18 @@ class HttpHandler(BaseHttpHandler):
         """
         http_msg = cast(HttpMessage, message)
 
-        # Check if this message is for this skill. If not, send to super()
-        # We expect requests to https://pfp.staging.autonolas.tech/{token_id}
-        handler_route = self.check_url(http_msg.url)
+        # Check if this is a request sent from the http_server skill
         if (
             http_msg.performative != HttpMessage.Performative.REQUEST
             or message.sender != str(HTTP_SERVER_PUBLIC_ID.without_hash())
-            or not handler_route
         ):
+            super().handle(message)
+            return
+
+        # Check if this message is for this skill. If not, send to super()
+        # We expect requests to https://pfp.staging.autonolas.tech/{token_id}
+        handler_route = self.check_url(http_msg.url)
+        if not handler_route:
             super().handle(message)
             return
 

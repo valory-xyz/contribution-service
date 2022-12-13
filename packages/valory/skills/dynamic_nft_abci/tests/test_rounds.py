@@ -173,7 +173,7 @@ def get_image_generation_payload_serialized(status: str = "success") -> str:
 
 def get_db_update_payload_serialized() -> str:
     """Dummy db update payload"""
-    return json.dumps({}, sort_keys=True)
+    return json.dumps({"last_update_time": 10}, sort_keys=True)
 
 
 @dataclass
