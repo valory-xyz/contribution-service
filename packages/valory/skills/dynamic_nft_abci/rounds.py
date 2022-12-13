@@ -40,7 +40,7 @@ from packages.valory.skills.dynamic_nft_abci.payloads import (
     ImageCodeCalculationPayload,
     ImageGenerationPayload,
     LeaderboardObservationPayload,
-    NewMembersPayload,
+    NewTokensPayload,
 )
 
 
@@ -64,7 +64,7 @@ class SynchronizedData(BaseSynchronizedData):
 
     @property
     def token_to_data(self) -> dict:
-        """Get the member table."""
+        """Get the token table."""
         return cast(dict, self.db.get("token_to_data", {}))
 
     @property
@@ -92,11 +92,11 @@ class ContributionAbstractRound(AbstractRound[Event, TransactionType], ABC):
         return cast(SynchronizedData, super().synchronized_data)
 
 
-class NewMembersRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
-    """NewMemberListRound"""
+class NewTokensRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
+    """NewTokensRound"""
 
-    round_id: str = "new_members"
-    allowed_tx_type = NewMembersPayload.transaction_type
+    round_id: str = "new_tokens"
+    allowed_tx_type = NewTokensPayload.transaction_type
     payload_attribute: str = "content"
     synchronized_data_class = SynchronizedData
 
@@ -107,7 +107,7 @@ class NewMembersRound(ContributionAbstractRound, CollectSameUntilThresholdRound)
         if self.threshold_reached:
             payload = json.loads(self.most_voted_payload)
 
-            if payload == NewMembersRound.ERROR_PAYLOAD:
+            if payload == NewTokensRound.ERROR_PAYLOAD:
                 return self.synchronized_data, Event.CONTRACT_ERROR
 
             new_token_to_data = payload["new_token_to_data"]
@@ -263,14 +263,14 @@ class FinishedDBUpdateRound(DegenerateRound, ABC):
 class DynamicNFTAbciApp(AbciApp[Event]):
     """DynamicNFTAbciApp"""
 
-    initial_round_cls: AppState = NewMembersRound
-    initial_states: Set[AppState] = {NewMembersRound}
+    initial_round_cls: AppState = NewTokensRound
+    initial_states: Set[AppState] = {NewTokensRound}
     transition_function: AbciAppTransitionFunction = {
-        NewMembersRound: {
+        NewTokensRound: {
             Event.DONE: LeaderboardObservationRound,
-            Event.CONTRACT_ERROR: NewMembersRound,
-            Event.NO_MAJORITY: NewMembersRound,
-            Event.ROUND_TIMEOUT: NewMembersRound,
+            Event.CONTRACT_ERROR: NewTokensRound,
+            Event.NO_MAJORITY: NewTokensRound,
+            Event.ROUND_TIMEOUT: NewTokensRound,
         },
         LeaderboardObservationRound: {
             Event.DONE: ImageCodeCalculationRound,
@@ -300,4 +300,4 @@ class DynamicNFTAbciApp(AbciApp[Event]):
     event_to_timeout: EventToTimeout = {
         Event.ROUND_TIMEOUT: 30.0,
     }
-    cross_period_persisted_keys: List[str] = ["members", "images", "redirects"]
+    cross_period_persisted_keys: List[str] = ["token_to_data", "images"]

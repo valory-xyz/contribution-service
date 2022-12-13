@@ -38,7 +38,7 @@ from packages.valory.skills.dynamic_nft_abci.payloads import (
     ImageCodeCalculationPayload,
     ImageGenerationPayload,
     LeaderboardObservationPayload,
-    NewMembersPayload,
+    NewTokensPayload,
 )
 from packages.valory.skills.dynamic_nft_abci.rounds import (
     DBUpdateRound,
@@ -46,7 +46,7 @@ from packages.valory.skills.dynamic_nft_abci.rounds import (
     ImageCodeCalculationRound,
     ImageGenerationRound,
     LeaderboardObservationRound,
-    NewMembersRound,
+    NewTokensRound,
     SynchronizedData,
 )
 from packages.valory.skills.dynamic_nft_abci.tests.test_behaviours import (
@@ -54,7 +54,8 @@ from packages.valory.skills.dynamic_nft_abci.tests.test_behaviours import (
 )
 
 
-TOKEN_URI_BASE = "https://pfp.staging.autonolas.tech/"  # nosec
+BASIC_IMAGE_CID = "basic_image_cid"
+
 
 DUMMY_TOKEN_TO_DATA = {
     "new_token_to_data": {
@@ -62,26 +63,31 @@ DUMMY_TOKEN_TO_DATA = {
             "address": "0x54EfA9b1865FFE8c528fb375A7A606149598932A",
             "points": DEFAULT_POINTS,
             "image_code": DEFAULT_IMAGE_CODE,
+            "image_hash": BASIC_IMAGE_CID
         },
         2: {
             "address": "0x3c03a080638b3c176aB7D9ed56E25bC416dFf525",
             "points": DEFAULT_POINTS,
             "image_code": DEFAULT_IMAGE_CODE,
+            "image_hash": BASIC_IMAGE_CID
         },
         3: {
             "address": "0x44704AE66f0B9FF08a7b0584B49FE941AdD1bAE7",
             "points": DEFAULT_POINTS,
             "image_code": DEFAULT_IMAGE_CODE,
+            "image_hash": BASIC_IMAGE_CID
         },
         4: {
             "address": "0x19B043aD06C48aeCb2028B0f10503422BD0E0918",
             "points": DEFAULT_POINTS,
             "image_code": DEFAULT_IMAGE_CODE,
+            "image_hash": BASIC_IMAGE_CID
         },
         5: {
             "address": "0x8325c5e4a56E352355c590E4A43420840F067F98",
             "points": DEFAULT_POINTS,
             "image_code": DEFAULT_IMAGE_CODE,
+            "image_hash": BASIC_IMAGE_CID
         },  # this one does not appear in the dummy leaderboard
     },
     "new_redirects": {
@@ -110,13 +116,13 @@ def get_payloads(
     }
 
 
-def get_dummy_new_members_payload_serialized() -> str:
-    """Dummy new members payload"""
-    return json.dumps(DUMMY_MEMBER_TO_DATA, sort_keys=True)
+def get_dummy_new_tokens_payload_serialized() -> str:
+    """Dummy new tokens payload"""
+    return json.dumps(DUMMY_TOKEN_TO_DATA, sort_keys=True)
 
 
-def get_dummy_new_members_payload_error_serialized() -> str:
-    """Dummy new members payload"""
+def get_dummy_new_tokens_payload_error_serialized() -> str:
+    """Dummy new tokens payload"""
     return json.dumps({"error": True}, sort_keys=True)
 
 
@@ -227,10 +233,10 @@ class BaseDynamicNFTRoundTestClass(BaseCollectSameUntilThresholdRoundTest):
         )
 
 
-class TestNewMembersRound(BaseDynamicNFTRoundTestClass):
-    """Tests for NewMemberListRound."""
+class TestNewTokensRound(BaseDynamicNFTRoundTestClass):
+    """Tests for NewTokensRound."""
 
-    round_class = NewMembersRound
+    round_class = NewTokensRound
 
     @pytest.mark.parametrize(
         "test_case",
@@ -239,19 +245,19 @@ class TestNewMembersRound(BaseDynamicNFTRoundTestClass):
                 name="Happy path",
                 initial_data={},
                 payloads=get_payloads(
-                    payload_cls=NewMembersPayload,
-                    data=get_dummy_new_members_payload_serialized(),
+                    payload_cls=NewTokensPayload,
+                    data=get_dummy_new_tokens_payload_serialized(),
                 ),
                 final_data={
-                    "members": json.loads(get_dummy_new_members_payload_serialized())[
-                        "new_member_to_data"
+                    "members": json.loads(get_dummy_new_tokens_payload_serialized())[
+                        "new_token_to_data"
                     ],
-                    "redirects": json.loads(get_dummy_new_members_payload_serialized())[
+                    "redirects": json.loads(get_dummy_new_tokens_payload_serialized())[
                         "new_redirects"
                     ],
                 },
                 event=Event.DONE,
-                most_voted_payload=get_dummy_new_members_payload_serialized(),
+                most_voted_payload=get_dummy_new_tokens_payload_serialized(),
                 synchronized_data_attr_checks=[
                     lambda _synchronized_data: _synchronized_data.members,
                     lambda _synchronized_data: _synchronized_data.redirects,
@@ -261,16 +267,16 @@ class TestNewMembersRound(BaseDynamicNFTRoundTestClass):
                 name="Contract error",
                 initial_data={},
                 payloads=get_payloads(
-                    payload_cls=NewMembersPayload,
-                    data=get_dummy_new_members_payload_error_serialized(),
+                    payload_cls=NewTokensPayload,
+                    data=get_dummy_new_tokens_payload_error_serialized(),
                 ),
                 final_data={
                     "members": json.loads(
-                        get_dummy_new_members_payload_error_serialized()
+                        get_dummy_new_tokens_payload_error_serialized()
                     ),
                 },
                 event=Event.CONTRACT_ERROR,
-                most_voted_payload=get_dummy_new_members_payload_error_serialized(),
+                most_voted_payload=get_dummy_new_tokens_payload_error_serialized(),
                 synchronized_data_attr_checks=[],
             ),
         ),

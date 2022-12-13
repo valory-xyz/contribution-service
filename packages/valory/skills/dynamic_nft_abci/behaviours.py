@@ -54,7 +54,7 @@ from packages.valory.skills.dynamic_nft_abci.payloads import (
     ImageCodeCalculationPayload,
     ImageGenerationPayload,
     LeaderboardObservationPayload,
-    NewMembersPayload,
+    NewTokensPayload,
 )
 from packages.valory.skills.dynamic_nft_abci.rounds import (
     DBUpdateRound,
@@ -62,7 +62,7 @@ from packages.valory.skills.dynamic_nft_abci.rounds import (
     ImageCodeCalculationRound,
     ImageGenerationRound,
     LeaderboardObservationRound,
-    NewMembersRound,
+    NewTokensRound,
     SynchronizedData,
 )
 from packages.valory.skills.dynamic_nft_abci.tools import SHEET_API_SCHEMA
@@ -92,22 +92,22 @@ class DynamicNFTBaseBehaviour(BaseBehaviour):
         return cast(Params, super().params)
 
 
-class NewMembersBehaviour(DynamicNFTBaseBehaviour):
-    """NewMemberListBehaviour"""
+class NewTokensBehaviour(DynamicNFTBaseBehaviour):
+    """NewTokensBehaviour"""
 
-    behaviour_id: str = "new_members"
-    matching_round: Type[AbstractRound] = NewMembersRound
+    behaviour_id: str = "new_tokens"
+    matching_round: Type[AbstractRound] = NewTokensRound
 
     def async_act(self) -> Generator:
-        """Get a list of the new members."""
+        """Get a list of the new tokens."""
         with self.context.benchmark_tool.measure(
             self.behaviour_id,
         ).local():
 
             token_id_to_address = yield from self.get_token_id_to_member()
 
-            if token_id_to_address == NewMembersRound.ERROR_PAYLOAD:
-                payload_data = json.dumps(NewMembersRound.ERROR_PAYLOAD, sort_keys=True)
+            if token_id_to_address == NewTokensRound.ERROR_PAYLOAD:
+                payload_data = json.dumps(NewTokensRound.ERROR_PAYLOAD, sort_keys=True)
             else:
                 old_tokens = set(self.synchronized_data.token_to_data.keys())
 
@@ -136,7 +136,7 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
         with self.context.benchmark_tool.measure(
             self.behaviour_id,
         ).consensus():
-            payload = NewMembersPayload(self.context.agent_address, payload_data)
+            payload = NewTokensPayload(self.context.agent_address, payload_data)
             yield from self.send_a2a_transaction(payload)
             yield from self.wait_until_round_end()
 
@@ -158,7 +158,7 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
         )
         if contract_api_msg.performative != ContractApiMessage.Performative.STATE:
             self.context.logger.info("Error retrieving the token_id to member data")
-            return NewMembersRound.ERROR_PAYLOAD
+            return NewTokensRound.ERROR_PAYLOAD
         data = cast(dict, contract_api_msg.state.body["token_id_to_member"])
         self.context.logger.info(f"Got token_id to member data: {data}")
         return data
@@ -830,10 +830,10 @@ class DBUpdateBehaviour(DynamicNFTBaseBehaviour):
 class DynamicNFTRoundBehaviour(AbstractRoundBehaviour):
     """DynamicNFTRoundBehaviour"""
 
-    initial_behaviour_cls = NewMembersBehaviour
+    initial_behaviour_cls = NewTokensBehaviour
     abci_app_cls = DynamicNFTAbciApp
     behaviours: Set[Type[BaseBehaviour]] = [
-        NewMembersBehaviour,
+        NewTokensBehaviour,
         LeaderboardObservationBehaviour,
         ImageCodeCalculationBehaviour,
         ImageGenerationBehaviour,

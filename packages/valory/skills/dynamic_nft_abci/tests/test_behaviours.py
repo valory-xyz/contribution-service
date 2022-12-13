@@ -53,12 +53,12 @@ from packages.valory.skills.dynamic_nft_abci.behaviours import (
     ImageCodeCalculationBehaviour,
     ImageGenerationBehaviour,
     LeaderboardObservationBehaviour,
-    NewMembersBehaviour,
+    NewTokensBehaviour,
 )
 from packages.valory.skills.dynamic_nft_abci.rounds import (
     Event,
     FinishedDBUpdateRound,
-    NewMembersRound,
+    NewTokensRound,
     SynchronizedData,
 )
 
@@ -281,10 +281,10 @@ class BaseDynamicNFTTest(FSMBehaviourBaseCase):
         )
 
 
-class TestNewMembersBehaviour(BaseDynamicNFTTest):
-    """Tests NewMembersBehaviour"""
+class TestNewTokensBehaviour(BaseDynamicNFTTest):
+    """Tests NewTokensBehaviour"""
 
-    behaviour_class = NewMembersBehaviour
+    behaviour_class = NewTokensBehaviour
     next_behaviour_class = LeaderboardObservationBehaviour
 
     def _mock_dynamic_contribution_contract_request(
@@ -337,11 +337,11 @@ class TestNewMembersBehaviour(BaseDynamicNFTTest):
         self.complete(test_case.event)
 
 
-class TestNewMembersBehaviourContractError(TestNewMembersBehaviour):
-    """Tests NewMembersBehaviour"""
+class TestNewTokensBehaviourContractError(TestNewTokensBehaviour):
+    """Tests NewTokensBehaviour"""
 
-    behaviour_class = NewMembersBehaviour
-    next_behaviour_class = NewMembersBehaviour
+    behaviour_class = NewTokensBehaviour
+    next_behaviour_class = NewTokensBehaviour
 
     @pytest.mark.parametrize(
         "test_case, kwargs",
@@ -354,7 +354,7 @@ class TestNewMembersBehaviourContractError(TestNewMembersBehaviour):
                 ),
                 {
                     "mock_response_data": dict(
-                        member_to_token_id=NewMembersRound.ERROR_PAYLOAD
+                        member_to_token_id=NewTokensRound.ERROR_PAYLOAD
                     ),
                     "mock_response_performative": ContractApiMessage.Performative.ERROR,
                 },

@@ -17,7 +17,7 @@ states:
 - ImageCodeCalculationRound
 - ImageGenerationRound
 - LeaderboardObservationRound
-- NewMembersRound
+- NewTokensRound
 - RegistrationRound
 - RegistrationStartupRound
 - ResetAndPauseRound
@@ -36,14 +36,14 @@ transition_func:
     (LeaderboardObservationRound, DONE): ImageCodeCalculationRound
     (LeaderboardObservationRound, NO_MAJORITY): LeaderboardObservationRound
     (LeaderboardObservationRound, ROUND_TIMEOUT): LeaderboardObservationRound
-    (NewMembersRound, CONTRACT_ERROR): NewMembersRound
-    (NewMembersRound, DONE): LeaderboardObservationRound
-    (NewMembersRound, NO_MAJORITY): NewMembersRound
-    (NewMembersRound, ROUND_TIMEOUT): NewMembersRound
-    (RegistrationRound, DONE): NewMembersRound
+    (NewTokensRound, CONTRACT_ERROR): NewTokensRound
+    (NewTokensRound, DONE): LeaderboardObservationRound
+    (NewTokensRound, NO_MAJORITY): NewTokensRound
+    (NewTokensRound, ROUND_TIMEOUT): NewTokensRound
+    (RegistrationRound, DONE): NewTokensRound
     (RegistrationRound, NO_MAJORITY): RegistrationRound
-    (RegistrationStartupRound, DONE): NewMembersRound
-    (RegistrationStartupRound, FAST_FORWARD): NewMembersRound
-    (ResetAndPauseRound, DONE): NewMembersRound
+    (RegistrationStartupRound, DONE): NewTokensRound
+    (RegistrationStartupRound, FAST_FORWARD): NewTokensRound
+    (ResetAndPauseRound, DONE): NewTokensRound
     (ResetAndPauseRound, NO_MAJORITY): RegistrationRound
     (ResetAndPauseRound, RESET_AND_PAUSE_TIMEOUT): RegistrationRound

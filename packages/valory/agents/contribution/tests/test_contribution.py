@@ -61,7 +61,7 @@ from packages.valory.skills.abstract_round_abci.tests.test_io.test_ipfs import (
 
 HAPPY_PATH: Tuple[RoundChecks, ...] = (
     RoundChecks("registration_startup"),
-    RoundChecks("new_members", n_periods=2),
+    RoundChecks("new_tokens", n_periods=2),
     RoundChecks("leaderboard_observation", n_periods=2),
     RoundChecks("image_code_calculation", n_periods=2),
     RoundChecks("image_generation", n_periods=2),
@@ -71,8 +71,8 @@ HAPPY_PATH: Tuple[RoundChecks, ...] = (
 
 # strict check log messages of the happy path
 STRICT_CHECK_STRINGS = (
-    "Got the new member list:",
-    "Calculated member updates:",
+    "Got the new token list:",
+    "Calculated token updates:",
     "Generated the following new images:",
     "Updating database tables",
     "Period end",
