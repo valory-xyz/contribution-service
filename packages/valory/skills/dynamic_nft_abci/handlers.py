@@ -22,7 +22,7 @@
 import json
 import re
 from enum import Enum
-from typing import Optional, cast
+from typing import cast
 from urllib.parse import urlparse
 
 from aea.protocols.base import Message
@@ -72,6 +72,7 @@ class Route(Enum):
 
     HEALTH = "health"
     METADATA = "metadata"
+    NONE = "none"
 
 
 class HttpHandler(BaseHttpHandler):
@@ -89,7 +90,7 @@ class HttpHandler(BaseHttpHandler):
             db=self.context.state.round_sequence.latest_synchronized_data.db
         )
 
-    def check_url(self, url) -> Optional[Route]:
+    def check_url(self, url) -> Route:
         """Check if an url is meant to be handled in this handler
 
         We expect url to match the pattern {hostname}/{token_id},
@@ -116,7 +117,7 @@ class HttpHandler(BaseHttpHandler):
         self.context.logger.info(
             f"The url {url} does not match the DynamicNFT HttpHandler's pattern"
         )
-        return None
+        return Route.NONE
 
     def handle(self, message: Message) -> None:
         """
@@ -137,7 +138,7 @@ class HttpHandler(BaseHttpHandler):
         # Check if this message is for this skill. If not, send to super()
         # We expect requests to https://pfp.staging.autonolas.tech/{token_id}
         handler_route = self.check_url(http_msg.url)
-        if not handler_route:
+        if handler_route == Route.NONE:
             super().handle(message)
             return
 
