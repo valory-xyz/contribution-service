@@ -63,31 +63,31 @@ DUMMY_TOKEN_TO_DATA = {
             "address": "0x54EfA9b1865FFE8c528fb375A7A606149598932A",
             "points": DEFAULT_POINTS,
             "image_code": DEFAULT_IMAGE_CODE,
-            "image_hash": BASIC_IMAGE_CID
+            "image_hash": BASIC_IMAGE_CID,
         },
         2: {
             "address": "0x3c03a080638b3c176aB7D9ed56E25bC416dFf525",
             "points": DEFAULT_POINTS,
             "image_code": DEFAULT_IMAGE_CODE,
-            "image_hash": BASIC_IMAGE_CID
+            "image_hash": BASIC_IMAGE_CID,
         },
         3: {
             "address": "0x44704AE66f0B9FF08a7b0584B49FE941AdD1bAE7",
             "points": DEFAULT_POINTS,
             "image_code": DEFAULT_IMAGE_CODE,
-            "image_hash": BASIC_IMAGE_CID
+            "image_hash": BASIC_IMAGE_CID,
         },
         4: {
             "address": "0x19B043aD06C48aeCb2028B0f10503422BD0E0918",
             "points": DEFAULT_POINTS,
             "image_code": DEFAULT_IMAGE_CODE,
-            "image_hash": BASIC_IMAGE_CID
+            "image_hash": BASIC_IMAGE_CID,
         },
         5: {
             "address": "0x8325c5e4a56E352355c590E4A43420840F067F98",
             "points": DEFAULT_POINTS,
             "image_code": DEFAULT_IMAGE_CODE,
-            "image_hash": BASIC_IMAGE_CID
+            "image_hash": BASIC_IMAGE_CID,
         },  # this one does not appear in the dummy leaderboard
     },
     "new_redirects": {
@@ -139,16 +139,6 @@ def get_image_code_calculation_payload_serialized() -> str:
         "member_a": {"points": 100, "image_code": "dummy_image_code_a"},
         "member_b": {"points": 200, "image_code": "dummy_image_code_b"},
         "member_c": {"points": 300, "image_code": "dummy_image_code_c"},
-    }
-    return json.dumps(data, sort_keys=True)
-
-
-def get_dummy_members() -> str:
-    """Dummy members table"""
-    data = {
-        "member_a": {"points": 100, "image_code": "dummy_image_code_a", "token_id": 0},
-        "member_b": {"points": 200, "image_code": "dummy_image_code_b", "token_id": 1},
-        "member_c": {"points": 300, "image_code": "dummy_image_code_c", "token_id": 2},
     }
     return json.dumps(data, sort_keys=True)
 
@@ -249,18 +239,14 @@ class TestNewTokensRound(BaseDynamicNFTRoundTestClass):
                     data=get_dummy_new_tokens_payload_serialized(),
                 ),
                 final_data={
-                    "members": json.loads(get_dummy_new_tokens_payload_serialized())[
-                        "new_token_to_data"
-                    ],
-                    "redirects": json.loads(get_dummy_new_tokens_payload_serialized())[
-                        "new_redirects"
-                    ],
+                    "token_to_data": json.loads(
+                        get_dummy_new_tokens_payload_serialized()
+                    )["new_token_to_data"],
                 },
                 event=Event.DONE,
                 most_voted_payload=get_dummy_new_tokens_payload_serialized(),
                 synchronized_data_attr_checks=[
-                    lambda _synchronized_data: _synchronized_data.members,
-                    lambda _synchronized_data: _synchronized_data.redirects,
+                    lambda _synchronized_data: _synchronized_data.token_to_data,
                 ],
             ),
             RoundTestCase(
@@ -271,7 +257,7 @@ class TestNewTokensRound(BaseDynamicNFTRoundTestClass):
                     data=get_dummy_new_tokens_payload_error_serialized(),
                 ),
                 final_data={
-                    "members": json.loads(
+                    "token_to_data": json.loads(
                         get_dummy_new_tokens_payload_error_serialized()
                     ),
                 },
@@ -349,14 +335,14 @@ class TestImageCodeCalculationRound(BaseDynamicNFTRoundTestClass):
                     data=get_image_code_calculation_payload_serialized(),
                 ),
                 final_data={
-                    "most_voted_member_updates": json.loads(
+                    "most_voted_token_updates": json.loads(
                         get_image_code_calculation_payload_serialized()
                     ),
                 },
                 event=Event.DONE,
                 most_voted_payload=get_image_code_calculation_payload_serialized(),
                 synchronized_data_attr_checks=[
-                    lambda _synchronized_data: _synchronized_data.most_voted_member_updates,
+                    lambda _synchronized_data: _synchronized_data.most_voted_token_updates,
                 ],
             ),
         ),
@@ -422,10 +408,8 @@ class TestDBUpdateRound(BaseDynamicNFTRoundTestClass):
             RoundTestCase(
                 name="Happy path",
                 initial_data={
-                    "members": json.loads(get_dummy_members()),
                     "images": get_dummy_images(),
-                    "redirects": {},
-                    "most_voted_member_updates": json.loads(get_dummy_members()),
+                    "most_voted_token_updates": {},
                 },
                 payloads=get_payloads(
                     payload_cls=DBUpdatePayload,

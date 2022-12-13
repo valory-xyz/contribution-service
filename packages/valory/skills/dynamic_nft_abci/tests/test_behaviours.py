@@ -49,6 +49,8 @@ from packages.valory.skills.abstract_round_abci.test_tools.base import (
 )
 from packages.valory.skills.dynamic_nft_abci.behaviours import (
     DBUpdateBehaviour,
+    DEFAULT_IMAGE_CODE,
+    DEFAULT_POINTS,
     DynamicNFTBaseBehaviour,
     ImageCodeCalculationBehaviour,
     ImageGenerationBehaviour,
@@ -77,20 +79,38 @@ def ipfs_daemon() -> Iterator[bool]:
 use_ipfs_daemon = pytest.mark.usefixtures("ipfs_daemon")
 
 DYNAMIC_CONTRIBUTION_CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+BASIC_IMAGE_CID = "basic_image_cid"
 
-DUMMY_MEMBERS = {
-    "0x54EfA9b1865FFE8c528fb375A7A606149598932A": {
-        "points": 1600,
-        "image_code": "0001",
+DUMMY_TOKEN_TO_DATA = {
+    1: {
+        "address": "0x54EfA9b1865FFE8c528fb375A7A606149598932A",
+        "points": DEFAULT_POINTS,
+        "image_code": DEFAULT_IMAGE_CODE,
+        "image_hash": BASIC_IMAGE_CID,
     },
-    "0x3c03a080638b3c176aB7D9ed56E25bC416dFf525": {
-        "points": 1000,
-        "image_code": "0001",
+    2: {
+        "address": "0x3c03a080638b3c176aB7D9ed56E25bC416dFf525",
+        "points": DEFAULT_POINTS,
+        "image_code": DEFAULT_IMAGE_CODE,
+        "image_hash": BASIC_IMAGE_CID,
     },
-    "0x44704AE66f0B9FF08a7b0584B49FE941AdD1bAE7": {"points": 600, "image_code": "0001"},
-    "0x19B043aD06C48aeCb2028B0f10503422BD0E0918": {
-        "points": 100,
-        "image_code": "0001",
+    3: {
+        "address": "0x44704AE66f0B9FF08a7b0584B49FE941AdD1bAE7",
+        "points": DEFAULT_POINTS,
+        "image_code": DEFAULT_IMAGE_CODE,
+        "image_hash": BASIC_IMAGE_CID,
+    },
+    4: {
+        "address": "0x19B043aD06C48aeCb2028B0f10503422BD0E0918",
+        "points": DEFAULT_POINTS,
+        "image_code": DEFAULT_IMAGE_CODE,
+        "image_hash": BASIC_IMAGE_CID,
+    },
+    5: {
+        "address": "0x8325c5e4a56E352355c590E4A43420840F067F98",
+        "points": DEFAULT_POINTS,
+        "image_code": DEFAULT_IMAGE_CODE,
+        "image_hash": BASIC_IMAGE_CID,
     },  # this one does not appear in the dummy leaderboard
 }
 
@@ -615,7 +635,8 @@ class TestImageCodeCalculationBehaviour(BaseDynamicNFTTest):
             BehaviourTestCase(
                 "Happy path",
                 initial_data=dict(
-                    members=DUMMY_MEMBERS, most_voted_api_data=DUMMY_API_DATA
+                    token_to_data=DUMMY_TOKEN_TO_DATA,
+                    most_voted_api_data=DUMMY_API_DATA,
                 ),
                 event=Event.DONE,
             ),
@@ -694,7 +715,7 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
                 BehaviourTestCase(
                     "Happy path",
                     initial_data=dict(
-                        most_voted_member_updates=get_dummy_updates(),
+                        most_voted_token_updates=get_dummy_updates(),
                         most_voted_api_data=DUMMY_API_DATA,
                     ),
                     event=Event.DONE,
@@ -708,7 +729,7 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
                 BehaviourTestCase(
                     "Happy path: images not in registry",
                     initial_data=dict(
-                        most_voted_member_updates=get_dummy_updates(),
+                        most_voted_token_updates=get_dummy_updates(),
                         most_voted_api_data=DUMMY_API_DATA,
                     ),
                     event=Event.DONE,
@@ -722,7 +743,7 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
                 BehaviourTestCase(
                     "Happy path: images already in database",
                     initial_data=dict(
-                        most_voted_member_updates=get_dummy_updates(),
+                        most_voted_token_updates=get_dummy_updates(),
                         most_voted_api_data=DUMMY_API_DATA,
                         images=get_dummy_images(),
                     ),
@@ -785,7 +806,7 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
         test_case = BehaviourTestCase(
             "Trigger image download from IPFS",
             initial_data=dict(
-                most_voted_member_updates=get_dummy_updates(),
+                most_voted_token_updates=get_dummy_updates(),
                 most_voted_api_data=DUMMY_API_DATA,
             ),
             event=Event.DONE,
@@ -863,7 +884,7 @@ class TestImageGenerationErrorBehaviour(BaseDynamicNFTTest):
             BehaviourTestCase(
                 "Generation error",
                 initial_data=dict(
-                    most_voted_member_updates=get_dummy_updates(error=True),
+                    most_voted_token_updates=get_dummy_updates(error=True),
                     most_voted_api_data=DUMMY_API_DATA,
                 ),
                 event=Event.IMAGE_ERROR,
@@ -882,7 +903,7 @@ class TestImageGenerationErrorBehaviour(BaseDynamicNFTTest):
                 BehaviourTestCase(
                     "Happy path",
                     initial_data=dict(
-                        most_voted_member_updates=get_dummy_updates(),
+                        most_voted_token_updates=get_dummy_updates(),
                         most_voted_api_data=DUMMY_API_DATA,
                     ),
                     event=Event.IMAGE_ERROR,
@@ -943,7 +964,7 @@ class TestImageGenerationErrorBehaviour(BaseDynamicNFTTest):
         test_case = BehaviourTestCase(
             "Happy path",
             initial_data=dict(
-                most_voted_member_updates=get_dummy_updates(),
+                most_voted_token_updates=get_dummy_updates(),
                 most_voted_api_data=DUMMY_API_DATA,
             ),
             event=Event.IMAGE_ERROR,
@@ -1000,7 +1021,7 @@ class TestDBUpdateBehaviour(BaseDynamicNFTTest):
         [
             BehaviourTestCase(
                 "Happy path",
-                initial_data={"most_voted_member_updates": {}},
+                initial_data={"most_voted_token_updates": {}},
                 event=Event.DONE,
             ),
         ],

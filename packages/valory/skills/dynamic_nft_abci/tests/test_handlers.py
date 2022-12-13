@@ -68,7 +68,7 @@ class HandlerTestCase:
 
     name: str
     request_url: str
-    redirects: Dict[str, str]
+    token_to_data: Dict[str, str]
     response_status_code: int
     response_status_text: str
     response_headers: str
@@ -156,18 +156,18 @@ class TestHttpHandler(BaseSkillTestCase):
             HandlerTestCase(
                 name="uri in redirects",
                 request_url=f"{TOKEN_URI_BASE}0",
-                redirects={"0": "some_url_redirect"},
+                token_to_data={0: {"image_hash": "some_image_hash"}},
                 response_status_code=OK_CODE,
                 response_status_text="Success",
                 response_headers="Content-Type: application/json\nsome_headers",
-                body=json.dumps(get_dummy_metadata(0, "some_url_redirect")).encode(
+                body=json.dumps(get_dummy_metadata(0, "some_image_hash")).encode(
                     "utf-8"
                 ),
             ),
             HandlerTestCase(
                 name="uri not in redirects",
                 request_url=f"{TOKEN_URI_BASE}1",
-                redirects={},
+                token_to_data={},
                 response_status_code=NOT_FOUND_CODE,
                 response_status_text="Not found",
                 response_headers="some_headers",
@@ -199,7 +199,7 @@ class TestHttpHandler(BaseSkillTestCase):
                 self.http_handler.context.state, "_round_sequence"
             ) as mock_round_sequence:
                 mock_round_sequence.latest_synchronized_data.db = {
-                    "redirects": test_case.redirects
+                    "token_to_data": test_case.token_to_data
                 }
                 self.http_handler.handle(incoming_message)
 
