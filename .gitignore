@@ -25,3 +25,4 @@ packages/open_aea
 packages/fetchai
 *.pyc
 .vscode/
+.coverage*
