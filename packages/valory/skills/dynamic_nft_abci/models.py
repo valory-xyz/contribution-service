@@ -230,6 +230,7 @@ class Sheet(Model):
                     (row_index, self.points_col), VERIFICATION_POINTS
                 )
                 break
+        self._read_sheet.cache_clear()
 
     def delete(self, discord_id):
         """Removes an user entry"""
