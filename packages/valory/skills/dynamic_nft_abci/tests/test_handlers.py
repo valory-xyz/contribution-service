@@ -68,7 +68,7 @@ def get_dummy_health():
     return {
         "seconds_since_last_reset": 0,
         "healthy": True,
-        "seconds_untime_next_update": 10,
+        "seconds_until_next_update": 10,
     }
 
 

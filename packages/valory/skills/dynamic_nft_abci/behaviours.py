@@ -809,13 +809,6 @@ class DBUpdateBehaviour(DynamicNFTBaseBehaviour):
 
         Redirect table: must be updated now to reflect the new redirects (if it applies).
         """
-        self.context.logger.info(
-            f"Current members: {self.synchronized_data.members}\n"
-            f"Current images: {self.synchronized_data.images}\n"
-            f"Current redirects: {self.synchronized_data.redirects}\n"
-            f"Updating database tables. Updates: {self.synchronized_data.most_voted_member_updates}\n"
-        )
-
         last_update_time = None
 
         # We need a try except here since this will raise even for checking the last_timestamp attribute
@@ -825,6 +818,14 @@ class DBUpdateBehaviour(DynamicNFTBaseBehaviour):
             ).round_sequence.abci_app.last_timestamp.timestamp()
         except ABCIAppInternalError:
             self.context.logger.info("Last timetstamp is not yet set")
+
+        self.context.logger.info(
+            f"Current members: {self.synchronized_data.members}\n"
+            f"Current images: {self.synchronized_data.images}\n"
+            f"Current redirects: {self.synchronized_data.redirects}\n"
+            f"Updating database tables. Updates: {self.synchronized_data.most_voted_member_updates}\n"
+            f"Last update timestamp: {last_update_time}\n"
+        )
 
         with self.context.benchmark_tool.measure(
             self.behaviour_id,

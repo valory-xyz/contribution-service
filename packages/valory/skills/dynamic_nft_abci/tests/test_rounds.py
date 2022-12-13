@@ -423,11 +423,16 @@ class TestDBUpdateRound(BaseDynamicNFTRoundTestClass):
                 ),
                 final_data={
                     "images": get_dummy_images(),
+                    "last_update_time": json.loads(get_db_update_payload_serialized())[
+                        "last_update_time"
+                    ],
+                    "redirects": {},
                 },
                 event=Event.DONE,
                 most_voted_payload=get_db_update_payload_serialized(),
                 synchronized_data_attr_checks=[
                     lambda _synchronized_data: _synchronized_data.images,
+                    lambda _synchronized_data: _synchronized_data.last_update_time,
                 ],
             ),
         ),

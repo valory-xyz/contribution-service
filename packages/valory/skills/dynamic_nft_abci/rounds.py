@@ -90,7 +90,7 @@ class SynchronizedData(BaseSynchronizedData):
     @property
     def last_update_time(self) -> float:
         """Get the last update time."""
-        return cast(float, self.db.get("last_update_time", {}))
+        return cast(float, self.db.get("last_update_time", None))
 
 
 class ContributionAbstractRound(AbstractRound[Event, TransactionType], ABC):
@@ -324,4 +324,9 @@ class DynamicNFTAbciApp(AbciApp[Event]):
     event_to_timeout: EventToTimeout = {
         Event.ROUND_TIMEOUT: 30.0,
     }
-    cross_period_persisted_keys: List[str] = ["members", "images", "redirects"]
+    cross_period_persisted_keys: List[str] = [
+        "members",
+        "images",
+        "redirects",
+        "last_update_time",
+    ]
