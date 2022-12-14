@@ -166,7 +166,7 @@ class TestHttpHandler(BaseSkillTestCase):
             HandlerTestCase(
                 name="uri in redirects",
                 request_url=f"{TOKEN_URI_BASE}0",
-                token_to_data={0: {"image_hash": "some_image_hash"}},
+                token_to_data={"0": {"image_hash": "some_image_hash"}},
                 response_status_code=OK_CODE,
                 response_status_text="Success",
                 response_headers="Content-Type: application/json\nsome_headers",

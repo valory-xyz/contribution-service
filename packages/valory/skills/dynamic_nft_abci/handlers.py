@@ -193,7 +193,7 @@ class HttpHandler(BaseHttpHandler):
         """
         # Get the requested uri and the redirects table
         request_uri = http_msg.url
-        token_id = int(request_uri.split("/")[-1])
+        token_id = str(request_uri.split("/")[-1])
         token_to_data = self.synchronized_data.token_to_data
 
         if token_id not in token_to_data:
