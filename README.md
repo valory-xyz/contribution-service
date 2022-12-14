@@ -64,7 +64,7 @@ have minted a token and verified their addresses through Discord. NFT images wil
       # Output
       {
       "title": "Autonolas Contribute Badges",
-      "name": "Badge 14",
+      "name": "Badge 1",
       "description": "This NFT recognizes the contributions made by the holder to the Autonolas Community.",
       "image": "ipfs://bafybeiabtdl53v2a3irrgrg7eujzffjallpymli763wvhv6gceurfmcemm",
       "attributes": []
