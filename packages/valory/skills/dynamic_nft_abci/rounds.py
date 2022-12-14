@@ -82,6 +82,11 @@ class SynchronizedData(BaseSynchronizedData):
         """Get the most_voted_token_updates."""
         return cast(Dict, self.db.get_strict("most_voted_token_updates"))
 
+    @property
+    def last_update_time(self) -> float:
+        """Get the last update time."""
+        return cast(float, self.db.get("last_update_time", None))
+
 
 class ContributionAbstractRound(AbstractRound[Event, TransactionType], ABC):
     """Abstract round for the APY estimation skill."""
@@ -233,6 +238,7 @@ class DBUpdateRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
             token_to_data = self.synchronized_data.token_to_data
             images = self.synchronized_data.images
             updates = self.synchronized_data.most_voted_token_updates
+            last_update_time = json.loads(self.most_voted_payload)["last_update_time"]
 
             for (
                 token_id,
@@ -245,6 +251,7 @@ class DBUpdateRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
             synchronized_data = self.synchronized_data.update(
                 synchronized_data_class=SynchronizedData,
                 token_to_data=token_to_data,
+                last_update_time=last_update_time,
             )
             return synchronized_data, Event.DONE
         if not self.is_majority_possible(
@@ -300,4 +307,8 @@ class DynamicNFTAbciApp(AbciApp[Event]):
     event_to_timeout: EventToTimeout = {
         Event.ROUND_TIMEOUT: 30.0,
     }
-    cross_period_persisted_keys: List[str] = ["token_to_data", "images"]
+    cross_period_persisted_keys: List[str] = [
+        "token_to_data",
+        "images",
+        "last_update_time",
+    ]
