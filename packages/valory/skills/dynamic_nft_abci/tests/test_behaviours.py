@@ -20,13 +20,14 @@
 """This package contains round behaviours of DynamicNFTAbciApp."""
 
 import copy
+import datetime
 import json
 import os
 import shutil
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Iterator, Optional, Type
+from typing import Any, Dict, Iterator, Optional, Type, cast
 from unittest import mock
 from unittest.mock import MagicMock, patch
 
@@ -55,6 +56,7 @@ from packages.valory.skills.dynamic_nft_abci.behaviours import (
     LeaderboardObservationBehaviour,
     NewMembersBehaviour,
 )
+from packages.valory.skills.dynamic_nft_abci.models import SharedState
 from packages.valory.skills.dynamic_nft_abci.rounds import (
     Event,
     FinishedDBUpdateRound,
@@ -1015,6 +1017,9 @@ class TestDBUpdateBehaviour(BaseDynamicNFTTest):
     )
     def test_run(self, test_case: BehaviourTestCase) -> None:
         """Run tests."""
+        time_in_future = datetime.datetime.now() + datetime.timedelta(hours=10)
+        state = cast(SharedState, self._skill.skill_context.state)
+        state.round_sequence.abci_app.update_time(time_in_future)
         self.fast_forward(test_case.initial_data)
         self.complete(test_case.event)
 

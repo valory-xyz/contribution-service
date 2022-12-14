@@ -40,6 +40,7 @@ from packages.valory.skills.dynamic_nft_abci.handlers import (
     HttpHandler,
     NOT_FOUND_CODE,
     OK_CODE,
+    Route,
 )
 from packages.valory.skills.dynamic_nft_abci.models import DEFAULT_ADDRESS
 from packages.valory.skills.dynamic_nft_abci.tests.test_models import DummySheetApi
@@ -64,6 +65,15 @@ def get_dummy_metadata(token_id, redirect_uri):
         "description": "This NFT recognizes the contributions made by the holder to the Autonolas Community.",
         "image": f"ipfs://{image_hash}",
         "attributes": [],  # TODO: add attributes
+    }
+
+
+def get_dummy_health():
+    """Get the dummy health data"""
+    return {
+        "seconds_since_last_reset": 0,
+        "healthy": True,
+        "seconds_until_next_update": 10,
     }
 
 
@@ -190,6 +200,15 @@ class TestHttpHandler(BaseSkillTestCase):
                 response_body=b"",
                 method="get",
             ),
+            HandlerTestCase(
+                name="healthcheck",
+                request_url=f"{TOKEN_URI_BASE}healthcheck",
+                redirects={},
+                response_status_code=OK_CODE,
+                response_status_text="Success",
+                response_headers="Content-Type: application/json\nsome_headers",
+                body=json.dumps(get_dummy_health()).encode("utf-8"),
+            ),
         ],
     )
     def test_handle_request_get(self, test_case):
@@ -216,8 +235,10 @@ class TestHttpHandler(BaseSkillTestCase):
                 self.http_handler.context.state, "_round_sequence"
             ) as mock_round_sequence:
                 mock_round_sequence.latest_synchronized_data.db = {
-                    "redirects": test_case.redirects
+                    "redirects": test_case.redirects,
+                    "last_update_time": 5,
                 }
+                mock_round_sequence.abci_app.last_timestamp.timestamp = lambda: 5
                 self.http_handler.handle(incoming_message)
 
         # after
@@ -451,3 +472,21 @@ class TestHttpHandler(BaseSkillTestCase):
             ),
         )
         assert self.http_handler._get_handler(http_msg=incoming_message) == (None, {})
+
+    @pytest.mark.parametrize(
+        "url, expected_value",
+        [
+            ("wrong_url", Route.NONE),
+            ("http://pfp.staging.autonolas.tech/healthcheck", Route.HEALTH),
+            ("http://pfp.staging.autonolas.tech/healt-hcheck", Route.NONE),
+            ("http://pfp.staging.autonolas.tech/1", Route.METADATA),
+            ("http://pfp.staging.autonolas.tech/999", Route.METADATA),
+            ("http://pfp.staging.autonolas.tech/-999", Route.NONE),
+        ],
+    )
+    def test_check_url(self, url, expected_value):
+        """Test check_url"""
+        actual_value = self.http_handler.check_url(url)
+        assert (
+            actual_value.value == expected_value.value
+        ), f"Wrong value for {url}. Expected {expected_value}, got {actual_value}"

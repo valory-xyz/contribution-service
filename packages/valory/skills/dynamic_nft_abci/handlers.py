@@ -21,7 +21,8 @@
 
 import json
 import re
-from typing import Callable, Dict, Optional, Tuple, cast
+from enum import Enum
+from typing import cast
 from urllib.parse import urlparse
 
 from aea.exceptions import AEAEnforceError
@@ -53,6 +54,7 @@ from packages.valory.skills.dynamic_nft_abci.dialogues import (
     HttpDialogue,
     HttpDialogues,
 )
+from packages.valory.skills.dynamic_nft_abci.models import SharedState
 from packages.valory.skills.dynamic_nft_abci.rounds import SynchronizedData
 
 
@@ -64,6 +66,14 @@ TendermintHandler = BaseTendermintHandler
 OK_CODE = 200
 NOT_FOUND_CODE = 404
 BAD_REQUEST_CODE = 400
+
+
+class Route(Enum):
+    """Handling route class"""
+
+    HEALTH = "health"
+    METADATA = "metadata"
+    NONE = "none"
 
 
 class HttpHandler(BaseHttpHandler):
@@ -94,8 +104,8 @@ class HttpHandler(BaseHttpHandler):
             db=self.context.state.round_sequence.latest_synchronized_data.db
         )
 
-    def _get_handler(self, http_msg: HttpMessage) -> Tuple[Optional[Callable], Dict]:
-        """Check if an url is meant to be handled in this handler and return its handling method
+    def check_url(self, url) -> Route:
+        """Check if an url is meant to be handled in this handler
 
         We expect url to match the pattern {hostname}/.*,
         where hostname is allowed to be localhost, 127.0.0.1 or the token_uri_base's hostname.
@@ -108,41 +118,20 @@ class HttpHandler(BaseHttpHandler):
         :param url: the url to check
         :returns: the handling method if the message is intended to be handled by this handler, None otherwise, and the regex captures
         """
+        uri_base_hostname = urlparse(self.context.params.token_uri_base).hostname
+        METADATA_URL = rf".*({uri_base_hostname}|localhost|127.0.0.1)(:\d+)?\/\d+"
+        HEALTH_URL = rf".*({uri_base_hostname}|localhost|127.0.0.1)(:\d+)?\/healthcheck"
 
-        # hassatr raises here so we need a try-except even for attr checking purposes
-        try:
-            if not hasattr(http_msg, "url"):
-                return None, {}
-        except AEAEnforceError:
-            return None, {}
+        if re.match(METADATA_URL, url):
+            return Route.METADATA
 
-        if not re.match(self.handler_url_regex, http_msg.url):
-            self.context.logger.info(
-                f"The url {http_msg.url} does not match the DynamicNFT HttpHandler's pattern"
-            )
-            return None, {}
-
-        if http_msg.method in ("get", "head"):
-
-            if re.match(self.metadata_url_regex, http_msg.url):
-                return self._handle_get_metadata, {}
-
-            if re.match(self.leaderboard_url_regex, http_msg.url):
-                return self._handle_get_leaderboard, {}
-
-            m = re.match(self.address_status_url_regex, http_msg.url)
-            if m:
-                return self._handle_get_address_status, m.groupdict()
-
-        if http_msg.method in ("post"):
-
-            if re.match(self.link_wallet_url_regex, http_msg.url):
-                return self._handle_post_link, {}
+        if re.match(HEALTH_URL, url):
+            return Route.HEALTH
 
         self.context.logger.info(
-            f"The message [{http_msg.method}] {http_msg.url} is intended for the DynamicNFT HttpHandler but did not match any valid pattern"
+            f"The url {url} does not match the DynamicNFT HttpHandler's pattern"
         )
-        return self._handle_bad_request, {}
+        return Route.NONE
 
     def handle(self, message: Message) -> None:
         """
@@ -153,12 +142,18 @@ class HttpHandler(BaseHttpHandler):
         http_msg = cast(HttpMessage, message)
         handler, kwargs = self._get_handler(http_msg)
 
-        # Check if this message is for this skill. If not, send to super()
+        # Check if this is a request sent from the http_server skill
         if (
             http_msg.performative != HttpMessage.Performative.REQUEST
             or message.sender != str(HTTP_SERVER_PUBLIC_ID.without_hash())
-            or not handler
         ):
+            super().handle(message)
+            return
+
+        # Check if this message is for this skill. If not, send to super()
+        # We expect requests to https://pfp.staging.autonolas.tech/{token_id}
+        handler_route = self.check_url(http_msg.url)
+        if handler_route == Route.NONE:
             super().handle(message)
             return
 
@@ -176,17 +171,10 @@ class HttpHandler(BaseHttpHandler):
             return
 
         # Handle message
-        self.context.logger.info(
-            "Received http request with method={}, url={} and body={!r}".format(
-                http_msg.method,
-                http_msg.url,
-                http_msg.body,
-            )
-        )
-        handler(http_msg, http_dialogue, **kwargs)
+        self._handle_request(http_msg, http_dialogue, handler_route)
 
-    def _handle_bad_request(
-        self, http_msg: HttpMessage, http_dialogue: HttpDialogue
+    def _handle_request(
+        self, http_msg: HttpMessage, http_dialogue: HttpDialogue, handler_route: Route
     ) -> None:
         """
         Handle a Http bad request.
@@ -203,10 +191,13 @@ class HttpHandler(BaseHttpHandler):
             headers=http_msg.headers,
             body=b"",
         )
-
-        # Send response
-        self.context.logger.info("Responding with: {}".format(http_response))
-        self.context.outbox.put_message(message=http_response)
+        if http_msg.method in ("get", "head"):
+            if handler_route == Route.METADATA:
+                self._handle_get_metadata(http_msg, http_dialogue)
+            if handler_route == Route.HEALTH:
+                self._handle_get_health(http_msg, http_dialogue)
+        else:
+            self._handle_non_get(http_msg, http_dialogue)  # reject other methods
 
     def _handle_get_metadata(
         self, http_msg: HttpMessage, http_dialogue: HttpDialogue
@@ -329,6 +320,59 @@ class HttpHandler(BaseHttpHandler):
             headers=http_msg.headers,
             body=b"",
         )
+        # Send response
+        self.context.logger.info("Responding with: {}".format(http_response))
+        self.context.outbox.put_message(message=http_response)
+
+    def _handle_get_health(
+        self, http_msg: HttpMessage, http_dialogue: HttpDialogue
+    ) -> None:
+        """
+        Handle a Http request of verb GET.
+
+        :param http_msg: the http message
+        :param http_dialogue: the http dialogue
+        """
+        last_update_time = self.synchronized_data.last_update_time
+
+        if last_update_time:
+            current_time = cast(
+                SharedState, self.context.state
+            ).round_sequence.abci_app.last_timestamp.timestamp()
+
+            observation_interval = self.context.params.observation_interval
+
+            seconds_since_last_reset = current_time - last_update_time
+            seconds_until_next_update = (
+                observation_interval - seconds_since_last_reset
+            )  # this can be negative if we have passed the estimated reset time without resetting
+            is_healthy = seconds_since_last_reset < 2 * observation_interval
+
+        else:
+            seconds_since_last_reset = None
+            is_healthy = None
+            seconds_until_next_update = None
+
+        data = {
+            "seconds_since_last_reset": seconds_since_last_reset,
+            "healthy": is_healthy,
+            "seconds_until_next_update": seconds_until_next_update,
+        }
+
+        self.context.logger.info(f"Responding with health data={data}")
+
+        content_header = "Content-Type: application/json\n"
+
+        http_response = http_dialogue.reply(
+            performative=HttpMessage.Performative.RESPONSE,
+            target_message=http_msg,
+            version=http_msg.version,
+            status_code=OK_CODE,
+            status_text="Success",
+            headers=f"{content_header}{http_msg.headers}",
+            body=json.dumps(data).encode("utf-8"),
+        )
+
         # Send response
         self.context.logger.info("Responding with: {}".format(http_response))
         self.context.outbox.put_message(message=http_response)

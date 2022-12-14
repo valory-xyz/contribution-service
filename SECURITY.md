@@ -8,7 +8,7 @@ The following table shows which versions of `contribution-service` are currently
 
 | Version   | Supported          |
 | --------- | ------------------ |
-| `N/A`     | :x:                |
+| `v0.1.0`  | ✔️                 |
 
 ## Reporting a Vulnerability
 
