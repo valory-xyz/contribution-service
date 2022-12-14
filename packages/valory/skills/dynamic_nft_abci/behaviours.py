@@ -380,9 +380,8 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
             # Get the oldest (lowest id) token and previous score for each member
             member_to_token = {}
             for token_id, token_data in self.synchronized_data.token_to_data.items():
-                if (
-                    token_data["address"] not in member_to_token
-                    or token_id < member_to_token[token_data["address"]]["token_id"]
+                if token_data["address"] not in member_to_token or int(token_id) < int(
+                    member_to_token[token_data["address"]]["token_id"]
                 ):
                     member_to_token[token_data["address"]] = {
                         "token_id": token_id,
