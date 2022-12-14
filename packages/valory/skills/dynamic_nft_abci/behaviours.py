@@ -382,7 +382,7 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
             for token_id, token_data in self.synchronized_data.token_to_data.items():
                 if (
                     token_data["address"] not in member_to_token
-                    or token_id < member_to_token[token_data["address"]["token_id"]]
+                    or token_id < member_to_token[token_data["address"]]["token_id"]
                 ):
                     member_to_token[token_data["address"]] = {
                         "token_id": token_id,

@@ -84,31 +84,31 @@ DYNAMIC_CONTRIBUTION_CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180
 BASIC_IMAGE_CID = "basic_image_cid"
 
 DUMMY_TOKEN_TO_DATA = {
-    1: {
+    "1": {
         "address": "0x54EfA9b1865FFE8c528fb375A7A606149598932A",
         "points": DEFAULT_POINTS,
         "image_code": DEFAULT_IMAGE_CODE,
         "image_hash": BASIC_IMAGE_CID,
     },
-    2: {
+    "2": {
         "address": "0x3c03a080638b3c176aB7D9ed56E25bC416dFf525",
         "points": DEFAULT_POINTS,
         "image_code": DEFAULT_IMAGE_CODE,
         "image_hash": BASIC_IMAGE_CID,
     },
-    3: {
+    "3": {
         "address": "0x44704AE66f0B9FF08a7b0584B49FE941AdD1bAE7",
         "points": DEFAULT_POINTS,
         "image_code": DEFAULT_IMAGE_CODE,
         "image_hash": BASIC_IMAGE_CID,
     },
-    4: {
+    "4": {
         "address": "0x19B043aD06C48aeCb2028B0f10503422BD0E0918",
         "points": DEFAULT_POINTS,
         "image_code": DEFAULT_IMAGE_CODE,
         "image_hash": BASIC_IMAGE_CID,
     },
-    5: {
+    "5": {
         "address": "0x8325c5e4a56E352355c590E4A43420840F067F98",
         "points": DEFAULT_POINTS,
         "image_code": DEFAULT_IMAGE_CODE,
