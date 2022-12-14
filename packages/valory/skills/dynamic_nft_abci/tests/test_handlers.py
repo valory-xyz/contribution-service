@@ -51,9 +51,8 @@ HTTP_SERVER_SENDER = str(HTTP_SERVER_PUBLIC_ID.without_hash())
 TOKEN_URI_BASE = "https://pfp.staging.autonolas.tech/"  # nosec
 
 
-def get_dummy_metadata(token_id, redirect_uri):
+def get_dummy_metadata(token_id, image_hash):
     """Get the dummy token metadata"""
-    image_hash = redirect_uri.split("/")[-1]  # get the hash only
     return {
         "title": "Autonolas Contribute Badges",
         "name": f"Badge {token_id}",
@@ -104,7 +103,6 @@ class TestHttpHandler(BaseSkillTestCase):
         cls.get_method = "get"
         cls.post_method = "post"
         cls.url = f"{TOKEN_URI_BASE}0"
-        cls.url_redirect = "some_url_redirect"
         cls.version = "some_version"
         cls.headers = "some_headers"
         cls.body = b"some_body/"
@@ -164,7 +162,7 @@ class TestHttpHandler(BaseSkillTestCase):
         "test_case",
         [
             HandlerTestCase(
-                name="uri in redirects",
+                name="id in token table",
                 request_url=f"{TOKEN_URI_BASE}0",
                 token_to_data={"0": {"image_hash": "some_image_hash"}},
                 response_status_code=OK_CODE,
@@ -175,7 +173,7 @@ class TestHttpHandler(BaseSkillTestCase):
                 ),
             ),
             HandlerTestCase(
-                name="uri not in redirects",
+                name="id not in token table",
                 request_url=f"{TOKEN_URI_BASE}1",
                 token_to_data={},
                 response_status_code=NOT_FOUND_CODE,

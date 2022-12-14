@@ -497,7 +497,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
         """Generate the images.
 
         Check if the changes list contains an image code
-        that is not present in the redirect  table. This happens when
+        that is not present in the token table. This happens when
         a member is granted a status whose corresponding image has never
         been used. For each of these cases, agents generate the new
         images and push them to IPFS.
@@ -806,7 +806,7 @@ class DBUpdateBehaviour(DynamicNFTBaseBehaviour):
         ImageCodeCalculationRound) must now reflect the new points and (if it applies)
         new image codes.
 
-        Redirect table: must be updated now to reflect the new redirects (if it applies).
+        Token table: must be updated now to reflect the new image redirects (if it applies).
         """
         last_update_time = cast(
             SharedState, self.context.state

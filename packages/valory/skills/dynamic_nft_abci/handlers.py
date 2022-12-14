@@ -191,14 +191,14 @@ class HttpHandler(BaseHttpHandler):
         :param http_msg: the http message
         :param http_dialogue: the http dialogue
         """
-        # Get the requested uri and the redirects table
+        # Get the requested uri and the token table
         request_uri = http_msg.url
         token_id = str(request_uri.split("/")[-1])
         token_to_data = self.synchronized_data.token_to_data
 
         if token_id not in token_to_data:
             self.context.logger.info(
-                f"Requested URL {request_uri} is not present in redirect table"
+                f"Requested URL {request_uri} is not present in token table"
             )
 
             http_response = http_dialogue.reply(
@@ -212,7 +212,7 @@ class HttpHandler(BaseHttpHandler):
             )
         else:
             self.context.logger.info(
-                f"Requested URL {request_uri} is present in redirect table"
+                f"Requested URL {request_uri} is present in token table"
             )
 
             image_hash = token_to_data[token_id]["image_hash"]
