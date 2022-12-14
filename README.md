@@ -1,6 +1,6 @@
 # Contribution Service
 A dynamic NFT service built with the open-autonomy framework. The service checks a spreadsheet that contains scores for all the community members that
-have minted a token and verified their addresses through Discord. NFT images will be upgraded according member scores.
+have minted a token and verified their addresses through Discord. NFT images will be upgraded according member scores. Find the frontend repository [here](https://github.com/valory-xyz/autonolas-contribution-service-frontend).
 
 - Clone the repository:
 
