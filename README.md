@@ -1,5 +1,6 @@
 # Contribution Service
-A dynamic NFT service built with the open-autonomy framework
+A dynamic NFT service built with the open-autonomy framework. The service checks a spreadsheet that contains scores for all the community members that
+have minted a token and verified their addresses through Discord. NFT images will be upgraded according member scores.
 
 - Clone the repository:
 
@@ -30,3 +31,30 @@ A dynamic NFT service built with the open-autonomy framework
 - Pull packages:
 
       autonomy packages sync --update-packages
+
+## Running the service
+
+- Fetch the service from the remote registry:
+
+      autonomy fetch --local --service valory/contribution
+      cd contribution/
+
+- Build the image
+
+      autonomy build-image
+
+- Export the environment variables: ETHEREUM_LEDGER_RPC, ETHEREUM_LEDGER_CHAIN_ID, LEADERBOARD_API_KEY, LEADERBOARD_SHEET_ID, OBSERVATION_INTERVAL, DYNAMIC_CONTRIBUTION_CONTRACT_ADDRESS.
+
+- Build the deployment:
+
+      autonomy deploy build --aev
+
+- Run the deployment:
+
+      autonomy deploy run --build-dir abci_build/
+
+- Some examples on how to curl the service endpoints from inside the container:
+
+      sudo apt install -y curl jq
+      curl localhost:8000/1 | jq
+      curl localhost:8000/healthcheck | jq
