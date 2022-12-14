@@ -47,7 +47,7 @@ have minted a token and verified their addresses through Discord. NFT images wil
 
 - Build the deployment:
 
-      autonomy deploy build --aev
+      autonomy deploy build
 
 - Run the deployment:
 
@@ -55,6 +55,28 @@ have minted a token and verified their addresses through Discord. NFT images wil
 
 - Some examples on how to curl the service endpoints from inside the container:
 
+      # Install curl and jq if they are not present
       sudo apt install -y curl jq
+
+      # Get the metadata for the token with id=1
       curl localhost:8000/1 | jq
+
+      # Output
+      {
+      "title": "Autonolas Contribute Badges",
+      "name": "Badge 14",
+      "description": "This NFT recognizes the contributions made by the holder to the Autonolas Community.",
+      "image": "ipfs://bafybeiabtdl53v2a3irrgrg7eujzffjallpymli763wvhv6gceurfmcemm",
+      "attributes": []
+      }
+
+      # Get the service health status
       curl localhost:8000/healthcheck | jq
+
+      # Output
+      {
+      "seconds_since_last_reset": 15.812911033630371,
+      "healthy": true,
+      "seconds_until_next_update": -5.812911033630371
+      }
+
