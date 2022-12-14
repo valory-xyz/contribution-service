@@ -515,7 +515,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
             for update in self.synchronized_data.most_voted_token_updates.values():
 
                 # Image already exists in the database
-                if update["image_code"] in self.synchronized_data.images:
+                if update["image_code"] in self.synchronized_data.image_code_to_hash:
                     continue
 
                 self.context.logger.info(
@@ -532,12 +532,12 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                     "An error happened while generating the new images"
                 )
                 status = "error"
-                new_image_code_to_hashes = {}
+                new_image_code_to_hash = {}
                 images_in_ipfs = {}
             else:
                 status = "success"
                 # Push to IPFS
-                new_image_code_to_hashes = {}
+                new_image_code_to_hash = {}
                 images_in_ipfs = {}
                 for image_code, image in new_image_code_to_images.items():
                     image_path = Path(
@@ -566,7 +566,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
 
                     image_in_ipfs = yield from self.check_ipfs_image(image_url)
                     if image_in_ipfs:
-                        images_in_ipfs[image_code] = image_url
+                        images_in_ipfs[image_code] = image_hash
                         continue
 
                     # Send
@@ -588,10 +588,10 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                         f"Image with hash {image_hash} was pushed to IPFS"
                     )
 
-                    new_image_code_to_hashes[image_code] = image_hash
+                    new_image_code_to_hash[image_code] = image_hash
 
             self.context.logger.info(
-                f"Generated the following new images: {new_image_code_to_hashes}\n"
+                f"Generated the following new images: {new_image_code_to_hash}\n"
                 f"Found the following images already in IPFS: {images_in_ipfs}"
             )
 
@@ -603,7 +603,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                 json.dumps(
                     {
                         "status": status,
-                        "new_image_code_to_hashes": new_image_code_to_hashes,
+                        "new_image_code_to_hash": new_image_code_to_hash,
                         "images_in_ipfs": images_in_ipfs,
                     },
                     sort_keys=True,
@@ -811,7 +811,7 @@ class DBUpdateBehaviour(DynamicNFTBaseBehaviour):
 
         self.context.logger.info(
             f"Current tokens: {self.synchronized_data.token_to_data}\n"
-            f"Current images: {self.synchronized_data.images}\n"
+            f"Current images: {self.synchronized_data.image_code_to_hash}\n"
             f"Last update timestamp: {last_update_time}\n"
             f"Updating database tables. Updates: {self.synchronized_data.most_voted_token_updates}\n"
         )

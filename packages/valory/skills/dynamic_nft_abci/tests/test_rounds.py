@@ -148,7 +148,7 @@ def get_dummy_images() -> dict:
 def get_image_generation_payload_serialized(status: str = "success") -> str:
     """Dummy image generation payload"""
 
-    DUMMY_NEW_IMAGE_CODE_TO_HASHES = {
+    DUMMY_NEW_IMAGE_CODE_TO_HASH = {
         "000000": "dummy_hash_1",
         "010101": "dummy_hash_2",
         "020202": "dummy_hash_3",
@@ -156,7 +156,7 @@ def get_image_generation_payload_serialized(status: str = "success") -> str:
 
     return json.dumps(
         {
-            "new_image_code_to_hashes": DUMMY_NEW_IMAGE_CODE_TO_HASHES,
+            "new_image_code_to_hash": DUMMY_NEW_IMAGE_CODE_TO_HASH,
             "status": status,
             "images_in_ipfs": {},
         },
@@ -361,14 +361,14 @@ class TestImageGenerationRound(BaseDynamicNFTRoundTestClass):
                     data=get_image_generation_payload_serialized("success"),
                 ),
                 final_data={
-                    "images": json.loads(
+                    "image_code_to_hash": json.loads(
                         get_image_generation_payload_serialized("success")
-                    )["new_image_code_to_hashes"],
+                    )["new_image_code_to_hash"],
                 },
                 event=Event.DONE,
                 most_voted_payload=get_image_generation_payload_serialized("success"),
                 synchronized_data_attr_checks=[
-                    lambda _synchronized_data: _synchronized_data.images,
+                    lambda _synchronized_data: _synchronized_data.image_code_to_hash,
                 ],
             ),
             RoundTestCase(
@@ -401,7 +401,7 @@ class TestDBUpdateRound(BaseDynamicNFTRoundTestClass):
             RoundTestCase(
                 name="Happy path",
                 initial_data={
-                    "images": get_dummy_images(),
+                    "image_code_to_hash": get_dummy_images(),
                     "most_voted_token_updates": {},
                 },
                 payloads=get_payloads(
@@ -409,7 +409,7 @@ class TestDBUpdateRound(BaseDynamicNFTRoundTestClass):
                     data=get_db_update_payload_serialized(),
                 ),
                 final_data={
-                    "images": get_dummy_images(),
+                    "image_code_to_hash": get_dummy_images(),
                     "last_update_time": json.loads(get_db_update_payload_serialized())[
                         "last_update_time"
                     ],
@@ -417,7 +417,7 @@ class TestDBUpdateRound(BaseDynamicNFTRoundTestClass):
                 event=Event.DONE,
                 most_voted_payload=get_db_update_payload_serialized(),
                 synchronized_data_attr_checks=[
-                    lambda _synchronized_data: _synchronized_data.images,
+                    lambda _synchronized_data: _synchronized_data.image_code_to_hash,
                     lambda _synchronized_data: _synchronized_data.last_update_time,
                 ],
             ),

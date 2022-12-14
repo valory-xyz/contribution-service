@@ -747,7 +747,7 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
                     initial_data=dict(
                         most_voted_token_updates=get_dummy_updates(),
                         most_voted_api_data=DUMMY_API_DATA,
-                        images=get_dummy_images(),
+                        image_code_to_hash=get_dummy_images(),
                     ),
                     event=Event.DONE,
                 ),

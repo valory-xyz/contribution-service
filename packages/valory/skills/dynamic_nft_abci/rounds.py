@@ -68,9 +68,9 @@ class SynchronizedData(BaseSynchronizedData):
         return cast(dict, self.db.get("token_to_data", {}))
 
     @property
-    def images(self) -> dict:
+    def image_code_to_hash(self) -> dict:
         """Get the image table."""
-        return cast(dict, self.db.get("images", {}))
+        return cast(dict, self.db.get("image_code_to_hash", {}))
 
     @property
     def most_voted_api_data(self) -> Dict:
@@ -206,14 +206,14 @@ class ImageGenerationRound(ContributionAbstractRound, CollectSameUntilThresholdR
             if payload["status"] != "success":
                 return self.synchronized_data, Event.IMAGE_ERROR
             else:
-                images = {
-                    **self.synchronized_data.images,
-                    **payload["new_image_code_to_hashes"],
+                image_code_to_hash = {
+                    **self.synchronized_data.image_code_to_hash,
+                    **payload["new_image_code_to_hash"],
                     **payload["images_in_ipfs"],
                 }
                 synchronized_data = self.synchronized_data.update(
                     synchronized_data_class=SynchronizedData,
-                    images=images,
+                    image_code_to_hash=image_code_to_hash,
                 )
                 return synchronized_data, Event.DONE
         if not self.is_majority_possible(
@@ -236,7 +236,7 @@ class DBUpdateRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
         if self.threshold_reached:
 
             token_to_data = self.synchronized_data.token_to_data
-            images = self.synchronized_data.images
+            image_code_to_hash = self.synchronized_data.image_code_to_hash
             updates = self.synchronized_data.most_voted_token_updates
             last_update_time = json.loads(self.most_voted_payload)["last_update_time"]
 
@@ -246,7 +246,9 @@ class DBUpdateRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
             ) in updates.items():
                 token_to_data[token_id]["points"] = data["points"]
                 token_to_data[token_id]["image_code"] = data["image_code"]
-                token_to_data[token_id]["image_hash"] = images[data["image_code"]]
+                token_to_data[token_id]["image_hash"] = image_code_to_hash[
+                    data["image_code"]
+                ]
 
             synchronized_data = self.synchronized_data.update(
                 synchronized_data_class=SynchronizedData,
@@ -309,6 +311,6 @@ class DynamicNFTAbciApp(AbciApp[Event]):
     }
     cross_period_persisted_keys: List[str] = [
         "token_to_data",
-        "images",
+        "image_code_to_hash",
         "last_update_time",
     ]
