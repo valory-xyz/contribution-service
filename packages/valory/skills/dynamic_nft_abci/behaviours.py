@@ -389,6 +389,10 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
                         "points": token_data["points"],
                     }
 
+            self.context.logger.info(
+                f"Member to token relationship is: {member_to_token}"
+            )
+
             token_updates = {}
             for member, new_points in leaderboard.items():
                 # Skip members in the leaderboard that have not minted an NFT

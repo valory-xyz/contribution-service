@@ -108,12 +108,18 @@ DUMMY_TOKEN_TO_DATA = {
         "image_code": DEFAULT_IMAGE_CODE,
         "image_hash": BASIC_IMAGE_CID,
     },
-    "5": {
+    "5": {  # this one does not appear in the dummy leaderboard
         "address": "0x8325c5e4a56E352355c590E4A43420840F067F98",
         "points": DEFAULT_POINTS,
         "image_code": DEFAULT_IMAGE_CODE,
         "image_hash": BASIC_IMAGE_CID,
-    },  # this one does not appear in the dummy leaderboard
+    },
+    "6": {  # minted by the same address as token_id 1
+        "address": "0x54EfA9b1865FFE8c528fb375A7A606149598932A",
+        "points": DEFAULT_POINTS,
+        "image_code": DEFAULT_IMAGE_CODE,
+        "image_hash": BASIC_IMAGE_CID,
+    },
 }
 
 
