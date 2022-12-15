@@ -200,13 +200,3 @@ class TestSheet:
             self.sheet.get_wallet_status(DEFAULT_ADDRESS)
             == self.sheet.WalletStatus.LINKED.value
         )
-
-    def test_read_sheet(self):
-        """Test _read_sheet"""
-        # Simple tests for coverage purposes: read the sheet so self.rows is created
-        # Then, read again mocking the lock to verify that we get the desired result
-        self.sheet._read_sheet()
-        with mock.patch.object(self.sheet.lock, "locked", return_value=True):
-            assert self.sheet._read_sheet() == [
-                ["dummy_header", "dummy_header", "dummy_header", "dummy_header"]
-            ]

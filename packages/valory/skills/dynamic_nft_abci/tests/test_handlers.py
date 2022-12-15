@@ -40,7 +40,6 @@ from packages.valory.skills.dynamic_nft_abci.handlers import (
     HttpHandler,
     NOT_FOUND_CODE,
     OK_CODE,
-    Route,
 )
 from packages.valory.skills.dynamic_nft_abci.models import DEFAULT_ADDRESS
 from packages.valory.skills.dynamic_nft_abci.tests.test_models import DummySheetApi
@@ -453,42 +452,33 @@ class TestHttpHandler(BaseSkillTestCase):
         assert self.http_handler.teardown() is None
         self.assert_quantity_in_outbox(0)
 
-    def test_get_handler(self):
-        """Test the _get_handler method of the handler."""
-        # Url not set
-        assert self.http_handler._get_handler(http_msg=object()) == (None, {})
-
-        # Message not intended for this handler
-        incoming_message = cast(
-            HttpMessage,
-            self.build_incoming_message(
-                message_type=HttpMessage,
-                performative=HttpMessage.Performative.REQUEST,
-                to=self.skill_id,
-                sender=self.sender,
-                method=self.get_method,
-                url="unknown_url",
-                version=self.version,
-                headers=self.headers,
-                body=b"",
-            ),
-        )
-        assert self.http_handler._get_handler(http_msg=incoming_message) == (None, {})
-
     @pytest.mark.parametrize(
-        "url, expected_value",
+        "url, method, expected_handler_name",
         [
-            ("wrong_url", Route.NONE),
-            ("http://pfp.staging.autonolas.tech/healthcheck", Route.HEALTH),
-            ("http://pfp.staging.autonolas.tech/healt-hcheck", Route.NONE),
-            ("http://pfp.staging.autonolas.tech/1", Route.METADATA),
-            ("http://pfp.staging.autonolas.tech/999", Route.METADATA),
-            ("http://pfp.staging.autonolas.tech/-999", Route.NONE),
+            ("wrong_url", "get", None),
+            (
+                "http://pfp.staging.autonolas.tech/healthcheck",
+                "get",
+                "_handle_get_health",
+            ),
+            (
+                "http://pfp.staging.autonolas.tech/healt-hcheck",
+                "get",
+                "_handle_bad_request",
+            ),
+            ("http://pfp.staging.autonolas.tech/1", "get", "_handle_get_metadata"),
+            ("http://pfp.staging.autonolas.tech/999", "get", "_handle_get_metadata"),
+            ("http://pfp.staging.autonolas.tech/-999", "get", "_handle_bad_request"),
         ],
     )
-    def test_check_url(self, url, expected_value):
+    def test_get_handler(self, url, method, expected_handler_name):
         """Test check_url"""
-        actual_value = self.http_handler.check_url(url)
+        expected_handler = (
+            getattr(self.http_handler, expected_handler_name)
+            if expected_handler_name
+            else None
+        )
+        actual_handler, _ = self.http_handler._get_handler(url, method)
         assert (
-            actual_value.value == expected_value.value
-        ), f"Wrong value for {url}. Expected {expected_value}, got {actual_value}"
+            actual_handler == expected_handler
+        ), f"Wrong value for {url}. Expected {expected_handler}, got {actual_handler}"

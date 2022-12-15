@@ -95,7 +95,7 @@ class HttpHandler(BaseHttpHandler):
             db=self.context.state.round_sequence.latest_synchronized_data.db
         )
 
-    def _get_handler(self, http_msg: HttpMessage) -> Tuple[Optional[Callable], Dict]:
+    def _get_handler(self, url: str, method: str) -> Tuple[Optional[Callable], Dict]:
         """Check if an url is meant to be handled in this handler
 
         We expect url to match the pattern {hostname}/.*,
@@ -109,34 +109,34 @@ class HttpHandler(BaseHttpHandler):
         :param url: the url to check
         :returns: the handling method if the message is intended to be handled by this handler, None otherwise, and the regex captures
         """
-        if not re.match(self.handler_url_regex, http_msg.url):
+        if not re.match(self.handler_url_regex, url):
             self.context.logger.info(
-                f"The url {http_msg.url} does not match the DynamicNFT HttpHandler's pattern"
+                f"The url {url} does not match the DynamicNFT HttpHandler's pattern"
             )
             return None, {}
 
-        if http_msg.method in ("get", "head"):
+        if method in ("get", "head"):
 
-            if re.match(self.metadata_url_regex, http_msg.url):
+            if re.match(self.metadata_url_regex, url):
                 return self._handle_get_metadata, {}
 
-            if re.match(self.leaderboard_url_regex, http_msg.url):
+            if re.match(self.leaderboard_url_regex, url):
                 return self._handle_get_leaderboard, {}
 
-            m = re.match(self.address_status_url_regex, http_msg.url)
+            m = re.match(self.address_status_url_regex, url)
             if m:
                 return self._handle_get_address_status, m.groupdict()
 
-            if re.match(self.health_url_regex, http_msg.url):
+            if re.match(self.health_url_regex, url):
                 return self._handle_get_health, {}
 
-        if http_msg.method in ("post"):
+        if method in ("post"):
 
-            if re.match(self.link_wallet_url_regex, http_msg.url):
+            if re.match(self.link_wallet_url_regex, url):
                 return self._handle_post_link, {}
 
         self.context.logger.info(
-            f"The message [{http_msg.method}] {http_msg.url} is intended for the DynamicNFT HttpHandler but did not match any valid pattern"
+            f"The message [{method}] {url} is intended for the DynamicNFT HttpHandler but did not match any valid pattern"
         )
         return self._handle_bad_request, {}
 
@@ -157,7 +157,7 @@ class HttpHandler(BaseHttpHandler):
             return
 
         # Check if this message is for this skill. If not, send to super()
-        handler, kwargs = self._get_handler(http_msg)
+        handler, kwargs = self._get_handler(http_msg.url, http_msg.method)
         if not handler:
             super().handle(message)
             return

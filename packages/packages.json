@@ -1,10 +1,10 @@
 {
     "dev": {
         "contract/valory/dynamic_contribution/0.1.0": "bafybeiarslnpix5zt6st25ccwvqsmszui4g7c67z5xyui4hgfjfctmce7y",
-        "skill/valory/dynamic_nft_abci/0.1.0": "bafybeib2wchydpvxei3i27atze5xgxuxu3ae4nemlr22gfrbyh3cq5kfgi",
-        "skill/valory/contribution_skill_abci/0.1.0": "bafybeia3ptakacrjyv6yi5ebi6kbyrukyj5ci2mjlzarvgfacl374f6iby",
-        "agent/valory/contribution/0.1.0": "bafybeiapothj4qx23tpcpihbnvzeeo3nd5wuzc4idt63cl4mfngh4xbhui",
-        "service/valory/contribution/0.1.0": "bafybeicghpcm6bpg6b4gd4pynxnh2kpodrcdwupqixqgfuwugiftz6xxma"
+        "skill/valory/dynamic_nft_abci/0.1.0": "bafybeid5evugsi2yadblttp3h7xxsjaclc7nsxc5tao4umfyo3qetisjw4",
+        "skill/valory/contribution_skill_abci/0.1.0": "bafybeigj4od3l4fcv2a5vr5dyfss4brubjtwiczolwfwrkbguh2tfnjq7q",
+        "agent/valory/contribution/0.1.0": "bafybeih7qahgdyyf5mge543mqorve6skuwsub3i22k7ht4t3gap4dycehm",
+        "service/valory/contribution/0.1.0": "bafybeicd43wpwp3wncnk6krtzyzycw55qg6o4hsyas445zjh4fl4zoc43u"
     },
     "third_party": {
         "protocol/open_aea/signing/1.0.0": "bafybeiambqptflge33eemdhis2whik67hjplfnqwieoa6wblzlaf7vuo44",

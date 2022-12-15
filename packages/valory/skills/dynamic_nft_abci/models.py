@@ -163,7 +163,6 @@ class Sheet(Model):
         """Create a new user."""
         rows = self.read()
         last_entry_index = len(rows) + 1 if rows else 1  # Take the heaer into account
-
         # Build the values in the correct order
         indexes = [
             self.discord_id_col,
@@ -188,11 +187,11 @@ class Sheet(Model):
             "discord_id": row[self.discord_id_col - 1],
         }
 
-    @timed_lru_cache(seconds=CACHE_EXPIRATION_SECONDS, maxsize=CACHE_MAXSIZE)
+    # @timed_lru_cache(seconds=CACHE_EXPIRATION_SECONDS, maxsize=CACHE_MAXSIZE) # noqa: E800
     def _read_sheet(self):
         """Reads the sheet and returns the sheet as a matrix"""
         if self.lock.locked():
-            return self.rows, self.sheet
+            return self.rows
         with self.lock:
             self.rows = self.sheet.get_all_values(returnas="matrix")
         return self.rows
@@ -230,7 +229,7 @@ class Sheet(Model):
                     (row_index, self.points_col), VERIFICATION_POINTS
                 )
                 break
-        self._read_sheet.cache_clear()
+        # self._read_sheet.cache_clear() # noqa: E800
 
     def delete(self, discord_id):
         """Removes an user entry"""
