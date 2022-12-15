@@ -65,6 +65,7 @@ TendermintHandler = BaseTendermintHandler
 OK_CODE = 200
 NOT_FOUND_CODE = 404
 BAD_REQUEST_CODE = 400
+DISCORD_ID_REGEX = r"^\d{16,20}$"
 
 
 class HttpMethod(Enum):
@@ -305,6 +306,9 @@ class HttpHandler(BaseHttpHandler):
 
         discord_id = str(body["discord_id"])
         wallet_address = body["wallet_address"]
+
+        if not re.match(DISCORD_ID_REGEX, discord_id):
+            self._handle_bad_request(http_msg, http_dialogue)
 
         self.context.sheet.write(discord_id=discord_id, wallet_address=wallet_address)
         self._send_ok_response(http_msg, http_dialogue, {})
