@@ -30,7 +30,7 @@ from packages.valory.skills.dynamic_nft_abci.payloads import (
     ImageCodeCalculationPayload,
     ImageGenerationPayload,
     LeaderboardObservationPayload,
-    NewMembersPayload,
+    NewTokensPayload,
     TransactionType,
 )
 
@@ -48,9 +48,9 @@ class PayloadTestCase:
     "test_case",
     [
         PayloadTestCase(
-            payload_cls=NewMembersPayload,
+            payload_cls=NewTokensPayload,
             content="payload_test_content",
-            transaction_type=TransactionType.NEW_MEMBERS,
+            transaction_type=TransactionType.NEW_TOKENS,
         ),
         PayloadTestCase(
             payload_cls=LeaderboardObservationPayload,
