@@ -21,6 +21,7 @@
 
 import json
 import re
+from enum import Enum
 from typing import Callable, Dict, Optional, Tuple, cast
 from urllib.parse import urlparse
 
@@ -66,6 +67,14 @@ NOT_FOUND_CODE = 404
 BAD_REQUEST_CODE = 400
 
 
+class HttpMethod(Enum):
+    """Http methods"""
+
+    GET = "get"
+    HEAD = "head"
+    POST = "post"
+
+
 class HttpHandler(BaseHttpHandler):
     """This implements the echo handler."""
 
@@ -74,17 +83,29 @@ class HttpHandler(BaseHttpHandler):
     def setup(self) -> None:
         """Implement the setup."""
         uri_base_hostname = urlparse(self.context.params.token_uri_base).hostname
+
+        # Route regexes
         hostname_regex = rf".*({uri_base_hostname}|localhost|127.0.0.1)(:\d+)?"
         address_regex = r"0x[a-fA-F0-9]{40}"
-
         self.handler_url_regex = rf"{hostname_regex}\/.*"
-        self.metadata_url_regex = rf"{hostname_regex}\/\d+"
-        self.leaderboard_url_regex = rf"{hostname_regex}\/leaderboard"
-        self.address_status_url_regex = (
+        metadata_url_regex = rf"{hostname_regex}\/\d+"
+        leaderboard_url_regex = rf"{hostname_regex}\/leaderboard"
+        address_status_url_regex = (
             rf"{hostname_regex}\/address_status/(?P<address>{address_regex})"
         )
-        self.link_wallet_url_regex = rf"{hostname_regex}\/link"
-        self.health_url_regex = rf"{hostname_regex}\/healthcheck"
+        health_url_regex = rf"{hostname_regex}\/healthcheck"
+        link_wallet_url_regex = rf"{hostname_regex}\/link"
+
+        # Routes
+        self.routes = {
+            (HttpMethod.GET.value, HttpMethod.HEAD.value): [
+                (metadata_url_regex, self._handle_get_metadata),
+                (leaderboard_url_regex, self._handle_get_leaderboard),
+                (address_status_url_regex, self._handle_get_address_status),
+                (health_url_regex, self._handle_get_health),
+            ],
+            (HttpMethod.POST.value): [(link_wallet_url_regex, self._handle_post_link)],
+        }
 
         self.json_content_header = "Content-Type: application/json\n"
 
@@ -109,32 +130,25 @@ class HttpHandler(BaseHttpHandler):
         :param url: the url to check
         :returns: the handling method if the message is intended to be handled by this handler, None otherwise, and the regex captures
         """
+        # Check base url
         if not re.match(self.handler_url_regex, url):
             self.context.logger.info(
                 f"The url {url} does not match the DynamicNFT HttpHandler's pattern"
             )
             return None, {}
 
-        if method in ("get", "head"):
+        # Check if there is a route for this request
+        for methods, routes in self.routes.items():
+            if method not in methods:
+                continue
 
-            if re.match(self.metadata_url_regex, url):
-                return self._handle_get_metadata, {}
+            for route in routes:
+                # Routes are tuples like (route_regex, handle_method)
+                m = re.match(route[0], url)
+                if m:
+                    return route[1], m.groupdict()
 
-            if re.match(self.leaderboard_url_regex, url):
-                return self._handle_get_leaderboard, {}
-
-            m = re.match(self.address_status_url_regex, url)
-            if m:
-                return self._handle_get_address_status, m.groupdict()
-
-            if re.match(self.health_url_regex, url):
-                return self._handle_get_health, {}
-
-        if method in ("post"):
-
-            if re.match(self.link_wallet_url_regex, url):
-                return self._handle_post_link, {}
-
+        # No route found
         self.context.logger.info(
             f"The message [{method}] {url} is intended for the DynamicNFT HttpHandler but did not match any valid pattern"
         )
