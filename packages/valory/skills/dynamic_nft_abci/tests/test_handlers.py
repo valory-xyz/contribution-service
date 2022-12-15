@@ -81,6 +81,7 @@ class HandlerTestCase:
 
     name: str
     request_url: str
+    request_body: bytes
     token_to_data: Dict[str, str]
     response_status_code: int
     response_status_text: str
@@ -180,9 +181,10 @@ class TestHttpHandler(BaseSkillTestCase):
                 response_status_code=OK_CODE,
                 response_status_text="Success",
                 response_headers="Content-Type: application/json\nsome_headers",
-                body=json.dumps(get_dummy_metadata(0, "some_image_hash")).encode(
-                    "utf-8"
-                ),
+                response_body=json.dumps(
+                    get_dummy_metadata(0, "some_image_hash")
+                ).encode("utf-8"),
+                method="get",
             ),
             HandlerTestCase(
                 name="id not in token table",
@@ -329,7 +331,7 @@ class TestHttpHandler(BaseSkillTestCase):
                 name="get leaderboard",
                 request_url=LEADERBOARD_URI_BASE,
                 request_body=b"some_body/",
-                redirects={},
+                token_to_data={},
                 response_status_code=OK_CODE,
                 response_status_text="Success",
                 response_headers="Content-Type: application/json\nsome_headers",
@@ -340,7 +342,7 @@ class TestHttpHandler(BaseSkillTestCase):
                 name="get address status",
                 request_url=f"{ADDRESS_STATUS_URI_BASE}/{DEFAULT_ADDRESS}",
                 request_body=b"some_body/",
-                redirects={},
+                token_to_data={},
                 response_status_code=OK_CODE,
                 response_status_text="Success",
                 response_headers="Content-Type: application/json\nsome_headers",
@@ -358,7 +360,7 @@ class TestHttpHandler(BaseSkillTestCase):
                         "wallet_address": "discord_wallet_address",
                     }
                 ).encode("utf-8"),
-                redirects={},
+                token_to_data={},
                 response_status_code=OK_CODE,
                 response_status_text="Success",
                 response_headers="Content-Type: application/json\nsome_headers",
@@ -369,7 +371,7 @@ class TestHttpHandler(BaseSkillTestCase):
                 name="link wallet, not found",
                 request_url=f"{LINK_URI_BASE}/{DEFAULT_ADDRESS}",
                 request_body=json.dumps({}).encode("utf-8"),
-                redirects={},
+                token_to_data={},
                 response_status_code=NOT_FOUND_CODE,
                 response_status_text="Not found",
                 response_headers="some_headers",
@@ -407,7 +409,7 @@ class TestHttpHandler(BaseSkillTestCase):
             return_value="wallet_status",
         ):
             mock_round_sequence.latest_synchronized_data.db = {
-                "redirects": test_case.redirects
+                "token_to_data": test_case.token_to_data
             }
 
             self.http_handler.handle(incoming_message)
