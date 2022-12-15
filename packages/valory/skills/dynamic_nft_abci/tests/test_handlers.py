@@ -203,11 +203,13 @@ class TestHttpHandler(BaseSkillTestCase):
             HandlerTestCase(
                 name="healthcheck",
                 request_url=f"{TOKEN_URI_BASE}healthcheck",
+                request_body=b"some_body/",
                 redirects={},
                 response_status_code=OK_CODE,
                 response_status_text="Success",
                 response_headers="Content-Type: application/json\nsome_headers",
-                body=json.dumps(get_dummy_health()).encode("utf-8"),
+                response_body=json.dumps(get_dummy_health()).encode("utf-8"),
+                method="get",
             ),
         ],
     )

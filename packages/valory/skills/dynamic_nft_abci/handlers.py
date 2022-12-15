@@ -24,7 +24,6 @@ import re
 from typing import Callable, Dict, Optional, Tuple, cast
 from urllib.parse import urlparse
 
-from aea.exceptions import AEAEnforceError
 from aea.protocols.base import Message
 
 from packages.fetchai.connections.http_server.connection import (
