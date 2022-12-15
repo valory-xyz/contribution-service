@@ -54,26 +54,23 @@ def timed_lru_cache(seconds: int, maxsize: Optional[int] = None):
 
     def wrapper_cache(func):
         """Wrapper cache"""
-        print("I will use lru_cache")
         func = lru_cache(maxsize=maxsize)(func)
-        print("I'm setting func.lifetime")
         func.lifetime = timedelta(seconds=seconds)
-        print("I'm setting func.expiration")
         func.expiration = datetime.utcnow() + func.lifetime
 
         @wraps(func)
         def wrapped_func(*args, **kwargs):
             """Wrapped func"""
-            print("Check func expiration")
-            print(
-                f"datetime.utcnow(): {datetime.utcnow()}, func.expiration: {func.expiration}"
-            )
             if datetime.utcnow() >= func.expiration:
                 print("func.expiration lru_cache lifetime expired")
                 func.cache_clear()
                 func.expiration = datetime.utcnow() + func.lifetime
 
             return func(*args, **kwargs)
+
+        # Add missing methods to wrapped function
+        wrapped_func.cache_clear = func.cache_clear
+        wrapped_func.cache_info = func.cache_info
 
         return wrapped_func
 
@@ -185,7 +182,7 @@ class Sheet(Model):
             "discord_id": row[self.discord_id_col - 1],
         }
 
-    # @timed_lru_cache(seconds=CACHE_EXPIRATION_SECONDS, maxsize=CACHE_MAXSIZE) # noqa: E800
+    @timed_lru_cache(seconds=CACHE_EXPIRATION_SECONDS, maxsize=CACHE_MAXSIZE)
     def _read_sheet(self):
         """Reads the sheet and returns the sheet as a matrix"""
         if self.lock.locked():
@@ -227,7 +224,8 @@ class Sheet(Model):
                     (row_index, self.points_col), VERIFICATION_POINTS
                 )
                 break
-        # self._read_sheet.cache_clear() # noqa: E800
+
+        self._read_sheet.cache_clear()
 
     def delete(self, discord_id):
         """Removes an user entry"""
