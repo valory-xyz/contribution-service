@@ -55,9 +55,8 @@ ADDRESS_STATUS_URI_BASE = f"{TOKEN_URI_BASE}address_status"
 LINK_URI_BASE = f"{TOKEN_URI_BASE}link"
 
 
-def get_dummy_metadata(token_id, redirect_uri):
+def get_dummy_metadata(token_id, image_hash):
     """Get the dummy token metadata"""
-    image_hash = redirect_uri.split("/")[-1]  # get the hash only
     return {
         "title": "Autonolas Contribute Badges",
         "name": f"Badge {token_id}",
@@ -82,8 +81,7 @@ class HandlerTestCase:
 
     name: str
     request_url: str
-    request_body: bytes
-    redirects: Dict[str, str]
+    token_to_data: Dict[str, str]
     response_status_code: int
     response_status_text: str
     response_headers: str
@@ -111,7 +109,6 @@ class TestHttpHandler(BaseSkillTestCase):
         cls.get_method = "get"
         cls.post_method = "post"
         cls.url = f"{TOKEN_URI_BASE}0"
-        cls.url_redirect = "some_url_redirect"
         cls.version = "some_version"
         cls.headers = "some_headers"
         cls.body = b"some_body/"
@@ -176,23 +173,22 @@ class TestHttpHandler(BaseSkillTestCase):
         "test_case",
         [
             HandlerTestCase(
-                name="get metadata, uri in redirects",
+                name="id in token table",
                 request_url=f"{TOKEN_URI_BASE}0",
+                token_to_data={"0": {"image_hash": "some_image_hash"}},
                 request_body=b"some_body/",
-                redirects={"0": "some_url_redirect"},
                 response_status_code=OK_CODE,
                 response_status_text="Success",
                 response_headers="Content-Type: application/json\nsome_headers",
-                response_body=json.dumps(
-                    get_dummy_metadata(0, "some_url_redirect")
-                ).encode("utf-8"),
-                method="get",
+                body=json.dumps(get_dummy_metadata(0, "some_image_hash")).encode(
+                    "utf-8"
+                ),
             ),
             HandlerTestCase(
-                name="get metadata, uri not in redirects",
+                name="id not in token table",
                 request_url=f"{TOKEN_URI_BASE}1",
+                token_to_data={},
                 request_body=b"some_body/",
-                redirects={},
                 response_status_code=NOT_FOUND_CODE,
                 response_status_text="Not found",
                 response_headers="some_headers",
@@ -202,8 +198,8 @@ class TestHttpHandler(BaseSkillTestCase):
             HandlerTestCase(
                 name="healthcheck",
                 request_url=f"{TOKEN_URI_BASE}healthcheck",
+                token_to_data={},
                 request_body=b"some_body/",
-                redirects={},
                 response_status_code=OK_CODE,
                 response_status_text="Success",
                 response_headers="Content-Type: application/json\nsome_headers",
@@ -236,7 +232,7 @@ class TestHttpHandler(BaseSkillTestCase):
                 self.http_handler.context.state, "_round_sequence"
             ) as mock_round_sequence:
                 mock_round_sequence.latest_synchronized_data.db = {
-                    "redirects": test_case.redirects,
+                    "token_to_data": test_case.token_to_data,
                     "last_update_time": 5,
                 }
                 mock_round_sequence.abci_app.last_timestamp.timestamp = lambda: 5

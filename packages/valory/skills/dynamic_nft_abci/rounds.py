@@ -40,7 +40,7 @@ from packages.valory.skills.dynamic_nft_abci.payloads import (
     ImageCodeCalculationPayload,
     ImageGenerationPayload,
     LeaderboardObservationPayload,
-    NewMembersPayload,
+    NewTokensPayload,
 )
 
 
@@ -63,19 +63,14 @@ class SynchronizedData(BaseSynchronizedData):
     """
 
     @property
-    def members(self) -> dict:
-        """Get the member table."""
-        return cast(dict, self.db.get("members", {}))
+    def token_to_data(self) -> dict:
+        """Get the token table."""
+        return cast(dict, self.db.get("token_to_data", {}))
 
     @property
-    def images(self) -> dict:
+    def image_code_to_hash(self) -> dict:
         """Get the image table."""
-        return cast(dict, self.db.get("images", {}))
-
-    @property
-    def redirects(self) -> dict:
-        """Get the redirect table."""
-        return cast(dict, self.db.get("redirects", {}))
+        return cast(dict, self.db.get("image_code_to_hash", {}))
 
     @property
     def most_voted_api_data(self) -> Dict:
@@ -83,9 +78,9 @@ class SynchronizedData(BaseSynchronizedData):
         return cast(Dict, self.db.get_strict("most_voted_api_data"))
 
     @property
-    def most_voted_member_updates(self) -> Dict:
-        """Get the most_voted_member_updates."""
-        return cast(Dict, self.db.get_strict("most_voted_member_updates"))
+    def most_voted_token_updates(self) -> Dict:
+        """Get the most_voted_token_updates."""
+        return cast(Dict, self.db.get_strict("most_voted_token_updates"))
 
     @property
     def last_update_time(self) -> float:
@@ -102,11 +97,11 @@ class ContributionAbstractRound(AbstractRound[Event, TransactionType], ABC):
         return cast(SynchronizedData, super().synchronized_data)
 
 
-class NewMembersRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
-    """NewMemberListRound"""
+class NewTokensRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
+    """NewTokensRound"""
 
-    round_id: str = "new_members"
-    allowed_tx_type = NewMembersPayload.transaction_type
+    round_id: str = "new_tokens"
+    allowed_tx_type = NewTokensPayload.transaction_type
     payload_attribute: str = "content"
     synchronized_data_class = SynchronizedData
 
@@ -117,28 +112,20 @@ class NewMembersRound(ContributionAbstractRound, CollectSameUntilThresholdRound)
         if self.threshold_reached:
             payload = json.loads(self.most_voted_payload)
 
-            if payload == NewMembersRound.ERROR_PAYLOAD:
+            if payload == NewTokensRound.ERROR_PAYLOAD:
                 return self.synchronized_data, Event.CONTRACT_ERROR
 
-            new_member_to_data = payload["new_member_to_data"]
-            new_redirects = payload["new_redirects"]
+            new_token_to_data = payload["new_token_to_data"]
 
-            # Add the new members to the members table. Note that the new members have no points or image_code fields
-            members = {
-                **new_member_to_data,
-                **self.synchronized_data.members,
-            }
-
-            # Add redirects for new members
-            redirects = {
-                **new_redirects,
-                **self.synchronized_data.redirects,
+            # Add the new tokens to the token table
+            token_to_data = {
+                **new_token_to_data,
+                **self.synchronized_data.token_to_data,
             }
 
             synchronized_data = self.synchronized_data.update(
                 synchronized_data_class=SynchronizedData,
-                members=members,
-                redirects=redirects,
+                token_to_data=token_to_data,
             )
             return synchronized_data, Event.DONE
         if not self.is_majority_possible(
@@ -194,7 +181,7 @@ class ImageCodeCalculationRound(
         if self.threshold_reached:
             synchronized_data = self.synchronized_data.update(
                 synchronized_data_class=SynchronizedData,
-                most_voted_member_updates=json.loads(self.most_voted_payload),
+                most_voted_token_updates=json.loads(self.most_voted_payload),
             )
             return synchronized_data, Event.DONE
         if not self.is_majority_possible(
@@ -219,14 +206,14 @@ class ImageGenerationRound(ContributionAbstractRound, CollectSameUntilThresholdR
             if payload["status"] != "success":
                 return self.synchronized_data, Event.IMAGE_ERROR
             else:
-                images = {
-                    **self.synchronized_data.images,
-                    **payload["new_image_code_to_hashes"],
+                image_code_to_hash = {
+                    **self.synchronized_data.image_code_to_hash,
+                    **payload["new_image_code_to_hash"],
                     **payload["images_in_ipfs"],
                 }
                 synchronized_data = self.synchronized_data.update(
                     synchronized_data_class=SynchronizedData,
-                    images=images,
+                    image_code_to_hash=image_code_to_hash,
                 )
                 return synchronized_data, Event.DONE
         if not self.is_majority_possible(
@@ -248,26 +235,24 @@ class DBUpdateRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
         """Process the end of the block."""
         if self.threshold_reached:
 
-            members = self.synchronized_data.members
-            images = self.synchronized_data.images
-            redirects = self.synchronized_data.redirects
-            updates = self.synchronized_data.most_voted_member_updates
+            token_to_data = self.synchronized_data.token_to_data
+            image_code_to_hash = self.synchronized_data.image_code_to_hash
+            updates = self.synchronized_data.most_voted_token_updates
             last_update_time = json.loads(self.most_voted_payload)["last_update_time"]
 
             for (
-                member,
+                token_id,
                 data,
             ) in updates.items():
-                members[member]["points"] = data["points"]
-                members[member]["image_code"] = data["image_code"]
-
-                token_id = str(members[member]["token_id"])
-                redirects[token_id] = images[data["image_code"]]
+                token_to_data[token_id]["points"] = data["points"]
+                token_to_data[token_id]["image_code"] = data["image_code"]
+                token_to_data[token_id]["image_hash"] = image_code_to_hash[
+                    data["image_code"]
+                ]
 
             synchronized_data = self.synchronized_data.update(
                 synchronized_data_class=SynchronizedData,
-                members=members,
-                redirects=redirects,
+                token_to_data=token_to_data,
                 last_update_time=last_update_time,
             )
             return synchronized_data, Event.DONE
@@ -287,14 +272,14 @@ class FinishedDBUpdateRound(DegenerateRound, ABC):
 class DynamicNFTAbciApp(AbciApp[Event]):
     """DynamicNFTAbciApp"""
 
-    initial_round_cls: AppState = NewMembersRound
-    initial_states: Set[AppState] = {NewMembersRound}
+    initial_round_cls: AppState = NewTokensRound
+    initial_states: Set[AppState] = {NewTokensRound}
     transition_function: AbciAppTransitionFunction = {
-        NewMembersRound: {
+        NewTokensRound: {
             Event.DONE: LeaderboardObservationRound,
-            Event.CONTRACT_ERROR: NewMembersRound,
-            Event.NO_MAJORITY: NewMembersRound,
-            Event.ROUND_TIMEOUT: NewMembersRound,
+            Event.CONTRACT_ERROR: NewTokensRound,
+            Event.NO_MAJORITY: NewTokensRound,
+            Event.ROUND_TIMEOUT: NewTokensRound,
         },
         LeaderboardObservationRound: {
             Event.DONE: ImageCodeCalculationRound,
@@ -325,8 +310,7 @@ class DynamicNFTAbciApp(AbciApp[Event]):
         Event.ROUND_TIMEOUT: 30.0,
     }
     cross_period_persisted_keys: List[str] = [
-        "members",
-        "images",
-        "redirects",
+        "token_to_data",
+        "image_code_to_hash",
         "last_update_time",
     ]

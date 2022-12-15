@@ -29,7 +29,7 @@ from packages.valory.skills.abstract_round_abci.base import BaseTxPayload
 class TransactionType(Enum):
     """Enumeration of transaction types."""
 
-    NEW_MEMBERS = "new_members"
+    NEW_TOKENS = "new_tokens"
     LEADERBOARD_OBSERVATION = "leaderboard_observation"
     IMAGE_CODE_CALCULATION = "image_code_calculation"
     IMAGE_GENERATION = "image_generation"
@@ -59,10 +59,10 @@ class BaseDynamicNFTPayload(BaseTxPayload, ABC):
         return dict(content=self.content)
 
 
-class NewMembersPayload(BaseDynamicNFTPayload):
-    """Represent a transaction payload for the NewMembersRound."""
+class NewTokensPayload(BaseDynamicNFTPayload):
+    """Represent a transaction payload for the NewTokensRound."""
 
-    transaction_type = TransactionType.NEW_MEMBERS
+    transaction_type = TransactionType.NEW_TOKENS
 
 
 class LeaderboardObservationPayload(BaseDynamicNFTPayload):
