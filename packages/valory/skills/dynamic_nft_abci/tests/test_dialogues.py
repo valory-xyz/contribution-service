@@ -21,6 +21,7 @@
 
 from pathlib import Path
 from typing import cast
+from unittest.mock import patch
 
 from aea.test_tools.test_skill import BaseSkillTestCase, COUNTERPARTY_AGENT_ADDRESS
 
@@ -29,6 +30,7 @@ from packages.valory.skills.dynamic_nft_abci.dialogues import (
     HttpDialogue,
     HttpDialogues,
 )
+from packages.valory.skills.dynamic_nft_abci.tests.test_models import DummySheetApi
 
 
 PACKAGE_DIR = Path(__file__).parent.parent
@@ -42,7 +44,8 @@ class TestDialogues(BaseSkillTestCase):
     @classmethod
     def setup_class(cls):
         """Setup the test class."""
-        super().setup_class()
+        with patch("pygsheets.authorize", return_value=DummySheetApi()):
+            super().setup_class()
         cls.http_dialogues = cast(
             HttpDialogues, cls._skill.skill_context.http_dialogues
         )

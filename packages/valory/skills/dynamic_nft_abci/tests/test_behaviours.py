@@ -20,15 +20,16 @@
 """This package contains round behaviours of DynamicNFTAbciApp."""
 
 import copy
+import datetime
 import json
 import os
 import shutil
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Iterator, Optional, Type
+from typing import Any, Dict, Iterator, Optional, Type, cast
 from unittest import mock
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 from aea.crypto.ledger_apis import LedgerApis
@@ -49,18 +50,22 @@ from packages.valory.skills.abstract_round_abci.test_tools.base import (
 )
 from packages.valory.skills.dynamic_nft_abci.behaviours import (
     DBUpdateBehaviour,
+    DEFAULT_IMAGE_CODE,
+    DEFAULT_POINTS,
     DynamicNFTBaseBehaviour,
     ImageCodeCalculationBehaviour,
     ImageGenerationBehaviour,
     LeaderboardObservationBehaviour,
-    NewMembersBehaviour,
+    NewTokensBehaviour,
 )
+from packages.valory.skills.dynamic_nft_abci.models import SharedState
 from packages.valory.skills.dynamic_nft_abci.rounds import (
     Event,
     FinishedDBUpdateRound,
-    NewMembersRound,
+    NewTokensRound,
     SynchronizedData,
 )
+from packages.valory.skills.dynamic_nft_abci.tests.test_models import DummySheetApi
 
 
 @pytest.fixture(scope="module")
@@ -77,21 +82,45 @@ def ipfs_daemon() -> Iterator[bool]:
 use_ipfs_daemon = pytest.mark.usefixtures("ipfs_daemon")
 
 DYNAMIC_CONTRIBUTION_CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+BASIC_IMAGE_CID = "basic_image_cid"
 
-DUMMY_MEMBERS = {
-    "0x54EfA9b1865FFE8c528fb375A7A606149598932A": {
-        "points": 1600,
-        "image_code": "0001",
+DUMMY_TOKEN_TO_DATA = {
+    "1": {
+        "address": "0x54EfA9b1865FFE8c528fb375A7A606149598932A",
+        "points": DEFAULT_POINTS,
+        "image_code": DEFAULT_IMAGE_CODE,
+        "image_hash": BASIC_IMAGE_CID,
     },
-    "0x3c03a080638b3c176aB7D9ed56E25bC416dFf525": {
-        "points": 1000,
-        "image_code": "0001",
+    "2": {
+        "address": "0x3c03a080638b3c176aB7D9ed56E25bC416dFf525",
+        "points": DEFAULT_POINTS,
+        "image_code": DEFAULT_IMAGE_CODE,
+        "image_hash": BASIC_IMAGE_CID,
     },
-    "0x44704AE66f0B9FF08a7b0584B49FE941AdD1bAE7": {"points": 600, "image_code": "0001"},
-    "0x19B043aD06C48aeCb2028B0f10503422BD0E0918": {
-        "points": 100,
-        "image_code": "0001",
-    },  # this one does not appear in the dummy leaderboard
+    "3": {
+        "address": "0x44704AE66f0B9FF08a7b0584B49FE941AdD1bAE7",
+        "points": DEFAULT_POINTS,
+        "image_code": DEFAULT_IMAGE_CODE,
+        "image_hash": BASIC_IMAGE_CID,
+    },
+    "4": {
+        "address": "0x19B043aD06C48aeCb2028B0f10503422BD0E0918",
+        "points": DEFAULT_POINTS,
+        "image_code": DEFAULT_IMAGE_CODE,
+        "image_hash": BASIC_IMAGE_CID,
+    },
+    "5": {  # this one does not appear in the dummy leaderboard
+        "address": "0x8325c5e4a56E352355c590E4A43420840F067F98",
+        "points": DEFAULT_POINTS,
+        "image_code": DEFAULT_IMAGE_CODE,
+        "image_hash": BASIC_IMAGE_CID,
+    },
+    "6": {  # minted by the same address as token_id 1
+        "address": "0x54EfA9b1865FFE8c528fb375A7A606149598932A",
+        "points": DEFAULT_POINTS,
+        "image_code": DEFAULT_IMAGE_CODE,
+        "image_hash": BASIC_IMAGE_CID,
+    },
 }
 
 
@@ -211,8 +240,8 @@ def get_dummy_updates(error: bool = False) -> Dict:
     if error:
         return {"dummy_member_1": {"points": 1000, "image_code": "error_code"}}
     return {
-        "dummy_member_1": {"points": 55000, "image_code": "000101"},
-        "dummy_member_2": {"points": 105000, "image_code": "000102"},
+        "dummy_token_1": {"points": 55000, "image_code": "000101"},
+        "dummy_token_2": {"points": 105000, "image_code": "000102"},
     }
 
 
@@ -243,11 +272,18 @@ class BaseDynamicNFTTest(FSMBehaviourBaseCase):
     done_event = Event.DONE
     image_dir: Path
 
+    @classmethod
+    def setup_class(cls, **kwargs: Any) -> None:
+        """Setup class"""
+        with patch("pygsheets.authorize", return_value=DummySheetApi()):
+            super().setup_class(**kwargs)
+
     def setup(self, **kwargs: Any) -> None:
         """Setup test"""
         super().setup(**kwargs)
         self.image_dir = IMAGE_PATH
         Path(self.image_dir).mkdir()
+        self.http_handler.setup()
 
     def teardown(self) -> None:
         """Teardown test"""
@@ -281,10 +317,10 @@ class BaseDynamicNFTTest(FSMBehaviourBaseCase):
         )
 
 
-class TestNewMembersBehaviour(BaseDynamicNFTTest):
-    """Tests NewMembersBehaviour"""
+class TestNewTokensBehaviour(BaseDynamicNFTTest):
+    """Tests NewTokensBehaviour"""
 
-    behaviour_class = NewMembersBehaviour
+    behaviour_class = NewTokensBehaviour
     next_behaviour_class = LeaderboardObservationBehaviour
 
     def _mock_dynamic_contribution_contract_request(
@@ -337,11 +373,11 @@ class TestNewMembersBehaviour(BaseDynamicNFTTest):
         self.complete(test_case.event)
 
 
-class TestNewMembersBehaviourContractError(TestNewMembersBehaviour):
-    """Tests NewMembersBehaviour"""
+class TestNewTokensBehaviourContractError(TestNewTokensBehaviour):
+    """Tests NewTokensBehaviour"""
 
-    behaviour_class = NewMembersBehaviour
-    next_behaviour_class = NewMembersBehaviour
+    behaviour_class = NewTokensBehaviour
+    next_behaviour_class = NewTokensBehaviour
 
     @pytest.mark.parametrize(
         "test_case, kwargs",
@@ -354,7 +390,7 @@ class TestNewMembersBehaviourContractError(TestNewMembersBehaviour):
                 ),
                 {
                     "mock_response_data": dict(
-                        member_to_token_id=NewMembersRound.ERROR_PAYLOAD
+                        member_to_token_id=NewTokensRound.ERROR_PAYLOAD
                     ),
                     "mock_response_performative": ContractApiMessage.Performative.ERROR,
                 },
@@ -615,7 +651,8 @@ class TestImageCodeCalculationBehaviour(BaseDynamicNFTTest):
             BehaviourTestCase(
                 "Happy path",
                 initial_data=dict(
-                    members=DUMMY_MEMBERS, most_voted_api_data=DUMMY_API_DATA
+                    token_to_data=DUMMY_TOKEN_TO_DATA,
+                    most_voted_api_data=DUMMY_API_DATA,
                 ),
                 event=Event.DONE,
             ),
@@ -694,7 +731,7 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
                 BehaviourTestCase(
                     "Happy path",
                     initial_data=dict(
-                        most_voted_member_updates=get_dummy_updates(),
+                        most_voted_token_updates=get_dummy_updates(),
                         most_voted_api_data=DUMMY_API_DATA,
                     ),
                     event=Event.DONE,
@@ -708,7 +745,7 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
                 BehaviourTestCase(
                     "Happy path: images not in registry",
                     initial_data=dict(
-                        most_voted_member_updates=get_dummy_updates(),
+                        most_voted_token_updates=get_dummy_updates(),
                         most_voted_api_data=DUMMY_API_DATA,
                     ),
                     event=Event.DONE,
@@ -722,9 +759,9 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
                 BehaviourTestCase(
                     "Happy path: images already in database",
                     initial_data=dict(
-                        most_voted_member_updates=get_dummy_updates(),
+                        most_voted_token_updates=get_dummy_updates(),
                         most_voted_api_data=DUMMY_API_DATA,
-                        images=get_dummy_images(),
+                        image_code_to_hash=get_dummy_images(),
                     ),
                     event=Event.DONE,
                 ),
@@ -785,7 +822,7 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
         test_case = BehaviourTestCase(
             "Trigger image download from IPFS",
             initial_data=dict(
-                most_voted_member_updates=get_dummy_updates(),
+                most_voted_token_updates=get_dummy_updates(),
                 most_voted_api_data=DUMMY_API_DATA,
             ),
             event=Event.DONE,
@@ -863,7 +900,7 @@ class TestImageGenerationErrorBehaviour(BaseDynamicNFTTest):
             BehaviourTestCase(
                 "Generation error",
                 initial_data=dict(
-                    most_voted_member_updates=get_dummy_updates(error=True),
+                    most_voted_token_updates=get_dummy_updates(error=True),
                     most_voted_api_data=DUMMY_API_DATA,
                 ),
                 event=Event.IMAGE_ERROR,
@@ -882,7 +919,7 @@ class TestImageGenerationErrorBehaviour(BaseDynamicNFTTest):
                 BehaviourTestCase(
                     "Happy path",
                     initial_data=dict(
-                        most_voted_member_updates=get_dummy_updates(),
+                        most_voted_token_updates=get_dummy_updates(),
                         most_voted_api_data=DUMMY_API_DATA,
                     ),
                     event=Event.IMAGE_ERROR,
@@ -943,7 +980,7 @@ class TestImageGenerationErrorBehaviour(BaseDynamicNFTTest):
         test_case = BehaviourTestCase(
             "Happy path",
             initial_data=dict(
-                most_voted_member_updates=get_dummy_updates(),
+                most_voted_token_updates=get_dummy_updates(),
                 most_voted_api_data=DUMMY_API_DATA,
             ),
             event=Event.IMAGE_ERROR,
@@ -1000,13 +1037,16 @@ class TestDBUpdateBehaviour(BaseDynamicNFTTest):
         [
             BehaviourTestCase(
                 "Happy path",
-                initial_data={"most_voted_member_updates": {}},
+                initial_data={"most_voted_token_updates": {}},
                 event=Event.DONE,
             ),
         ],
     )
     def test_run(self, test_case: BehaviourTestCase) -> None:
         """Run tests."""
+        time_in_future = datetime.datetime.now() + datetime.timedelta(hours=10)
+        state = cast(SharedState, self._skill.skill_context.state)
+        state.round_sequence.abci_app.update_time(time_in_future)
         self.fast_forward(test_case.initial_data)
         self.complete(test_case.event)
 

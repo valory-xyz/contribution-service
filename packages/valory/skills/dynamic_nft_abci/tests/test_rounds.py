@@ -29,12 +29,16 @@ from packages.valory.skills.abstract_round_abci.base import BaseTxPayload
 from packages.valory.skills.abstract_round_abci.test_tools.rounds import (
     BaseCollectSameUntilThresholdRoundTest,
 )
+from packages.valory.skills.dynamic_nft_abci.behaviours import (
+    DEFAULT_IMAGE_CODE,
+    DEFAULT_POINTS,
+)
 from packages.valory.skills.dynamic_nft_abci.payloads import (
     DBUpdatePayload,
     ImageCodeCalculationPayload,
     ImageGenerationPayload,
     LeaderboardObservationPayload,
-    NewMembersPayload,
+    NewTokensPayload,
 )
 from packages.valory.skills.dynamic_nft_abci.rounds import (
     DBUpdateRound,
@@ -42,7 +46,7 @@ from packages.valory.skills.dynamic_nft_abci.rounds import (
     ImageCodeCalculationRound,
     ImageGenerationRound,
     LeaderboardObservationRound,
-    NewMembersRound,
+    NewTokensRound,
     SynchronizedData,
 )
 from packages.valory.skills.dynamic_nft_abci.tests.test_behaviours import (
@@ -50,42 +54,41 @@ from packages.valory.skills.dynamic_nft_abci.tests.test_behaviours import (
 )
 
 
-TOKEN_URI_BASE = "https://pfp.staging.autonolas.tech/"  # nosec
+BASIC_IMAGE_CID = "basic_image_cid"
 
-DUMMY_MEMBER_TO_DATA = {
-    "new_member_to_data": {
-        "0x54EfA9b1865FFE8c528fb375A7A606149598932A": {
-            "uri": f"{TOKEN_URI_BASE}1",
-            "points": None,
-            "image_code": None,
+
+DUMMY_TOKEN_TO_DATA = {
+    "new_token_to_data": {
+        "1": {
+            "address": "0x54EfA9b1865FFE8c528fb375A7A606149598932A",
+            "points": DEFAULT_POINTS,
+            "image_code": DEFAULT_IMAGE_CODE,
+            "image_hash": BASIC_IMAGE_CID,
         },
-        "0x3c03a080638b3c176aB7D9ed56E25bC416dFf525": {
-            "uri": f"{TOKEN_URI_BASE}2",
-            "points": None,
-            "image_code": None,
+        "2": {
+            "address": "0x3c03a080638b3c176aB7D9ed56E25bC416dFf525",
+            "points": DEFAULT_POINTS,
+            "image_code": DEFAULT_IMAGE_CODE,
+            "image_hash": BASIC_IMAGE_CID,
         },
-        "0x44704AE66f0B9FF08a7b0584B49FE941AdD1bAE7": {
-            "uri": f"{TOKEN_URI_BASE}3",
-            "points": None,
-            "image_code": None,
+        "3": {
+            "address": "0x44704AE66f0B9FF08a7b0584B49FE941AdD1bAE7",
+            "points": DEFAULT_POINTS,
+            "image_code": DEFAULT_IMAGE_CODE,
+            "image_hash": BASIC_IMAGE_CID,
         },
-        "0x19B043aD06C48aeCb2028B0f10503422BD0E0918": {
-            "uri": f"{TOKEN_URI_BASE}4",
-            "points": None,
-            "image_code": None,
+        "4": {
+            "address": "0x19B043aD06C48aeCb2028B0f10503422BD0E0918",
+            "points": DEFAULT_POINTS,
+            "image_code": DEFAULT_IMAGE_CODE,
+            "image_hash": BASIC_IMAGE_CID,
         },
-        "0x8325c5e4a56E352355c590E4A43420840F067F98": {
-            "uri": f"{TOKEN_URI_BASE}5",
-            "points": None,
-            "image_code": None,
+        "5": {
+            "address": "0x8325c5e4a56E352355c590E4A43420840F067F98",
+            "points": DEFAULT_POINTS,
+            "image_code": DEFAULT_IMAGE_CODE,
+            "image_hash": BASIC_IMAGE_CID,
         },  # this one does not appear in the dummy leaderboard
-    },
-    "new_redirects": {
-        "0x54EfA9b1865FFE8c528fb375A7A606149598932A": "dummy_basic_redirect",
-        "0x3c03a080638b3c176aB7D9ed56E25bC416dFf525": "dummy_basic_redirect",
-        "0x44704AE66f0B9FF08a7b0584B49FE941AdD1bAE7": "dummy_basic_redirect",
-        "0x19B043aD06C48aeCb2028B0f10503422BD0E0918": "dummy_basic_redirect",
-        "0x8325c5e4a56E352355c590E4A43420840F067F98": "dummy_basic_redirect",  # this one does not appear in the dummy leaderboard
     },
 }
 
@@ -106,13 +109,13 @@ def get_payloads(
     }
 
 
-def get_dummy_new_members_payload_serialized() -> str:
-    """Dummy new members payload"""
-    return json.dumps(DUMMY_MEMBER_TO_DATA, sort_keys=True)
+def get_dummy_new_tokens_payload_serialized() -> str:
+    """Dummy new tokens payload"""
+    return json.dumps(DUMMY_TOKEN_TO_DATA, sort_keys=True)
 
 
-def get_dummy_new_members_payload_error_serialized() -> str:
-    """Dummy new members payload"""
+def get_dummy_new_tokens_payload_error_serialized() -> str:
+    """Dummy new tokens payload"""
     return json.dumps({"error": True}, sort_keys=True)
 
 
@@ -133,16 +136,6 @@ def get_image_code_calculation_payload_serialized() -> str:
     return json.dumps(data, sort_keys=True)
 
 
-def get_dummy_members() -> str:
-    """Dummy members table"""
-    data = {
-        "member_a": {"points": 100, "image_code": "dummy_image_code_a", "token_id": 0},
-        "member_b": {"points": 200, "image_code": "dummy_image_code_b", "token_id": 1},
-        "member_c": {"points": 300, "image_code": "dummy_image_code_c", "token_id": 2},
-    }
-    return json.dumps(data, sort_keys=True)
-
-
 def get_dummy_images() -> dict:
     """Dummy image table"""
     return {
@@ -155,7 +148,7 @@ def get_dummy_images() -> dict:
 def get_image_generation_payload_serialized(status: str = "success") -> str:
     """Dummy image generation payload"""
 
-    DUMMY_NEW_IMAGE_CODE_TO_HASHES = {
+    DUMMY_NEW_IMAGE_CODE_TO_HASH = {
         "000000": "dummy_hash_1",
         "010101": "dummy_hash_2",
         "020202": "dummy_hash_3",
@@ -163,7 +156,7 @@ def get_image_generation_payload_serialized(status: str = "success") -> str:
 
     return json.dumps(
         {
-            "new_image_code_to_hashes": DUMMY_NEW_IMAGE_CODE_TO_HASHES,
+            "new_image_code_to_hash": DUMMY_NEW_IMAGE_CODE_TO_HASH,
             "status": status,
             "images_in_ipfs": {},
         },
@@ -173,7 +166,7 @@ def get_image_generation_payload_serialized(status: str = "success") -> str:
 
 def get_db_update_payload_serialized() -> str:
     """Dummy db update payload"""
-    return json.dumps({}, sort_keys=True)
+    return json.dumps({"last_update_time": 10}, sort_keys=True)
 
 
 @dataclass
@@ -223,10 +216,10 @@ class BaseDynamicNFTRoundTestClass(BaseCollectSameUntilThresholdRoundTest):
         )
 
 
-class TestNewMembersRound(BaseDynamicNFTRoundTestClass):
-    """Tests for NewMemberListRound."""
+class TestNewTokensRound(BaseDynamicNFTRoundTestClass):
+    """Tests for NewTokensRound."""
 
-    round_class = NewMembersRound
+    round_class = NewTokensRound
 
     @pytest.mark.parametrize(
         "test_case",
@@ -235,38 +228,34 @@ class TestNewMembersRound(BaseDynamicNFTRoundTestClass):
                 name="Happy path",
                 initial_data={},
                 payloads=get_payloads(
-                    payload_cls=NewMembersPayload,
-                    data=get_dummy_new_members_payload_serialized(),
+                    payload_cls=NewTokensPayload,
+                    data=get_dummy_new_tokens_payload_serialized(),
                 ),
                 final_data={
-                    "members": json.loads(get_dummy_new_members_payload_serialized())[
-                        "new_member_to_data"
-                    ],
-                    "redirects": json.loads(get_dummy_new_members_payload_serialized())[
-                        "new_redirects"
-                    ],
+                    "token_to_data": json.loads(
+                        get_dummy_new_tokens_payload_serialized()
+                    )["new_token_to_data"],
                 },
                 event=Event.DONE,
-                most_voted_payload=get_dummy_new_members_payload_serialized(),
+                most_voted_payload=get_dummy_new_tokens_payload_serialized(),
                 synchronized_data_attr_checks=[
-                    lambda _synchronized_data: _synchronized_data.members,
-                    lambda _synchronized_data: _synchronized_data.redirects,
+                    lambda _synchronized_data: _synchronized_data.token_to_data,
                 ],
             ),
             RoundTestCase(
                 name="Contract error",
                 initial_data={},
                 payloads=get_payloads(
-                    payload_cls=NewMembersPayload,
-                    data=get_dummy_new_members_payload_error_serialized(),
+                    payload_cls=NewTokensPayload,
+                    data=get_dummy_new_tokens_payload_error_serialized(),
                 ),
                 final_data={
-                    "members": json.loads(
-                        get_dummy_new_members_payload_error_serialized()
+                    "token_to_data": json.loads(
+                        get_dummy_new_tokens_payload_error_serialized()
                     ),
                 },
                 event=Event.CONTRACT_ERROR,
-                most_voted_payload=get_dummy_new_members_payload_error_serialized(),
+                most_voted_payload=get_dummy_new_tokens_payload_error_serialized(),
                 synchronized_data_attr_checks=[],
             ),
         ),
@@ -339,14 +328,14 @@ class TestImageCodeCalculationRound(BaseDynamicNFTRoundTestClass):
                     data=get_image_code_calculation_payload_serialized(),
                 ),
                 final_data={
-                    "most_voted_member_updates": json.loads(
+                    "most_voted_token_updates": json.loads(
                         get_image_code_calculation_payload_serialized()
                     ),
                 },
                 event=Event.DONE,
                 most_voted_payload=get_image_code_calculation_payload_serialized(),
                 synchronized_data_attr_checks=[
-                    lambda _synchronized_data: _synchronized_data.most_voted_member_updates,
+                    lambda _synchronized_data: _synchronized_data.most_voted_token_updates,
                 ],
             ),
         ),
@@ -372,14 +361,14 @@ class TestImageGenerationRound(BaseDynamicNFTRoundTestClass):
                     data=get_image_generation_payload_serialized("success"),
                 ),
                 final_data={
-                    "images": json.loads(
+                    "image_code_to_hash": json.loads(
                         get_image_generation_payload_serialized("success")
-                    )["new_image_code_to_hashes"],
+                    )["new_image_code_to_hash"],
                 },
                 event=Event.DONE,
                 most_voted_payload=get_image_generation_payload_serialized("success"),
                 synchronized_data_attr_checks=[
-                    lambda _synchronized_data: _synchronized_data.images,
+                    lambda _synchronized_data: _synchronized_data.image_code_to_hash,
                 ],
             ),
             RoundTestCase(
@@ -412,22 +401,24 @@ class TestDBUpdateRound(BaseDynamicNFTRoundTestClass):
             RoundTestCase(
                 name="Happy path",
                 initial_data={
-                    "members": json.loads(get_dummy_members()),
-                    "images": get_dummy_images(),
-                    "redirects": {},
-                    "most_voted_member_updates": json.loads(get_dummy_members()),
+                    "image_code_to_hash": get_dummy_images(),
+                    "most_voted_token_updates": {},
                 },
                 payloads=get_payloads(
                     payload_cls=DBUpdatePayload,
                     data=get_db_update_payload_serialized(),
                 ),
                 final_data={
-                    "images": get_dummy_images(),
+                    "image_code_to_hash": get_dummy_images(),
+                    "last_update_time": json.loads(get_db_update_payload_serialized())[
+                        "last_update_time"
+                    ],
                 },
                 event=Event.DONE,
                 most_voted_payload=get_db_update_payload_serialized(),
                 synchronized_data_attr_checks=[
-                    lambda _synchronized_data: _synchronized_data.images,
+                    lambda _synchronized_data: _synchronized_data.image_code_to_hash,
+                    lambda _synchronized_data: _synchronized_data.last_update_time,
                 ],
             ),
         ),

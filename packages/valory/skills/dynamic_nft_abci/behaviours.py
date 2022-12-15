@@ -48,13 +48,13 @@ from packages.valory.skills.dynamic_nft_abci.io_.store import (
     ExtendedSupportedFiletype,
     Storer,
 )
-from packages.valory.skills.dynamic_nft_abci.models import Params
+from packages.valory.skills.dynamic_nft_abci.models import Params, SharedState
 from packages.valory.skills.dynamic_nft_abci.payloads import (
     DBUpdatePayload,
     ImageCodeCalculationPayload,
     ImageGenerationPayload,
     LeaderboardObservationPayload,
-    NewMembersPayload,
+    NewTokensPayload,
 )
 from packages.valory.skills.dynamic_nft_abci.rounds import (
     DBUpdateRound,
@@ -62,7 +62,7 @@ from packages.valory.skills.dynamic_nft_abci.rounds import (
     ImageCodeCalculationRound,
     ImageGenerationRound,
     LeaderboardObservationRound,
-    NewMembersRound,
+    NewTokensRound,
     SynchronizedData,
 )
 from packages.valory.skills.dynamic_nft_abci.tools import SHEET_API_SCHEMA
@@ -70,6 +70,8 @@ from packages.valory.skills.dynamic_nft_abci.tools import SHEET_API_SCHEMA
 
 NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
 HTTP_TIMEOUT = 10
+DEFAULT_POINTS = 0
+DEFAULT_IMAGE_CODE = "000000"
 
 
 class DynamicNFTBaseBehaviour(BaseBehaviour):
@@ -90,56 +92,41 @@ class DynamicNFTBaseBehaviour(BaseBehaviour):
         return cast(Params, super().params)
 
 
-class NewMembersBehaviour(DynamicNFTBaseBehaviour):
-    """NewMemberListBehaviour"""
+class NewTokensBehaviour(DynamicNFTBaseBehaviour):
+    """NewTokensBehaviour"""
 
-    behaviour_id: str = "new_members"
-    matching_round: Type[AbstractRound] = NewMembersRound
+    behaviour_id: str = "new_tokens"
+    matching_round: Type[AbstractRound] = NewTokensRound
 
     def async_act(self) -> Generator:
-        """Get a list of the new members."""
+        """Get a list of the new tokens."""
         with self.context.benchmark_tool.measure(
             self.behaviour_id,
         ).local():
 
-            token_id_to_member = yield from self.get_token_id_to_member()
+            token_id_to_address = yield from self.get_token_id_to_member()
 
-            if token_id_to_member == NewMembersRound.ERROR_PAYLOAD:
-                payload_data = json.dumps(NewMembersRound.ERROR_PAYLOAD, sort_keys=True)
+            if token_id_to_address == NewTokensRound.ERROR_PAYLOAD:
+                payload_data = json.dumps(NewTokensRound.ERROR_PAYLOAD, sort_keys=True)
             else:
-                old_members = set(self.synchronized_data.members.keys())
+                old_tokens = set(self.synchronized_data.token_to_data.keys())
 
-                # Build the inverse mapping: member_to_token_id
-                # Take the first minted token into account only
-                member_to_token_id = {}
-                for token_id, member in token_id_to_member.items():
-                    if (
-                        member not in member_to_token_id
-                        or member_to_token_id[member] > token_id
-                    ):
-                        member_to_token_id[member] = token_id
-
-                # Add new members only
-                new_member_to_data = {
-                    member: {"token_id": token_id, "points": None, "image_code": None}
-                    for member, token_id in member_to_token_id.items()
-                    if member not in old_members
+                # Add new tokens only
+                new_token_to_data = {
+                    token_id: {
+                        "address": address,
+                        "points": DEFAULT_POINTS,
+                        "image_code": DEFAULT_IMAGE_CODE,
+                        "image_hash": self.context.params.basic_image_cid,
+                    }
+                    for token_id, address in token_id_to_address.items()
+                    if token_id not in old_tokens
                 }
-                self.context.logger.info(
-                    f"Got the new member list: {new_member_to_data}"
-                )
-
-                # Add new redirects
-                basic_image_url = f"{self.context.params.ipfs_gateway_base_url}{self.context.params.basic_image_cid}"
-
-                new_redirects = {}
-                for data in new_member_to_data.values():
-                    new_redirects[data["token_id"]] = basic_image_url
+                self.context.logger.info(f"Got the new token list: {new_token_to_data}")
 
                 payload_data = json.dumps(
                     {
-                        "new_member_to_data": new_member_to_data,
-                        "new_redirects": new_redirects,
+                        "new_token_to_data": new_token_to_data,
                     },
                     sort_keys=True,
                 )
@@ -149,7 +136,7 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
         with self.context.benchmark_tool.measure(
             self.behaviour_id,
         ).consensus():
-            payload = NewMembersPayload(self.context.agent_address, payload_data)
+            payload = NewTokensPayload(self.context.agent_address, payload_data)
             yield from self.send_a2a_transaction(payload)
             yield from self.wait_until_round_end()
 
@@ -171,7 +158,7 @@ class NewMembersBehaviour(DynamicNFTBaseBehaviour):
         )
         if contract_api_msg.performative != ContractApiMessage.Performative.STATE:
             self.context.logger.info("Error retrieving the token_id to member data")
-            return NewMembersRound.ERROR_PAYLOAD
+            return NewTokensRound.ERROR_PAYLOAD
         data = cast(dict, contract_api_msg.state.body["token_id_to_member"])
         self.context.logger.info(f"Got token_id to member data: {data}")
         return data
@@ -389,36 +376,51 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
             leaderboard = api_data["leaderboard"]
             layer_data = api_data["layers"]
             thresholds = {k: list(v.keys()) for k, v in layer_data.items()}
-            members = self.synchronized_data.members
 
-            member_updates = {}
+            # Get the oldest (lowest id) token and previous score for each member
+            member_to_token = {}
+            for token_id, token_data in self.synchronized_data.token_to_data.items():
+                if token_data["address"] not in member_to_token or int(token_id) < int(
+                    member_to_token[token_data["address"]]["token_id"]
+                ):
+                    member_to_token[token_data["address"]] = {
+                        "token_id": token_id,
+                        "points": token_data["points"],
+                    }
+
+            self.context.logger.info(
+                f"Member to token relationship is: {member_to_token}"
+            )
+
+            token_updates = {}
             for member, new_points in leaderboard.items():
                 # Skip members in the leaderboard that have not minted an NFT
-                if member not in members:
+                if member not in member_to_token.keys():
                     continue
-                if members[member]["points"] != new_points:
+                if member_to_token[member]["points"] != new_points:
                     self.context.logger.info(
                         f"Calculating image code for member {member}: points={new_points} thresholds={thresholds}"
                     )
                     image_code = self.points_to_code(new_points, thresholds)
-                    member_updates[member] = {
+                    token_updates[member_to_token[member]["token_id"]] = {
                         "points": new_points,
                         "image_code": image_code,
+                        "image_hash": None,  # Points have changed. This will be updated later.
                     }
                     self.context.logger.info(
-                        f"Image code for member {member} is {image_code}"
+                        f"New image code for member {member} [{new_points} points] is {image_code}"
                     )
 
-            member_updates_serialized = json.dumps(member_updates, sort_keys=True)
+            token_updates_serialized = json.dumps(token_updates, sort_keys=True)
             self.context.logger.info(
-                f"Calculated member updates: {member_updates_serialized}"
+                f"Calculated token updates: {token_updates_serialized}"
             )
 
         with self.context.benchmark_tool.measure(
             self.behaviour_id,
         ).consensus():
             payload = ImageCodeCalculationPayload(
-                self.context.agent_address, member_updates_serialized
+                self.context.agent_address, token_updates_serialized
             )
             yield from self.send_a2a_transaction(payload)
             yield from self.wait_until_round_end()
@@ -495,7 +497,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
         """Generate the images.
 
         Check if the changes list contains an image code
-        that is not present in the redirect  table. This happens when
+        that is not present in the token table. This happens when
         a member is granted a status whose corresponding image has never
         been used. For each of these cases, agents generate the new
         images and push them to IPFS.
@@ -513,10 +515,10 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
 
             # Get the image codes that have been never generated
             new_image_code_to_images = {}
-            for update in self.synchronized_data.most_voted_member_updates.values():
+            for update in self.synchronized_data.most_voted_token_updates.values():
 
                 # Image already exists in the database
-                if update["image_code"] in self.synchronized_data.images:
+                if update["image_code"] in self.synchronized_data.image_code_to_hash:
                     continue
 
                 self.context.logger.info(
@@ -533,12 +535,12 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                     "An error happened while generating the new images"
                 )
                 status = "error"
-                new_image_code_to_hashes = {}
+                new_image_code_to_hash = {}
                 images_in_ipfs = {}
             else:
                 status = "success"
                 # Push to IPFS
-                new_image_code_to_hashes = {}
+                new_image_code_to_hash = {}
                 images_in_ipfs = {}
                 for image_code, image in new_image_code_to_images.items():
                     image_path = Path(
@@ -567,7 +569,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
 
                     image_in_ipfs = yield from self.check_ipfs_image(image_url)
                     if image_in_ipfs:
-                        images_in_ipfs[image_code] = image_url
+                        images_in_ipfs[image_code] = image_hash
                         continue
 
                     # Send
@@ -589,10 +591,10 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                         f"Image with hash {image_hash} was pushed to IPFS"
                     )
 
-                    new_image_code_to_hashes[image_code] = image_hash
+                    new_image_code_to_hash[image_code] = image_hash
 
             self.context.logger.info(
-                f"Generated the following new images: {new_image_code_to_hashes}\n"
+                f"Generated the following new images: {new_image_code_to_hash}\n"
                 f"Found the following images already in IPFS: {images_in_ipfs}"
             )
 
@@ -604,7 +606,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                 json.dumps(
                     {
                         "status": status,
-                        "new_image_code_to_hashes": new_image_code_to_hashes,
+                        "new_image_code_to_hash": new_image_code_to_hash,
                         "images_in_ipfs": images_in_ipfs,
                     },
                     sort_keys=True,
@@ -804,13 +806,17 @@ class DBUpdateBehaviour(DynamicNFTBaseBehaviour):
         ImageCodeCalculationRound) must now reflect the new points and (if it applies)
         new image codes.
 
-        Redirect table: must be updated now to reflect the new redirects (if it applies).
+        Token table: must be updated now to reflect the new image redirects (if it applies).
         """
+        last_update_time = cast(
+            SharedState, self.context.state
+        ).round_sequence.abci_app.last_timestamp.timestamp()
+
         self.context.logger.info(
-            f"Current members: {self.synchronized_data.members}\n"
-            f"Current images: {self.synchronized_data.images}\n"
-            f"Current redirects: {self.synchronized_data.redirects}\n"
-            f"Updating database tables. Updates: {self.synchronized_data.most_voted_member_updates}\n"
+            f"Current tokens: {self.synchronized_data.token_to_data}\n"
+            f"Current images: {self.synchronized_data.image_code_to_hash}\n"
+            f"Last update timestamp: {last_update_time}\n"
+            f"Updating database tables. Updates: {self.synchronized_data.most_voted_token_updates}\n"
         )
 
         with self.context.benchmark_tool.measure(
@@ -819,7 +825,7 @@ class DBUpdateBehaviour(DynamicNFTBaseBehaviour):
             payload = DBUpdatePayload(
                 self.context.agent_address,
                 json.dumps(
-                    {},  # empty payload for now
+                    {"last_update_time": last_update_time},
                     sort_keys=True,
                 ),
             )
@@ -832,10 +838,10 @@ class DBUpdateBehaviour(DynamicNFTBaseBehaviour):
 class DynamicNFTRoundBehaviour(AbstractRoundBehaviour):
     """DynamicNFTRoundBehaviour"""
 
-    initial_behaviour_cls = NewMembersBehaviour
+    initial_behaviour_cls = NewTokensBehaviour
     abci_app_cls = DynamicNFTAbciApp
     behaviours: Set[Type[BaseBehaviour]] = [
-        NewMembersBehaviour,
+        NewTokensBehaviour,
         LeaderboardObservationBehaviour,
         ImageCodeCalculationBehaviour,
         ImageGenerationBehaviour,

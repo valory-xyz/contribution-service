@@ -21,6 +21,7 @@
 
 import json
 import re
+from enum import Enum
 from typing import Callable, Dict, Optional, Tuple, cast
 from urllib.parse import urlparse
 
@@ -52,6 +53,7 @@ from packages.valory.skills.dynamic_nft_abci.dialogues import (
     HttpDialogue,
     HttpDialogues,
 )
+from packages.valory.skills.dynamic_nft_abci.models import SharedState
 from packages.valory.skills.dynamic_nft_abci.rounds import SynchronizedData
 
 
@@ -65,6 +67,14 @@ NOT_FOUND_CODE = 404
 BAD_REQUEST_CODE = 400
 
 
+class HttpMethod(Enum):
+    """Http methods"""
+
+    GET = "get"
+    HEAD = "head"
+    POST = "post"
+
+
 class HttpHandler(BaseHttpHandler):
     """This implements the echo handler."""
 
@@ -73,16 +83,29 @@ class HttpHandler(BaseHttpHandler):
     def setup(self) -> None:
         """Implement the setup."""
         uri_base_hostname = urlparse(self.context.params.token_uri_base).hostname
+
+        # Route regexes
         hostname_regex = rf".*({uri_base_hostname}|localhost|127.0.0.1)(:\d+)?"
         address_regex = r"0x[a-fA-F0-9]{40}"
-
         self.handler_url_regex = rf"{hostname_regex}\/.*"
-        self.metadata_url_regex = rf"{hostname_regex}\/\d+"
-        self.leaderboard_url_regex = rf"{hostname_regex}\/leaderboard"
-        self.address_status_url_regex = (
+        metadata_url_regex = rf"{hostname_regex}\/\d+"
+        leaderboard_url_regex = rf"{hostname_regex}\/leaderboard"
+        address_status_url_regex = (
             rf"{hostname_regex}\/address_status/(?P<address>{address_regex})"
         )
-        self.link_wallet_url_regex = rf"{hostname_regex}\/link"
+        health_url_regex = rf"{hostname_regex}\/healthcheck"
+        link_wallet_url_regex = rf"{hostname_regex}\/link"
+
+        # Routes
+        self.routes = {
+            (HttpMethod.GET.value, HttpMethod.HEAD.value): [
+                (metadata_url_regex, self._handle_get_metadata),
+                (leaderboard_url_regex, self._handle_get_leaderboard),
+                (address_status_url_regex, self._handle_get_address_status),
+                (health_url_regex, self._handle_get_health),
+            ],
+            (HttpMethod.POST.value): [(link_wallet_url_regex, self._handle_post_link)],
+        }
 
         self.json_content_header = "Content-Type: application/json\n"
 
@@ -93,8 +116,8 @@ class HttpHandler(BaseHttpHandler):
             db=self.context.state.round_sequence.latest_synchronized_data.db
         )
 
-    def _get_handler(self, http_msg: HttpMessage) -> Tuple[Optional[Callable], Dict]:
-        """Check if an url is meant to be handled in this handler and return its handling method
+    def _get_handler(self, url: str, method: str) -> Tuple[Optional[Callable], Dict]:
+        """Check if an url is meant to be handled in this handler
 
         We expect url to match the pattern {hostname}/.*,
         where hostname is allowed to be localhost, 127.0.0.1 or the token_uri_base's hostname.
@@ -107,32 +130,27 @@ class HttpHandler(BaseHttpHandler):
         :param url: the url to check
         :returns: the handling method if the message is intended to be handled by this handler, None otherwise, and the regex captures
         """
-
-        if not re.match(self.handler_url_regex, http_msg.url):
+        # Check base url
+        if not re.match(self.handler_url_regex, url):
             self.context.logger.info(
-                f"The url {http_msg.url} does not match the DynamicNFT HttpHandler's pattern"
+                f"The url {url} does not match the DynamicNFT HttpHandler's pattern"
             )
             return None, {}
 
-        if http_msg.method in ("get", "head"):
+        # Check if there is a route for this request
+        for methods, routes in self.routes.items():
+            if method not in methods:
+                continue
 
-            if re.match(self.metadata_url_regex, http_msg.url):
-                return self._handle_get_metadata, {}
+            for route in routes:
+                # Routes are tuples like (route_regex, handle_method)
+                m = re.match(route[0], url)
+                if m:
+                    return route[1], m.groupdict()
 
-            if re.match(self.leaderboard_url_regex, http_msg.url):
-                return self._handle_get_leaderboard, {}
-
-            m = re.match(self.address_status_url_regex, http_msg.url)
-            if m:
-                return self._handle_get_address_status, m.groupdict()
-
-        if http_msg.method in ("post"):
-
-            if re.match(self.link_wallet_url_regex, http_msg.url):
-                return self._handle_post_link, {}
-
+        # No route found
         self.context.logger.info(
-            f"The message [{http_msg.method}] {http_msg.url} is intended for the DynamicNFT HttpHandler but did not match any valid pattern"
+            f"The message [{method}] {url} is intended for the DynamicNFT HttpHandler but did not match any valid pattern"
         )
         return self._handle_bad_request, {}
 
@@ -143,14 +161,18 @@ class HttpHandler(BaseHttpHandler):
         :param message: the message
         """
         http_msg = cast(HttpMessage, message)
-        handler, kwargs = self._get_handler(http_msg)
 
-        # Check if this message is for this skill. If not, send to super()
+        # Check if this is a request sent from the http_server skill
         if (
             http_msg.performative != HttpMessage.Performative.REQUEST
             or message.sender != str(HTTP_SERVER_PUBLIC_ID.without_hash())
-            or not handler
         ):
+            super().handle(message)
+            return
+
+        # Check if this message is for this skill. If not, send to super()
+        handler, kwargs = self._get_handler(http_msg.url, http_msg.method)
+        if not handler:
             super().handle(message)
             return
 
@@ -209,26 +231,23 @@ class HttpHandler(BaseHttpHandler):
         :param http_msg: the http message
         :param http_dialogue: the http dialogue
         """
-        # Get the requested uri and the redirects table
+        # Get the requested uri and the token table
         request_uri = http_msg.url
-        token_id = request_uri.split("/")[-1]
-        redirects = self.synchronized_data.redirects
+        token_id = str(request_uri.split("/")[-1])
+        token_to_data = self.synchronized_data.token_to_data
 
-        # Token not in redirects
-        if token_id not in redirects:
+        if token_id not in token_to_data:
             self.context.logger.info(
-                f"Requested URL {request_uri} is not present in redirect table"
+                f"Requested URL {request_uri} is not present in token table"
             )
             self._send_not_found_response(http_msg, http_dialogue)
             return
 
-        # Token in redirects
         self.context.logger.info(
-            f"Requested URL {request_uri} is present in redirect table"
+            f"Requested URL {request_uri} is present in token table"
         )
 
-        redirect_uri = redirects[token_id]
-        image_hash = redirect_uri.split("/")[-1]  # get the hash only
+        image_hash = token_to_data[token_id]["image_hash"]
 
         # Build token metadata
         metadata = {
@@ -289,6 +308,43 @@ class HttpHandler(BaseHttpHandler):
 
         self.context.sheet.write(discord_id=discord_id, wallet_address=wallet_address)
         self._send_ok_response(http_msg, http_dialogue, {})
+
+    def _handle_get_health(
+        self, http_msg: HttpMessage, http_dialogue: HttpDialogue
+    ) -> None:
+        """
+        Handle a Http request of verb GET.
+
+        :param http_msg: the http message
+        :param http_dialogue: the http dialogue
+        """
+        last_update_time = self.synchronized_data.last_update_time
+
+        if last_update_time:
+            current_time = cast(
+                SharedState, self.context.state
+            ).round_sequence.abci_app.last_timestamp.timestamp()
+
+            observation_interval = self.context.params.observation_interval
+
+            seconds_since_last_reset = current_time - last_update_time
+            seconds_until_next_update = (
+                observation_interval - seconds_since_last_reset
+            )  # this can be negative if we have passed the estimated reset time without resetting
+            is_healthy = seconds_since_last_reset < 2 * observation_interval
+
+        else:
+            seconds_since_last_reset = None
+            is_healthy = None
+            seconds_until_next_update = None
+
+        data = {
+            "seconds_since_last_reset": seconds_since_last_reset,
+            "healthy": is_healthy,
+            "seconds_until_next_update": seconds_until_next_update,
+        }
+
+        self._send_ok_response(http_msg, http_dialogue, data)
 
     def _send_ok_response(
         self, http_msg: HttpMessage, http_dialogue: HttpDialogue, data: Dict
