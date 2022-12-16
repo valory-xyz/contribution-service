@@ -19,6 +19,7 @@
 
 """This module contains the shared state for the abci skill of DynamicNFTAbciApp."""
 
+import tempfile
 from datetime import datetime, timedelta
 from enum import Enum
 from functools import lru_cache, wraps
@@ -130,7 +131,8 @@ class Sheet(Model):
         """Initialize GoogleSheets model."""
         # Get the service auth string and write it to a temporal file
         service_auth = kwargs.pop("service_auth", "{}")
-        service_auth_file_path = Path("/", "tmp", "service_auth.json")
+        tmp_dir = Path(tempfile.mkdtemp())
+        service_auth_file_path = Path(tmp_dir, "service_auth.json")
         with open(service_auth_file_path, "w") as f:
             f.write(service_auth)
 
