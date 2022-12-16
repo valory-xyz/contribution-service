@@ -19,7 +19,6 @@
 
 """This module contains the shared state for the abci skill of DynamicNFTAbciApp."""
 
-import json
 from datetime import datetime, timedelta
 from enum import Enum
 from functools import lru_cache, wraps
