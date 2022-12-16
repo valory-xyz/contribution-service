@@ -164,6 +164,8 @@ models:
     args: {}
     class_name: TendermintDialogues
 dependencies:
+  google-api-python-client:
+    version: ==2.69.0
   Pillow:
     version: ==9.2.0
   jsonschema:
