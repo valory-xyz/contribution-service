@@ -6,3 +6,5 @@ bf0b1d8c17c1eee74dfd7ce3d8865bc065c0028e:packages/valory/services/contribution/s
 a8e28883e82612bbe123ec3fe021ee7eeab4e7a0:packages/valory/agents/contribution/aea-config.yaml:generic-api-key:9
 68a7b2dcdea2de5ee228083d72434a08226381eb:packages/valory/services/contribution/service.yaml:generic-api-key:10
 5554f4c2a4032167a2294e96fcc4d8045dc06a60:packages/valory/services/contribution/service.yaml:generic-api-key:10
+1fed3d35b7579c80ae7ff07c918b06b659d12420:packages/valory/skills/dynamic_nft_abci/tests/test_handlers.py:discord-client-id:359
+b01db1b0a736b9d3069f16488b4e3255ad139978:packages/valory/agents/contribution/tests/test_contribution.py:private-key:92

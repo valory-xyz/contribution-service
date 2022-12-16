@@ -84,7 +84,7 @@ MOCK_API_PORT = _DEFAULT_JSON_SERVER_PORT
 MOCK_WHITELIST_ADDRESS = _DEFAULT_JSON_SERVER_ADDR
 MOCK_IPFS_ADDRESS = _DEFAULT_JSON_SERVER_ADDR
 
-# This variable contains a dummy RSA key
+# This object contains a dummy RSA key for testing. Do not use outside here.
 DUMMY_SERVICE_AUTH = {
     "type": "service_account",
     "project_id": "my_dummy_project_id",
