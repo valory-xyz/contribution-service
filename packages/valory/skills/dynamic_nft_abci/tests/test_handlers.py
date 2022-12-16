@@ -356,7 +356,7 @@ class TestHttpHandler(BaseSkillTestCase):
                 request_url=f"{LINK_URI_BASE}/{DEFAULT_ADDRESS}",
                 request_body=json.dumps(
                     {
-                        "discord_id": "dummy_discord_id",
+                        "discord_id": "111111111111111111",  # must be 16-20 digits
                         "wallet_address": "discord_wallet_address",
                     }
                 ).encode("utf-8"),
