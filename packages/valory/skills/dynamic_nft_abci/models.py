@@ -19,10 +19,12 @@
 
 """This module contains the shared state for the abci skill of DynamicNFTAbciApp."""
 
+import json
 from datetime import datetime, timedelta
 from enum import Enum
 from functools import lru_cache, wraps
 from multiprocessing import Manager
+from pathlib import Path
 from threading import Lock
 from time import time
 from typing import Any, Dict, Optional
@@ -127,13 +129,26 @@ class Sheet(Model):
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         """Initialize GoogleSheets model."""
-        self.api = pygsheets.authorize(
-            service_account_env_var=kwargs.pop("service_auth", None)
-        )
+
+        # Get the service auth string and write it to a temporal file
+        service_auth = kwargs.pop("service_auth", "{}")
+        service_auth_file_path = Path("/", "tmp", "service_auth.json")
+        with open(service_auth_file_path, "w") as f:
+            f.write(service_auth)
+
+        # Use the file to authorize
+        self.api = pygsheets.authorize(service_file=service_auth_file_path)
         self.leaderboard_sheet_id = self.ensure("leaderboard_sheet_id", kwargs)
         self.leaderboard_sheet_name = self.ensure("leaderboard_sheet_name", kwargs)
-        self.sheet = self.api.open_by_key(self.leaderboard_sheet_id).worksheet(
-            "title", self.leaderboard_sheet_name
+        # The following line accesses Google service to open the spreadsheet.
+        # During e2e tests, this is not possible since the service auth data
+        # is dummy. For this reason, we do not execute if we detect we are in an e2e test.
+        self.sheet = (
+            self.api.open_by_key(self.leaderboard_sheet_id).worksheet(
+                "title", self.leaderboard_sheet_name
+            )
+            if "my_dummy_project_id" not in service_auth
+            else None
         )
         self.name_col = self.ensure("name_col", kwargs)
         self.address_col = self.ensure("address_col", kwargs)
