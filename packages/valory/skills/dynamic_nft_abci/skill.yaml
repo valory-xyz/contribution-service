@@ -21,19 +21,19 @@ fingerprint:
   io_/__init__.py: bafybeidxth2otiyp5gfk2l3zjvnfktgrtpwzsknihkef3v2lhwbkgum3ea
   io_/load.py: bafybeifd7ib4lktvgv6rphk6sblkndn3klmzd5js62h2gzxlubjcmlf6jy
   io_/store.py: bafybeih3wa6quhstymsqcsy7jejpj4fx6crq6gs72dzs6svjklu7wushtq
-  models.py: bafybeia5q5xuvc6lcq3pgom2extey36y5hr2ix3vm223ot6qqw336igw5e
+  models.py: bafybeiapmjaup7jmr4t6eoot3fhlcr6altgvhhzde4pvyuty4v4ovgnskm
   payloads.py: bafybeiasgnt2og22bl7idlmttyv6xjpoj63xirzxetihvukfnt3dc5hrpq
   rounds.py: bafybeidz6m4utibaebu2px44o2dfffbulhvz7kkvy6z3cos54v46sk4dcm
   tests/__init__.py: bafybeia2xqlacp44lylwlkf7f7ci6m3yshppv3vusgcdjpj4bbcbnuhvla
-  tests/test_behaviours.py: bafybeichiu2c3iswrszdyiphboelafhb5ksyotd5t2rgazivqv7sdxk7gy
+  tests/test_behaviours.py: bafybeif7wtfgx6axgovroturmtnrzcozyvjzjqt67po66feuaedopwyuky
   tests/test_dialogues.py: bafybeigyf2l7uz5yiw3mz7lyno2akf6jggpoj2riqqsdopk7b6hnpa3xdu
   tests/test_dummy_e2e.py: bafybeidrzn2wzng62jptkf2zjtlhup7bu74ptrlwmdwh7lgwuubk5dbm4q
-  tests/test_handlers.py: bafybeihmt7ndgwzlhignxec4t5rafzt5n6u4jwfqvxpaku5xtnrmz2dgre
+  tests/test_handlers.py: bafybeib2kdzteab63xgpufqk7xmilmlkqjfxs3zlilkcbkchnbywtdmnru
   tests/test_io/__init__.py: bafybeid3sssvbbyju4snrdssxyafleuo57sqyuepl25btxcbuj3p5oonsm
   tests/test_io/conftest.py: bafybeid6tmrx6nogml5dlqkqwtmuqjsqwaejskthj7avxjt5mkbbajpf4u
   tests/test_io/test_load.py: bafybeidljwrzoadvpbxbyiesdjmw6a26t4lyidu2wmyy4pjqdrrpqq6ajq
   tests/test_io/test_store.py: bafybeih72breobvnw7m4t5ds3ludx7e3mgki6falajofqbanu4gohkirx4
-  tests/test_models.py: bafybeidvld4bmczcosvjpwa4novsdkwiisw3moce26dqgti6ldx2s66oa4
+  tests/test_models.py: bafybeifa2kaavtblz23dfgmrjmkigxvo7x4aiblyth3qnhqspz353twogy
   tests/test_payloads.py: bafybeihbg37546wuij2ldcgyebvdo3x6xgkdpzirdolgddte4ruqvbtujm
   tests/test_rounds.py: bafybeiftv3p46zskjh35mnzddvfwb72qe7ldihkxlts3swh4lbxwdji6nm
   tools.py: bafybeigjmtp6ngs2d54i5obbynwqj26vztes3s3h2pdaqxklulevjq5xjm
@@ -152,7 +152,7 @@ models:
       name_col: 1
       observation_interval: 10
       points_col: 3
-      service_auth: null
+      service_auth: '{}'
     class_name: Sheet
   signing_dialogues:
     args: {}

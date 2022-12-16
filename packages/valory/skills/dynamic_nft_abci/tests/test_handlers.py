@@ -98,8 +98,19 @@ class TestHttpHandler(BaseSkillTestCase):
     @classmethod
     def setup_class(cls):
         """Setup the test class."""
+
+        cls.config_overrides = {
+            "models": {
+                "sheet": {
+                    "args": {
+                        "service_auth": "{}",
+                    }
+                }
+            },
+        }
+
         with patch("pygsheets.authorize", return_value=DummySheetApi()):
-            super().setup_class()
+            super().setup_class(config_overrides=cls.config_overrides)
         cls.http_handler = cast(HttpHandler, cls._skill.skill_context.handlers.http)
         cls.logger = cls._skill.skill_context.logger
 

@@ -128,7 +128,6 @@ class Sheet(Model):
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         """Initialize GoogleSheets model."""
-
         # Get the service auth string and write it to a temporal file
         service_auth = kwargs.pop("service_auth", "{}")
         service_auth_file_path = Path("/", "tmp", "service_auth.json")

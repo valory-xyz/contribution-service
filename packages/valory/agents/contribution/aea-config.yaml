@@ -29,8 +29,8 @@ protocols:
 skills:
 - valory/abstract_abci:0.1.0:bafybeihkcgjgyoleu6jgwhpffkzvflmybajlz5k2fkxhl3nngbbo6xzlsy
 - valory/abstract_round_abci:0.1.0:bafybeifh4qtjurq5637ykxexzexca5l4n6t4ujw26tpnern2swajanvhny
-- valory/contribution_skill_abci:0.1.0:bafybeiafnxgnpih23qtr3irfqblc22tlxs4e3yph4jrq7ppvmk7efhox5y
-- valory/dynamic_nft_abci:0.1.0:bafybeia42wdxba45ulgobmvochcgpdzqxe5xkpjuyxibaiigbzdipe3fh4
+- valory/contribution_skill_abci:0.1.0:bafybeigq2y2lbo2lbjayfudfkk3pkznlkvtt6c54uposo7bazkzjljtji4
+- valory/dynamic_nft_abci:0.1.0:bafybeidbkpg76mwteigdznmug2cdyq53bstbmainf37kntdspk6og7pzla
 - valory/registration_abci:0.1.0:bafybeicuz3f4tvowd2xwcl5w4ck56rm5abfoyng3cmbprovpch4u6eexge
 - valory/reset_pause_abci:0.1.0:bafybeihlsjhy4dpiulgdof3noh6dlzvr6wkywcwbsrti45labn7htrfg3y
 default_ledger: ethereum
@@ -166,7 +166,7 @@ models:
       points_col: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_SHEET_ARGS_POINTS_COL:int:3}
       discord_id_col: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_SHEET_ARGS_DISCORD_ID_COL:int:4}
       observation_interval: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_SHEET_ARGS_OBSERVATION_INTERVAL:int:300}
-      service_auth: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_SHEET_ARGS_SERVICE_AUTH:str:null}
+      service_auth: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_SHEET_ARGS_SERVICE_AUTH:str:{}}
 ---
 public_id: fetchai/http_server:0.22.0:bafybeicblltx7ha3ulthg7bzfccuqqyjmihhrvfeztlgrlcoxhr7kf6nbq
 type: connection
