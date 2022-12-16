@@ -21,7 +21,7 @@ fingerprint:
   io_/__init__.py: bafybeidxth2otiyp5gfk2l3zjvnfktgrtpwzsknihkef3v2lhwbkgum3ea
   io_/load.py: bafybeifd7ib4lktvgv6rphk6sblkndn3klmzd5js62h2gzxlubjcmlf6jy
   io_/store.py: bafybeih3wa6quhstymsqcsy7jejpj4fx6crq6gs72dzs6svjklu7wushtq
-  models.py: bafybeihikcqxpnwfzk2cwrwpfgjb3tiy46gyvuamvkcin3qvmo3dzln27q
+  models.py: bafybeihjhc577mah4tzjy7f5dveciqh4hlszryaxkaa5doe2vl4yucf2ui
   payloads.py: bafybeiasgnt2og22bl7idlmttyv6xjpoj63xirzxetihvukfnt3dc5hrpq
   rounds.py: bafybeidz6m4utibaebu2px44o2dfffbulhvz7kkvy6z3cos54v46sk4dcm
   tests/__init__.py: bafybeia2xqlacp44lylwlkf7f7ci6m3yshppv3vusgcdjpj4bbcbnuhvla
@@ -33,7 +33,7 @@ fingerprint:
   tests/test_io/conftest.py: bafybeid6tmrx6nogml5dlqkqwtmuqjsqwaejskthj7avxjt5mkbbajpf4u
   tests/test_io/test_load.py: bafybeidljwrzoadvpbxbyiesdjmw6a26t4lyidu2wmyy4pjqdrrpqq6ajq
   tests/test_io/test_store.py: bafybeih72breobvnw7m4t5ds3ludx7e3mgki6falajofqbanu4gohkirx4
-  tests/test_models.py: bafybeicf7cti5n4iklw6w4bi7bddfznv6ffvpj2jjt4ns7vh26xgqb7tem
+  tests/test_models.py: bafybeidvld4bmczcosvjpwa4novsdkwiisw3moce26dqgti6ldx2s66oa4
   tests/test_payloads.py: bafybeihbg37546wuij2ldcgyebvdo3x6xgkdpzirdolgddte4ruqvbtujm
   tests/test_rounds.py: bafybeiftv3p46zskjh35mnzddvfwb72qe7ldihkxlts3swh4lbxwdji6nm
   tools.py: bafybeigjmtp6ngs2d54i5obbynwqj26vztes3s3h2pdaqxklulevjq5xjm
@@ -146,13 +146,13 @@ models:
   sheet:
     args:
       address_col: 2
-      auth_file_path: service_auth.json
       discord_id_col: 4
       leaderboard_sheet_id: 1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc
       leaderboard_sheet_name: Ranking
       name_col: 1
       observation_interval: 10
       points_col: 3
+      service_auth: null
     class_name: Sheet
   signing_dialogues:
     args: {}

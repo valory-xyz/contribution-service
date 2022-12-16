@@ -93,7 +93,7 @@ class TestSheet:
         """Setup test"""
         self.sheet = Sheet(
             name="dummy_sheet_model",
-            auth_file_path="dummy_auth_file_path",
+            service_auth="dummy_service_auth",
             leaderboard_sheet_id="dummy_leaderboard_sheet_id",
             leaderboard_sheet_name="dummy_leaderboard_sheet_name",
             name_col=1,

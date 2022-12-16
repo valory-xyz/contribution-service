@@ -128,7 +128,7 @@ class Sheet(Model):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         """Initialize GoogleSheets model."""
         self.api = pygsheets.authorize(
-            service_file=self.ensure("auth_file_path", kwargs)
+            service_account_env_var=kwargs.pop("service_auth", None)
         )
         self.leaderboard_sheet_id = self.ensure("leaderboard_sheet_id", kwargs)
         self.leaderboard_sheet_name = self.ensure("leaderboard_sheet_name", kwargs)
