@@ -26,3 +26,5 @@ packages/fetchai
 *.pyc
 .vscode/
 .coverage*
+
+*.env
