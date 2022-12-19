@@ -31,6 +31,7 @@ from typing import Any, Dict, Optional
 
 import pygsheets
 from aea.skills.base import Model
+from googleapiclient.errors import HttpError
 
 from packages.valory.skills.abstract_round_abci.models import BaseParams
 from packages.valory.skills.abstract_round_abci.models import (
@@ -258,16 +259,21 @@ class Sheet(Model):
     ):
         """Writes an entry to the sheet."""
         user = self.read(discord_id)
-        with self.lock:
-            if not user:
-                self.create(discord_id, name)
-            else:
-                self.update(
-                    discord_id=user[self.discord_id_col - 1],
-                    address=wallet_address or user[self.address_col - 1],
-                )
-            # Since this data is not subject to consensus we can safely use time() here
-            self.linking_wallets[wallet_address] = time()
+        try:
+            with self.lock:
+                if not user:
+                    self.create(discord_id, name)
+                else:
+                    self.update(
+                        discord_id=user[self.discord_id_col - 1],
+                        address=wallet_address or user[self.address_col - 1],
+                    )
+                # Since this data is not subject to consensus we can safely use time() here
+                self.linking_wallets[wallet_address] = time()
+        except HttpError as e:
+            self.context.logger.info(
+                f"HttpError while writing to the spreadsheet:\n{str(e)}"
+            )
 
     def get_wallet_status(self, wallet_address: str):
         """Checks the wallet linking status"""
