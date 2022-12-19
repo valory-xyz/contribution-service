@@ -29,8 +29,8 @@ protocols:
 skills:
 - valory/abstract_abci:0.1.0:bafybeihkcgjgyoleu6jgwhpffkzvflmybajlz5k2fkxhl3nngbbo6xzlsy
 - valory/abstract_round_abci:0.1.0:bafybeifh4qtjurq5637ykxexzexca5l4n6t4ujw26tpnern2swajanvhny
-- valory/contribution_skill_abci:0.1.0:bafybeigulgp25fccwps4js6ky5sdjzuaaudsiidv6taeqtj7ardcgm26qi
-- valory/dynamic_nft_abci:0.1.0:bafybeihtxcxkyuqpj33vhuyrpigwal6hlqrg6f62r6ra7i3lwytivaiwhi
+- valory/contribution_skill_abci:0.1.0:bafybeigtngbzaetildftmgion5oqbahhqlj7co4td5p3cm3t5xb6kaubyi
+- valory/dynamic_nft_abci:0.1.0:bafybeibommb3lhtmp7arope4ep5qcmtinkclinydlv6v2sqgvfbvbmz3bq
 - valory/registration_abci:0.1.0:bafybeicuz3f4tvowd2xwcl5w4ck56rm5abfoyng3cmbprovpch4u6eexge
 - valory/reset_pause_abci:0.1.0:bafybeihlsjhy4dpiulgdof3noh6dlzvr6wkywcwbsrti45labn7htrfg3y
 default_ledger: ethereum

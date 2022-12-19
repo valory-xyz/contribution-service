@@ -292,9 +292,15 @@ class HttpHandler(BaseHttpHandler):
             seconds_until_next_update = (
                 observation_interval - seconds_since_last_reset
             )  # this can be negative if we have passed the estimated reset time without resetting
-            is_healthy = seconds_since_last_reset < 2 * observation_interval
 
             seconds_since_last_tm_update = current_time - current_time_tm
+
+            is_healthy = all(
+                [
+                    seconds_since_last_reset < 2 * observation_interval,
+                    seconds_since_last_tm_update < 2 * observation_interval,
+                ]
+            )
 
         else:
             seconds_since_last_reset = None
