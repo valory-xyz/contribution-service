@@ -280,6 +280,10 @@ class HttpHandler(BaseHttpHandler):
         last_update_time = self.synchronized_data.last_update_time
 
         if last_update_time:
+            current_time_tm = cast(
+                SharedState, self.context.state
+            ).round_sequence.abci_app.last_timestamp.timestamp()
+
             current_time = datetime.datetime.now().timestamp()
 
             observation_interval = self.context.params.observation_interval
@@ -290,15 +294,19 @@ class HttpHandler(BaseHttpHandler):
             )  # this can be negative if we have passed the estimated reset time without resetting
             is_healthy = seconds_since_last_reset < 2 * observation_interval
 
+            seconds_since_last_tm_update = current_time - current_time_tm
+
         else:
             seconds_since_last_reset = None
             is_healthy = None
             seconds_until_next_update = None
+            seconds_since_last_tm_update = None
 
         data = {
             "seconds_since_last_reset": seconds_since_last_reset,
             "healthy": is_healthy,
             "seconds_until_next_update": seconds_until_next_update,
+            "seconds_since_last_tm_update": seconds_since_last_tm_update,
         }
 
         self.context.logger.info(f"Responding with health data={data}")
