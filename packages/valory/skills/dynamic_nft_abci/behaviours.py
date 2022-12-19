@@ -95,7 +95,6 @@ class DynamicNFTBaseBehaviour(BaseBehaviour):
 class NewTokensBehaviour(DynamicNFTBaseBehaviour):
     """NewTokensBehaviour"""
 
-    behaviour_id: str = "new_tokens"
     matching_round: Type[AbstractRound] = NewTokensRound
 
     def async_act(self) -> Generator:
@@ -167,7 +166,6 @@ class NewTokensBehaviour(DynamicNFTBaseBehaviour):
 class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
     """LeaderboardBehaviour"""
 
-    behaviour_id: str = "leaderboard_observation"
     matching_round: Type[AbstractRound] = LeaderboardObservationRound
 
     def async_act(self) -> Generator:
@@ -356,7 +354,6 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
 class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
     """ImageCodeCalculationBehaviour"""
 
-    behaviour_id: str = "image_code_calculation"
     matching_round: Type[AbstractRound] = ImageCodeCalculationRound
 
     def async_act(self) -> Generator:
@@ -490,7 +487,6 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
 class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
     """ImageGenerationBehaviour"""
 
-    behaviour_id: str = "image_generation"
     matching_round: Type[AbstractRound] = ImageGenerationRound
 
     def async_act(self) -> Generator:
@@ -796,7 +792,6 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
 class DBUpdateBehaviour(DynamicNFTBaseBehaviour):
     """DBUpdateBehaviour"""
 
-    behaviour_id: str = "db_update"
     matching_round: Type[AbstractRound] = DBUpdateRound
 
     def async_act(self) -> Generator:

@@ -61,6 +61,7 @@ logging_config:
       - logfile
       - console
       propagate: false
+skill_exception_policy: stop_and_exit
 dependencies:
   Pillow:
     version: ==9.2.0

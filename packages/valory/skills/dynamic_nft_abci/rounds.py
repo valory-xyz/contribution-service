@@ -34,6 +34,7 @@ from packages.valory.skills.abstract_round_abci.base import (
     DegenerateRound,
     EventToTimeout,
     TransactionType,
+    get_name,
 )
 from packages.valory.skills.dynamic_nft_abci.payloads import (
     DBUpdatePayload,
@@ -100,9 +101,8 @@ class ContributionAbstractRound(AbstractRound[Event, TransactionType], ABC):
 class NewTokensRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
     """NewTokensRound"""
 
-    round_id: str = "new_tokens"
     allowed_tx_type = NewTokensPayload.transaction_type
-    payload_attribute: str = "content"
+    payload_attribute: str = get_name(NewTokensPayload.content)
     synchronized_data_class = SynchronizedData
 
     ERROR_PAYLOAD = {"error": True}
@@ -125,7 +125,9 @@ class NewTokensRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
 
             synchronized_data = self.synchronized_data.update(
                 synchronized_data_class=SynchronizedData,
-                token_to_data=token_to_data,
+                **{
+                    get_name(SynchronizedData.token_to_data): token_to_data
+                }
             )
             return synchronized_data, Event.DONE
         if not self.is_majority_possible(
@@ -140,9 +142,8 @@ class LeaderboardObservationRound(
 ):
     """LeaderboardObservationRound"""
 
-    round_id = "leaderboard_observation"
     allowed_tx_type = LeaderboardObservationPayload.transaction_type
-    payload_attribute = "content"
+    payload_attribute = get_name(LeaderboardObservationPayload.content)
     synchronized_data_class = SynchronizedData
 
     ERROR_PAYLOAD = {}
@@ -156,7 +157,9 @@ class LeaderboardObservationRound(
 
             synchronized_data = self.synchronized_data.update(
                 synchronized_data_class=SynchronizedData,
-                most_voted_api_data=payload,
+                **{
+                    get_name(SynchronizedData.most_voted_api_data): payload
+                }
             )
             return synchronized_data, Event.DONE
         if not self.is_majority_possible(
@@ -171,9 +174,8 @@ class ImageCodeCalculationRound(
 ):
     """ImageCodeCalculationRound"""
 
-    round_id: str = "image_code_calculation"
     allowed_tx_type = ImageCodeCalculationPayload.transaction_type
-    payload_attribute = "content"
+    payload_attribute = get_name(ImageCodeCalculationPayload.content)
     synchronized_data_class = SynchronizedData
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:
@@ -181,7 +183,9 @@ class ImageCodeCalculationRound(
         if self.threshold_reached:
             synchronized_data = self.synchronized_data.update(
                 synchronized_data_class=SynchronizedData,
-                most_voted_token_updates=json.loads(self.most_voted_payload),
+                **{
+                    get_name(SynchronizedData.most_voted_token_updates): json.loads(self.most_voted_payload)
+                }
             )
             return synchronized_data, Event.DONE
         if not self.is_majority_possible(
@@ -194,9 +198,8 @@ class ImageCodeCalculationRound(
 class ImageGenerationRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
     """ImageGenerationRound"""
 
-    round_id: str = "image_generation"
     allowed_tx_type = ImageGenerationPayload.transaction_type
-    payload_attribute = "content"
+    payload_attribute = get_name(ImageGenerationPayload.content)
     synchronized_data_class = SynchronizedData
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:
@@ -213,7 +216,9 @@ class ImageGenerationRound(ContributionAbstractRound, CollectSameUntilThresholdR
                 }
                 synchronized_data = self.synchronized_data.update(
                     synchronized_data_class=SynchronizedData,
-                    image_code_to_hash=image_code_to_hash,
+                    **{
+                        get_name(SynchronizedData.image_code_to_hash): image_code_to_hash
+                    }
                 )
                 return synchronized_data, Event.DONE
         if not self.is_majority_possible(
@@ -226,9 +231,8 @@ class ImageGenerationRound(ContributionAbstractRound, CollectSameUntilThresholdR
 class DBUpdateRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
     """DBUpdateRound"""
 
-    round_id: str = "db_update"
     allowed_tx_type = DBUpdatePayload.transaction_type
-    payload_attribute = "content"
+    payload_attribute = get_name(DBUpdatePayload.content)
     synchronized_data_class = SynchronizedData
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:
@@ -252,8 +256,10 @@ class DBUpdateRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
 
             synchronized_data = self.synchronized_data.update(
                 synchronized_data_class=SynchronizedData,
-                token_to_data=token_to_data,
-                last_update_time=last_update_time,
+                **{
+                    get_name(SynchronizedData.token_to_data): token_to_data,
+                    get_name(SynchronizedData.last_update_time): last_update_time
+                }
             )
             return synchronized_data, Event.DONE
         if not self.is_majority_possible(
