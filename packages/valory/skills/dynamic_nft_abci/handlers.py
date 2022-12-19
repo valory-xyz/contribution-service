@@ -19,6 +19,7 @@
 
 """This module contains the handlers for the skill of DynamicNFTAbciApp."""
 
+import datetime
 import json
 import re
 from enum import Enum
@@ -279,9 +280,7 @@ class HttpHandler(BaseHttpHandler):
         last_update_time = self.synchronized_data.last_update_time
 
         if last_update_time:
-            current_time = cast(
-                SharedState, self.context.state
-            ).round_sequence.abci_app.last_timestamp.timestamp()
+            current_time = datetime.datetime.now().timestamp()
 
             observation_interval = self.context.params.observation_interval
 
