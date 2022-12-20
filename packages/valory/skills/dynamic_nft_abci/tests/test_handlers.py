@@ -69,7 +69,6 @@ def get_dummy_health():
         "seconds_since_last_reset": 5.0,
         "healthy": True,
         "seconds_until_next_update": 5.0,
-        "seconds_since_last_tm_update": 5.0,
     }
 
 
@@ -222,9 +221,7 @@ class TestHttpHandler(BaseSkillTestCase):
                 "token_to_data": test_case.token_to_data,
                 "last_update_time": mock_now_time_timestamp - 5.0,  # 5 seconds before
             }
-            mock_round_sequence.abci_app.last_timestamp.timestamp = (
-                lambda: mock_now_time_timestamp - 5.0
-            )
+            mock_round_sequence.block_stall_deadline_expired = False
 
             datetime_mock = Mock(wraps=datetime.datetime)
             datetime_mock.now.return_value = mock_now_time
