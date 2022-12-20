@@ -3,8 +3,8 @@
         "contract/valory/dynamic_contribution/0.1.0": "bafybeifxeoufydwijhip32hbvz4b64qouoranadccv7x6t73lgogr2tilq",
         "skill/valory/dynamic_nft_abci/0.1.0": "bafybeigcma5e7gjni6ftacakkchn2a3a7cgtwqxn77x3pmlgm2qvchj7ey",
         "skill/valory/contribution_skill_abci/0.1.0": "bafybeiag7iqv2ulzoa7nacjgsvcnqdbqvrnvhk3a2g6kfuukrkmfqpwkq4",
-        "agent/valory/contribution/0.1.0": "bafybeibiuqzfwpfclh2uy5ul22ev46cviolwslac4mz4mbokgbbdnnqrp4",
-        "service/valory/contribution/0.1.0": "bafybeibxh5hmwo2fnd4m2u3fpv3zjwyjwtlghmeufkpac5jslerabq4mlq"
+        "agent/valory/contribution/0.1.0": "bafybeiapw7gnjz2hpgkpcqhjsy7jdvcsu6h7hua74hxzwpxfniv7rj5kle",
+        "service/valory/contribution/0.1.0": "bafybeiabrcgpyeaw5lcuye26sy6j3ur22prw2piadb2h3ocfr7ip5iiyei"
     },
     "third_party": {
         "protocol/open_aea/signing/1.0.0": "bafybeiambqptflge33eemdhis2whik67hjplfnqwieoa6wblzlaf7vuo44",
