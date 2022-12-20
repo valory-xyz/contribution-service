@@ -21,6 +21,7 @@
 
 import json
 import os
+import re
 import shutil
 from logging import Logger
 from pathlib import Path
@@ -31,6 +32,7 @@ import jsonschema
 from PIL import Image
 from aea.configurations.constants import DEFAULT_LEDGER
 from aea.crypto.ledger_apis import LedgerApis
+from aea.helpers.base import IPFS_HASH_REGEX
 from aea.helpers.ipfs.base import IPFSHashOnly
 
 from packages.valory.contracts.dynamic_contribution.contract import (
@@ -72,6 +74,7 @@ NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
 HTTP_TIMEOUT = 10
 DEFAULT_POINTS = 0
 DEFAULT_IMAGE_CODE = "000000"
+THRESHOLD_REGEX = rf"^\d+:{IPFS_HASH_REGEX}$"
 
 
 class DynamicNFTBaseBehaviour(BaseBehaviour):
@@ -250,6 +253,7 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
                     #    "wallet_1": 1500,  # noqa: E800
                     #     ...
                     # }                     # noqa: E800
+                    # Non valid addresses are skipped
                     leaderboard = {
                         entry[0]: int(entry[1])
                         for entry in leaderboard_raw
@@ -339,9 +343,14 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
         # Score thresholds are monotonic increasing
         for i in data["valueRanges"]:
             if i["range"] == self.params.leaderboard_layers_range:
-                for threshold_data in i["values"]:
+                for layer_data in i["values"]:
+
+                    # Check the layer and threshold format
+                    if not all(re.match(THRESHOLD_REGEX, t) for t in layer_data):
+                        return False
+
                     thresholds = [
-                        int(img_data.split(":")[0]) for img_data in threshold_data
+                        int(img_data.split(":")[0]) for img_data in layer_data
                     ]
 
                     # Strictly increasing

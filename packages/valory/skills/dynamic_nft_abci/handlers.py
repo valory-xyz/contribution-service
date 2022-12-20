@@ -66,6 +66,7 @@ TendermintHandler = BaseTendermintHandler
 OK_CODE = 200
 NOT_FOUND_CODE = 404
 BAD_REQUEST_CODE = 400
+AVERAGE_PERIOD_SECONDS = 10
 
 
 class Route(Enum):
@@ -290,7 +291,7 @@ class HttpHandler(BaseHttpHandler):
 
             seconds_since_last_reset = current_time - last_update_time
             seconds_until_next_update = (
-                observation_interval - seconds_since_last_reset
+                AVERAGE_PERIOD_SECONDS + observation_interval - seconds_since_last_reset
             )  # this can be negative if we have passed the estimated reset time without resetting
 
             is_healthy = all(
