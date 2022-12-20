@@ -304,7 +304,6 @@ class HttpHandler(BaseHttpHandler):
             seconds_since_last_reset = None
             is_healthy = None
             seconds_until_next_update = None
-            seconds_since_last_tm_update = None
 
         data = {
             "seconds_since_last_reset": seconds_since_last_reset,
