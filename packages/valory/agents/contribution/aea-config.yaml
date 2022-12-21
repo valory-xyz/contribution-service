@@ -158,16 +158,6 @@ models:
       token_uri_base: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_TOKEN_URI_BASE:str:https://pfp.staging.autonolas.tech/}
       whitelist_api_key: null
       whitelist_endpoint: http://localhost
-  sheet:
-    args:
-      leaderboard_sheet_id: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_SHEET_ARGS_LEADERBOARD_SHEET_ID:str:1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc}
-      leaderboard_sheet_name: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_SHEET_ARGS_LEADERBOARD_SHEET_NAME:str:Ranking}
-      name_col: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_SHEET_ARGS_NAME_COL:int:1}
-      address_col: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_SHEET_ARGS_ADDRESS_COL:int:2}
-      points_col: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_SHEET_ARGS_POINTS_COL:int:3}
-      discord_id_col: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_SHEET_ARGS_DISCORD_ID_COL:int:4}
-      observation_interval: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_SHEET_ARGS_OBSERVATION_INTERVAL:int:300}
-      service_auth: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_SHEET_ARGS_SERVICE_AUTH:str:{}}
 ---
 public_id: fetchai/http_server:0.22.0:bafybeicblltx7ha3ulthg7bzfccuqqyjmihhrvfeztlgrlcoxhr7kf6nbq
 type: connection

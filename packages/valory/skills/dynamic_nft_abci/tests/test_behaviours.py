@@ -65,7 +65,6 @@ from packages.valory.skills.dynamic_nft_abci.rounds import (
     NewTokensRound,
     SynchronizedData,
 )
-from packages.valory.skills.dynamic_nft_abci.tests.test_models import DummySheetApi
 
 
 @pytest.fixture(scope="module")
@@ -272,18 +271,11 @@ class BaseDynamicNFTTest(FSMBehaviourBaseCase):
     done_event = Event.DONE
     image_dir: Path
 
-    @classmethod
-    def setup_class(cls, **kwargs: Any) -> None:
-        """Setup class"""
-        with patch("pygsheets.authorize", return_value=DummySheetApi()):
-            super().setup_class(**kwargs)
-
     def setup(self, **kwargs: Any) -> None:
         """Setup test"""
         super().setup(**kwargs)
         self.image_dir = IMAGE_PATH
         Path(self.image_dir).mkdir()
-        self.http_handler.setup()
 
     def teardown(self) -> None:
         """Teardown test"""

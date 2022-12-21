@@ -143,17 +143,6 @@ models:
   requests:
     args: {}
     class_name: Requests
-  sheet:
-    args:
-      address_col: 2
-      discord_id_col: 4
-      leaderboard_sheet_id: 1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc
-      leaderboard_sheet_name: Ranking
-      name_col: 1
-      observation_interval: 10
-      points_col: 3
-      service_auth: '{}'
-    class_name: Sheet
   signing_dialogues:
     args: {}
     class_name: SigningDialogues
@@ -164,12 +153,8 @@ models:
     args: {}
     class_name: TendermintDialogues
 dependencies:
-  google-api-python-client:
-    version: ==2.69.0
   Pillow:
     version: ==9.2.0
   jsonschema:
     version: ==3.2.0
-  pygsheets:
-    version: ==2.0.6
 is_abstract: true

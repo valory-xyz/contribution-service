@@ -24,8 +24,8 @@ import json
 import logging
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, cast
-from unittest.mock import patch
+from typing import Dict, cast
+from unittest.mock import Mock, patch
 
 import pytest
 from aea.protocols.dialogue.base import DialogueMessage
@@ -42,8 +42,6 @@ from packages.valory.skills.dynamic_nft_abci.handlers import (
     NOT_FOUND_CODE,
     OK_CODE,
 )
-from packages.valory.skills.dynamic_nft_abci.models import DEFAULT_ADDRESS
-from packages.valory.skills.dynamic_nft_abci.tests.test_models import DummySheetApi
 
 
 PACKAGE_DIR = Path(__file__).parent.parent
@@ -51,9 +49,6 @@ PACKAGE_DIR = Path(__file__).parent.parent
 HTTP_SERVER_SENDER = str(HTTP_SERVER_PUBLIC_ID.without_hash())
 
 TOKEN_URI_BASE = "https://pfp.staging.autonolas.tech/"  # nosec
-LEADERBOARD_URI_BASE = f"{TOKEN_URI_BASE}leaderboard"
-ADDRESS_STATUS_URI_BASE = f"{TOKEN_URI_BASE}address_status"
-LINK_URI_BASE = f"{TOKEN_URI_BASE}link"
 
 
 def get_dummy_metadata(token_id, image_hash):
@@ -99,19 +94,7 @@ class TestHttpHandler(BaseSkillTestCase):
     @classmethod
     def setup_class(cls):
         """Setup the test class."""
-
-        cls.config_overrides = {
-            "models": {
-                "sheet": {
-                    "args": {
-                        "service_auth": "{}",
-                    }
-                }
-            },
-        }
-
-        with patch("pygsheets.authorize", return_value=DummySheetApi()):
-            super().setup_class(config_overrides=cls.config_overrides)
+        super().setup_class()
         cls.http_handler = cast(HttpHandler, cls._skill.skill_context.handlers.http)
         cls.logger = cls._skill.skill_context.logger
 
@@ -145,7 +128,7 @@ class TestHttpHandler(BaseSkillTestCase):
             ),
         )
 
-    def setup(self, **kwargs: Any) -> None:
+    def setup(self) -> None:
         """Setup"""
         self.http_handler.setup()
 
@@ -154,8 +137,7 @@ class TestHttpHandler(BaseSkillTestCase):
         assert self.http_handler.setup() is None
         self.assert_quantity_in_outbox(0)
 
-    @patch("pygsheets.authorize", return_value=DummySheetApi())
-    def test_handle_unidentified_dialogue(self, *_mocks: Any):
+    def test_handle_unidentified_dialogue(self):
         """Test the _handle_unidentified_dialogue method of the handler."""
         # setup
         incorrect_dialogue_reference = ("", "")
@@ -333,127 +315,6 @@ class TestHttpHandler(BaseSkillTestCase):
             status_text="Bad request",
             headers=incoming_message.headers,
             body=b"",
-        )
-        assert has_attributes, error_str
-
-        mock_logger.assert_any_call(
-            logging.INFO,
-            f"Responding with: {message}",
-        )
-
-    @pytest.mark.parametrize(
-        "test_case",
-        [
-            HandlerTestCase(
-                name="get leaderboard",
-                request_url=LEADERBOARD_URI_BASE,
-                request_body=b"some_body/",
-                token_to_data={},
-                response_status_code=OK_CODE,
-                response_status_text="Success",
-                response_headers="Content-Type: application/json\nsome_headers",
-                response_body=json.dumps({"result": {}}).encode("utf-8"),
-                method="get",
-            ),
-            HandlerTestCase(
-                name="get address status",
-                request_url=f"{ADDRESS_STATUS_URI_BASE}/{DEFAULT_ADDRESS}",
-                request_body=b"some_body/",
-                token_to_data={},
-                response_status_code=OK_CODE,
-                response_status_text="Success",
-                response_headers="Content-Type: application/json\nsome_headers",
-                response_body=json.dumps(
-                    {"address": DEFAULT_ADDRESS, "status": "wallet_status"}
-                ).encode("utf-8"),
-                method="get",
-            ),
-            HandlerTestCase(
-                name="link wallet",
-                request_url=f"{LINK_URI_BASE}/{DEFAULT_ADDRESS}",
-                request_body=json.dumps(
-                    {
-                        "discord_id": "111111111111111111",  # must be 16-20 digits
-                        "wallet_address": "discord_wallet_address",
-                    }
-                ).encode("utf-8"),
-                token_to_data={},
-                response_status_code=OK_CODE,
-                response_status_text="Success",
-                response_headers="Content-Type: application/json\nsome_headers",
-                response_body=json.dumps({}).encode("utf-8"),
-                method="post",
-            ),
-            HandlerTestCase(
-                name="link wallet, not found",
-                request_url=f"{LINK_URI_BASE}/{DEFAULT_ADDRESS}",
-                request_body=json.dumps({}).encode("utf-8"),
-                token_to_data={},
-                response_status_code=NOT_FOUND_CODE,
-                response_status_text="Not found",
-                response_headers="some_headers",
-                response_body=b"",
-                method="post",
-            ),
-        ],
-    )
-    def test_handle_sheet_requests(self, test_case):
-        """Test the _handle_request method of the handler."""
-        # setup
-        incoming_message = cast(
-            HttpMessage,
-            self.build_incoming_message(
-                message_type=HttpMessage,
-                performative=HttpMessage.Performative.REQUEST,
-                to=self.skill_id,
-                sender=self.sender,
-                method=test_case.method,
-                url=test_case.request_url,
-                version=self.version,
-                headers=self.headers,
-                body=test_case.request_body,
-            ),
-        )
-
-        # operation
-        with patch.object(self.logger, "log") as mock_logger, patch.object(
-            self.http_handler.context.state, "_round_sequence"
-        ) as mock_round_sequence, patch.object(
-            self.http_handler.context.sheet, "read", return_value={}
-        ), patch.object(
-            self.http_handler.context.sheet,
-            "get_wallet_status",
-            return_value="wallet_status",
-        ):
-            mock_round_sequence.latest_synchronized_data.db = {
-                "token_to_data": test_case.token_to_data
-            }
-
-            self.http_handler.handle(incoming_message)
-
-        # after
-        self.assert_quantity_in_outbox(1)
-
-        mock_logger.assert_any_call(
-            logging.INFO,
-            "Received http request with method={}, url={} and body={!r}".format(
-                incoming_message.method, incoming_message.url, incoming_message.body
-            ),
-        )
-
-        # _handle_get
-        message = self.get_message_from_outbox()
-        has_attributes, error_str = self.message_has_attributes(
-            actual_message=message,
-            message_type=HttpMessage,
-            performative=HttpMessage.Performative.RESPONSE,
-            to=incoming_message.sender,
-            sender=incoming_message.to,
-            version=incoming_message.version,
-            status_code=test_case.response_status_code,
-            status_text=test_case.response_status_text,
-            headers=test_case.response_headers,
-            body=test_case.response_body,
         )
         assert has_attributes, error_str
 

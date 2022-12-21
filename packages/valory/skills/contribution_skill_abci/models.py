@@ -26,7 +26,6 @@ from packages.valory.skills.contribution_skill_abci.composition import (
 )
 from packages.valory.skills.dynamic_nft_abci.models import (
     Params as DynamicNFTAbciParams,
-    Sheet as DynamicNFTAbciSheet,
 )
 from packages.valory.skills.dynamic_nft_abci.rounds import (
     Event as DynamicNFTEvent,
@@ -45,7 +44,6 @@ from packages.valory.skills.reset_pause_abci.rounds import Event as ResetPauseEv
 DynamicNFTParams = DynamicNFTAbciParams
 Requests = BaseRequests
 BenchmarkTool = BaseBenchmarkTool
-Sheet = DynamicNFTAbciSheet
 
 MARGIN = 5
 

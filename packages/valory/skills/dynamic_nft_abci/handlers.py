@@ -89,25 +89,16 @@ class HttpHandler(BaseHttpHandler):
 
         # Route regexes
         hostname_regex = rf".*({uri_base_hostname}|localhost|127.0.0.1)(:\d+)?"
-        address_regex = r"0x[a-fA-F0-9]{40}"
         self.handler_url_regex = rf"{hostname_regex}\/.*"
         metadata_url_regex = rf"{hostname_regex}\/\d+"
-        leaderboard_url_regex = rf"{hostname_regex}\/leaderboard"
-        address_status_url_regex = (
-            rf"{hostname_regex}\/address_status/(?P<address>{address_regex})"
-        )
         health_url_regex = rf"{hostname_regex}\/healthcheck"
-        link_wallet_url_regex = rf"{hostname_regex}\/link"
 
         # Routes
         self.routes = {
             (HttpMethod.GET.value, HttpMethod.HEAD.value): [
                 (metadata_url_regex, self._handle_get_metadata),
-                (leaderboard_url_regex, self._handle_get_leaderboard),
-                (address_status_url_regex, self._handle_get_address_status),
                 (health_url_regex, self._handle_get_health),
             ],
-            (HttpMethod.POST.value): [(link_wallet_url_regex, self._handle_post_link)],
         }
 
         self.json_content_header = "Content-Type: application/json\n"
@@ -263,57 +254,6 @@ class HttpHandler(BaseHttpHandler):
 
         self.context.logger.info(f"Responding with token metadata={metadata}")
         self._send_ok_response(http_msg, http_dialogue, metadata)
-
-    def _handle_get_leaderboard(
-        self, http_msg: HttpMessage, http_dialogue: HttpDialogue
-    ) -> None:
-        """
-        Handle the leaderboard Http request.
-
-        :param http_msg: the http message
-        :param http_dialogue: the http dialogue
-        """
-        data = {"result": self.context.sheet.read()}
-        self._send_ok_response(http_msg, http_dialogue, data)
-
-    def _handle_get_address_status(
-        self, http_msg: HttpMessage, http_dialogue: HttpDialogue, address: str
-    ) -> None:
-        """
-        Handle the address_status Http request.
-
-        :param http_msg: the http message
-        :param http_dialogue: the http dialogue
-        """
-        data = {
-            "address": address,
-            "status": self.context.sheet.get_wallet_status(wallet_address=address),
-        }
-        self._send_ok_response(http_msg, http_dialogue, data)
-
-    def _handle_post_link(
-        self, http_msg: HttpMessage, http_dialogue: HttpDialogue
-    ) -> None:
-        """
-        Handle the link Http request.
-
-        :param http_msg: the http message
-        :param http_dialogue: the http dialogue
-        """
-        body = json.loads(http_msg.body)
-
-        if "discord_id" not in body or "wallet_address" not in body:
-            self._send_not_found_response(http_msg, http_dialogue)
-            return
-
-        discord_id = str(body["discord_id"])
-        wallet_address = body["wallet_address"]
-
-        if not re.match(DISCORD_ID_REGEX, discord_id):
-            self._handle_bad_request(http_msg, http_dialogue)
-
-        self.context.sheet.write(discord_id=discord_id, wallet_address=wallet_address)
-        self._send_ok_response(http_msg, http_dialogue, {})
 
     def _handle_get_health(
         self, http_msg: HttpMessage, http_dialogue: HttpDialogue
