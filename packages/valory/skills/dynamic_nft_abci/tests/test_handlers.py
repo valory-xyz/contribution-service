@@ -224,7 +224,7 @@ class TestHttpHandler(BaseSkillTestCase):
             ),
             HandlerTestCase(
                 name="no-handler",
-                request_url=f"wrong_uri",
+                request_url="wrong_uri",
                 token_to_data={},
                 request_body=b"some_body/",
                 response_status_code=BAD_REQUEST_CODE,

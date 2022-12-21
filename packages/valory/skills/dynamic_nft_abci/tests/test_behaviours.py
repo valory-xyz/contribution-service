@@ -186,12 +186,12 @@ DUMMY_API_RESPONSE = {
             "range": "Layers!B1:Z3",
             "majorDimension": "ROWS",
             "values": [
-                [f"0:bafybeif4dtvtnqjss4dhmwenxzhbyao6reqoxx5imlzxgxeh4bajnz444u"],
+                ["0:bafybeif4dtvtnqjss4dhmwenxzhbyao6reqoxx5imlzxgxeh4bajnz444u"],
                 [
-                    f"0:bafybeicy22hgzs7kwuw7wswht2q3gmv4daxyoga2mvr5f644lgzfconpn4",
-                    f"1000:bafybeih67y7g5qstirprambfsqd7dbunyyjlktpfqpukabp4fkrt4ziuba",
-                    f"2000:bafybeibiyqmsjgp7ofqktthkgi6up77w4mzrgyzii2mtiodic6h7v2h6de",
-                    f"3000:bafybeiheikuwkkwaygtssfkumzhursxh6a76546spakmr6wwrw6v3heb2a",
+                    "0:bafybeicy22hgzs7kwuw7wswht2q3gmv4daxyoga2mvr5f644lgzfconpn4",
+                    "1000:bafybeih67y7g5qstirprambfsqd7dbunyyjlktpfqpukabp4fkrt4ziuba",
+                    "2000:bafybeibiyqmsjgp7ofqktthkgi6up77w4mzrgyzii2mtiodic6h7v2h6de",
+                    "3000:bafybeiheikuwkkwaygtssfkumzhursxh6a76546spakmr6wwrw6v3heb2a",
                 ],
             ],
         },
@@ -207,8 +207,8 @@ DUMMY_BAD_API_RESPONSE_WRONG_THRESHOLDS["valueRanges"][1]["values"][1][
 ] = "10000:dummy_frame_hash_0"
 DUMMY_BAD_API_RESPONSE_WRONG_HASH = copy.deepcopy(DUMMY_API_RESPONSE)
 DUMMY_BAD_API_RESPONSE_WRONG_HASH["valueRanges"][1]["values"][1] = [
-    f"1000:bafybeicy22hgzs7kwuw7wswht2q3gmv4daxyoga2mvr5f644lgzfconpn4",
-    f"0:bafybeih67y7g5qstirprambfsqd7dbunyyjlktpfqpukabp4fkrt4ziuba",
+    "1000:bafybeicy22hgzs7kwuw7wswht2q3gmv4daxyoga2mvr5f644lgzfconpn4",
+    "0:bafybeih67y7g5qstirprambfsqd7dbunyyjlktpfqpukabp4fkrt4ziuba",
 ]
 
 SHEET_ID = "1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc"
@@ -1118,11 +1118,9 @@ class TestImageGenerationURLMockCheck(BaseDynamicNFTTest):
 
         # Mock the IPFS checks
         if kwargs.get("mock_http"):
-            for img_code in test_codes:
+            for _ in test_codes:
 
-                img_hash = IMAGE_CODE_TO_HASHES[img_code]
-
-                url = f"mock_ipfs"
+                url = "mock_ipfs"
 
                 self.mock_http_request(
                     request_kwargs=dict(
