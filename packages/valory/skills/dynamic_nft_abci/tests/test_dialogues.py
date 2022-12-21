@@ -21,7 +21,6 @@
 
 from pathlib import Path
 from typing import cast
-from unittest.mock import patch
 
 from aea.test_tools.test_skill import BaseSkillTestCase, COUNTERPARTY_AGENT_ADDRESS
 
