@@ -577,7 +577,9 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                         images_in_ipfs[image_code] = image_hash
                         continue
 
-                    # Send
+                    # Whitelist and send
+                    # Ignored for now until it is tested further
+                    # success = yield from self.whitelist_hash(image_hash)  # noqa: E800
                     self.context.logger.info(
                         f"Trying to push image with hash {image_hash}..."
                     )
@@ -622,7 +624,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
 
         self.set_done()
 
-    def update_layers(self):
+    def update_layers(self):  # pragma: no cover
         """Updates local layer if they dont match the ones from the leaderboard API"""
         api_data = LeaderboardObservationBehaviour.fix_api_data(
             self.synchronized_data.most_voted_api_data
@@ -666,7 +668,9 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
             else:
                 self.context.logger.info(f"Layer {layer_name} is already up to date")
 
-    def whitelist_hash(self, image_hash: str) -> Generator[None, None, bool]:
+    def whitelist_hash(
+        self, image_hash: str
+    ) -> Generator[None, None, bool]:  # pragma: no cover
         """Send a whitelist request to the whitelist server
 
         :param image_hash: the hash to whitelist
