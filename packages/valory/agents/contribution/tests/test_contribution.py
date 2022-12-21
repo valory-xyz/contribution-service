@@ -19,30 +19,14 @@
 
 """Integration tests for the valory/oracle_abci skill."""
 
-# pylint: skip-file
-
 from pathlib import Path
 from typing import Tuple
-import json
 import pytest
 from aea.configurations.data_types import PublicId
 from aea_test_autonomy.base_test_classes.agents import (
     BaseTestEnd2EndExecution,
     RoundChecks,
 )
-from aea_test_autonomy.fixture_helpers import abci_host  # noqa: F401
-from aea_test_autonomy.fixture_helpers import abci_port  # noqa: F401
-from aea_test_autonomy.fixture_helpers import flask_tendermint  # noqa: F401
-from aea_test_autonomy.fixture_helpers import ganache_addr  # noqa: F401
-from aea_test_autonomy.fixture_helpers import ganache_configuration  # noqa: F401
-from aea_test_autonomy.fixture_helpers import ganache_port  # noqa: F401
-from aea_test_autonomy.fixture_helpers import ganache_scope_class  # noqa: F401
-from aea_test_autonomy.fixture_helpers import ganache_scope_function  # noqa: F401
-from aea_test_autonomy.fixture_helpers import hardhat_addr  # noqa: F401
-from aea_test_autonomy.fixture_helpers import hardhat_port  # noqa: F401
-from aea_test_autonomy.fixture_helpers import key_pairs  # noqa: F401
-from aea_test_autonomy.fixture_helpers import tendermint  # noqa: F401
-from aea_test_autonomy.fixture_helpers import tendermint_port  # noqa: F401
 from packages.valory.agents.contribution.tests.helpers.fixtures import (  # noqa: F401
     UseHardHatContributionBaseTest,
     UseMockGoogleSheetsApiBaseTest,
