@@ -577,7 +577,9 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                         images_in_ipfs[image_code] = image_hash
                         continue
 
-                    # Send
+                    # Whitelist and send
+                    # Ignored for now until it is tested further
+                    # success = yield from self.whitelist_hash(image_hash)  # noqa: E800
                     self.context.logger.info(
                         f"Trying to push image with hash {image_hash}..."
                     )
