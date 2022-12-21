@@ -56,16 +56,25 @@ from packages.valory.agents.contribution.tests.helpers.docker import (
 from packages.valory.skills.abstract_round_abci.tests.test_io.test_ipfs import (  # noqa: F401
     ipfs_daemon,
 )
+from packages.valory.skills.registration_abci.rounds import RegistrationStartupRound
+from packages.valory.skills.reset_pause_abci.rounds import ResetAndPauseRound
+from packages.valory.skills.dynamic_nft_abci.rounds import (
+    NewTokensRound,
+    LeaderboardObservationRound,
+    ImageCodeCalculationRound,
+    ImageGenerationRound,
+    DBUpdateRound,
+)
 
 
 HAPPY_PATH: Tuple[RoundChecks, ...] = (
-    RoundChecks("registration_startup"),
-    RoundChecks("new_tokens", n_periods=2),
-    RoundChecks("leaderboard_observation", n_periods=2),
-    RoundChecks("image_code_calculation", n_periods=2),
-    RoundChecks("image_generation", n_periods=2),
-    RoundChecks("db_update", n_periods=2),
-    RoundChecks("reset_and_pause", n_periods=2),
+    RoundChecks(RegistrationStartupRound.auto_round_id()),
+    RoundChecks(NewTokensRound.auto_round_id(), n_periods=2),
+    RoundChecks(LeaderboardObservationRound.auto_round_id(), n_periods=2),
+    RoundChecks(ImageCodeCalculationRound.auto_round_id(), n_periods=2),
+    RoundChecks(ImageGenerationRound.auto_round_id(), n_periods=2),
+    RoundChecks(DBUpdateRound.auto_round_id(), n_periods=2),
+    RoundChecks(ResetAndPauseRound.auto_round_id(), n_periods=2),
 )
 
 # strict check log messages of the happy path

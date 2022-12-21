@@ -296,12 +296,12 @@ class BaseDynamicNFTTest(FSMBehaviourBaseCase):
         data = data if data is not None else {}
         self.fast_forward_to_behaviour(
             self.behaviour,  # type: ignore
-            self.behaviour_class.behaviour_id,
+            self.behaviour_class.auto_behaviour_id(),
             SynchronizedData(AbciAppDB(setup_data=AbciAppDB.data_to_lists(data))),
         )
         assert (
-            self.behaviour.current_behaviour.behaviour_id  # type: ignore
-            == self.behaviour_class.behaviour_id
+            self.behaviour.current_behaviour.auto_behaviour_id()  # type: ignore
+            == self.behaviour_class.auto_behaviour_id()
         )
 
     def complete(self, event: Event) -> None:
@@ -312,8 +312,8 @@ class BaseDynamicNFTTest(FSMBehaviourBaseCase):
         self._test_done_flag_set()
         self.end_round(done_event=event)
         assert (
-            self.behaviour.current_behaviour.behaviour_id  # type: ignore
-            == self.next_behaviour_class.behaviour_id
+            self.behaviour.current_behaviour.auto_behaviour_id()  # type: ignore
+            == self.next_behaviour_class.auto_behaviour_id()
         )
 
 
@@ -811,8 +811,8 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
         self._test_done_flag_set()
         self.end_round(done_event=test_case.event)
         assert (
-            self.behaviour.current_behaviour.behaviour_id  # type: ignore
-            == self.next_behaviour_class.behaviour_id
+            self.behaviour.current_behaviour.auto_behaviour_id()  # type: ignore
+            == self.next_behaviour_class.auto_behaviour_id()
         )
 
     @mock.patch.object(BaseBehaviour, "get_from_ipfs", return_value=False)
@@ -875,8 +875,8 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
             self._test_done_flag_set()
             self.end_round(done_event=test_case.event)
             assert (
-                self.behaviour.current_behaviour.behaviour_id  # type: ignore
-                == self.next_behaviour_class.behaviour_id
+                self.behaviour.current_behaviour.auto_behaviour_id()  # type: ignore
+                == self.next_behaviour_class.auto_behaviour_id()
             )
 
 
@@ -969,8 +969,8 @@ class TestImageGenerationErrorBehaviour(BaseDynamicNFTTest):
         self._test_done_flag_set()
         self.end_round(done_event=test_case.event)
         assert (
-            self.behaviour.current_behaviour.behaviour_id  # type: ignore
-            == self.next_behaviour_class.behaviour_id
+            self.behaviour.current_behaviour.auto_behaviour_id()  # type: ignore
+            == self.next_behaviour_class.auto_behaviour_id()
         )
 
     @mock.patch.object(BaseBehaviour, "send_to_ipfs", return_value=None)
@@ -1021,8 +1021,8 @@ class TestImageGenerationErrorBehaviour(BaseDynamicNFTTest):
         self._test_done_flag_set()
         self.end_round(done_event=test_case.event)
         assert (
-            self.behaviour.current_behaviour.behaviour_id  # type: ignore
-            == self.next_behaviour_class.behaviour_id
+            self.behaviour.current_behaviour.auto_behaviour_id()  # type: ignore
+            == self.next_behaviour_class.auto_behaviour_id()
         )
 
 
@@ -1030,7 +1030,9 @@ class TestDBUpdateBehaviour(BaseDynamicNFTTest):
     """Tests DBUpdateBehaviour"""
 
     behaviour_class = DBUpdateBehaviour
-    next_behaviour_class = make_degenerate_behaviour(FinishedDBUpdateRound.round_id)
+    next_behaviour_class = make_degenerate_behaviour(  # type: ignore
+        FinishedDBUpdateRound.auto_round_id()
+    )
 
     @pytest.mark.parametrize(
         "test_case",

@@ -19,6 +19,7 @@
 
 """This module contains the handlers for the skill of DynamicNFTAbciApp."""
 
+import datetime
 import json
 import re
 from enum import Enum
@@ -65,6 +66,7 @@ TendermintHandler = BaseTendermintHandler
 OK_CODE = 200
 NOT_FOUND_CODE = 404
 BAD_REQUEST_CODE = 400
+AVERAGE_PERIOD_SECONDS = 10
 DISCORD_ID_REGEX = r"^\d{16,20}$"
 
 
@@ -325,17 +327,25 @@ class HttpHandler(BaseHttpHandler):
         last_update_time = self.synchronized_data.last_update_time
 
         if last_update_time:
-            current_time = cast(
+            is_tm_unhealthy = cast(
                 SharedState, self.context.state
-            ).round_sequence.abci_app.last_timestamp.timestamp()
+            ).round_sequence.block_stall_deadline_expired
+
+            current_time = datetime.datetime.now().timestamp()
 
             observation_interval = self.context.params.observation_interval
 
             seconds_since_last_reset = current_time - last_update_time
             seconds_until_next_update = (
-                observation_interval - seconds_since_last_reset
+                AVERAGE_PERIOD_SECONDS + observation_interval - seconds_since_last_reset
             )  # this can be negative if we have passed the estimated reset time without resetting
-            is_healthy = seconds_since_last_reset < 2 * observation_interval
+
+            is_healthy = all(
+                [
+                    seconds_since_last_reset < 2 * observation_interval,
+                    not is_tm_unhealthy,
+                ]
+            )
 
         else:
             seconds_since_last_reset = None

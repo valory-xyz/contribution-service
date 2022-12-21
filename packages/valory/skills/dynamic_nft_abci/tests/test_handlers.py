@@ -19,6 +19,7 @@
 
 """Test the handlers.py module of the DynamicNFT skill."""
 
+import datetime
 import json
 import logging
 from dataclasses import dataclass
@@ -69,9 +70,9 @@ def get_dummy_metadata(token_id, image_hash):
 def get_dummy_health():
     """Get the dummy health data"""
     return {
-        "seconds_since_last_reset": 0,
+        "seconds_since_last_reset": 5.0,
         "healthy": True,
-        "seconds_until_next_update": 10,
+        "seconds_until_next_update": 15.0,
     }
 
 
@@ -240,15 +241,20 @@ class TestHttpHandler(BaseSkillTestCase):
         )
 
         # operation
-        with patch.object(self.logger, "log") as mock_logger:
-            with patch.object(
-                self.http_handler.context.state, "_round_sequence"
-            ) as mock_round_sequence:
-                mock_round_sequence.latest_synchronized_data.db = {
-                    "token_to_data": test_case.token_to_data,
-                    "last_update_time": 5,
-                }
-                mock_round_sequence.abci_app.last_timestamp.timestamp = lambda: 5
+        with patch.object(self.logger, "log") as mock_logger, patch.object(
+            self.http_handler.context.state, "_round_sequence"
+        ) as mock_round_sequence:
+            mock_now_time = datetime.datetime(2022, 1, 1)
+            mock_now_time_timestamp = mock_now_time.timestamp()
+            mock_round_sequence.latest_synchronized_data.db = {
+                "token_to_data": test_case.token_to_data,
+                "last_update_time": mock_now_time_timestamp - 5.0,  # 5 seconds before
+            }
+            mock_round_sequence.block_stall_deadline_expired = False
+
+            datetime_mock = Mock(wraps=datetime.datetime)
+            datetime_mock.now.return_value = mock_now_time
+            with patch("datetime.datetime", new=datetime_mock):
                 self.http_handler.handle(incoming_message)
 
         # after
