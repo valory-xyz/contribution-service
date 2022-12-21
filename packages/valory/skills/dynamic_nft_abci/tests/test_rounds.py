@@ -139,9 +139,9 @@ def get_image_code_calculation_payload_serialized() -> str:
 def get_dummy_images() -> dict:
     """Dummy image table"""
     return {
-        "dummy_image_code_a": "uri_1",
-        "dummy_image_code_b": "uri_2",
-        "dummy_image_code_c": "uri_3",
+        "dummy_image_code_a": "dummy_image_hash_a",
+        "dummy_image_code_b": "dummy_image_hash_b",
+        "dummy_image_code_c": "dummy_image_hash_c",
     }
 
 
@@ -402,7 +402,20 @@ class TestDBUpdateRound(BaseDynamicNFTRoundTestClass):
                 name="Happy path",
                 initial_data={
                     "image_code_to_hash": get_dummy_images(),
-                    "most_voted_token_updates": {},
+                    "token_to_data": {
+                        1: {
+                            "points": 0,
+                            "image_code": "dummy_image_code_a",
+                            "image_hash": "dummy_image_hash_a",
+                        }
+                    },
+                    "most_voted_token_updates": {
+                        1: {
+                            "points": 100,
+                            "image_code": "dummy_image_code_b",
+                            "image_hash": "dummy_image_hash_b",
+                        }
+                    },
                 },
                 payloads=get_payloads(
                     payload_cls=DBUpdatePayload,

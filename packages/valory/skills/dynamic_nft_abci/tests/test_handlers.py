@@ -62,12 +62,12 @@ def get_dummy_metadata(token_id, image_hash):
     }
 
 
-def get_dummy_health():
+def get_dummy_health(time_updated: bool = True):
     """Get the dummy health data"""
     return {
-        "seconds_since_last_reset": 5.0,
-        "healthy": True,
-        "seconds_until_next_update": 15.0,
+        "seconds_since_last_reset": 5.0 if time_updated else None,
+        "healthy": True if time_updated else None,
+        "seconds_until_next_update": 15.0 if time_updated else None,
     }
 
 
@@ -84,6 +84,8 @@ class HandlerTestCase:
     response_headers: str
     response_body: bytes
     method: str
+    n_outbox_msgs: int
+    set_last_update_time: bool = True
 
 
 class TestHttpHandler(BaseSkillTestCase):
@@ -179,6 +181,7 @@ class TestHttpHandler(BaseSkillTestCase):
                     get_dummy_metadata(0, "some_image_hash")
                 ).encode("utf-8"),
                 method="get",
+                n_outbox_msgs=1,
             ),
             HandlerTestCase(
                 name="id not in token table",
@@ -190,6 +193,7 @@ class TestHttpHandler(BaseSkillTestCase):
                 response_headers="some_headers",
                 response_body=b"",
                 method="get",
+                n_outbox_msgs=1,
             ),
             HandlerTestCase(
                 name="healthcheck",
@@ -201,6 +205,34 @@ class TestHttpHandler(BaseSkillTestCase):
                 response_headers="Content-Type: application/json\nsome_headers",
                 response_body=json.dumps(get_dummy_health()).encode("utf-8"),
                 method="get",
+                n_outbox_msgs=1,
+            ),
+            HandlerTestCase(
+                name="healthcheck_time_not_updated_yet",
+                request_url=f"{TOKEN_URI_BASE}healthcheck",
+                token_to_data={},
+                request_body=b"some_body/",
+                response_status_code=OK_CODE,
+                response_status_text="Success",
+                response_headers="Content-Type: application/json\nsome_headers",
+                response_body=json.dumps(get_dummy_health(time_updated=False)).encode(
+                    "utf-8"
+                ),
+                method="get",
+                n_outbox_msgs=1,
+                set_last_update_time=False,
+            ),
+            HandlerTestCase(
+                name="no-handler",
+                request_url=f"wrong_uri",
+                token_to_data={},
+                request_body=b"some_body/",
+                response_status_code=BAD_REQUEST_CODE,
+                response_status_text="Bad request",
+                response_headers="some_headers",
+                response_body=b"",
+                method="get",
+                n_outbox_msgs=0,
             ),
         ],
     )
@@ -230,45 +262,50 @@ class TestHttpHandler(BaseSkillTestCase):
             mock_now_time_timestamp = mock_now_time.timestamp()
             mock_round_sequence.latest_synchronized_data.db = {
                 "token_to_data": test_case.token_to_data,
-                "last_update_time": mock_now_time_timestamp - 5.0,  # 5 seconds before
+                "last_update_time": mock_now_time_timestamp - 5.0  # 5 seconds before
+                if test_case.set_last_update_time
+                else None,
             }
             mock_round_sequence.block_stall_deadline_expired = False
 
             datetime_mock = Mock(wraps=datetime.datetime)
             datetime_mock.now.return_value = mock_now_time
+
             with patch("datetime.datetime", new=datetime_mock):
                 self.http_handler.handle(incoming_message)
 
         # after
-        self.assert_quantity_in_outbox(1)
+        self.assert_quantity_in_outbox(test_case.n_outbox_msgs)
 
-        mock_logger.assert_any_call(
-            logging.INFO,
-            "Received http request with method={}, url={} and body={!r}".format(
-                incoming_message.method, incoming_message.url, incoming_message.body
-            ),
-        )
+        if test_case.n_outbox_msgs > 0:
 
-        # _handle_get
-        message = self.get_message_from_outbox()
-        has_attributes, error_str = self.message_has_attributes(
-            actual_message=message,
-            message_type=HttpMessage,
-            performative=HttpMessage.Performative.RESPONSE,
-            to=incoming_message.sender,
-            sender=incoming_message.to,
-            version=incoming_message.version,
-            status_code=test_case.response_status_code,
-            status_text=test_case.response_status_text,
-            headers=test_case.response_headers,
-            body=test_case.response_body,
-        )
-        assert has_attributes, error_str
+            mock_logger.assert_any_call(
+                logging.INFO,
+                "Received http request with method={}, url={} and body={!r}".format(
+                    incoming_message.method, incoming_message.url, incoming_message.body
+                ),
+            )
 
-        mock_logger.assert_any_call(
-            logging.INFO,
-            f"Responding with: {message}",
-        )
+            # _handle_get
+            message = self.get_message_from_outbox()
+            has_attributes, error_str = self.message_has_attributes(
+                actual_message=message,
+                message_type=HttpMessage,
+                performative=HttpMessage.Performative.RESPONSE,
+                to=incoming_message.sender,
+                sender=incoming_message.to,
+                version=incoming_message.version,
+                status_code=test_case.response_status_code,
+                status_text=test_case.response_status_text,
+                headers=test_case.response_headers,
+                body=test_case.response_body,
+            )
+            assert has_attributes, error_str
+
+            mock_logger.assert_any_call(
+                logging.INFO,
+                f"Responding with: {message}",
+            )
 
     def test_handle_request_post(self):
         """Test the _handle_request method of the handler where method is post."""
