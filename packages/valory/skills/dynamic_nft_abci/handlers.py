@@ -23,7 +23,7 @@ import datetime
 import json
 import re
 from enum import Enum
-from typing import cast
+from typing import Callable, Dict, Optional, Tuple, cast
 from urllib.parse import urlparse
 
 from aea.protocols.base import Message
@@ -67,14 +67,15 @@ OK_CODE = 200
 NOT_FOUND_CODE = 404
 BAD_REQUEST_CODE = 400
 AVERAGE_PERIOD_SECONDS = 10
+DISCORD_ID_REGEX = r"^\d{16,20}$"
 
 
-class Route(Enum):
-    """Handling route class"""
+class HttpMethod(Enum):
+    """Http methods"""
 
-    HEALTH = "health"
-    METADATA = "metadata"
-    NONE = "none"
+    GET = "get"
+    HEAD = "head"
+    POST = "post"
 
 
 class HttpHandler(BaseHttpHandler):
@@ -84,6 +85,23 @@ class HttpHandler(BaseHttpHandler):
 
     def setup(self) -> None:
         """Implement the setup."""
+        uri_base_hostname = urlparse(self.context.params.token_uri_base).hostname
+
+        # Route regexes
+        hostname_regex = rf".*({uri_base_hostname}|localhost|127.0.0.1)(:\d+)?"
+        self.handler_url_regex = rf"{hostname_regex}\/.*"
+        metadata_url_regex = rf"{hostname_regex}\/\d+"
+        health_url_regex = rf"{hostname_regex}\/healthcheck"
+
+        # Routes
+        self.routes = {
+            (HttpMethod.GET.value, HttpMethod.HEAD.value): [
+                (metadata_url_regex, self._handle_get_metadata),
+                (health_url_regex, self._handle_get_health),
+            ],
+        }
+
+        self.json_content_header = "Content-Type: application/json\n"
 
     @property
     def synchronized_data(self) -> SynchronizedData:
@@ -92,10 +110,10 @@ class HttpHandler(BaseHttpHandler):
             db=self.context.state.round_sequence.latest_synchronized_data.db
         )
 
-    def check_url(self, url) -> Route:
+    def _get_handler(self, url: str, method: str) -> Tuple[Optional[Callable], Dict]:
         """Check if an url is meant to be handled in this handler
 
-        We expect url to match the pattern {hostname}/{token_id},
+        We expect url to match the pattern {hostname}/.*,
         where hostname is allowed to be localhost, 127.0.0.1 or the token_uri_base's hostname.
         Examples:
             localhost:8000/0
@@ -104,22 +122,31 @@ class HttpHandler(BaseHttpHandler):
             http://pfp.staging.autonolas.tech/120
 
         :param url: the url to check
-        :returns: True if the message is intended to be handled by this handler
+        :returns: the handling method if the message is intended to be handled by this handler, None otherwise, and the regex captures
         """
-        uri_base_hostname = urlparse(self.context.params.token_uri_base).hostname
-        METADATA_URL = rf".*({uri_base_hostname}|localhost|127.0.0.1)(:\d+)?\/\d+"
-        HEALTH_URL = rf".*({uri_base_hostname}|localhost|127.0.0.1)(:\d+)?\/healthcheck"
+        # Check base url
+        if not re.match(self.handler_url_regex, url):
+            self.context.logger.info(
+                f"The url {url} does not match the DynamicNFT HttpHandler's pattern"
+            )
+            return None, {}
 
-        if re.match(METADATA_URL, url):
-            return Route.METADATA
+        # Check if there is a route for this request
+        for methods, routes in self.routes.items():
+            if method not in methods:
+                continue
 
-        if re.match(HEALTH_URL, url):
-            return Route.HEALTH
+            for route in routes:
+                # Routes are tuples like (route_regex, handle_method)
+                m = re.match(route[0], url)
+                if m:
+                    return route[1], m.groupdict()
 
+        # No route found
         self.context.logger.info(
-            f"The url {url} does not match the DynamicNFT HttpHandler's pattern"
+            f"The message [{method}] {url} is intended for the DynamicNFT HttpHandler but did not match any valid pattern"
         )
-        return Route.NONE
+        return self._handle_bad_request, {}
 
     def handle(self, message: Message) -> None:
         """
@@ -138,9 +165,8 @@ class HttpHandler(BaseHttpHandler):
             return
 
         # Check if this message is for this skill. If not, send to super()
-        # We expect requests to https://pfp.staging.autonolas.tech/{token_id}
-        handler_route = self.check_url(http_msg.url)
-        if handler_route == Route.NONE:
+        handler, kwargs = self._get_handler(http_msg.url, http_msg.method)
+        if not handler:
             super().handle(message)
             return
 
@@ -158,17 +184,6 @@ class HttpHandler(BaseHttpHandler):
             return
 
         # Handle message
-        self._handle_request(http_msg, http_dialogue, handler_route)
-
-    def _handle_request(
-        self, http_msg: HttpMessage, http_dialogue: HttpDialogue, handler_route: Route
-    ) -> None:
-        """
-        Handle a Http request.
-
-        :param http_msg: the http message
-        :param http_dialogue: the http dialogue
-        """
         self.context.logger.info(
             "Received http request with method={}, url={} and body={!r}".format(
                 http_msg.method,
@@ -176,81 +191,13 @@ class HttpHandler(BaseHttpHandler):
                 http_msg.body,
             )
         )
-        if http_msg.method in ("get", "head"):
-            if handler_route == Route.METADATA:
-                self._handle_get_metadata(http_msg, http_dialogue)
-            if handler_route == Route.HEALTH:
-                self._handle_get_health(http_msg, http_dialogue)
-        else:
-            self._handle_non_get(http_msg, http_dialogue)  # reject other methods
+        handler(http_msg, http_dialogue, **kwargs)
 
-    def _handle_get_metadata(
+    def _handle_bad_request(
         self, http_msg: HttpMessage, http_dialogue: HttpDialogue
     ) -> None:
         """
-        Handle a Http request of verb GET.
-
-        :param http_msg: the http message
-        :param http_dialogue: the http dialogue
-        """
-        # Get the requested uri and the token table
-        request_uri = http_msg.url
-        token_id = str(request_uri.split("/")[-1])
-        token_to_data = self.synchronized_data.token_to_data
-
-        if token_id not in token_to_data:
-            self.context.logger.info(
-                f"Requested URL {request_uri} is not present in token table"
-            )
-
-            http_response = http_dialogue.reply(
-                performative=HttpMessage.Performative.RESPONSE,
-                target_message=http_msg,
-                version=http_msg.version,
-                status_code=NOT_FOUND_CODE,
-                status_text="Not found",
-                headers=http_msg.headers,
-                body=b"",
-            )
-        else:
-            self.context.logger.info(
-                f"Requested URL {request_uri} is present in token table"
-            )
-
-            image_hash = token_to_data[token_id]["image_hash"]
-
-            # Build token metadata
-            metadata = {
-                "title": "Autonolas Contribute Badges",
-                "name": f"Badge {token_id}",
-                "description": "This NFT recognizes the contributions made by the holder to the Autonolas Community.",
-                "image": f"ipfs://{image_hash}",
-                "attributes": [],  # TODO: add attributes
-            }
-
-            self.context.logger.info(f"Responding with token metadata={metadata}")
-
-            content_header = "Content-Type: application/json\n"
-
-            http_response = http_dialogue.reply(
-                performative=HttpMessage.Performative.RESPONSE,
-                target_message=http_msg,
-                version=http_msg.version,
-                status_code=OK_CODE,
-                status_text="Success",
-                headers=f"{content_header}{http_msg.headers}",
-                body=json.dumps(metadata).encode("utf-8"),
-            )
-
-        # Send response
-        self.context.logger.info("Responding with: {}".format(http_response))
-        self.context.outbox.put_message(message=http_response)
-
-    def _handle_non_get(
-        self, http_msg: HttpMessage, http_dialogue: HttpDialogue
-    ) -> None:
-        """
-        Handle a Http request different from GET.
+        Handle a Http bad request.
 
         :param http_msg: the http message
         :param http_dialogue: the http dialogue
@@ -268,6 +215,45 @@ class HttpHandler(BaseHttpHandler):
         # Send response
         self.context.logger.info("Responding with: {}".format(http_response))
         self.context.outbox.put_message(message=http_response)
+
+    def _handle_get_metadata(
+        self, http_msg: HttpMessage, http_dialogue: HttpDialogue
+    ) -> None:
+        """
+        Handle the metadata Http request.
+
+        :param http_msg: the http message
+        :param http_dialogue: the http dialogue
+        """
+        # Get the requested uri and the token table
+        request_uri = http_msg.url
+        token_id = str(request_uri.split("/")[-1])
+        token_to_data = self.synchronized_data.token_to_data
+
+        if token_id not in token_to_data:
+            self.context.logger.info(
+                f"Requested URL {request_uri} is not present in token table"
+            )
+            self._send_not_found_response(http_msg, http_dialogue)
+            return
+
+        self.context.logger.info(
+            f"Requested URL {request_uri} is present in token table"
+        )
+
+        image_hash = token_to_data[token_id]["image_hash"]
+
+        # Build token metadata
+        metadata = {
+            "title": "Autonolas Contribute Badges",
+            "name": f"Badge {token_id}",
+            "description": "This NFT recognizes the contributions made by the holder to the Autonolas Community.",
+            "image": f"ipfs://{image_hash}",
+            "attributes": [],  # TODO: add attributes
+        }
+
+        self.context.logger.info(f"Responding with token metadata={metadata}")
+        self._send_ok_response(http_msg, http_dialogue, metadata)
 
     def _handle_get_health(
         self, http_msg: HttpMessage, http_dialogue: HttpDialogue
@@ -312,20 +298,39 @@ class HttpHandler(BaseHttpHandler):
             "seconds_until_next_update": seconds_until_next_update,
         }
 
-        self.context.logger.info(f"Responding with health data={data}")
+        self._send_ok_response(http_msg, http_dialogue, data)
 
-        content_header = "Content-Type: application/json\n"
-
+    def _send_ok_response(
+        self, http_msg: HttpMessage, http_dialogue: HttpDialogue, data: Dict
+    ) -> None:
+        """Send an OK response with the provided data"""
         http_response = http_dialogue.reply(
             performative=HttpMessage.Performative.RESPONSE,
             target_message=http_msg,
             version=http_msg.version,
             status_code=OK_CODE,
             status_text="Success",
-            headers=f"{content_header}{http_msg.headers}",
+            headers=f"{self.json_content_header}{http_msg.headers}",
             body=json.dumps(data).encode("utf-8"),
         )
 
+        # Send response
+        self.context.logger.info("Responding with: {}".format(http_response))
+        self.context.outbox.put_message(message=http_response)
+
+    def _send_not_found_response(
+        self, http_msg: HttpMessage, http_dialogue: HttpDialogue
+    ) -> None:
+        """Send an not found response"""
+        http_response = http_dialogue.reply(
+            performative=HttpMessage.Performative.RESPONSE,
+            target_message=http_msg,
+            version=http_msg.version,
+            status_code=NOT_FOUND_CODE,
+            status_text="Not found",
+            headers=http_msg.headers,
+            body=b"",
+        )
         # Send response
         self.context.logger.info("Responding with: {}".format(http_response))
         self.context.outbox.put_message(message=http_response)

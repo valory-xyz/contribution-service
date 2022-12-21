@@ -41,7 +41,6 @@ from packages.valory.skills.dynamic_nft_abci.handlers import (
     HttpHandler,
     NOT_FOUND_CODE,
     OK_CODE,
-    Route,
 )
 
 
@@ -78,11 +77,13 @@ class HandlerTestCase:
 
     name: str
     request_url: str
+    request_body: bytes
     token_to_data: Dict[str, str]
     response_status_code: int
     response_status_text: str
     response_headers: str
-    body: bytes
+    response_body: bytes
+    method: str
 
 
 class TestHttpHandler(BaseSkillTestCase):
@@ -127,13 +128,17 @@ class TestHttpHandler(BaseSkillTestCase):
             ),
         )
 
+    def setup(self) -> None:
+        """Setup"""
+        self.http_handler.setup()
+
     def test_setup(self):
-        """Test the setup method of the http_echo handler."""
+        """Test the setup method of the handler."""
         assert self.http_handler.setup() is None
         self.assert_quantity_in_outbox(0)
 
     def test_handle_unidentified_dialogue(self):
-        """Test the _handle_unidentified_dialogue method of the http_echo handler."""
+        """Test the _handle_unidentified_dialogue method of the handler."""
         # setup
         incorrect_dialogue_reference = ("", "")
         incoming_message = self.build_incoming_message(
@@ -166,35 +171,41 @@ class TestHttpHandler(BaseSkillTestCase):
                 name="id in token table",
                 request_url=f"{TOKEN_URI_BASE}0",
                 token_to_data={"0": {"image_hash": "some_image_hash"}},
+                request_body=b"some_body/",
                 response_status_code=OK_CODE,
                 response_status_text="Success",
                 response_headers="Content-Type: application/json\nsome_headers",
-                body=json.dumps(get_dummy_metadata(0, "some_image_hash")).encode(
-                    "utf-8"
-                ),
+                response_body=json.dumps(
+                    get_dummy_metadata(0, "some_image_hash")
+                ).encode("utf-8"),
+                method="get",
             ),
             HandlerTestCase(
                 name="id not in token table",
                 request_url=f"{TOKEN_URI_BASE}1",
                 token_to_data={},
+                request_body=b"some_body/",
                 response_status_code=NOT_FOUND_CODE,
                 response_status_text="Not found",
                 response_headers="some_headers",
-                body=b"",
+                response_body=b"",
+                method="get",
             ),
             HandlerTestCase(
                 name="healthcheck",
                 request_url=f"{TOKEN_URI_BASE}healthcheck",
                 token_to_data={},
+                request_body=b"some_body/",
                 response_status_code=OK_CODE,
                 response_status_text="Success",
                 response_headers="Content-Type: application/json\nsome_headers",
-                body=json.dumps(get_dummy_health()).encode("utf-8"),
+                response_body=json.dumps(get_dummy_health()).encode("utf-8"),
+                method="get",
             ),
         ],
     )
     def test_handle_request_get(self, test_case):
-        """Test the _handle_request method of the http_echo handler where method is get."""
+        """Test the _handle_request method of the handler where method is get."""
         # setup
         incoming_message = cast(
             HttpMessage,
@@ -203,11 +214,11 @@ class TestHttpHandler(BaseSkillTestCase):
                 performative=HttpMessage.Performative.REQUEST,
                 to=self.skill_id,
                 sender=self.sender,
-                method=self.get_method,
+                method=test_case.method,
                 url=test_case.request_url,
                 version=self.version,
                 headers=self.headers,
-                body=self.body,
+                body=test_case.request_body,
             ),
         )
 
@@ -250,7 +261,7 @@ class TestHttpHandler(BaseSkillTestCase):
             status_code=test_case.response_status_code,
             status_text=test_case.response_status_text,
             headers=test_case.response_headers,
-            body=test_case.body,
+            body=test_case.response_body,
         )
         assert has_attributes, error_str
 
@@ -260,7 +271,7 @@ class TestHttpHandler(BaseSkillTestCase):
         )
 
     def test_handle_request_post(self):
-        """Test the _handle_request method of the http_echo handler where method is post."""
+        """Test the _handle_request method of the handler where method is post."""
         # setup
         incoming_message = cast(
             HttpMessage,
@@ -313,24 +324,37 @@ class TestHttpHandler(BaseSkillTestCase):
         )
 
     def test_teardown(self):
-        """Test the teardown method of the http_echo handler."""
+        """Test the teardown method of the handler."""
         assert self.http_handler.teardown() is None
         self.assert_quantity_in_outbox(0)
 
     @pytest.mark.parametrize(
-        "url, expected_value",
+        "url, method, expected_handler_name",
         [
-            ("wrong_url", Route.NONE),
-            ("http://pfp.staging.autonolas.tech/healthcheck", Route.HEALTH),
-            ("http://pfp.staging.autonolas.tech/healt-hcheck", Route.NONE),
-            ("http://pfp.staging.autonolas.tech/1", Route.METADATA),
-            ("http://pfp.staging.autonolas.tech/999", Route.METADATA),
-            ("http://pfp.staging.autonolas.tech/-999", Route.NONE),
+            ("wrong_url", "get", None),
+            (
+                "http://pfp.staging.autonolas.tech/healthcheck",
+                "get",
+                "_handle_get_health",
+            ),
+            (
+                "http://pfp.staging.autonolas.tech/healt-hcheck",
+                "get",
+                "_handle_bad_request",
+            ),
+            ("http://pfp.staging.autonolas.tech/1", "get", "_handle_get_metadata"),
+            ("http://pfp.staging.autonolas.tech/999", "get", "_handle_get_metadata"),
+            ("http://pfp.staging.autonolas.tech/-999", "get", "_handle_bad_request"),
         ],
     )
-    def test_check_url(self, url, expected_value):
+    def test_get_handler(self, url, method, expected_handler_name):
         """Test check_url"""
-        actual_value = self.http_handler.check_url(url)
+        expected_handler = (
+            getattr(self.http_handler, expected_handler_name)
+            if expected_handler_name
+            else None
+        )
+        actual_handler, _ = self.http_handler._get_handler(url, method)
         assert (
-            actual_value.value == expected_value.value
-        ), f"Wrong value for {url}. Expected {expected_value}, got {actual_value}"
+            actual_handler == expected_handler
+        ), f"Wrong value for {url}. Expected {expected_handler}, got {actual_handler}"

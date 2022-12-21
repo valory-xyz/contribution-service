@@ -19,12 +19,8 @@
 
 """Integration tests for the valory/oracle_abci skill."""
 
-# pylint: skip-file
-
-from copy import deepcopy
 from pathlib import Path
 from typing import Tuple
-
 import pytest
 from aea.configurations.data_types import PublicId
 from aea_test_autonomy.base_test_classes.agents import (
@@ -106,27 +102,27 @@ class BaseTestEnd2EndContributionNormalExecution(BaseTestEnd2EndExecution):
     happy_path = HAPPY_PATH
     package_registry_src_rel = PACKAGES_DIR
 
-    __args_prefix = f"vendor.valory.skills.{PublicId.from_str(skill_package).name}.models.params.args"
+    __param_args_prefix = f"vendor.valory.skills.{PublicId.from_str(skill_package).name}.models.params.args"
 
     extra_configs = [
         {
-            "dotted_path": f"{__args_prefix}.leaderboard_base_endpoint",
+            "dotted_path": f"{__param_args_prefix}.leaderboard_base_endpoint",
             "value": f"{MOCK_API_ADDRESS}:{MOCK_API_PORT}",
         },
         {
-            "dotted_path": f"{__args_prefix}.leaderboard_sheet_id",
+            "dotted_path": f"{__param_args_prefix}.leaderboard_sheet_id",
             "value": "mock_sheet_id",
         },
         {
-            "dotted_path": f"{__args_prefix}.ipfs_domain_name",
+            "dotted_path": f"{__param_args_prefix}.ipfs_domain_name",
             "value": "/dns/localhost/tcp/5001/http",
         },
         {
-            "dotted_path": f"{__args_prefix}.whitelist_endpoint",
+            "dotted_path": f"{__param_args_prefix}.whitelist_endpoint",
             "value": f"{MOCK_WHITELIST_ADDRESS}:{MOCK_API_PORT}/mock_whitelist",
         },
         {
-            "dotted_path": f"{__args_prefix}.ipfs_gateway_base_url",
+            "dotted_path": f"{__param_args_prefix}.ipfs_gateway_base_url",
             "value": f"{MOCK_IPFS_ADDRESS}:{MOCK_API_PORT}/mock_ipfs/",
         },
     ]
