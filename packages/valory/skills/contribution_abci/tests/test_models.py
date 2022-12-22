@@ -16,13 +16,18 @@
 #   limitations under the License.
 #
 # ------------------------------------------------------------------------------
-# pylint: skip-file
 
-"""This package contains round behaviours of the contribution skill."""
-from packages.valory.skills.contribution_skill_abci.behaviours import (  # noqa
-    ContributionSkillConsensusBehaviour,
-)
+"""Test the models.py module of the contribution skill."""
+
+from packages.valory.skills.contribution_abci.models import SharedState
+from packages.valory.skills.abstract_round_abci.test_tools.base import DummyContext
 
 
-def test_import() -> None:
-    """Test that the 'behaviours.py' of the contribution skill can be imported."""
+class TestSharedState:  # pylint: disable=too-few-public-methods
+    """Test SharedState of the contribution skill."""
+
+    def test_initialization(  # pylint: disable=no-self-use
+        self,
+    ) -> None:
+        """Test initialization."""
+        SharedState(name="", skill_context=DummyContext())

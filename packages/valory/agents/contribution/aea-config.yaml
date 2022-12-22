@@ -12,7 +12,7 @@ fingerprint:
   tests/helpers/data/json_server/data.json: bafybeidxxrnko3lmzgcces5nfkkotinqa5mv343fuhezkb6tdbjv4cgsoy
   tests/helpers/docker.py: bafybeihjh65uysuk3pp2bn3c4l2ish6tp2ay64w5tsetsx53hqnthgntwa
   tests/helpers/fixtures.py: bafybeibbzank7chfncg6ifb4r3lvnttahixu2cq7cs6nnglbeolwlbrsvm
-  tests/test_contribution.py: bafybeide7y3zsgnhk6nceukcvz5hgginqc2lrgrb55mkx6egy2cbjjclae
+  tests/test_contribution.py: bafybeifmangtotjnktk43ytn6qrixw2jczn3xx5h6tjmu5vi6klw5y3otq
 fingerprint_ignore_patterns: []
 connections:
 - fetchai/http_server:0.22.0:bafybeiaf2w3jfemqu4zrtfzewexh5ttqytvhv4tqfzcrv6qxsqnxrv7eu4
@@ -29,7 +29,7 @@ protocols:
 skills:
 - valory/abstract_abci:0.1.0:bafybeibqgoxd25itxyuauou6xybiwu3nxkhqwxklggvdwcg42b7expnflq
 - valory/abstract_round_abci:0.1.0:bafybeih7sibc3evofk3fnmfijavyp6hhkku7fg4l336qysqwlnhvjhsvlm
-- valory/contribution_skill_abci:0.1.0:bafybeigtfihwwx5y36yc44dh44lwny73zv53sbyrvexoxpxzdha3gstf6m
+- valory/contribution_abci:0.1.0:bafybeicm2zetehnk6qajdfjdlvxr4yazrpahe2kbrzrt5rmcbgc27wjf3a
 - valory/dynamic_nft_abci:0.1.0:bafybeic6nccsmvbalb3fni6vfmt557yrwdmbrx4dkmlxuw52tijpurvnlu
 - valory/registration_abci:0.1.0:bafybeibvuyylbaxqits6eskh5i3wrtyglr4l7gmahvcaqevphv7haj5mbi
 - valory/reset_pause_abci:0.1.0:bafybeibq5tl6xf4g22ojzzeglylbanu5nxfsf6s6g7uf3yubogpv3acc4q
@@ -72,7 +72,7 @@ default_connection: null
 public_id: valory/abci:0.1.0
 type: connection
 config:
-  target_skill_id: valory/contribution_skill_abci:0.1.0
+  target_skill_id: valory/contribution_abci:0.1.0
   host: ${ABCI_HOST:str:localhost}
   port: ${ABCI_PORT:int:26658}
   use_tendermint: ${ABCI_USE_TENDERMINT:bool:false}
@@ -103,12 +103,12 @@ cert_requests:
   save_path: .certs/acn_cosmos_9005.txt
 is_abstract: true
 ---
-public_id: valory/contribution_skill_abci:0.1.0
+public_id: valory/contribution_abci:0.1.0
 type: skill
 models:
   params:
     args:
-      basic_image_cid: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_BASIC_IMAGE_CID:str:bafybeiabtdl53v2a3irrgrg7eujzffjallpymli763wvhv6gceurfmcemm}
+      basic_image_cid: ${SKILL_CONTRIBUTION_ABCI_MODELS_PARAMS_ARGS_BASIC_IMAGE_CID:str:bafybeiabtdl53v2a3irrgrg7eujzffjallpymli763wvhv6gceurfmcemm}
       cleanup_history_depth: 1
       cleanup_history_depth_current: null
       consensus:
@@ -132,16 +132,16 @@ models:
             - ed25519
           version: {}
         voting_power: '10'
-      ipfs_domain_name: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_IPFS_DOMAIN_NAME:str:/dns/registry.autonolas.tech/tcp/443/https}
-      ipfs_gateway_base_url: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_IPFS_GATEWAY_BASE_URL:str:https://gateway.staging.autonolas.tech/ipfs/}
+      ipfs_domain_name: ${SKILL_CONTRIBUTION_ABCI_MODELS_PARAMS_ARGS_IPFS_DOMAIN_NAME:str:/dns/registry.autonolas.tech/tcp/443/https}
+      ipfs_gateway_base_url: ${SKILL_CONTRIBUTION_ABCI_MODELS_PARAMS_ARGS_IPFS_GATEWAY_BASE_URL:str:https://gateway.staging.autonolas.tech/ipfs/}
       keeper_timeout: 30.0
-      leaderboard_api_key: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_LEADERBOARD_API_KEY:str:null}
-      leaderboard_base_endpoint: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_LEADERBOARD_BASE_ENDPOINT:str:https://sheets.googleapis.com/v4/spreadsheets}
-      leaderboard_layers_range: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_LEADERBOARD_LAYERS_RANGE:str:Layers!B1:Z3}
-      leaderboard_points_range: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_LEADERBOARD_POINTS_RANGE:str:Ranking!B2:C302}
-      leaderboard_sheet_id: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_LEADERBOARD_SHEET_ID:str:1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc}
+      leaderboard_api_key: ${SKILL_CONTRIBUTION_ABCI_MODELS_PARAMS_ARGS_LEADERBOARD_API_KEY:str:null}
+      leaderboard_base_endpoint: ${SKILL_CONTRIBUTION_ABCI_MODELS_PARAMS_ARGS_LEADERBOARD_BASE_ENDPOINT:str:https://sheets.googleapis.com/v4/spreadsheets}
+      leaderboard_layers_range: ${SKILL_CONTRIBUTION_ABCI_MODELS_PARAMS_ARGS_LEADERBOARD_LAYERS_RANGE:str:Layers!B1:Z3}
+      leaderboard_points_range: ${SKILL_CONTRIBUTION_ABCI_MODELS_PARAMS_ARGS_LEADERBOARD_POINTS_RANGE:str:Ranking!B2:C302}
+      leaderboard_sheet_id: ${SKILL_CONTRIBUTION_ABCI_MODELS_PARAMS_ARGS_LEADERBOARD_SHEET_ID:str:1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc}
       max_healthcheck: 120
-      observation_interval: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_OBSERVATION_INTERVAL:int:300}
+      observation_interval: ${SKILL_CONTRIBUTION_ABCI_MODELS_PARAMS_ARGS_OBSERVATION_INTERVAL:int:300}
       on_chain_service_id: null
       reset_tendermint_after: 2
       retry_attempts: 400
@@ -150,12 +150,12 @@ models:
       service_id: contribution_service
       service_registry_address: null
       sleep_time: 1
-      dynamic_contribution_contract_address: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_DYNAMIC_CONTRIBUTION_CONTRACT_ADDRESS:str:0x5FbDB2315678afecb367f032d93F642f64180aa3}
+      dynamic_contribution_contract_address: ${SKILL_CONTRIBUTION_ABCI_MODELS_PARAMS_ARGS_DYNAMIC_CONTRIBUTION_CONTRACT_ADDRESS:str:0x5FbDB2315678afecb367f032d93F642f64180aa3}
       tendermint_check_sleep_delay: 3
       tendermint_com_url: ${TENDERMINT_COM_URL:str:http://localhost:8080}
       tendermint_max_retries: 5
       tendermint_url: ${TENDERMINT_URL:str:http://localhost:26657}
-      token_uri_base: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_TOKEN_URI_BASE:str:https://pfp.staging.autonolas.tech/}
+      token_uri_base: ${SKILL_CONTRIBUTION_ABCI_MODELS_PARAMS_ARGS_TOKEN_URI_BASE:str:https://pfp.staging.autonolas.tech/}
       whitelist_api_key: null
       whitelist_endpoint: http://localhost
 ---
@@ -163,4 +163,4 @@ public_id: fetchai/http_server:0.22.0:bafybeicblltx7ha3ulthg7bzfccuqqyjmihhrvfez
 type: connection
 config:
   host: 0.0.0.0
-  target_skill_id: valory/contribution_skill_abci:0.1.0
+  target_skill_id: valory/contribution_abci:0.1.0
