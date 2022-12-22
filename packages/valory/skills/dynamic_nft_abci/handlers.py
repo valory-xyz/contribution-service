@@ -69,6 +69,14 @@ BAD_REQUEST_CODE = 400
 AVERAGE_PERIOD_SECONDS = 10
 DISCORD_ID_REGEX = r"^\d{16,20}$"
 
+BADGE_LEVELS = {
+    "Idle": 100,
+    "Basic": 50000,
+    "Legendary": 100000,
+    "Epic": 150000,
+    "Super Epic": None,
+}
+
 
 class HttpMethod(Enum):
     """Http methods"""
@@ -243,13 +251,27 @@ class HttpHandler(BaseHttpHandler):
 
         image_hash = token_to_data[token_id]["image_hash"]
 
+        # Attributes
+        user_points = token_to_data[token_id]["points"]
+        user_level = None
+        for level, threshold in BADGE_LEVELS.items():
+            if not threshold or user_points < threshold:
+                user_level = level
+                break
+
         # Build token metadata
         metadata = {
             "title": "Autonolas Contribute Badges",
             "name": f"Badge {token_id}",
             "description": "This NFT recognizes the contributions made by the holder to the Autonolas Community.",
             "image": f"ipfs://{image_hash}",
-            "attributes": [],  # TODO: add attributes
+            "attributes": [
+                {"trait_type": "Score", "value": user_points},
+                {
+                    "trait_type": "Level",
+                    "value": user_level,
+                },
+            ],
         }
 
         self.context.logger.info(f"Responding with token metadata={metadata}")
