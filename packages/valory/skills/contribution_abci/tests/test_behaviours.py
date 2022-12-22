@@ -16,10 +16,13 @@
 #   limitations under the License.
 #
 # ------------------------------------------------------------------------------
+# pylint: skip-file
 
-"""This module contains the implementation of the contribution skill."""
+"""This package contains round behaviours of the contribution skill."""
+from packages.valory.skills.contribution_abci.behaviours import (  # noqa
+    ContributionSkillConsensusBehaviour,
+)
 
-from aea.configurations.base import PublicId
 
-
-PUBLIC_ID = PublicId.from_str("valory/contribution_skill_abci:0.1.0")
+def test_import() -> None:
+    """Test that the 'behaviours.py' of the contribution skill can be imported."""

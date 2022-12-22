@@ -21,7 +21,7 @@
 
 from typing import Any
 
-from packages.valory.skills.contribution_skill_abci.composition import (
+from packages.valory.skills.contribution_abci.composition import (
     ContributionSkillAbciApp,
 )
 from packages.valory.skills.dynamic_nft_abci.models import (

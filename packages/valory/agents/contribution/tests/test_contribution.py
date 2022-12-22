@@ -96,7 +96,7 @@ class BaseTestEnd2EndContributionNormalExecution(BaseTestEnd2EndExecution):
     """Base class for the contribution service e2e tests."""
 
     agent_package = "valory/contribution:0.1.0"
-    skill_package = "valory/contribution_skill_abci:0.1.0"
+    skill_package = "valory/contribution_abci:0.1.0"
     wait_to_finish = 180
     strict_check_strings = STRICT_CHECK_STRINGS
     happy_path = HAPPY_PATH

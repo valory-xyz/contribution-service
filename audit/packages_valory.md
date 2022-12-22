@@ -52,11 +52,11 @@ https://community.infura.io/t/getlogs-error-query-returned-more-than-1000-result
 ...
     ├── abstract_round_abci (out of scope)
 ...
-    ├── contribution_skill_abci
+    ├── contribution_abci
     │   ├── behaviours.py (ok)
     │   ├── composition.py (ok)
     │   ├── dialogues.py (ok)
-    │   ├── fsm_specification.yaml 
+    │   ├── fsm_specification.yaml
     │   ├── handlers.py (ok)
     │   ├── __init__.py
     │   ├── models.py (ok)
@@ -80,7 +80,7 @@ def get_member_to_token_id(self) -> Generator[None, None, dict]:
             from_address=NULL_ADDRESS,
         )
 Transfer(address(0), to, id); => correct
-Keep in mind that you can always know in advance the block in which the contract is created. 
+Keep in mind that you can always know in advance the block in which the contract is created.
 Example: https://etherscan.io/tx/0x4da20a09b78d6c3d04489f464b9fd98e0f09c59bbb60e74e44c46c1cb8a58c81
 Block: 16097553
 Timestamp: Dec-02-2022 01:54:35 PM +UTC
