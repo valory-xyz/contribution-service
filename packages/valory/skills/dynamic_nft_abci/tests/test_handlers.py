@@ -58,7 +58,13 @@ def get_dummy_metadata(token_id, image_hash):
         "name": f"Badge {token_id}",
         "description": "This NFT recognizes the contributions made by the holder to the Autonolas Community.",
         "image": f"ipfs://{image_hash}",
-        "attributes": [],  # TODO: add attributes
+        "attributes": [
+            {"trait_type": "Score", "value": 10},
+            {
+                "trait_type": "Level",
+                "value": "Idle",
+            },
+        ],
     }
 
 
@@ -172,7 +178,7 @@ class TestHttpHandler(BaseSkillTestCase):
             HandlerTestCase(
                 name="id in token table",
                 request_url=f"{TOKEN_URI_BASE}0",
-                token_to_data={"0": {"image_hash": "some_image_hash"}},
+                token_to_data={"0": {"image_hash": "some_image_hash", "points": 10}},
                 request_body=b"some_body/",
                 response_status_code=OK_CODE,
                 response_status_text="Success",
