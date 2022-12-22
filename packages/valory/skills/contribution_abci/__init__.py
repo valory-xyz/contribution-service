@@ -17,10 +17,9 @@
 #
 # ------------------------------------------------------------------------------
 
-"""Test the handlers.py module of the contribution skill."""
+"""This module contains the implementation of the contribution skill."""
 
-import packages.valory.skills.contribution_skill_abci.handlers  # pylint: disable=unused-import # noqa: F401
+from aea.configurations.base import PublicId
 
 
-def test_import() -> None:
-    """Test that the 'handlers.py' of the contribution skill can be imported."""
+PUBLIC_ID = PublicId.from_str("valory/contribution_abci:0.1.0")

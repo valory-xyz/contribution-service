@@ -17,10 +17,10 @@
 #
 # ------------------------------------------------------------------------------
 
-"""Test the dialogues.py module of the contribution skill."""
+"""Test the handlers.py module of the contribution skill."""
 
-import packages.valory.skills.contribution_skill_abci.dialogues  # pylint: disable=unused-import # noqa: F401
+import packages.valory.skills.contribution_abci.handlers  # pylint: disable=unused-import # noqa: F401
 
 
 def test_import() -> None:
-    """Test that the 'dialogues.py' of the contribution skill can be imported."""
+    """Test that the 'handlers.py' of the contribution skill can be imported."""

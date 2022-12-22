@@ -20,7 +20,7 @@
 """This package contains round behaviours of ContributionSkillAbci."""
 from typing import Set, Type
 
-from packages.valory.skills.contribution_skill_abci.composition import (
+from packages.valory.skills.contribution_abci.composition import (
     ContributionSkillAbciApp,
 )
 from packages.valory.skills.dynamic_nft_abci.behaviours import (
