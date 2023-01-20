@@ -23,6 +23,7 @@ import json
 import os
 import re
 import shutil
+from abc import ABC
 from logging import Logger
 from pathlib import Path
 from typing import Any, Dict, Generator, List, Optional, Set, Tuple, Type, cast
@@ -68,7 +69,6 @@ from packages.valory.skills.dynamic_nft_abci.rounds import (
     SynchronizedData,
 )
 from packages.valory.skills.dynamic_nft_abci.tools import SHEET_API_SCHEMA
-from abc import ABC
 
 
 NULL_ADDRESS = "0x0000000000000000000000000000000000000000"

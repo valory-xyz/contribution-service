@@ -313,7 +313,9 @@ def main() -> None:
         itertools.chain(
             Path("packages", "valory", "skills", "contribution_abci").glob("**/*.py"),
             Path("packages", "valory", "skills", "dynamic_nft_abci").glob("**/*.py"),
-            Path("packages", "valory", "contracts", "dynamic_contribution").glob("**/*.py"),
+            Path("packages", "valory", "contracts", "dynamic_contribution").glob(
+                "**/*.py"
+            ),
             Path("tests").glob("**/*.py"),
             Path("scripts").glob("**/*.py"),
         ),
