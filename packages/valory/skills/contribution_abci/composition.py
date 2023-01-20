@@ -31,7 +31,6 @@ from packages.valory.skills.abstract_round_abci.abci_app_chain import (
 # more information here: https://docs.autonolas.network/fsm_app_introduction/#composition-of-fsm-apps
 abci_app_transition_mapping: AbciAppTransitionMapping = {
     RegistrationAbci.FinishedRegistrationRound: DynamicNFTAbci.NewTokensRound,
-    RegistrationAbci.FinishedRegistrationFFWRound: DynamicNFTAbci.NewTokensRound,
     DynamicNFTAbci.FinishedDBUpdateRound: ResetAndPauseAbci.ResetAndPauseRound,
     ResetAndPauseAbci.FinishedResetAndPauseRound: DynamicNFTAbci.NewTokensRound,
     ResetAndPauseAbci.FinishedResetAndPauseErrorRound: RegistrationAbci.RegistrationRound,

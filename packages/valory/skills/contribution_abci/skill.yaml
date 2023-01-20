@@ -8,7 +8,7 @@ aea_version: '>=1.0.0, <2.0.0'
 fingerprint:
   __init__.py: bafybeicygns2oodvl2r657a3y6o5j56tnqlzf5wnieo352e43yii5p7xii
   behaviours.py: bafybeibb6emwfdcvpdxkwievvwj6sbb5ptqlqpyczm6awkztcu3dsvb5se
-  composition.py: bafybeie74edrwpmuo3mfqnk4caba75wcqldg65pd6vrrooigenelsc7ppq
+  composition.py: bafybeiaslyrdzrbh7b732vyzedwb5diq6cur75sr6pms5ibk6zsvoa6o6i
   dialogues.py: bafybeibybzylcicdeuykgiwtiqkfqqy5ggnyhkg5pmr5ewzsofq3hvd2yi
   fsm_specification.yaml: bafybeiezzp5wtt37m62zaorjmyseuumzltbggwkpovqau2qbqomei3yle4
   handlers.py: bafybeiecjboqsdjyzoyojqskda2xgmbklrzmnl5hwc3hfkmjukumnkrlwe
@@ -112,6 +112,8 @@ models:
       service_id: contribution_service
       service_registry_address: null
       setup:
+        safe_contract_address:
+        - '0x8001bdCf80F8Fb61CdcDA48419A30b430B385ca1'
         all_participants:
         - {}
       sleep_time: 1
