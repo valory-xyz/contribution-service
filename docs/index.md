@@ -3,7 +3,7 @@
 The CoordinationKit helps you build services to show off community contributions by minting badges which evolve as users make contributions to the DAO. Such services work by minting badges and activate them to witness an update, showing off contributions on NFT-enabled social media sites.
 
 Autonolas Contribute, a service based on the CoordinationKit, streamlines the contribution experience for members of the Autonolas community.
-When someone mints a badge, they will start at the first tier. As they complete actions that contribute to the success of Autonolas, you'll earn points and climb the leaderboard. When you earn enough points to reach a higher badge tier, their badge will automatically update to reflect the new rank. This is a great way to demonstrate contributions on NFT-enabled social media sites and earn recognition that reflects your contribution within the Autonolas community.
+When someone mints a badge, they will start at the first tier. As they complete actions that contribute to the success of Autonolas, they will earn points and climb the leaderboard. When they earn enough points to reach a higher badge tier, their badge will automatically update to reflect the new rank. This is a great way to demonstrate contributions on NFT-enabled social media sites and earn recognition that reflects users' contribution within the Autonolas community.
 
 Every few minutes an Autonolas Contribute checks the leaderboard. If a user has earned enough points to put them in a new [badge tier](https://contribute.autonolas.network/docs#section-badge) the service will automatically update your badge NFT’s image. By completing certain actions, users climb the leaderboard and upgrade their badge.
 
