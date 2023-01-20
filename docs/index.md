@@ -11,8 +11,7 @@ Every few minutes an Autonolas Contribute checks the leaderboard. If a user has 
 
 !!! warning "Important"
 
-	This section is currently being reviewed. You might encounter some difficulty when executing some steps in the tutorial.
-	We are working to update it soon.
+	This section is currently being reviewed. We are working to update it soon.
 
 Once you have {{set_up_system}} to work with the Open Autonomy framework, you can run a local demo of the El Collectooorr service as follows:
 
@@ -56,7 +55,26 @@ Once you have {{set_up_system}} to work with the Open Autonomy framework, you ca
         ]
         ```
 
-4. Build the service deployment.
+4. Prepare the environment and build the service deployment.
+
+	1. Create a service token (you can follow [this guide](https://www.sharperlight.com/uncategorized/2022/04/06/accessing-the-google-sheets-api-via-sharperlight-query-builder/)).
+	
+	2. Create an `.env` file with the required environment variables.
+	
+	```bash
+	ETHEREUM_LEDGER_RPC=https://goerli.infura.io/v3/d27c4537b4c34e82b70bf970574a5f2d
+	DYNAMIC_CONTRIBUTION_CONTRACT_ADDRESS=0x7c3b976434fae9986050b26089649d9f63314bd8
+	EARLIEST_BLOCK_TO_MONITOR=8053690
+	IPFS_GATEWAY_BASE_URL=https://gateway.staging.autonolas.tech/ipfs/
+	LEADERBOARD_API_KEY=AIzaSyBKCAc6P1hHr9s0tlHQ87Xt2ANHH2CGiwA
+	LEADERBOARD_BASE_ENDPOINT=https://sheets.googleapis.com/v4/spreadsheets
+	LEADERBOARD_LAYERS_RANGE=Layers!B1:Z32
+	LEADERBOARD_POINTS_RANGE=Ranking!B2:C302
+	LEADERBOARD_SHEET_ID=1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc
+	OBSERVATION_INTERVAL=10 SERVICE_AUTH=<service_auth_here>	
+	```
+	
+	3. Build the service deployment.
 
     ```bash
     autonomy deploy build keys.json --aev
