@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 #
-#   Copyright 2022 Valory AG
+#   Copyright 2022-2023 Valory AG
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import json
 import os
 import re
 import shutil
+from abc import ABC
 from logging import Logger
 from pathlib import Path
 from typing import Any, Dict, Generator, List, Optional, Set, Tuple, Type, cast
@@ -77,7 +78,7 @@ DEFAULT_IMAGE_CODE = "000000"
 THRESHOLD_REGEX = rf"^\d+:{IPFS_HASH_REGEX}$"
 
 
-class DynamicNFTBaseBehaviour(BaseBehaviour):
+class DynamicNFTBaseBehaviour(BaseBehaviour, ABC):
     """Base behaviour for the common apps' skill."""
 
     def __init__(self, **kwargs: Any):

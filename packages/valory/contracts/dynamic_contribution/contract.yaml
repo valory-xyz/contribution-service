@@ -6,16 +6,16 @@ description: dynamic_contribution contract
 license: Apache-2.0
 aea_version: '>=1.0.0, <2.0.0'
 fingerprint:
-  __init__.py: bafybeignr47lv3yghipgo25c5hwuax3gsnbdktdljy5n3htdindifydkza
+  __init__.py: bafybeied73rq2fac7zwgdhfevcwjjxrqphrdkrbqzarvejsd3ayjza76w4
   build/DynamicContribution.json: bafybeicq5ee4hba3h6tsluzvdrtyvzllpqsseqys66e24bfrpjlegnxome
-  contract.py: bafybeibdj6qnrnvnj7wurmgqdqhvjr6xlzokwzx6zvkgni5jpnllfhr6e4
+  contract.py: bafybeiecv5wymgpltrel5mrhbidmimyskmlxehyocy4qiuandahpytgoou
 fingerprint_ignore_patterns: []
 class_name: DynamicContributionContract
 contract_interface_paths:
   ethereum: build/DynamicContribution.json
 dependencies:
   open-aea-ledger-ethereum:
-    version: ==1.26.0
+    version: ==1.27.0
   web3:
     version: ==5.25.0
 contracts: []
