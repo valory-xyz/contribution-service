@@ -8,3 +8,7 @@ a8e28883e82612bbe123ec3fe021ee7eeab4e7a0:packages/valory/agents/contribution/aea
 5554f4c2a4032167a2294e96fcc4d8045dc06a60:packages/valory/services/contribution/service.yaml:generic-api-key:10
 b01db1b0a736b9d3069f16488b4e3255ad139978:packages/valory/agents/contribution/tests/test_contribution.py:private-key:92
 1fed3d35b7579c80ae7ff07c918b06b659d12420:packages/valory/skills/dynamic_nft_abci/tests/test_handlers.py:discord-client-id:359
+559362b27d353b99df9c2db2772bb2ee563e0ae9:docs/index.md:generic-api-key:42
+559362b27d353b99df9c2db2772bb2ee563e0ae9:docs/index.md:generic-api-key:46
+559362b27d353b99df9c2db2772bb2ee563e0ae9:docs/index.md:generic-api-key:50
+559362b27d353b99df9c2db2772bb2ee563e0ae9:docs/index.md:generic-api-key:54
