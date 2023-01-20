@@ -6,8 +6,8 @@ description: This skill implements the dynamic NFT feature.
 license: Apache-2.0
 aea_version: '>=1.0.0, <2.0.0'
 fingerprint:
-  __init__.py: bafybeif56b2yk2pzo6njoexydkvwkl5tiaj7p76542ljnrijm3urhtnsxq
-  behaviours.py: bafybeichdmeyned2bsb6jbkuvkj2m7smlroexjkctyr26vjwu6y5wob3d4
+  __init__.py: bafybeiav5443ke4ldxssxhmpcwxxq7ekax3piggfnywq72fvn4fezzgqxq
+  behaviours.py: bafybeihbyuwxj5x4jko7jo4wnthrp4dvkeju2niorcxq6d5zms3n4e4gvi
   data/layers/activation/0.png: bafybeicy22hgzs7kwuw7wswht2q3gmv4daxyoga2mvr5f644lgzfconpn4
   data/layers/activation/1.png: bafybeibhfdzlez66uyeofhz3z4sq6an64i6b2cvadvzahb5iygqyq4gscu
   data/layers/classes/0.png: bafybeif4dtvtnqjss4dhmwenxzhbyao6reqoxx5imlzxgxeh4bajnz444u
@@ -15,15 +15,15 @@ fingerprint:
   data/layers/frames/1.png: bafybeih67y7g5qstirprambfsqd7dbunyyjlktpfqpukabp4fkrt4ziuba
   data/layers/frames/2.png: bafybeibiyqmsjgp7ofqktthkgi6up77w4mzrgyzii2mtiodic6h7v2h6de
   data/layers/frames/3.png: bafybeiheikuwkkwaygtssfkumzhursxh6a76546spakmr6wwrw6v3heb2a
-  dialogues.py: bafybeifxlkz47umd63ojgydccujs4j2kwhfh32bdhxcjdodm5brvc25fjq
+  dialogues.py: bafybeigrnr4uxefgxrxlqwze3q2evnduey44neulaggs52yeyy5cfz57z4
   fsm_specification.yaml: bafybeieu56rqmiqh47xdchcxhrbmj2n5mgdiod76yriyuyc3pfeovtvwqi
-  handlers.py: bafybeigcs5lutysockzurssysws5sap33ze7mtnlj7ub7ytvgputelwnqm
+  handlers.py: bafybeic6iew6os3gbhwinvcre3jrobmmsohnun3b2mtkohts4uze74zela
   io_/__init__.py: bafybeidxth2otiyp5gfk2l3zjvnfktgrtpwzsknihkef3v2lhwbkgum3ea
   io_/load.py: bafybeifd7ib4lktvgv6rphk6sblkndn3klmzd5js62h2gzxlubjcmlf6jy
   io_/store.py: bafybeih3wa6quhstymsqcsy7jejpj4fx6crq6gs72dzs6svjklu7wushtq
-  models.py: bafybeicwj7k6ouq5z373ccfnflwzmnttgg2554ody7pzqvi3c5cwhjat64
-  payloads.py: bafybeiasgnt2og22bl7idlmttyv6xjpoj63xirzxetihvukfnt3dc5hrpq
-  rounds.py: bafybeihxjpd32qidvfgh65zv4iofnn337e4354u7ldss5lecwv3zd4vkfi
+  models.py: bafybeigxlkln434vo2tqdrzafikuwslhignyg2cmq5txqbzwe4kgvf3zde
+  payloads.py: bafybeibl3drwunevksjvzgshf6evu4dmypyn2mpe7md5y2qd4p34azhoxe
+  rounds.py: bafybeiavdlqd6yx36la4kttvwkjhiu6gjvazoxwdnl2s5i2lsjafk2pw3y
   tests/__init__.py: bafybeia2xqlacp44lylwlkf7f7ci6m3yshppv3vusgcdjpj4bbcbnuhvla
   tests/test_behaviours.py: bafybeifenszc7k3j3zp57p4xfbggbmhzbyck6alw5tiqtf4yeabbfwcihi
   tests/test_dialogues.py: bafybeibfzhpyz2kdokjkz76oxz4sc6nw26dw5pgx5fwvloyfyl2inixwdi
@@ -36,17 +36,17 @@ fingerprint:
   tests/test_models.py: bafybeidqf7caad3zke6xzefmfoufce6bfn5bqgbiy4racghm5w67yddrea
   tests/test_payloads.py: bafybeihbg37546wuij2ldcgyebvdo3x6xgkdpzirdolgddte4ruqvbtujm
   tests/test_rounds.py: bafybeif5lw4ih5hu4epjrbf5kwcnh5bwdry4duqsr2vslzilpbfkafijwi
-  tools.py: bafybeigjmtp6ngs2d54i5obbynwqj26vztes3s3h2pdaqxklulevjq5xjm
+  tools.py: bafybeicmi3wfowhm3uqljny2x2yhbvu6htxuzkejzv2sdtoiauygfn36t4
 fingerprint_ignore_patterns: []
 connections:
-- fetchai/http_server:0.22.0:bafybeidu4w747xuhdo6h2s6aoagyktefywjbpfz7ogsojy4lfsqbtm4dx4
+- fetchai/http_server:0.22.0:bafybeic7p2e2ey44k6yv3dzznepekggceqc6mxb55e4xovcjnr3qym5ncu
 contracts:
-- valory/dynamic_contribution:0.1.0:bafybeic72zkykfndvigscmuhbuasxpmk4yaxaconob2qtix33npsrfsmpa
+- valory/dynamic_contribution:0.1.0:bafybeidngjmes54s3sjn65v53qejtramyexp4qdvsppazjkmurg353zuby
 protocols:
 - valory/contract_api:1.0.0:bafybeif32nchkgn6yet7e5gt4auhf7lsahxnj4t36kxbw55p3gi7qpeuxq
 - valory/http:1.0.0:bafybeifru3qs6udfzprax7jxktbsuzn7immfvi3scgfspifq3zdxwkgvnm
 skills:
-- valory/abstract_round_abci:0.1.0:bafybeiftebw45qduk4jevxitm6bbpkhkbbj7cijtlnioo4o4oky5ur4lpa
+- valory/abstract_round_abci:0.1.0:bafybeibfemo6nqd5itfd2damllya56qi4jrtythwcsb7wyt55qtxtsuu3u
 behaviours:
   main:
     args: {}
