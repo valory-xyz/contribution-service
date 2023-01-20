@@ -11,7 +11,7 @@ Every few minutes an Autonolas Contribute checks the leaderboard. If a user has 
 
 !!! warning "Important"
 
-	This section is currently being reviewed. We are working to update it soon.
+	This section is under active development - please report issues in the [Autonolas Discord](https://discord.com/invite/z2PT65jKqQ).
 
 Once you have {{set_up_system}} to work with the Open Autonomy framework, you can run a local demo of the El Collectooorr service as follows:
 
