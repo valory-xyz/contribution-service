@@ -111,6 +111,9 @@ models:
       round_timeout_seconds: 30.0
       service_id: contribution_service
       service_registry_address: null
+      setup:
+        all_participants:
+        - {}
       sleep_time: 1
       tendermint_check_sleep_delay: 3
       tendermint_com_url: http://localhost:8080
