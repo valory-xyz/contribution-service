@@ -1,6 +1,6 @@
-site_name: product/autonolas-contribute #Required format to work with monorepo including a specific route in the address.
-site_url: https://docs.autonolas.network/product/autonolas-contribute/
-site_description: Developer documentation of Autonolas Contribute.
+site_name: product/coordinationkit #Required format to work with monorepo including a specific route in the address.
+site_url: https://docs.autonolas.network/product/coordinationkit/
+site_description: Autonolas ContributionKit developer documentation
 repo_url: https://github.com/valory-xyz/contribution-service
 site_author: developer@valory.xyz
 edit_uri: ""
@@ -29,7 +29,7 @@ extra_css:
  
 
 nav:
-  - Autonolas Contribute: 'index.md' 
+  - ContributionKit: 'index.md' 
 
   
 plugins:
