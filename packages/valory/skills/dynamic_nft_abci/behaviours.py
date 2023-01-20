@@ -68,6 +68,7 @@ from packages.valory.skills.dynamic_nft_abci.rounds import (
     SynchronizedData,
 )
 from packages.valory.skills.dynamic_nft_abci.tools import SHEET_API_SCHEMA
+from abc import ABC
 
 
 NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
@@ -77,7 +78,7 @@ DEFAULT_IMAGE_CODE = "000000"
 THRESHOLD_REGEX = rf"^\d+:{IPFS_HASH_REGEX}$"
 
 
-class DynamicNFTBaseBehaviour(BaseBehaviour):
+class DynamicNFTBaseBehaviour(BaseBehaviour, ABC):
     """Base behaviour for the common apps' skill."""
 
     def __init__(self, **kwargs: Any):

@@ -1152,7 +1152,7 @@ class TestDBUpdateBehaviour(BaseDynamicNFTTest):
 
     behaviour_class = DBUpdateBehaviour
     next_behaviour_class = make_degenerate_behaviour(  # type: ignore
-        FinishedDBUpdateRound.auto_round_id()
+        FinishedDBUpdateRound
     )
 
     @pytest.mark.parametrize(

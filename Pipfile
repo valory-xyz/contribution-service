@@ -27,7 +27,7 @@ openapi-spec-validator = "==0.2.8"
 open-aea = "==1.27.0.post1"
 open-aea-ledger-ethereum = "==1.27.0"
 open-aea-ledger-cosmos = "==1.27.0"
-open-aea-cli-ipfs = "==1.27.0"
+open-aea-cli-ipfs = "==1.27.0.post4"
 open-aea-test-autonomy = "==0.7.0"
 open-autonomy = {version = "==0.7.0", extras = [ "all"]}
 Pillow = "==9.2.0"
