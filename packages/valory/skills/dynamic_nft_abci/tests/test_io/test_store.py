@@ -50,11 +50,11 @@ class TestStorer:
         "filetype, custom_storer, expected_storer",
         (
             (None, None, None),
-            (ExtendedSupportedFiletype.PNG, None, PNGStorer.store_single_file),
+            (ExtendedSupportedFiletype.PNG, None, PNGStorer.serialize_object),
             (
                 ExtendedSupportedFiletype.PNG,
                 __dummy_custom_storer,
-                PNGStorer.store_single_file,
+                PNGStorer.serialize_object,
             ),
             (None, __dummy_custom_storer, __dummy_custom_storer),
         ),
@@ -86,30 +86,14 @@ class TestStorer:
             )
 
     @staticmethod
-    @pytest.mark.parametrize("multiple, index", product((True, False), repeat=2))
-    def test_store(
-        multiple: bool,
-        index: bool,
+    def test_serialize(
         tmp_path: PosixPath,
         dummy_obj: StoredPNGType,
         dummy_multiple_obj: Dict[str, StoredPNGType],
     ) -> None:
         """Test `store`."""
-        if multiple:
-            storer = Storer(ExtendedSupportedFiletype.PNG, None, str(tmp_path))
-            storer.store(dummy_multiple_obj, multiple, index=index)
-            for filename, expected_PNG in dummy_multiple_obj.items():
-                filepath = os.path.join(tmp_path, filename)
-                saved_PNG = Image.open(filepath)
-                assert saved_PNG, expected_PNG
-
-        else:
-            filepath = os.path.join(tmp_path, "test_obj.png")
-            storer = Storer(ExtendedSupportedFiletype.PNG, None, filepath)
-            storer.store(dummy_obj, multiple, index=index)
-            saved_PNG = Image.open(filepath)
-            # Images with alpha channel can fail when compared directly
-            # We use the approach from: https://stackoverflow.com/questions/35176639/compare-images-python-pil
-            assert not ImageChops.difference(
-                saved_PNG.convert("RGB"), dummy_obj.convert("RGB")
-            ).getbbox()
+        filepath = os.path.join(tmp_path, "test_obj.png")
+        expected_serialized_object = ":".join([dummy_obj.mode, str(dummy_obj.size[0]), str(dummy_obj.size[1]), dummy_obj.tobytes().hex()])
+        storer = Storer(ExtendedSupportedFiletype.PNG, None, filepath)
+        serialized_object = storer.serialize_object(filepath, dummy_obj)[filepath]
+        assert serialized_object == expected_serialized_object

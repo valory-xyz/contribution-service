@@ -40,19 +40,11 @@ SupportedLoaderType = Callable[[str], SupportedSingleObjectType]
 class PNGLoader(AbstractLoader):
     """A PNG files Loader."""
 
-    def load_single_file(self, path: str) -> NativelySupportedSingleObjectType:
-        """Read an image from a PNG file.
-
-        :param path: the path of the png.
-        :return: the image object.
-        """
-        try:
-            return Image.open(path)
-        except FileNotFoundError as e:  # pragma: no cover
-            raise IOError(f"File {path} was not found!") from e
-        except (UnidentifiedImageError, ValueError, TypeError) as e:  # pragma: no cover
-            raise IOError("The provided png could not be opened and identified!") from e
-
+    def load_single_object(self, serialized_object: str) -> NativelySupportedSingleObjectType:
+        """Load a single object."""
+        mode, width, height, data = serialized_object.split(":")
+        size = (int(width), int(height))
+        return Image.frombytes(mode, size, bytes.fromhex(data))
 
 class Loader(BaseLoader):
     """Class which loads files."""
@@ -68,4 +60,4 @@ class Loader(BaseLoader):
         self.__filetype_to_loader: Dict[ExtendedSupportedFiletype, SupportedLoaderType]
         self.__filetype_to_loader[
             ExtendedSupportedFiletype.PNG
-        ] = PNGLoader().load_single_file
+        ] = PNGLoader().load_single_object
