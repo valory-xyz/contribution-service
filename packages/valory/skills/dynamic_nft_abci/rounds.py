@@ -33,7 +33,6 @@ from packages.valory.skills.abstract_round_abci.base import (
     CollectSameUntilThresholdRound,
     DegenerateRound,
     EventToTimeout,
-    TransactionType,
     get_name,
 )
 from packages.valory.skills.dynamic_nft_abci.payloads import (
@@ -89,19 +88,10 @@ class SynchronizedData(BaseSynchronizedData):
         return cast(float, self.db.get("last_update_time", None))
 
 
-class ContributionAbstractRound(AbstractRound[Event, TransactionType], ABC):
-    """Abstract round for the APY estimation skill."""
-
-    @property
-    def synchronized_data(self) -> SynchronizedData:
-        """Return the synchronized data."""
-        return cast(SynchronizedData, super().synchronized_data)
-
-
-class NewTokensRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
+class NewTokensRound(CollectSameUntilThresholdRound):
     """NewTokensRound"""
 
-    allowed_tx_type = NewTokensPayload.transaction_type
+    payload_class = NewTokensPayload
     payload_attribute: str = get_name(NewTokensPayload.content)
     synchronized_data_class = SynchronizedData
 
@@ -135,12 +125,10 @@ class NewTokensRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
         return None
 
 
-class LeaderboardObservationRound(
-    ContributionAbstractRound, CollectSameUntilThresholdRound
-):
+class LeaderboardObservationRound(CollectSameUntilThresholdRound):
     """LeaderboardObservationRound"""
 
-    allowed_tx_type = LeaderboardObservationPayload.transaction_type
+    payload_class = LeaderboardObservationPayload
     payload_attribute = get_name(LeaderboardObservationPayload.content)
     synchronized_data_class = SynchronizedData
 
@@ -165,12 +153,10 @@ class LeaderboardObservationRound(
         return None
 
 
-class ImageCodeCalculationRound(
-    ContributionAbstractRound, CollectSameUntilThresholdRound
-):
+class ImageCodeCalculationRound(CollectSameUntilThresholdRound):
     """ImageCodeCalculationRound"""
 
-    allowed_tx_type = ImageCodeCalculationPayload.transaction_type
+    payload_class = ImageCodeCalculationPayload
     payload_attribute = get_name(ImageCodeCalculationPayload.content)
     synchronized_data_class = SynchronizedData
 
@@ -193,10 +179,10 @@ class ImageCodeCalculationRound(
         return None
 
 
-class ImageGenerationRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
+class ImageGenerationRound(CollectSameUntilThresholdRound):
     """ImageGenerationRound"""
 
-    allowed_tx_type = ImageGenerationPayload.transaction_type
+    payload_class = ImageGenerationPayload
     payload_attribute = get_name(ImageGenerationPayload.content)
     synchronized_data_class = SynchronizedData
 
@@ -228,10 +214,10 @@ class ImageGenerationRound(ContributionAbstractRound, CollectSameUntilThresholdR
         return None
 
 
-class DBUpdateRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
+class DBUpdateRound(CollectSameUntilThresholdRound):
     """DBUpdateRound"""
 
-    allowed_tx_type = DBUpdatePayload.transaction_type
+    payload_class = DBUpdatePayload
     payload_attribute = get_name(DBUpdatePayload.content)
     synchronized_data_class = SynchronizedData
 
