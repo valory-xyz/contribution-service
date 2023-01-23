@@ -30,10 +30,14 @@ from packages.valory.skills.abstract_round_abci.models import (
     SharedState as BaseSharedState,
 )
 from packages.valory.skills.dynamic_nft_abci.rounds import DynamicNFTAbciApp
-
+from packages.valory.skills.dynamic_nft_abci.rounds import (
+    DynamicNFTAbciApp,
+)
 
 class SharedState(BaseSharedState):
     """Keep the current shared state of the skill."""
+
+    abci_app_cls = DynamicNFTAbciApp
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         """Initialize the state."""
@@ -45,26 +49,26 @@ class Params(BaseParams):
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         """Initialize the parameters object."""
-        self.ipfs_domain_name = self._ensure("ipfs_domain_name", kwargs)
-        leaderboard_base_endpoint = self._ensure("leaderboard_base_endpoint", kwargs)
-        leaderboard_sheet_id = self._ensure("leaderboard_sheet_id", kwargs)
-        self.leaderboard_points_range = self._ensure("leaderboard_points_range", kwargs)
-        self.leaderboard_layers_range = self._ensure("leaderboard_layers_range", kwargs)
+        self.ipfs_domain_name = self._ensure("ipfs_domain_name", kwargs, str)
+        leaderboard_base_endpoint = self._ensure("leaderboard_base_endpoint", kwargs, str)
+        leaderboard_sheet_id = self._ensure("leaderboard_sheet_id", kwargs, str)
+        self.leaderboard_points_range = self._ensure("leaderboard_points_range", kwargs, str)
+        self.leaderboard_layers_range = self._ensure("leaderboard_layers_range", kwargs, str)
         leaderboard_api_key = kwargs.pop("leaderboard_api_key", None)
         self.leaderboard_endpoint = (
             f"{leaderboard_base_endpoint}/{leaderboard_sheet_id}/values:batchGet?"
             f"ranges={self.leaderboard_points_range}&ranges={self.leaderboard_layers_range}&key={leaderboard_api_key}"
         )
         self.whitelist_api_key = kwargs.pop("whitelist_api_key", None)
-        self.whitelist_endpoint = self._ensure("whitelist_endpoint", kwargs)
+        self.whitelist_endpoint = self._ensure("whitelist_endpoint", kwargs, str)
         self.dynamic_contribution_contract_address = self._ensure(
-            "dynamic_contribution_contract_address", kwargs
+            "dynamic_contribution_contract_address", kwargs, str
         )
-        self.token_uri_base = self._ensure("token_uri_base", kwargs)
-        self.ipfs_gateway_base_url = self._ensure("ipfs_gateway_base_url", kwargs)
-        self.basic_image_cid = self._ensure("basic_image_cid", kwargs)
+        self.token_uri_base = self._ensure("token_uri_base", kwargs, str)
+        self.ipfs_gateway_base_url = self._ensure("ipfs_gateway_base_url", kwargs, str)
+        self.basic_image_cid = self._ensure("basic_image_cid", kwargs, str)
         self.earliest_block_to_monitor = self._ensure(
-            "earliest_block_to_monitor", kwargs
+            "earliest_block_to_monitor", kwargs, int
         )
 
         super().__init__(*args, **kwargs)

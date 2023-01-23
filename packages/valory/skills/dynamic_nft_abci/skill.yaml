@@ -122,21 +122,28 @@ models:
       leaderboard_layers_range: Layers!B1:Z3
       leaderboard_points_range: Ranking!B2:C302
       leaderboard_sheet_id: 1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc
+      max_attempts: 10
       max_healthcheck: 120
       observation_interval: 10
       on_chain_service_id: null
+      request_retry_delay: 1.0
+      request_timeout: 10.0
       reset_tendermint_after: 2
       retry_attempts: 400
       retry_timeout: 3
       round_timeout_seconds: 30.0
       service_id: contribution_service
       service_registry_address: null
+      setup: {}
+      share_tm_config_on_startup: false
       sleep_time: 1
       tendermint_check_sleep_delay: 3
       tendermint_com_url: http://localhost:8080
       tendermint_max_retries: 5
+      tendermint_p2p_url: localhost:26656
       tendermint_url: http://localhost:26657
       token_uri_base: https://pfp.staging.autonolas.tech/
+      tx_timeout: 10.0
       whitelist_api_key: null
       whitelist_endpoint: http://localhost
     class_name: Params
