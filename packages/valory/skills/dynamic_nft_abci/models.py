@@ -39,9 +39,9 @@ class SharedState(BaseSharedState):
 
     abci_app_cls = DynamicNFTAbciApp
 
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
+    def setup(self, *args: Any, **kwargs: Any) -> None:
         """Initialize the state."""
-        super().__init__(*args, abci_app_cls=DynamicNFTAbciApp, **kwargs)
+        super().setup(*args, **kwargs)
 
 
 class Params(BaseParams):
