@@ -30,9 +30,7 @@ from packages.valory.skills.abstract_round_abci.models import (
     SharedState as BaseSharedState,
 )
 from packages.valory.skills.dynamic_nft_abci.rounds import DynamicNFTAbciApp
-from packages.valory.skills.dynamic_nft_abci.rounds import (
-    DynamicNFTAbciApp,
-)
+
 
 class SharedState(BaseSharedState):
     """Keep the current shared state of the skill."""
@@ -50,10 +48,16 @@ class Params(BaseParams):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         """Initialize the parameters object."""
         self.ipfs_domain_name = self._ensure("ipfs_domain_name", kwargs, str)
-        leaderboard_base_endpoint = self._ensure("leaderboard_base_endpoint", kwargs, str)
+        leaderboard_base_endpoint = self._ensure(
+            "leaderboard_base_endpoint", kwargs, str
+        )
         leaderboard_sheet_id = self._ensure("leaderboard_sheet_id", kwargs, str)
-        self.leaderboard_points_range = self._ensure("leaderboard_points_range", kwargs, str)
-        self.leaderboard_layers_range = self._ensure("leaderboard_layers_range", kwargs, str)
+        self.leaderboard_points_range = self._ensure(
+            "leaderboard_points_range", kwargs, str
+        )
+        self.leaderboard_layers_range = self._ensure(
+            "leaderboard_layers_range", kwargs, str
+        )
         leaderboard_api_key = kwargs.pop("leaderboard_api_key", None)
         self.leaderboard_endpoint = (
             f"{leaderboard_base_endpoint}/{leaderboard_sheet_id}/values:batchGet?"

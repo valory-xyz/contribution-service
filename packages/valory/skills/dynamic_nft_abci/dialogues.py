@@ -40,6 +40,12 @@ from packages.valory.skills.abstract_round_abci.dialogues import (
     ContractApiDialogues as BaseContractApiDialogues,
 )
 from packages.valory.skills.abstract_round_abci.dialogues import (
+    IpfsDialogue as BaseIpfsDialogue,
+)
+from packages.valory.skills.abstract_round_abci.dialogues import (
+    IpfsDialogues as BaseIpfsDialogues,
+)
+from packages.valory.skills.abstract_round_abci.dialogues import (
     LedgerApiDialogue as BaseLedgerApiDialogue,
 )
 from packages.valory.skills.abstract_round_abci.dialogues import (
@@ -56,12 +62,6 @@ from packages.valory.skills.abstract_round_abci.dialogues import (
 )
 from packages.valory.skills.abstract_round_abci.dialogues import (
     TendermintDialogues as BaseTendermintDialogues,
-)
-from packages.valory.skills.abstract_round_abci.dialogues import (
-    IpfsDialogue as BaseIpfsDialogue,
-)
-from packages.valory.skills.abstract_round_abci.dialogues import (
-    IpfsDialogues as BaseIpfsDialogues,
 )
 
 

@@ -24,6 +24,7 @@ from typing import Hashable
 
 import pytest
 
+from packages.valory.skills.abstract_round_abci.base import BaseTxPayload
 from packages.valory.skills.dynamic_nft_abci.payloads import (
     DBUpdatePayload,
     ImageCodeCalculationPayload,
@@ -31,7 +32,7 @@ from packages.valory.skills.dynamic_nft_abci.payloads import (
     LeaderboardObservationPayload,
     NewTokensPayload,
 )
-from packages.valory.skills.abstract_round_abci.base import BaseTxPayload
+
 
 @dataclass
 class PayloadTestCase:

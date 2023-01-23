@@ -40,11 +40,14 @@ SupportedLoaderType = Callable[[str], SupportedSingleObjectType]
 class PNGLoader(AbstractLoader):
     """A PNG files Loader."""
 
-    def load_single_object(self, serialized_object: str) -> NativelySupportedSingleObjectType:
+    def load_single_object(
+        self, serialized_object: str
+    ) -> NativelySupportedSingleObjectType:
         """Load a single object."""
         mode, width, height, data = serialized_object.split(":")
         size = (int(width), int(height))
         return Image.frombytes(mode, size, bytes.fromhex(data))
+
 
 class Loader(BaseLoader):
     """Class which loads files."""

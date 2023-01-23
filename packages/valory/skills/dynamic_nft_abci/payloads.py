@@ -20,17 +20,19 @@
 """This module contains the transaction payloads of the DynamicNFTAbciApp."""
 
 from abc import ABC
+from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Dict, Hashable, Optional
-from dataclasses import dataclass
 
 from packages.valory.skills.abstract_round_abci.base import BaseTxPayload
+
 
 @dataclass(frozen=True)
 class NewTokensPayload(BaseTxPayload):
     """Represent a transaction payload for the NewTokensRound."""
 
     content: str
+
 
 @dataclass(frozen=True)
 class LeaderboardObservationPayload(BaseTxPayload):
@@ -58,4 +60,3 @@ class DBUpdatePayload(BaseTxPayload):
     """Represent a transaction payload for the DBUpdateRound."""
 
     content: str
-

@@ -93,7 +93,14 @@ class TestStorer:
     ) -> None:
         """Test `store`."""
         filepath = os.path.join(tmp_path, "test_obj.png")
-        expected_serialized_object = ":".join([dummy_obj.mode, str(dummy_obj.size[0]), str(dummy_obj.size[1]), dummy_obj.tobytes().hex()])
+        expected_serialized_object = ":".join(
+            [
+                dummy_obj.mode,
+                str(dummy_obj.size[0]),
+                str(dummy_obj.size[1]),
+                dummy_obj.tobytes().hex(),
+            ]
+        )
         storer = Storer(ExtendedSupportedFiletype.PNG, None, filepath)
         serialized_object = storer.serialize_object(filepath, dummy_obj)[filepath]
         assert serialized_object == expected_serialized_object

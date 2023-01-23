@@ -94,7 +94,14 @@ class TestLoader:
         loader = Loader(ExtendedSupportedFiletype.PNG, None)
 
         # serialize dummy object.
-        serialized_object = ":".join([dummy_obj.mode, str(dummy_obj.size[0]), str(dummy_obj.size[1]), dummy_obj.tobytes().hex()])
+        serialized_object = ":".join(
+            [
+                dummy_obj.mode,
+                str(dummy_obj.size[0]),
+                str(dummy_obj.size[1]),
+                dummy_obj.tobytes().hex(),
+            ]
+        )
         # load with loader.
         loaded_obj = loader.load_single_object(serialized_object)
         # assert loaded png with expected.

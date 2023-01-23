@@ -27,7 +27,7 @@ import shutil
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Iterator, Optional, Type, cast
+from typing import Any, Callable, Dict, Generator, Iterator, Optional, Type, cast
 from unittest import mock
 from unittest.mock import MagicMock
 
@@ -61,6 +61,7 @@ from packages.valory.skills.dynamic_nft_abci.behaviours import (
     LeaderboardObservationBehaviour,
     NewTokensBehaviour,
 )
+from packages.valory.skills.dynamic_nft_abci.io_.store import SupportedObjectType
 from packages.valory.skills.dynamic_nft_abci.models import SharedState
 from packages.valory.skills.dynamic_nft_abci.rounds import (
     Event,
@@ -255,6 +256,19 @@ def get_dummy_updates(error: bool = False) -> Dict:
 def get_dummy_images() -> Dict:
     """Dummy updates"""
     return {i["image_code"]: "dummy_cid" for i in get_dummy_updates().values()}
+
+
+def wrap_dummy_get_from_ipfs(return_value: Optional[SupportedObjectType]) -> Callable:
+    """Wrap dummy_get_from_ipfs."""
+
+    def dummy_get_from_ipfs(
+        *args: Any, **kwargs: Any
+    ) -> Generator[None, None, Optional[SupportedObjectType]]:
+        """A mock get_from_ipfs."""
+        return return_value
+        yield
+
+    return dummy_get_from_ipfs
 
 
 @dataclass
@@ -794,31 +808,40 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
             open(Path(self.image_dir, f"{test_code}.png"), "w").close()
 
         self.fast_forward(test_case.initial_data)
-        self.behaviour.act_wrapper()
 
-        # Mock the IPFS checks
-        if kwargs.get("mock_http"):
-            for img_code in test_codes:
+        dummy_object = {
+            "dummy_k1": "dummy_v1",
+        }
+        with mock.patch.object(
+            BaseBehaviour,
+            "send_to_ipfs",
+            side_effect=wrap_dummy_get_from_ipfs(dummy_object),
+        ):
+            self.behaviour.act_wrapper()
 
-                img_hash = IMAGE_CODE_TO_HASHES[img_code]
+            # Mock the IPFS checks
+            if kwargs.get("mock_http"):
+                for img_code in test_codes:
 
-                url = f"{IPFS_GATEWAY_BASE_URL}{img_hash}"
+                    img_hash = IMAGE_CODE_TO_HASHES[img_code]
 
-                self.mock_http_request(
-                    request_kwargs=dict(
-                        method="GET",
-                        headers="",
-                        version="",
-                        url=url,
-                    ),
-                    response_kwargs=dict(
-                        version="",
-                        status_code=kwargs.get("status_code"),
-                        status_text="",
-                        headers="",
-                        body=b"",
-                    ),
-                )
+                    url = f"{IPFS_GATEWAY_BASE_URL}{img_hash}"
+
+                    self.mock_http_request(
+                        request_kwargs=dict(
+                            method="GET",
+                            headers="",
+                            version="",
+                            url=url,
+                        ),
+                        response_kwargs=dict(
+                            version="",
+                            status_code=kwargs.get("status_code"),
+                            status_text="",
+                            headers="",
+                            body=b"",
+                        ),
+                    )
 
         self.mock_a2a_transaction()
         self._test_done_flag_set()
@@ -890,7 +913,7 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
             if kwargs.get("raise_timeout"):
                 with mock.patch.object(
                     BaseBehaviour, "_do_request", side_effect=TimeoutException
-                ):
+                ), mock.patch.object(BaseBehaviour, "send_to_ipfs", side_effect=None):
                     self.behaviour.act_wrapper()
             else:
                 self.behaviour.act_wrapper()
@@ -1021,7 +1044,7 @@ class TestImageGenerationErrorBehaviour(BaseDynamicNFTTest):
             == self.next_behaviour_class.auto_behaviour_id()
         )
 
-    @mock.patch.object(BaseBehaviour, "send_to_ipfs", return_value=None)
+    @mock.patch.object(BaseBehaviour, "send_to_ipfs", side_effect=None)
     def test_send_to_ipfs_error(self, *_: Any) -> None:
         """Run tests."""
 

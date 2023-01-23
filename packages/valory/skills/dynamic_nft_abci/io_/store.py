@@ -72,7 +72,9 @@ class PNGStorer(AbstractStorer):
             )
 
         try:
-            serialized_object = ":".join([obj.mode, str(obj.size[0]), str(obj.size[1]), obj.tobytes().hex()])
+            serialized_object = ":".join(
+                [obj.mode, str(obj.size[0]), str(obj.size[1]), obj.tobytes().hex()]
+            )
             name_to_obj = {filename: serialized_object}
             return name_to_obj
         except (ValueError, OSError) as e:  # pragma: no cover
