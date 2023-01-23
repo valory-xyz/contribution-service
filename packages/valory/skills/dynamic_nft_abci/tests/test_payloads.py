@@ -25,23 +25,20 @@ from typing import Hashable
 import pytest
 
 from packages.valory.skills.dynamic_nft_abci.payloads import (
-    BaseDynamicNFTPayload,
     DBUpdatePayload,
     ImageCodeCalculationPayload,
     ImageGenerationPayload,
     LeaderboardObservationPayload,
     NewTokensPayload,
-    TransactionType,
 )
-
+from packages.valory.skills.abstract_round_abci.base import BaseTxPayload
 
 @dataclass
 class PayloadTestCase:
     """PayloadTestCase"""
 
-    payload_cls: BaseDynamicNFTPayload
+    payload_cls: BaseTxPayload
     content: Hashable
-    transaction_type: TransactionType
 
 
 @pytest.mark.parametrize(
@@ -50,27 +47,22 @@ class PayloadTestCase:
         PayloadTestCase(
             payload_cls=NewTokensPayload,
             content="payload_test_content",
-            transaction_type=TransactionType.NEW_TOKENS,
         ),
         PayloadTestCase(
             payload_cls=LeaderboardObservationPayload,
             content="payload_test_content",
-            transaction_type=TransactionType.LEADERBOARD_OBSERVATION,
         ),
         PayloadTestCase(
             payload_cls=ImageCodeCalculationPayload,
             content="payload_test_content",
-            transaction_type=TransactionType.IMAGE_CODE_CALCULATION,
         ),
         PayloadTestCase(
             payload_cls=ImageGenerationPayload,
             content="payload_test_content",
-            transaction_type=TransactionType.IMAGE_GENERATION,
         ),
         PayloadTestCase(
             payload_cls=DBUpdatePayload,
             content="payload_test_content",
-            transaction_type=TransactionType.DB_UPDATE,
         ),
     ],
 )
@@ -80,5 +72,4 @@ def test_payloads(test_case: PayloadTestCase) -> None:
     payload = test_case.payload_cls(sender="sender", content=test_case.content)
     assert payload.sender == "sender"
     assert payload.content == test_case.content
-    assert payload.transaction_type == test_case.transaction_type
     assert payload.from_json(payload.json) == payload

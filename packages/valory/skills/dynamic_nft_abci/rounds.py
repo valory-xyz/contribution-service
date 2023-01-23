@@ -92,7 +92,7 @@ class NewTokensRound(CollectSameUntilThresholdRound):
     """NewTokensRound"""
 
     payload_class = NewTokensPayload
-    payload_attribute: str = get_name(NewTokensPayload.content)
+    payload_attribute: str = "content"
     synchronized_data_class = SynchronizedData
 
     ERROR_PAYLOAD = {"error": True}
@@ -129,7 +129,7 @@ class LeaderboardObservationRound(CollectSameUntilThresholdRound):
     """LeaderboardObservationRound"""
 
     payload_class = LeaderboardObservationPayload
-    payload_attribute = get_name(LeaderboardObservationPayload.content)
+    payload_attribute = "content"
     synchronized_data_class = SynchronizedData
 
     ERROR_PAYLOAD = {}
@@ -157,7 +157,7 @@ class ImageCodeCalculationRound(CollectSameUntilThresholdRound):
     """ImageCodeCalculationRound"""
 
     payload_class = ImageCodeCalculationPayload
-    payload_attribute = get_name(ImageCodeCalculationPayload.content)
+    payload_attribute = "content"
     synchronized_data_class = SynchronizedData
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:
@@ -183,7 +183,7 @@ class ImageGenerationRound(CollectSameUntilThresholdRound):
     """ImageGenerationRound"""
 
     payload_class = ImageGenerationPayload
-    payload_attribute = get_name(ImageGenerationPayload.content)
+    payload_attribute = "content"
     synchronized_data_class = SynchronizedData
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:
@@ -218,7 +218,7 @@ class DBUpdateRound(CollectSameUntilThresholdRound):
     """DBUpdateRound"""
 
     payload_class = DBUpdatePayload
-    payload_attribute = get_name(DBUpdatePayload.content)
+    payload_attribute = "content"
     synchronized_data_class = SynchronizedData
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:
