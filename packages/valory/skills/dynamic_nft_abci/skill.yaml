@@ -84,6 +84,9 @@ models:
   http_dialogues:
     args: {}
     class_name: HttpDialogues
+  ipfs_dialogues:
+    args: {}
+    class_name: IpfsDialogues
   ledger_api_dialogues:
     args: {}
     class_name: LedgerApiDialogues
