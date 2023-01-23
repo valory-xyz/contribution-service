@@ -21,7 +21,7 @@
 
 from typing import Callable, Dict, Optional
 
-from PIL import Image, UnidentifiedImageError
+from PIL import Image
 
 from packages.valory.skills.abstract_round_abci.io_.load import AbstractLoader
 from packages.valory.skills.abstract_round_abci.io_.load import Loader as BaseLoader

@@ -21,7 +21,6 @@
 
 # pylint: skip-file
 
-import os.path
 from pathlib import PosixPath
 from typing import Dict, Optional, cast
 
@@ -37,7 +36,6 @@ from packages.valory.skills.dynamic_nft_abci.io_.load import (
 from packages.valory.skills.dynamic_nft_abci.io_.store import (
     ExtendedSupportedFiletype,
     StoredPNGType,
-    SupportedMultipleObjectsType,
 )
 
 

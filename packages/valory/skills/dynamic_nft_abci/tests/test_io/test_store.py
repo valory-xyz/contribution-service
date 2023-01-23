@@ -22,12 +22,10 @@
 # pylint: skip-file
 
 import os.path
-from itertools import product
 from pathlib import PosixPath
 from typing import Dict, Optional, cast
 
 import pytest
-from PIL import Image, ImageChops
 
 from packages.valory.skills.dynamic_nft_abci.io_.store import (
     CustomStorerType,
