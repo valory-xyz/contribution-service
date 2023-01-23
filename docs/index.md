@@ -66,7 +66,7 @@ Once you have {{set_up_system}} to work with the Open Autonomy framework, you ca
 	DYNAMIC_CONTRIBUTION_CONTRACT_ADDRESS=0x7c3b976434fae9986050b26089649d9f63314bd8
 	EARLIEST_BLOCK_TO_MONITOR=8053690
 	IPFS_GATEWAY_BASE_URL=https://gateway.staging.autonolas.tech/ipfs/
-	LEADERBOARD_API_KEY=AIzaSyBKCAc6P1hHr9s0tlHQ87Xt2ANHH2CGiwA
+	LEADERBOARD_API_KEY=<google_api_key_here>
 	LEADERBOARD_BASE_ENDPOINT=https://sheets.googleapis.com/v4/spreadsheets
 	LEADERBOARD_LAYERS_RANGE=Layers!B1:Z32
 	LEADERBOARD_POINTS_RANGE=Ranking!B2:C302
