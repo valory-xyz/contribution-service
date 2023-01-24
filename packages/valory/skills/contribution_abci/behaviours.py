@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 #
-#   Copyright 2022 Valory AG
+#   Copyright 2022-2023 Valory AG
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 """This package contains round behaviours of ContributionSkillAbci."""
 from typing import Set, Type
 
-from packages.valory.skills.contribution_skill_abci.composition import (
+from packages.valory.skills.contribution_abci.composition import (
     ContributionSkillAbciApp,
 )
 from packages.valory.skills.dynamic_nft_abci.behaviours import (

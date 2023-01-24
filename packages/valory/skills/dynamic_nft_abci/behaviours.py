@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 #
-#   Copyright 2022 Valory AG
+#   Copyright 2022-2023 Valory AG
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -21,7 +21,9 @@
 
 import json
 import os
+import re
 import shutil
+from abc import ABC
 from logging import Logger
 from pathlib import Path
 from typing import Any, Dict, Generator, List, Optional, Set, Tuple, Type, cast
@@ -31,6 +33,7 @@ import jsonschema
 from PIL import Image
 from aea.configurations.constants import DEFAULT_LEDGER
 from aea.crypto.ledger_apis import LedgerApis
+from aea.helpers.base import IPFS_HASH_REGEX
 from aea.helpers.ipfs.base import IPFSHashOnly
 
 from packages.valory.contracts.dynamic_contribution.contract import (
@@ -72,9 +75,10 @@ NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
 HTTP_TIMEOUT = 10
 DEFAULT_POINTS = 0
 DEFAULT_IMAGE_CODE = "000000"
+THRESHOLD_REGEX = rf"^\d+:{IPFS_HASH_REGEX}$"
 
 
-class DynamicNFTBaseBehaviour(BaseBehaviour):
+class DynamicNFTBaseBehaviour(BaseBehaviour, ABC):
     """Base behaviour for the common apps' skill."""
 
     def __init__(self, **kwargs: Any):
@@ -95,7 +99,6 @@ class DynamicNFTBaseBehaviour(BaseBehaviour):
 class NewTokensBehaviour(DynamicNFTBaseBehaviour):
     """NewTokensBehaviour"""
 
-    behaviour_id: str = "new_tokens"
     matching_round: Type[AbstractRound] = NewTokensRound
 
     def async_act(self) -> Generator:
@@ -167,7 +170,6 @@ class NewTokensBehaviour(DynamicNFTBaseBehaviour):
 class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
     """LeaderboardBehaviour"""
 
-    behaviour_id: str = "leaderboard_observation"
     matching_round: Type[AbstractRound] = LeaderboardObservationRound
 
     def async_act(self) -> Generator:
@@ -252,6 +254,7 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
                     #    "wallet_1": 1500,  # noqa: E800
                     #     ...
                     # }                     # noqa: E800
+                    # Non valid addresses are skipped
                     leaderboard = {
                         entry[0]: int(entry[1])
                         for entry in leaderboard_raw
@@ -341,9 +344,14 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
         # Score thresholds are monotonic increasing
         for i in data["valueRanges"]:
             if i["range"] == self.params.leaderboard_layers_range:
-                for threshold_data in i["values"]:
+                for layer_data in i["values"]:
+
+                    # Check the layer and threshold format
+                    if not all(re.match(THRESHOLD_REGEX, t) for t in layer_data):
+                        return False
+
                     thresholds = [
-                        int(img_data.split(":")[0]) for img_data in threshold_data
+                        int(img_data.split(":")[0]) for img_data in layer_data
                     ]
 
                     # Strictly increasing
@@ -356,7 +364,6 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
 class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
     """ImageCodeCalculationBehaviour"""
 
-    behaviour_id: str = "image_code_calculation"
     matching_round: Type[AbstractRound] = ImageCodeCalculationRound
 
     def async_act(self) -> Generator:
@@ -490,7 +497,6 @@ class ImageCodeCalculationBehaviour(DynamicNFTBaseBehaviour):
 class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
     """ImageGenerationBehaviour"""
 
-    behaviour_id: str = "image_generation"
     matching_round: Type[AbstractRound] = ImageGenerationRound
 
     def async_act(self) -> Generator:
@@ -572,11 +578,13 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                         images_in_ipfs[image_code] = image_hash
                         continue
 
-                    # Send
+                    # Whitelist and send
+                    # Ignored for now until it is tested further
+                    # success = yield from self.whitelist_hash(image_hash)  # noqa: E800
                     self.context.logger.info(
                         f"Trying to push image with hash {image_hash}..."
                     )
-                    image_hash = self.send_to_ipfs(
+                    image_hash = yield from self.send_to_ipfs(
                         image_path, image, filetype=ExtendedSupportedFiletype.PNG
                     )
 
@@ -617,7 +625,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
 
         self.set_done()
 
-    def update_layers(self):
+    def update_layers(self):  # pragma: no cover
         """Updates local layer if they dont match the ones from the leaderboard API"""
         api_data = LeaderboardObservationBehaviour.fix_api_data(
             self.synchronized_data.most_voted_api_data
@@ -661,7 +669,9 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
             else:
                 self.context.logger.info(f"Layer {layer_name} is already up to date")
 
-    def whitelist_hash(self, image_hash: str) -> Generator[None, None, bool]:
+    def whitelist_hash(
+        self, image_hash: str
+    ) -> Generator[None, None, bool]:  # pragma: no cover
         """Send a whitelist request to the whitelist server
 
         :param image_hash: the hash to whitelist
@@ -796,7 +806,6 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
 class DBUpdateBehaviour(DynamicNFTBaseBehaviour):
     """DBUpdateBehaviour"""
 
-    behaviour_id: str = "db_update"
     matching_round: Type[AbstractRound] = DBUpdateRound
 
     def async_act(self) -> Generator:

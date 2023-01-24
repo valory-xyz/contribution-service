@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 #
-#   Copyright 2021-2022 Valory AG
+#   Copyright 2021-2023 Valory AG
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ from typing import Dict, Iterator, Optional, Tuple, cast
 
 CURRENT_YEAR = datetime.now().year
 GIT_PATH = shutil.which("git")
-START_YEARS = (2021, 2022)
+START_YEARS = tuple(range(2021, 2023))
 SHEBANG = "#!/usr/bin/env python3"
 HEADER_REGEX = re.compile(
     r"""(#!/usr/bin/env python3
@@ -311,7 +311,11 @@ def main() -> None:
     python_files = filter(
         lambda x: x not in exclude_files,
         itertools.chain(
-            Path("packages", "valory", "skills").glob("**/*.py"),
+            Path("packages", "valory", "skills", "contribution_abci").glob("**/*.py"),
+            Path("packages", "valory", "skills", "dynamic_nft_abci").glob("**/*.py"),
+            Path("packages", "valory", "contracts", "dynamic_contribution").glob(
+                "**/*.py"
+            ),
             Path("tests").glob("**/*.py"),
             Path("scripts").glob("**/*.py"),
         ),

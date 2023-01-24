@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 #
-#   Copyright 2022 Valory AG
+#   Copyright 2022-2023 Valory AG
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import shutil
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Iterator, Optional, Type, cast
+from typing import Any, Callable, Dict, Generator, Iterator, Optional, Type, cast
 from unittest import mock
 from unittest.mock import MagicMock
 
@@ -41,7 +41,10 @@ from packages.valory.contracts.dynamic_contribution.contract import (
 from packages.valory.protocols.contract_api import ContractApiMessage
 from packages.valory.protocols.contract_api.custom_types import State
 from packages.valory.skills.abstract_round_abci.base import AbciAppDB
-from packages.valory.skills.abstract_round_abci.behaviour_utils import BaseBehaviour
+from packages.valory.skills.abstract_round_abci.behaviour_utils import (
+    BaseBehaviour,
+    TimeoutException,
+)
 from packages.valory.skills.abstract_round_abci.behaviours import (
     make_degenerate_behaviour,
 )
@@ -58,6 +61,7 @@ from packages.valory.skills.dynamic_nft_abci.behaviours import (
     LeaderboardObservationBehaviour,
     NewTokensBehaviour,
 )
+from packages.valory.skills.dynamic_nft_abci.io_.store import SupportedObjectType
 from packages.valory.skills.dynamic_nft_abci.models import SharedState
 from packages.valory.skills.dynamic_nft_abci.rounds import (
     Event,
@@ -183,12 +187,12 @@ DUMMY_API_RESPONSE = {
             "range": "Layers!B1:Z3",
             "majorDimension": "ROWS",
             "values": [
-                ["0:dummy_class_hash_0"],
+                ["0:bafybeif4dtvtnqjss4dhmwenxzhbyao6reqoxx5imlzxgxeh4bajnz444u"],
                 [
-                    "0:dummy_frame_hash_0",
-                    "1000:dummy_frame_hash_1",
-                    "2000:dummy_frame_hash_2",
-                    "3000:dummy_frame_hash_3",
+                    "0:bafybeicy22hgzs7kwuw7wswht2q3gmv4daxyoga2mvr5f644lgzfconpn4",
+                    "1000:bafybeih67y7g5qstirprambfsqd7dbunyyjlktpfqpukabp4fkrt4ziuba",
+                    "2000:bafybeibiyqmsjgp7ofqktthkgi6up77w4mzrgyzii2mtiodic6h7v2h6de",
+                    "3000:bafybeiheikuwkkwaygtssfkumzhursxh6a76546spakmr6wwrw6v3heb2a",
                 ],
             ],
         },
@@ -202,6 +206,11 @@ DUMMY_BAD_API_RESPONSE_WRONG_THRESHOLDS = copy.deepcopy(DUMMY_API_RESPONSE)
 DUMMY_BAD_API_RESPONSE_WRONG_THRESHOLDS["valueRanges"][1]["values"][1][
     0
 ] = "10000:dummy_frame_hash_0"
+DUMMY_BAD_API_RESPONSE_WRONG_HASH = copy.deepcopy(DUMMY_API_RESPONSE)
+DUMMY_BAD_API_RESPONSE_WRONG_HASH["valueRanges"][1]["values"][1] = [
+    "1000:bafybeicy22hgzs7kwuw7wswht2q3gmv4daxyoga2mvr5f644lgzfconpn4",
+    "0:bafybeih67y7g5qstirprambfsqd7dbunyyjlktpfqpukabp4fkrt4ziuba",
+]
 
 SHEET_ID = "1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc"
 GOOGLE_API_KEY = None
@@ -249,6 +258,19 @@ def get_dummy_images() -> Dict:
     return {i["image_code"]: "dummy_cid" for i in get_dummy_updates().values()}
 
 
+def wrap_dummy_get_from_ipfs(return_value: Optional[SupportedObjectType]) -> Callable:
+    """Wrap dummy_get_from_ipfs."""
+
+    def dummy_get_from_ipfs(
+        *args: Any, **kwargs: Any
+    ) -> Generator[None, None, Optional[SupportedObjectType]]:
+        """A mock get_from_ipfs."""
+        return return_value
+        yield
+
+    return dummy_get_from_ipfs
+
+
 @dataclass
 class BehaviourTestCase:
     """BehaviourTestCase"""
@@ -288,12 +310,12 @@ class BaseDynamicNFTTest(FSMBehaviourBaseCase):
         data = data if data is not None else {}
         self.fast_forward_to_behaviour(
             self.behaviour,  # type: ignore
-            self.behaviour_class.behaviour_id,
+            self.behaviour_class.auto_behaviour_id(),
             SynchronizedData(AbciAppDB(setup_data=AbciAppDB.data_to_lists(data))),
         )
         assert (
-            self.behaviour.current_behaviour.behaviour_id  # type: ignore
-            == self.behaviour_class.behaviour_id
+            self.behaviour.current_behaviour.auto_behaviour_id()  # type: ignore
+            == self.behaviour_class.auto_behaviour_id()
         )
 
     def complete(self, event: Event) -> None:
@@ -304,8 +326,8 @@ class BaseDynamicNFTTest(FSMBehaviourBaseCase):
         self._test_done_flag_set()
         self.end_round(done_event=event)
         assert (
-            self.behaviour.current_behaviour.behaviour_id  # type: ignore
-            == self.next_behaviour_class.behaviour_id
+            self.behaviour.current_behaviour.auto_behaviour_id()  # type: ignore
+            == self.next_behaviour_class.auto_behaviour_id()
         )
 
 
@@ -503,6 +525,19 @@ class TestLeaderboardObservationErrorBehaviour(BaseDynamicNFTTest):
                 {
                     "body": json.dumps(
                         DUMMY_BAD_API_RESPONSE_WRONG_THRESHOLDS,
+                    ),
+                    "status_code": 200,
+                },
+            ),
+            (
+                BehaviourTestCase(
+                    "Wrong API response: decreasing threshold hash",
+                    initial_data=dict(),
+                    event=Event.API_ERROR,
+                ),
+                {
+                    "body": json.dumps(
+                        DUMMY_BAD_API_RESPONSE_WRONG_HASH,
                     ),
                     "status_code": 200,
                 },
@@ -773,56 +808,93 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
             open(Path(self.image_dir, f"{test_code}.png"), "w").close()
 
         self.fast_forward(test_case.initial_data)
-        self.behaviour.act_wrapper()
 
-        # Mock the IPFS checks
-        if kwargs.get("mock_http"):
-            for img_code in test_codes:
+        dummy_object = {
+            "dummy_k1": "dummy_v1",
+        }
+        with mock.patch.object(
+            BaseBehaviour,
+            "send_to_ipfs",
+            side_effect=wrap_dummy_get_from_ipfs(dummy_object),
+        ):
+            self.behaviour.act_wrapper()
 
-                img_hash = IMAGE_CODE_TO_HASHES[img_code]
+            # Mock the IPFS checks
+            if kwargs.get("mock_http"):
+                for img_code in test_codes:
 
-                url = f"{IPFS_GATEWAY_BASE_URL}{img_hash}"
+                    img_hash = IMAGE_CODE_TO_HASHES[img_code]
 
-                self.mock_http_request(
-                    request_kwargs=dict(
-                        method="GET",
-                        headers="",
-                        version="",
-                        url=url,
-                    ),
-                    response_kwargs=dict(
-                        version="",
-                        status_code=kwargs.get("status_code"),
-                        status_text="",
-                        headers="",
-                        body=b"",
-                    ),
-                )
+                    url = f"{IPFS_GATEWAY_BASE_URL}{img_hash}"
+
+                    self.mock_http_request(
+                        request_kwargs=dict(
+                            method="GET",
+                            headers="",
+                            version="",
+                            url=url,
+                        ),
+                        response_kwargs=dict(
+                            version="",
+                            status_code=kwargs.get("status_code"),
+                            status_text="",
+                            headers="",
+                            body=b"",
+                        ),
+                    )
 
         self.mock_a2a_transaction()
         self._test_done_flag_set()
         self.end_round(done_event=test_case.event)
         assert (
-            self.behaviour.current_behaviour.behaviour_id  # type: ignore
-            == self.next_behaviour_class.behaviour_id
+            self.behaviour.current_behaviour.auto_behaviour_id()  # type: ignore
+            == self.next_behaviour_class.auto_behaviour_id()
         )
 
-    @mock.patch.object(BaseBehaviour, "get_from_ipfs", return_value=False)
-    def test_run_redownload_layers(self, *_: Any) -> None:
-        """Run tests."""
-
-        test_case = BehaviourTestCase(
-            "Trigger image download from IPFS",
-            initial_data=dict(
-                most_voted_token_updates=get_dummy_updates(),
-                most_voted_api_data=DUMMY_API_DATA,
+    @pytest.mark.parametrize(
+        "test_case, kwargs",
+        [
+            (
+                BehaviourTestCase(
+                    "Trigger image download from IPFS",
+                    initial_data=dict(
+                        most_voted_token_updates=get_dummy_updates(),
+                        most_voted_api_data=DUMMY_API_DATA,
+                    ),
+                    event=Event.DONE,
+                ),
+                {
+                    "status_code": 200,
+                    "raise_timeout": False,
+                },
             ),
-            event=Event.DONE,
-        )
+            (
+                BehaviourTestCase(
+                    "Timeout",
+                    initial_data=dict(
+                        most_voted_token_updates=get_dummy_updates(),
+                        most_voted_api_data=DUMMY_API_DATA,
+                        image_code_to_hash={},
+                    ),
+                    event=Event.DONE,
+                ),
+                {
+                    "status_code": 200,
+                    "raise_timeout": True,
+                },
+            ),
+        ],
+    )
+    def test_run_redownload_layers(
+        self, test_case: BehaviourTestCase, kwargs: Any
+    ) -> None:
+        """Run tests."""
 
         # Use an empty temporary directory as local image storage
         # so update_layers() detects that images are missing and tries to redownload
-        with tempfile.TemporaryDirectory() as tmpdir:
+        with tempfile.TemporaryDirectory() as tmpdir, mock.patch.object(
+            BaseBehaviour, "get_from_ipfs", return_value=False
+        ):
 
             image_manager_cls = self.behaviour.behaviours[3].ImageManager
             image_manager_cls.IMAGE_ROOT = Path(tmpdir)
@@ -837,38 +909,45 @@ class TestImageGenerationBehaviour(BaseDynamicNFTTest):
                 open(Path(self.image_dir, f"{test_code}.png"), "w").close()
 
             self.fast_forward(test_case.initial_data)
-            self.behaviour.act_wrapper()
 
-            # Mock the IPFS checks
-            for img_code in test_codes:
+            if kwargs.get("raise_timeout"):
+                with mock.patch.object(
+                    BaseBehaviour, "_do_request", side_effect=TimeoutException
+                ), mock.patch.object(BaseBehaviour, "send_to_ipfs", side_effect=None):
+                    self.behaviour.act_wrapper()
+            else:
+                self.behaviour.act_wrapper()
 
-                img_hash = IMAGE_CODE_TO_HASHES[img_code]
+                # Mock the IPFS checks
+                for img_code in test_codes:
 
-                url = f"{IPFS_GATEWAY_BASE_URL}{img_hash}"
+                    img_hash = IMAGE_CODE_TO_HASHES[img_code]
 
-                self.mock_http_request(
-                    request_kwargs=dict(
-                        method="GET",
-                        headers="",
-                        version="",
-                        url=url,
-                    ),
-                    response_kwargs=dict(
-                        version="",
-                        status_code=200,
-                        status_text="",
-                        headers="",
-                        body=b"",
-                    ),
-                )
-            self.behaviour.act_wrapper()
+                    url = f"{IPFS_GATEWAY_BASE_URL}{img_hash}"
+
+                    self.mock_http_request(
+                        request_kwargs=dict(
+                            method="GET",
+                            headers="",
+                            version="",
+                            url=url,
+                        ),
+                        response_kwargs=dict(
+                            version="",
+                            status_code=kwargs.get("status_code"),
+                            status_text="",
+                            headers="",
+                            body=b"",
+                        ),
+                    )
+                self.behaviour.act_wrapper()
 
             self.mock_a2a_transaction()
             self._test_done_flag_set()
             self.end_round(done_event=test_case.event)
             assert (
-                self.behaviour.current_behaviour.behaviour_id  # type: ignore
-                == self.next_behaviour_class.behaviour_id
+                self.behaviour.current_behaviour.auto_behaviour_id()  # type: ignore
+                == self.next_behaviour_class.auto_behaviour_id()
             )
 
 
@@ -961,11 +1040,11 @@ class TestImageGenerationErrorBehaviour(BaseDynamicNFTTest):
         self._test_done_flag_set()
         self.end_round(done_event=test_case.event)
         assert (
-            self.behaviour.current_behaviour.behaviour_id  # type: ignore
-            == self.next_behaviour_class.behaviour_id
+            self.behaviour.current_behaviour.auto_behaviour_id()  # type: ignore
+            == self.next_behaviour_class.auto_behaviour_id()
         )
 
-    @mock.patch.object(BaseBehaviour, "send_to_ipfs", return_value=None)
+    @mock.patch.object(BaseBehaviour, "send_to_ipfs", side_effect=None)
     def test_send_to_ipfs_error(self, *_: Any) -> None:
         """Run tests."""
 
@@ -1013,8 +1092,81 @@ class TestImageGenerationErrorBehaviour(BaseDynamicNFTTest):
         self._test_done_flag_set()
         self.end_round(done_event=test_case.event)
         assert (
-            self.behaviour.current_behaviour.behaviour_id  # type: ignore
-            == self.next_behaviour_class.behaviour_id
+            self.behaviour.current_behaviour.auto_behaviour_id()  # type: ignore
+            == self.next_behaviour_class.auto_behaviour_id()
+        )
+
+
+@use_ipfs_daemon
+class TestImageGenerationURLMockCheck(BaseDynamicNFTTest):
+    """Tests ImageGenerationBehaviour"""
+
+    behaviour_class = ImageGenerationBehaviour
+    next_behaviour_class = DBUpdateBehaviour
+
+    @classmethod
+    def setup_class(cls, **kwargs: Any) -> None:
+        """Set up the test class."""
+        super().setup_class(param_overrides={"ipfs_gateway_base_url": "mock_ipfs"})
+
+    @pytest.mark.parametrize(
+        "test_case, kwargs",
+        [
+            (
+                BehaviourTestCase(
+                    "Happy path",
+                    initial_data=dict(
+                        most_voted_token_updates=get_dummy_updates(),
+                        most_voted_api_data=DUMMY_API_DATA,
+                    ),
+                    event=Event.DONE,
+                ),
+                {
+                    "status_code": 200,
+                    "mock_http": True,
+                },
+            ),
+        ],
+    )
+    def test_run(self, test_case: BehaviourTestCase, kwargs: Any) -> None:
+        """Run tests."""
+
+        # Create empty png files for the tests
+        test_codes = [i["image_code"] for i in get_dummy_updates().values()]
+        for test_code in test_codes:
+            open(Path(self.image_dir, f"{test_code}.png"), "w").close()
+
+        self.fast_forward(test_case.initial_data)
+        self.behaviour.act_wrapper()
+
+        # Mock the IPFS checks
+        if kwargs.get("mock_http"):
+            for _ in test_codes:
+
+                url = "mock_ipfs"
+
+                self.mock_http_request(
+                    request_kwargs=dict(
+                        method="GET",
+                        headers="",
+                        version="",
+                        url=url,
+                    ),
+                    response_kwargs=dict(
+                        version="",
+                        status_code=kwargs.get("status_code"),
+                        status_text="",
+                        headers="",
+                        body=b"",
+                    ),
+                )
+
+        self.mock_a2a_transaction()
+        self._test_done_flag_set()
+        self.end_round(done_event=test_case.event)
+        assert (
+            self.behaviour.current_behaviour.auto_behaviour_id()  # type: ignore
+            == self.next_behaviour_class.auto_behaviour_id()
         )
 
 
@@ -1022,7 +1174,9 @@ class TestDBUpdateBehaviour(BaseDynamicNFTTest):
     """Tests DBUpdateBehaviour"""
 
     behaviour_class = DBUpdateBehaviour
-    next_behaviour_class = make_degenerate_behaviour(FinishedDBUpdateRound.round_id)
+    next_behaviour_class = make_degenerate_behaviour(  # type: ignore
+        FinishedDBUpdateRound
+    )
 
     @pytest.mark.parametrize(
         "test_case",

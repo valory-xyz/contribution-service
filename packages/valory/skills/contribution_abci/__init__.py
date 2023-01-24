@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 #
-#   Copyright 2022 Valory AG
+#   Copyright 2022-2023 Valory AG
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -17,10 +17,9 @@
 #
 # ------------------------------------------------------------------------------
 
-"""Test the handlers.py module of the contribution skill."""
+"""This module contains the implementation of the contribution skill."""
 
-import packages.valory.skills.contribution_skill_abci.handlers  # pylint: disable=unused-import # noqa: F401
+from aea.configurations.base import PublicId
 
 
-def test_import() -> None:
-    """Test that the 'handlers.py' of the contribution skill can be imported."""
+PUBLIC_ID = PublicId.from_str("valory/contribution_abci:0.1.0")

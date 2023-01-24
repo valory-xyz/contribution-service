@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 #
-#   Copyright 2022 Valory AG
+#   Copyright 2022-2023 Valory AG
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -27,13 +27,12 @@ from typing import Dict, List, Optional, Set, Tuple, cast
 from packages.valory.skills.abstract_round_abci.base import (
     AbciApp,
     AbciAppTransitionFunction,
-    AbstractRound,
     AppState,
     BaseSynchronizedData,
     CollectSameUntilThresholdRound,
     DegenerateRound,
     EventToTimeout,
-    TransactionType,
+    get_name,
 )
 from packages.valory.skills.dynamic_nft_abci.payloads import (
     DBUpdatePayload,
@@ -88,20 +87,10 @@ class SynchronizedData(BaseSynchronizedData):
         return cast(float, self.db.get("last_update_time", None))
 
 
-class ContributionAbstractRound(AbstractRound[Event, TransactionType], ABC):
-    """Abstract round for the APY estimation skill."""
-
-    @property
-    def synchronized_data(self) -> SynchronizedData:
-        """Return the synchronized data."""
-        return cast(SynchronizedData, super().synchronized_data)
-
-
-class NewTokensRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
+class NewTokensRound(CollectSameUntilThresholdRound):
     """NewTokensRound"""
 
-    round_id: str = "new_tokens"
-    allowed_tx_type = NewTokensPayload.transaction_type
+    payload_class = NewTokensPayload
     payload_attribute: str = "content"
     synchronized_data_class = SynchronizedData
 
@@ -125,7 +114,7 @@ class NewTokensRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
 
             synchronized_data = self.synchronized_data.update(
                 synchronized_data_class=SynchronizedData,
-                token_to_data=token_to_data,
+                **{get_name(SynchronizedData.token_to_data): token_to_data}
             )
             return synchronized_data, Event.DONE
         if not self.is_majority_possible(
@@ -135,13 +124,10 @@ class NewTokensRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
         return None
 
 
-class LeaderboardObservationRound(
-    ContributionAbstractRound, CollectSameUntilThresholdRound
-):
+class LeaderboardObservationRound(CollectSameUntilThresholdRound):
     """LeaderboardObservationRound"""
 
-    round_id = "leaderboard_observation"
-    allowed_tx_type = LeaderboardObservationPayload.transaction_type
+    payload_class = LeaderboardObservationPayload
     payload_attribute = "content"
     synchronized_data_class = SynchronizedData
 
@@ -156,7 +142,7 @@ class LeaderboardObservationRound(
 
             synchronized_data = self.synchronized_data.update(
                 synchronized_data_class=SynchronizedData,
-                most_voted_api_data=payload,
+                **{get_name(SynchronizedData.most_voted_api_data): payload}
             )
             return synchronized_data, Event.DONE
         if not self.is_majority_possible(
@@ -166,13 +152,10 @@ class LeaderboardObservationRound(
         return None
 
 
-class ImageCodeCalculationRound(
-    ContributionAbstractRound, CollectSameUntilThresholdRound
-):
+class ImageCodeCalculationRound(CollectSameUntilThresholdRound):
     """ImageCodeCalculationRound"""
 
-    round_id: str = "image_code_calculation"
-    allowed_tx_type = ImageCodeCalculationPayload.transaction_type
+    payload_class = ImageCodeCalculationPayload
     payload_attribute = "content"
     synchronized_data_class = SynchronizedData
 
@@ -181,7 +164,11 @@ class ImageCodeCalculationRound(
         if self.threshold_reached:
             synchronized_data = self.synchronized_data.update(
                 synchronized_data_class=SynchronizedData,
-                most_voted_token_updates=json.loads(self.most_voted_payload),
+                **{
+                    get_name(SynchronizedData.most_voted_token_updates): json.loads(
+                        self.most_voted_payload
+                    )
+                }
             )
             return synchronized_data, Event.DONE
         if not self.is_majority_possible(
@@ -191,11 +178,10 @@ class ImageCodeCalculationRound(
         return None
 
 
-class ImageGenerationRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
+class ImageGenerationRound(CollectSameUntilThresholdRound):
     """ImageGenerationRound"""
 
-    round_id: str = "image_generation"
-    allowed_tx_type = ImageGenerationPayload.transaction_type
+    payload_class = ImageGenerationPayload
     payload_attribute = "content"
     synchronized_data_class = SynchronizedData
 
@@ -213,7 +199,11 @@ class ImageGenerationRound(ContributionAbstractRound, CollectSameUntilThresholdR
                 }
                 synchronized_data = self.synchronized_data.update(
                     synchronized_data_class=SynchronizedData,
-                    image_code_to_hash=image_code_to_hash,
+                    **{
+                        get_name(
+                            SynchronizedData.image_code_to_hash
+                        ): image_code_to_hash
+                    }
                 )
                 return synchronized_data, Event.DONE
         if not self.is_majority_possible(
@@ -223,11 +213,10 @@ class ImageGenerationRound(ContributionAbstractRound, CollectSameUntilThresholdR
         return None
 
 
-class DBUpdateRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
+class DBUpdateRound(CollectSameUntilThresholdRound):
     """DBUpdateRound"""
 
-    round_id: str = "db_update"
-    allowed_tx_type = DBUpdatePayload.transaction_type
+    payload_class = DBUpdatePayload
     payload_attribute = "content"
     synchronized_data_class = SynchronizedData
 
@@ -252,8 +241,10 @@ class DBUpdateRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
 
             synchronized_data = self.synchronized_data.update(
                 synchronized_data_class=SynchronizedData,
-                token_to_data=token_to_data,
-                last_update_time=last_update_time,
+                **{
+                    get_name(SynchronizedData.token_to_data): token_to_data,
+                    get_name(SynchronizedData.last_update_time): last_update_time,
+                }
             )
             return synchronized_data, Event.DONE
         if not self.is_majority_possible(
@@ -308,6 +299,18 @@ class DynamicNFTAbciApp(AbciApp[Event]):
     final_states: Set[AppState] = {FinishedDBUpdateRound}
     event_to_timeout: EventToTimeout = {
         Event.ROUND_TIMEOUT: 30.0,
+    }
+    db_pre_conditions: Dict[AppState, List[str]] = {
+        NewTokensRound: [],
+    }
+    db_post_conditions: Dict[AppState, List[str]] = {
+        FinishedDBUpdateRound: [
+            get_name(SynchronizedData.token_to_data),
+            get_name(SynchronizedData.image_code_to_hash),
+            get_name(SynchronizedData.most_voted_api_data),
+            get_name(SynchronizedData.most_voted_token_updates),
+            get_name(SynchronizedData.last_update_time),
+        ]
     }
     cross_period_persisted_keys: List[str] = [
         "token_to_data",

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 #
-#   Copyright 2021-2022 Valory AG
+#   Copyright 2021-2023 Valory AG
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -62,9 +62,9 @@ class ExtendedSupportedFiletype(Enum):
 class PNGStorer(AbstractStorer):
     """A CSV file storer."""
 
-    def store_single_file(
+    def serialize_object(
         self, filename: str, obj: NativelySupportedSingleObjectType, **kwargs: Any
-    ) -> None:
+    ) -> Dict[str, str]:
         """Store a PNG file."""
         if not isinstance(obj, Image):
             raise ValueError(  # pragma: no cover
@@ -72,7 +72,11 @@ class PNGStorer(AbstractStorer):
             )
 
         try:
-            obj.save(filename)
+            serialized_object = ":".join(
+                [obj.mode, str(obj.size[0]), str(obj.size[1]), obj.tobytes().hex()]
+            )
+            name_to_obj = {filename: serialized_object}
+            return name_to_obj
         except (ValueError, OSError) as e:  # pragma: no cover
             raise IOError(str(e)) from e
 
@@ -90,5 +94,5 @@ class Storer(BaseStorer):
         super().__init__(filetype, custom_storer, path)
         self._filetype_to_storer: Dict[Enum, SupportedStorerType]
         self._filetype_to_storer[ExtendedSupportedFiletype.PNG] = cast(
-            NativelySupportedPNGStorerType, PNGStorer(path).store_single_file
+            NativelySupportedPNGStorerType, PNGStorer(path).serialize_object
         )

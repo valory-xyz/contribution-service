@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 #
-#   Copyright 2022 Valory AG
+#   Copyright 2022-2023 Valory AG
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 
 from typing import Any
 
-from packages.valory.skills.contribution_skill_abci.composition import (
+from packages.valory.skills.contribution_abci.composition import (
     ContributionSkillAbciApp,
 )
 from packages.valory.skills.dynamic_nft_abci.models import (
@@ -39,6 +39,9 @@ from packages.valory.skills.abstract_round_abci.models import (
     SharedState as BaseSharedState,
 )
 from packages.valory.skills.reset_pause_abci.rounds import Event as ResetPauseEvent
+from packages.valory.skills.contribution_abci.composition import (
+    ContributionSkillAbciApp,
+)
 
 
 DynamicNFTParams = DynamicNFTAbciParams
@@ -50,6 +53,8 @@ MARGIN = 5
 
 class SharedState(BaseSharedState):
     """Keep the current shared state of the skill."""
+
+    abci_app_cls = ContributionSkillAbciApp
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         """Initialize the state."""

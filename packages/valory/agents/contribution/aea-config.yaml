@@ -12,27 +12,27 @@ fingerprint:
   tests/helpers/data/json_server/data.json: bafybeidxxrnko3lmzgcces5nfkkotinqa5mv343fuhezkb6tdbjv4cgsoy
   tests/helpers/docker.py: bafybeihjh65uysuk3pp2bn3c4l2ish6tp2ay64w5tsetsx53hqnthgntwa
   tests/helpers/fixtures.py: bafybeibbzank7chfncg6ifb4r3lvnttahixu2cq7cs6nnglbeolwlbrsvm
-  tests/test_contribution.py: bafybeic5g37hfga3yaf722u4yeb2akq7wrgg7cn3radf6oyxcxyl5i2v5e
+  tests/test_contribution.py: bafybeifg7ybrxhtzwcppchbbstjtemporg4xsicvub4dzogqxoiaohymui
 fingerprint_ignore_patterns: []
 connections:
-- fetchai/http_server:0.22.0:bafybeiaf2w3jfemqu4zrtfzewexh5ttqytvhv4tqfzcrv6qxsqnxrv7eu4
-- valory/abci:0.1.0:bafybeihwpl24rodaaacw5dpsmeazaaelm5j263fqderxm5xn7f5penm2bq
-- valory/http_client:0.23.0:bafybeihz3tubwado7j3wlivndzzuj3c6fdsp4ra5r3nqixn3ufawzo3wii
-- valory/ledger:0.19.0:bafybeiadc25se7dgnn4mufztwpzdono4xsfs45qknzdqyi3gckn6ccuv44
-- valory/p2p_libp2p_client:0.1.0:bafybeidkk33xbga54szmitk6uwsi3ef56hbbdbuasltqtiyki34hgfpnxa
+- fetchai/http_server:0.22.0:bafybeic7p2e2ey44k6yv3dzznepekggceqc6mxb55e4xovcjnr3qym5ncu
+- valory/abci:0.1.0:bafybeib56ojddzexxbapowofypmpk6zeznqaumwgj7ftneb5ua6sk5k5vm
+- valory/http_client:0.23.0:bafybeigggahci7hq6tr3tyueatgkvgn73y4b3av2vk7vtr7jkeuwsqcteq
+- valory/ledger:0.19.0:bafybeicpxyoxez7lperltamvikxu6vzk2lhqakbivce4nzywyzoqbxoogm
+- valory/p2p_libp2p_client:0.1.0:bafybeiayoofxmj6z3pasn2akqj3udgq2ta2ar6mv6zoehstul2btvv3gqa
 contracts:
-- valory/dynamic_contribution:0.1.0:bafybeiaojwczfjupvkpn7it3muej57pgqbqvqwbvsdljautdeunbqqgecy
+- valory/dynamic_contribution:0.1.0:bafybeigrhhytf5lqnu7xy7faz7cghzpye6dnvq2zhkqeydrrnpmtkpudyi
 protocols:
-- open_aea/signing:1.0.0:bafybeiambqptflge33eemdhis2whik67hjplfnqwieoa6wblzlaf7vuo44
-- valory/contract_api:1.0.0:bafybeiaxbrvgtbdrh4lslskuxyp4awyr4whcx3nqq5yrr6vimzsxg5dy64
-- valory/http:1.0.0:bafybeigzqo2zaakcjtzzsm6dh4x73v72xg6ctk6muyp5uq5ueb7y34fbxy
+- open_aea/signing:1.0.0:bafybeiclsbgrviyxbmi2vex5ze3dhr7ywohrqedebx26jozayxvroqtegq
+- valory/contract_api:1.0.0:bafybeif32nchkgn6yet7e5gt4auhf7lsahxnj4t36kxbw55p3gi7qpeuxq
+- valory/http:1.0.0:bafybeifru3qs6udfzprax7jxktbsuzn7immfvi3scgfspifq3zdxwkgvnm
 skills:
-- valory/abstract_abci:0.1.0:bafybeihkcgjgyoleu6jgwhpffkzvflmybajlz5k2fkxhl3nngbbo6xzlsy
-- valory/abstract_round_abci:0.1.0:bafybeifh4qtjurq5637ykxexzexca5l4n6t4ujw26tpnern2swajanvhny
-- valory/contribution_skill_abci:0.1.0:bafybeiducumu77tbwuax7oncj77gvdqkxxt4mpekmp72auawxr3honwgia
-- valory/dynamic_nft_abci:0.1.0:bafybeia4tuxuliiwufef22ltubulq4syq5hbzjllrupslape2lctrbxf7e
-- valory/registration_abci:0.1.0:bafybeicuz3f4tvowd2xwcl5w4ck56rm5abfoyng3cmbprovpch4u6eexge
-- valory/reset_pause_abci:0.1.0:bafybeihlsjhy4dpiulgdof3noh6dlzvr6wkywcwbsrti45labn7htrfg3y
+- valory/abstract_abci:0.1.0:bafybeidwizzka3qjotu35zzstoqunp3hjhkx6oojqnlwqsvd3qnjjpmusq
+- valory/abstract_round_abci:0.1.0:bafybeicvbxixjsu3bgjk5frqz5mq2kmv44grwd6324viz4tehw3yejfhji
+- valory/contribution_abci:0.1.0:bafybeifqg5joa42gfnqrk2sjgmpbrhqhvriz54ublktjhiouartvsubfla
+- valory/dynamic_nft_abci:0.1.0:bafybeib4s7yno2yl2izfiyfuss2j7bczzzzsoyg64zsjiji4zzefgjhj5u
+- valory/registration_abci:0.1.0:bafybeihai2otcmnb2w7k64bnwf5qagfexg5gqow74xhj3wynikgdxre3ka
+- valory/reset_pause_abci:0.1.0:bafybeifs6zpg5nbvuapmxafzo6fdhoz5ebpiujetvk243apo3iwl2rn45i
 default_ledger: ethereum
 required_ledgers:
 - ethereum
@@ -61,17 +61,18 @@ logging_config:
       - logfile
       - console
       propagate: false
+skill_exception_policy: stop_and_exit
 dependencies:
   Pillow:
     version: ==9.2.0
   open-aea-ledger-ethereum:
-    version: ==1.25.0
+    version: ==1.28.0.post1
 default_connection: null
 ---
 public_id: valory/abci:0.1.0
 type: connection
 config:
-  target_skill_id: valory/contribution_skill_abci:0.1.0
+  target_skill_id: valory/contribution_abci:0.1.0
   host: ${ABCI_HOST:str:localhost}
   port: ${ABCI_PORT:int:26658}
   use_tendermint: ${ABCI_USE_TENDERMINT:bool:false}
@@ -90,24 +91,24 @@ public_id: valory/p2p_libp2p_client:0.1.0
 type: connection
 config:
   nodes:
-  - uri: ${P2P_URI:str:acn.staging.autonolas.tech:9005}
-    public_key: ${P2P_PUBLIC_KEY:str:0250827315351f6f4d3777b77d4bfd67280156240313bf221750b36404344bb35d}
+  - uri: ${str:acn.staging.autonolas.tech:9005}
+    public_key: ${str:02d3a830c9d6ea1ae91936951430dee11f4662f33118b02190693be835359a9d77}
 cert_requests:
 - identifier: acn
   ledger_id: ethereum
   message_format: '{public_key}'
-  not_after: '2022-01-01'
-  not_before: '2021-01-01'
-  public_key: ${P2P_PUBLIC_KEY:str:0250827315351f6f4d3777b77d4bfd67280156240313bf221750b36404344bb35d}
-  save_path: .certs/acn_cosmos_9005.txt
+  not_after: '2023-01-01'
+  not_before: '2022-01-01'
+  public_key: ${str:02d3a830c9d6ea1ae91936951430dee11f4662f33118b02190693be835359a9d77}
+  save_path: .certs/acn_cosmos_11000.txt
 is_abstract: true
 ---
-public_id: valory/contribution_skill_abci:0.1.0
+public_id: valory/contribution_abci:0.1.0
 type: skill
 models:
   params:
     args:
-      basic_image_cid: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_BASIC_IMAGE_CID:str:bafybeiabtdl53v2a3irrgrg7eujzffjallpymli763wvhv6gceurfmcemm}
+      basic_image_cid: ${SKILL_CONTRIBUTION_ABCI_MODELS_PARAMS_ARGS_BASIC_IMAGE_CID:str:bafybeiabtdl53v2a3irrgrg7eujzffjallpymli763wvhv6gceurfmcemm}
       cleanup_history_depth: 1
       cleanup_history_depth_current: null
       consensus:
@@ -131,16 +132,16 @@ models:
             - ed25519
           version: {}
         voting_power: '10'
-      ipfs_domain_name: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_IPFS_DOMAIN_NAME:str:/dns/registry.autonolas.tech/tcp/443/https}
-      ipfs_gateway_base_url: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_IPFS_GATEWAY_BASE_URL:str:https://gateway.staging.autonolas.tech/ipfs/}
+      ipfs_domain_name: ${SKILL_CONTRIBUTION_ABCI_MODELS_PARAMS_ARGS_IPFS_DOMAIN_NAME:str:/dns/registry.autonolas.tech/tcp/443/https}
+      ipfs_gateway_base_url: ${SKILL_CONTRIBUTION_ABCI_MODELS_PARAMS_ARGS_IPFS_GATEWAY_BASE_URL:str:https://gateway.staging.autonolas.tech/ipfs/}
       keeper_timeout: 30.0
-      leaderboard_api_key: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_LEADERBOARD_API_KEY:str:null}
-      leaderboard_base_endpoint: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_LEADERBOARD_BASE_ENDPOINT:str:https://sheets.googleapis.com/v4/spreadsheets}
-      leaderboard_layers_range: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_LEADERBOARD_LAYERS_RANGE:str:Layers!B1:Z3}
-      leaderboard_points_range: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_LEADERBOARD_POINTS_RANGE:str:Ranking!B2:C302}
-      leaderboard_sheet_id: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_LEADERBOARD_SHEET_ID:str:1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc}
+      leaderboard_api_key: ${SKILL_CONTRIBUTION_ABCI_MODELS_PARAMS_ARGS_LEADERBOARD_API_KEY:str:null}
+      leaderboard_base_endpoint: ${SKILL_CONTRIBUTION_ABCI_MODELS_PARAMS_ARGS_LEADERBOARD_BASE_ENDPOINT:str:https://sheets.googleapis.com/v4/spreadsheets}
+      leaderboard_layers_range: ${SKILL_CONTRIBUTION_ABCI_MODELS_PARAMS_ARGS_LEADERBOARD_LAYERS_RANGE:str:Layers!B1:Z3}
+      leaderboard_points_range: ${SKILL_CONTRIBUTION_ABCI_MODELS_PARAMS_ARGS_LEADERBOARD_POINTS_RANGE:str:Ranking!B2:C302}
+      leaderboard_sheet_id: ${SKILL_CONTRIBUTION_ABCI_MODELS_PARAMS_ARGS_LEADERBOARD_SHEET_ID:str:1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc}
       max_healthcheck: 120
-      observation_interval: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_OBSERVATION_INTERVAL:int:300}
+      observation_interval: ${SKILL_CONTRIBUTION_ABCI_MODELS_PARAMS_ARGS_OBSERVATION_INTERVAL:int:300}
       on_chain_service_id: null
       reset_tendermint_after: 2
       retry_attempts: 400
@@ -148,13 +149,14 @@ models:
       round_timeout_seconds: 30.0
       service_id: contribution_service
       service_registry_address: null
+      share_tm_config_on_startup: ${bool:false}
       sleep_time: 1
-      dynamic_contribution_contract_address: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_DYNAMIC_CONTRIBUTION_CONTRACT_ADDRESS:str:0x5FbDB2315678afecb367f032d93F642f64180aa3}
+      dynamic_contribution_contract_address: ${SKILL_CONTRIBUTION_ABCI_MODELS_PARAMS_ARGS_DYNAMIC_CONTRIBUTION_CONTRACT_ADDRESS:str:0x5FbDB2315678afecb367f032d93F642f64180aa3}
       tendermint_check_sleep_delay: 3
       tendermint_com_url: ${TENDERMINT_COM_URL:str:http://localhost:8080}
       tendermint_max_retries: 5
       tendermint_url: ${TENDERMINT_URL:str:http://localhost:26657}
-      token_uri_base: ${SKILL_CONTRIBUTION_SKILL_ABCI_MODELS_PARAMS_ARGS_TOKEN_URI_BASE:str:https://pfp.staging.autonolas.tech/}
+      token_uri_base: ${SKILL_CONTRIBUTION_ABCI_MODELS_PARAMS_ARGS_TOKEN_URI_BASE:str:https://pfp.staging.autonolas.tech/}
       whitelist_api_key: null
       whitelist_endpoint: http://localhost
 ---
@@ -162,4 +164,4 @@ public_id: fetchai/http_server:0.22.0:bafybeicblltx7ha3ulthg7bzfccuqqyjmihhrvfez
 type: connection
 config:
   host: 0.0.0.0
-  target_skill_id: valory/contribution_skill_abci:0.1.0
+  target_skill_id: valory/contribution_abci:0.1.0

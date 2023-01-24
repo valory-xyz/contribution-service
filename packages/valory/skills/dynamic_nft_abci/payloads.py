@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 #
-#   Copyright 2022 Valory AG
+#   Copyright 2022-2023 Valory AG
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -19,71 +19,41 @@
 
 """This module contains the transaction payloads of the DynamicNFTAbciApp."""
 
-from abc import ABC
-from enum import Enum
-from typing import Any, Dict, Hashable
+from dataclasses import dataclass
 
 from packages.valory.skills.abstract_round_abci.base import BaseTxPayload
 
 
-class TransactionType(Enum):
-    """Enumeration of transaction types."""
-
-    NEW_TOKENS = "new_tokens"
-    LEADERBOARD_OBSERVATION = "leaderboard_observation"
-    IMAGE_CODE_CALCULATION = "image_code_calculation"
-    IMAGE_GENERATION = "image_generation"
-    DB_UPDATE = "db_update"
-
-    def __str__(self) -> str:
-        """Get the string value of the transaction type."""
-        return self.value
-
-
-class BaseDynamicNFTPayload(BaseTxPayload, ABC):
-    """Base payload for DynamicNFT."""
-
-    def __init__(self, sender: str, content: Hashable, **kwargs: Any) -> None:
-        """Initialize a transaction payload."""
-        super().__init__(sender, **kwargs)
-        self._content = content
-
-    @property
-    def content(self):
-        """Get the content."""
-        return self._content
-
-    @property
-    def data(self) -> Dict[str, Hashable]:
-        """Get the data."""
-        return dict(content=self.content)
-
-
-class NewTokensPayload(BaseDynamicNFTPayload):
+@dataclass(frozen=True)
+class NewTokensPayload(BaseTxPayload):
     """Represent a transaction payload for the NewTokensRound."""
 
-    transaction_type = TransactionType.NEW_TOKENS
+    content: str
 
 
-class LeaderboardObservationPayload(BaseDynamicNFTPayload):
+@dataclass(frozen=True)
+class LeaderboardObservationPayload(BaseTxPayload):
     """Represent a transaction payload for the LeaderboardObservationRound."""
 
-    transaction_type = TransactionType.LEADERBOARD_OBSERVATION
+    content: str
 
 
-class ImageCodeCalculationPayload(BaseDynamicNFTPayload):
+@dataclass(frozen=True)
+class ImageCodeCalculationPayload(BaseTxPayload):
     """Represent a transaction payload for the ImageCodeCalculationRound."""
 
-    transaction_type = TransactionType.IMAGE_CODE_CALCULATION
+    content: str
 
 
-class ImageGenerationPayload(BaseDynamicNFTPayload):
+@dataclass(frozen=True)
+class ImageGenerationPayload(BaseTxPayload):
     """Represent a transaction payload for the ImageGenerationRound."""
 
-    transaction_type = TransactionType.IMAGE_GENERATION
+    content: str
 
 
-class DBUpdatePayload(BaseDynamicNFTPayload):
+@dataclass(frozen=True)
+class DBUpdatePayload(BaseTxPayload):
     """Represent a transaction payload for the DBUpdateRound."""
 
-    transaction_type = TransactionType.DB_UPDATE
+    content: str

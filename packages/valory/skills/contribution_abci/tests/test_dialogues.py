@@ -17,11 +17,10 @@
 #
 # ------------------------------------------------------------------------------
 
-"""This package contains e2e tests for the DynamicNFT skill."""
-import pytest
+"""Test the dialogues.py module of the contribution skill."""
+
+import packages.valory.skills.contribution_abci.dialogues  # pylint: disable=unused-import # noqa: F401
 
 
-@pytest.mark.e2e
-def test_dummy_e2e() -> None:
-    """Dummy e2e test"""
-    assert True
+def test_import() -> None:
+    """Test that the 'dialogues.py' of the contribution skill can be imported."""
