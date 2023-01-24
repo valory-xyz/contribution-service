@@ -91,7 +91,6 @@ MOCK_IPFS_ADDRESS = _DEFAULT_JSON_SERVER_ADDR
 
 
 @pytest.mark.usefixtures("ipfs_daemon")
-@pytest.mark.usefixtures("ipfs_domain")
 class BaseTestEnd2EndContributionNormalExecution(BaseTestEnd2EndExecution):
     """Base class for the contribution service e2e tests."""
 
