@@ -12,7 +12,7 @@ fingerprint:
   tests/helpers/data/json_server/data.json: bafybeidxxrnko3lmzgcces5nfkkotinqa5mv343fuhezkb6tdbjv4cgsoy
   tests/helpers/docker.py: bafybeihjh65uysuk3pp2bn3c4l2ish6tp2ay64w5tsetsx53hqnthgntwa
   tests/helpers/fixtures.py: bafybeibbzank7chfncg6ifb4r3lvnttahixu2cq7cs6nnglbeolwlbrsvm
-  tests/test_contribution.py: bafybeifmangtotjnktk43ytn6qrixw2jczn3xx5h6tjmu5vi6klw5y3otq
+  tests/test_contribution.py: bafybeifgc2lpbz5rjbne4yci5r47yjw26kndnd5p5smry4xdndniuqpgzu
 fingerprint_ignore_patterns: []
 connections:
 - fetchai/http_server:0.22.0:bafybeic7p2e2ey44k6yv3dzznepekggceqc6mxb55e4xovcjnr3qym5ncu
@@ -29,8 +29,8 @@ protocols:
 skills:
 - valory/abstract_abci:0.1.0:bafybeidwizzka3qjotu35zzstoqunp3hjhkx6oojqnlwqsvd3qnjjpmusq
 - valory/abstract_round_abci:0.1.0:bafybeicvbxixjsu3bgjk5frqz5mq2kmv44grwd6324viz4tehw3yejfhji
-- valory/contribution_abci:0.1.0:bafybeid5ungp5lxzqohjgyjuakwp3kjjvkahd5k6kvuhyoip26j6c4b6vm
-- valory/dynamic_nft_abci:0.1.0:bafybeieolqtxtpvowhhsue2ettk3skckyvpxrtyk4hk66jpcaavekt6rp4
+- valory/contribution_abci:0.1.0:bafybeico6ezze3fk7zbjmuvaj45t7aomdlbbjuvcyxavvhncurgoaje7oq
+- valory/dynamic_nft_abci:0.1.0:bafybeictekacpytmrlkr3phqqynirc3f5i55zi435qykql3usvcqw2u2fu
 - valory/registration_abci:0.1.0:bafybeihai2otcmnb2w7k64bnwf5qagfexg5gqow74xhj3wynikgdxre3ka
 - valory/reset_pause_abci:0.1.0:bafybeifs6zpg5nbvuapmxafzo6fdhoz5ebpiujetvk243apo3iwl2rn45i
 default_ledger: ethereum
