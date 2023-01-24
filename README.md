@@ -43,7 +43,15 @@ have minted a token and verified their addresses through Discord. NFT images wil
 
       autonomy build-image
 
-- Export the environment variables: ETHEREUM_LEDGER_RPC, ETHEREUM_LEDGER_CHAIN_ID, LEADERBOARD_API_KEY, LEADERBOARD_SHEET_ID, OBSERVATION_INTERVAL, DYNAMIC_CONTRIBUTION_CONTRACT_ADDRESS.
+- Export the environment variables:
+	```
+	ETHEREUM_LEDGER_RPC,
+	ETHEREUM_LEDGER_CHAIN_ID,
+	LEADERBOARD_API_KEY,
+	LEADERBOARD_SHEET_ID,
+	OBSERVATION_INTERVAL,
+	DYNAMIC_CONTRIBUTION_CONTRACT_ADDRESS.
+	``
 
 - Build the deployment:
 
