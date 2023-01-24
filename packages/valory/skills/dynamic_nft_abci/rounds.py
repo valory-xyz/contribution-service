@@ -27,13 +27,11 @@ from typing import Dict, List, Optional, Set, Tuple, cast
 from packages.valory.skills.abstract_round_abci.base import (
     AbciApp,
     AbciAppTransitionFunction,
-    AbstractRound,
     AppState,
     BaseSynchronizedData,
     CollectSameUntilThresholdRound,
     DegenerateRound,
     EventToTimeout,
-    TransactionType,
     get_name,
 )
 from packages.valory.skills.dynamic_nft_abci.payloads import (
@@ -89,20 +87,11 @@ class SynchronizedData(BaseSynchronizedData):
         return cast(float, self.db.get("last_update_time", None))
 
 
-class ContributionAbstractRound(AbstractRound[Event, TransactionType], ABC):
-    """Abstract round for the APY estimation skill."""
-
-    @property
-    def synchronized_data(self) -> SynchronizedData:
-        """Return the synchronized data."""
-        return cast(SynchronizedData, super().synchronized_data)
-
-
-class NewTokensRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
+class NewTokensRound(CollectSameUntilThresholdRound):
     """NewTokensRound"""
 
-    allowed_tx_type = NewTokensPayload.transaction_type
-    payload_attribute: str = get_name(NewTokensPayload.content)
+    payload_class = NewTokensPayload
+    payload_attribute: str = "content"
     synchronized_data_class = SynchronizedData
 
     ERROR_PAYLOAD = {"error": True}
@@ -135,13 +124,11 @@ class NewTokensRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
         return None
 
 
-class LeaderboardObservationRound(
-    ContributionAbstractRound, CollectSameUntilThresholdRound
-):
+class LeaderboardObservationRound(CollectSameUntilThresholdRound):
     """LeaderboardObservationRound"""
 
-    allowed_tx_type = LeaderboardObservationPayload.transaction_type
-    payload_attribute = get_name(LeaderboardObservationPayload.content)
+    payload_class = LeaderboardObservationPayload
+    payload_attribute = "content"
     synchronized_data_class = SynchronizedData
 
     ERROR_PAYLOAD = {}
@@ -165,13 +152,11 @@ class LeaderboardObservationRound(
         return None
 
 
-class ImageCodeCalculationRound(
-    ContributionAbstractRound, CollectSameUntilThresholdRound
-):
+class ImageCodeCalculationRound(CollectSameUntilThresholdRound):
     """ImageCodeCalculationRound"""
 
-    allowed_tx_type = ImageCodeCalculationPayload.transaction_type
-    payload_attribute = get_name(ImageCodeCalculationPayload.content)
+    payload_class = ImageCodeCalculationPayload
+    payload_attribute = "content"
     synchronized_data_class = SynchronizedData
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:
@@ -193,11 +178,11 @@ class ImageCodeCalculationRound(
         return None
 
 
-class ImageGenerationRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
+class ImageGenerationRound(CollectSameUntilThresholdRound):
     """ImageGenerationRound"""
 
-    allowed_tx_type = ImageGenerationPayload.transaction_type
-    payload_attribute = get_name(ImageGenerationPayload.content)
+    payload_class = ImageGenerationPayload
+    payload_attribute = "content"
     synchronized_data_class = SynchronizedData
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:
@@ -228,11 +213,11 @@ class ImageGenerationRound(ContributionAbstractRound, CollectSameUntilThresholdR
         return None
 
 
-class DBUpdateRound(ContributionAbstractRound, CollectSameUntilThresholdRound):
+class DBUpdateRound(CollectSameUntilThresholdRound):
     """DBUpdateRound"""
 
-    allowed_tx_type = DBUpdatePayload.transaction_type
-    payload_attribute = get_name(DBUpdatePayload.content)
+    payload_class = DBUpdatePayload
+    payload_attribute = "content"
     synchronized_data_class = SynchronizedData
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:

@@ -40,6 +40,8 @@ from aea_test_autonomy.fixture_helpers import hardhat_port  # noqa: F401
 from aea_test_autonomy.fixture_helpers import key_pairs  # noqa: F401
 from aea_test_autonomy.fixture_helpers import tendermint  # noqa: F401
 from aea_test_autonomy.fixture_helpers import tendermint_port  # noqa: F401
+from aea_test_autonomy.fixture_helpers import ipfs_daemon  # noqa: F401
+from aea_test_autonomy.fixture_helpers import ipfs_domain  # noqa: F401
 from packages.valory.agents.contribution.tests.helpers.fixtures import (  # noqa: F401
     UseHardHatContributionBaseTest,
     UseMockGoogleSheetsApiBaseTest,
@@ -49,9 +51,6 @@ from packages.valory.agents.contribution.tests.helpers.docker import (
 )
 from packages.valory.agents.contribution.tests.helpers.docker import (
     DEFAULT_JSON_SERVER_PORT as _DEFAULT_JSON_SERVER_PORT,
-)
-from packages.valory.skills.abstract_round_abci.tests.test_io.test_ipfs import (  # noqa: F401
-    ipfs_daemon,
 )
 from packages.valory.skills.registration_abci.rounds import RegistrationStartupRound
 from packages.valory.skills.reset_pause_abci.rounds import ResetAndPauseRound

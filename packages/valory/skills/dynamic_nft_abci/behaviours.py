@@ -584,7 +584,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
                     self.context.logger.info(
                         f"Trying to push image with hash {image_hash}..."
                     )
-                    image_hash = self.send_to_ipfs(
+                    image_hash = yield from self.send_to_ipfs(
                         image_path, image, filetype=ExtendedSupportedFiletype.PNG
                     )
 

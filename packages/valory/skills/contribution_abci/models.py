@@ -39,6 +39,9 @@ from packages.valory.skills.abstract_round_abci.models import (
     SharedState as BaseSharedState,
 )
 from packages.valory.skills.reset_pause_abci.rounds import Event as ResetPauseEvent
+from packages.valory.skills.contribution_abci.composition import (
+    ContributionSkillAbciApp,
+)
 
 
 DynamicNFTParams = DynamicNFTAbciParams
@@ -50,6 +53,8 @@ MARGIN = 5
 
 class SharedState(BaseSharedState):
     """Keep the current shared state of the skill."""
+
+    abci_app_cls = ContributionSkillAbciApp
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         """Initialize the state."""
