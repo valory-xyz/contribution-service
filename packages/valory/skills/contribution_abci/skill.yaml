@@ -9,10 +9,10 @@ fingerprint:
   __init__.py: bafybeicygns2oodvl2r657a3y6o5j56tnqlzf5wnieo352e43yii5p7xii
   behaviours.py: bafybeibb6emwfdcvpdxkwievvwj6sbb5ptqlqpyczm6awkztcu3dsvb5se
   composition.py: bafybeiaslyrdzrbh7b732vyzedwb5diq6cur75sr6pms5ibk6zsvoa6o6i
-  dialogues.py: bafybeibybzylcicdeuykgiwtiqkfqqy5ggnyhkg5pmr5ewzsofq3hvd2yi
+  dialogues.py: bafybeif2ninzxluoxpb7tohpeopmexru5q3hdvc6n66fwhhn2uj7n75o4u
   fsm_specification.yaml: bafybeiezzp5wtt37m62zaorjmyseuumzltbggwkpovqau2qbqomei3yle4
-  handlers.py: bafybeiecjboqsdjyzoyojqskda2xgmbklrzmnl5hwc3hfkmjukumnkrlwe
-  models.py: bafybeieqod5ebg53fbkvrhbcskntzpbcawjhenf5ggwkndboxmcvfs7x34
+  handlers.py: bafybeiesxmdeqer43njk6o4j4ff6d5qu4s7v6kxo5ugpmvsm65pi3isrpy
+  models.py: bafybeiblm6fvi27lzafqu4n4cfgbt447gvxm7m3ljx27dl4gxqwszosfei
   tests/__init__.py: bafybeicukkp7ajzvqtmpedzwo23azuorvy5qtftadsxbwmv5zhk2tktjc4
   tests/test_behaviours.py: bafybeiali637pe2hkgmb4js2xf3qootkebmo73o6yfcynydmursvngtoze
   tests/test_dialogues.py: bafybeic7hvuqahi4n3otym4ffe5d3pchv2jvlfeqff4xhsnpo376c5b3t4
@@ -24,7 +24,7 @@ contracts: []
 protocols: []
 skills:
 - valory/abstract_round_abci:0.1.0:bafybeicvbxixjsu3bgjk5frqz5mq2kmv44grwd6324viz4tehw3yejfhji
-- valory/dynamic_nft_abci:0.1.0:bafybeieolqtxtpvowhhsue2ettk3skckyvpxrtyk4hk66jpcaavekt6rp4
+- valory/dynamic_nft_abci:0.1.0:bafybeib4s7yno2yl2izfiyfuss2j7bczzzzsoyg64zsjiji4zzefgjhj5u
 - valory/registration_abci:0.1.0:bafybeihai2otcmnb2w7k64bnwf5qagfexg5gqow74xhj3wynikgdxre3ka
 - valory/reset_pause_abci:0.1.0:bafybeifs6zpg5nbvuapmxafzo6fdhoz5ebpiujetvk243apo3iwl2rn45i
 behaviours:
@@ -41,6 +41,9 @@ handlers:
   http:
     args: {}
     class_name: HttpHandler
+  ipfs:
+    args: {}
+    class_name: IpfsHandler
   ledger_api:
     args: {}
     class_name: LedgerApiHandler
@@ -64,6 +67,9 @@ models:
   http_dialogues:
     args: {}
     class_name: HttpDialogues
+  ipfs_dialogues:
+    args: {}
+    class_name: IpfsDialogues
   ledger_api_dialogues:
     args: {}
     class_name: LedgerApiDialogues
@@ -102,9 +108,12 @@ models:
       leaderboard_layers_range: Layers!B1:Z3
       leaderboard_points_range: Ranking!B2:C302
       leaderboard_sheet_id: 1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc
+      max_attempts: 10
       max_healthcheck: 120
       observation_interval: 10
       on_chain_service_id: null
+      request_retry_delay: 1.0
+      request_timeout: 10.0
       reset_tendermint_after: 2
       retry_attempts: 400
       retry_timeout: 3
@@ -121,8 +130,10 @@ models:
       tendermint_check_sleep_delay: 3
       tendermint_com_url: http://localhost:8080
       tendermint_max_retries: 5
+      tendermint_p2p_url: localhost:26656
       tendermint_url: http://localhost:26657
       token_uri_base: https://pfp.staging.autonolas.tech/
+      tx_timeout: 10.0
       whitelist_api_key: null
       whitelist_endpoint: http://localhost
     class_name: Params

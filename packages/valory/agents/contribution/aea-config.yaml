@@ -12,7 +12,7 @@ fingerprint:
   tests/helpers/data/json_server/data.json: bafybeidxxrnko3lmzgcces5nfkkotinqa5mv343fuhezkb6tdbjv4cgsoy
   tests/helpers/docker.py: bafybeihjh65uysuk3pp2bn3c4l2ish6tp2ay64w5tsetsx53hqnthgntwa
   tests/helpers/fixtures.py: bafybeibbzank7chfncg6ifb4r3lvnttahixu2cq7cs6nnglbeolwlbrsvm
-  tests/test_contribution.py: bafybeifmangtotjnktk43ytn6qrixw2jczn3xx5h6tjmu5vi6klw5y3otq
+  tests/test_contribution.py: bafybeifg7ybrxhtzwcppchbbstjtemporg4xsicvub4dzogqxoiaohymui
 fingerprint_ignore_patterns: []
 connections:
 - fetchai/http_server:0.22.0:bafybeic7p2e2ey44k6yv3dzznepekggceqc6mxb55e4xovcjnr3qym5ncu
@@ -21,7 +21,7 @@ connections:
 - valory/ledger:0.19.0:bafybeicpxyoxez7lperltamvikxu6vzk2lhqakbivce4nzywyzoqbxoogm
 - valory/p2p_libp2p_client:0.1.0:bafybeiayoofxmj6z3pasn2akqj3udgq2ta2ar6mv6zoehstul2btvv3gqa
 contracts:
-- valory/dynamic_contribution:0.1.0:bafybeidngjmes54s3sjn65v53qejtramyexp4qdvsppazjkmurg353zuby
+- valory/dynamic_contribution:0.1.0:bafybeigrhhytf5lqnu7xy7faz7cghzpye6dnvq2zhkqeydrrnpmtkpudyi
 protocols:
 - open_aea/signing:1.0.0:bafybeiclsbgrviyxbmi2vex5ze3dhr7ywohrqedebx26jozayxvroqtegq
 - valory/contract_api:1.0.0:bafybeif32nchkgn6yet7e5gt4auhf7lsahxnj4t36kxbw55p3gi7qpeuxq
@@ -29,8 +29,8 @@ protocols:
 skills:
 - valory/abstract_abci:0.1.0:bafybeidwizzka3qjotu35zzstoqunp3hjhkx6oojqnlwqsvd3qnjjpmusq
 - valory/abstract_round_abci:0.1.0:bafybeicvbxixjsu3bgjk5frqz5mq2kmv44grwd6324viz4tehw3yejfhji
-- valory/contribution_abci:0.1.0:bafybeibxpbzaacyhznulgsjoykl6dp6tcgjionxdvyjryjdvmfftop2g6y
-- valory/dynamic_nft_abci:0.1.0:bafybeieolqtxtpvowhhsue2ettk3skckyvpxrtyk4hk66jpcaavekt6rp4
+- valory/contribution_abci:0.1.0:bafybeifqg5joa42gfnqrk2sjgmpbrhqhvriz54ublktjhiouartvsubfla
+- valory/dynamic_nft_abci:0.1.0:bafybeib4s7yno2yl2izfiyfuss2j7bczzzzsoyg64zsjiji4zzefgjhj5u
 - valory/registration_abci:0.1.0:bafybeihai2otcmnb2w7k64bnwf5qagfexg5gqow74xhj3wynikgdxre3ka
 - valory/reset_pause_abci:0.1.0:bafybeifs6zpg5nbvuapmxafzo6fdhoz5ebpiujetvk243apo3iwl2rn45i
 default_ledger: ethereum
@@ -66,7 +66,7 @@ dependencies:
   Pillow:
     version: ==9.2.0
   open-aea-ledger-ethereum:
-    version: ==1.27.0
+    version: ==1.28.0.post1
 default_connection: null
 ---
 public_id: valory/abci:0.1.0
