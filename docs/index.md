@@ -18,7 +18,7 @@ Once you have {{set_up_system}} to work with the Open Autonomy framework, you ca
 1. Fetch the Autonolas Contribute service.
 
 	```bash
-	autonomy fetch valory/contribution:0.1.0:bafybeicr3jorsd55vvhrmfzpkx5mrepdcqt72xgj7gmuce6vsjkdqfw4ei --service
+	autonomy fetch valory/contribution:0.1.0:bafybeif4jiiwrqoiruq6el2dd7bdqqo4xvxrv3gsbjjss4hvi6pmn7bklu --service
 	```
 
 2. Build the Docker image of the service agents
@@ -58,9 +58,9 @@ Once you have {{set_up_system}} to work with the Open Autonomy framework, you ca
 4. Prepare the environment and build the service deployment.
 
 	1. Create a service token (you can follow [this guide](https://www.sharperlight.com/uncategorized/2022/04/06/accessing-the-google-sheets-api-via-sharperlight-query-builder/)).
-	
+
 	2. Create an `.env` file with the required environment variables.
-	
+
 	```bash
 	ETHEREUM_LEDGER_RPC=https://goerli.infura.io/v3/d27c4537b4c34e82b70bf970574a5f2d
 	DYNAMIC_CONTRIBUTION_CONTRACT_ADDRESS=0x7c3b976434fae9986050b26089649d9f63314bd8
@@ -71,9 +71,9 @@ Once you have {{set_up_system}} to work with the Open Autonomy framework, you ca
 	LEADERBOARD_LAYERS_RANGE=Layers!B1:Z32
 	LEADERBOARD_POINTS_RANGE=Ranking!B2:C302
 	LEADERBOARD_SHEET_ID=1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc
-	OBSERVATION_INTERVAL=10 SERVICE_AUTH=<service_auth_here>	
+	OBSERVATION_INTERVAL=10 SERVICE_AUTH=<service_auth_here>
 	```
-	
+
 	3. Build the service deployment.
 
     ```bash
