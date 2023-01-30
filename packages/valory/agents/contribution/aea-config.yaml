@@ -29,7 +29,7 @@ protocols:
 skills:
 - valory/abstract_abci:0.1.0:bafybeidwizzka3qjotu35zzstoqunp3hjhkx6oojqnlwqsvd3qnjjpmusq
 - valory/abstract_round_abci:0.1.0:bafybeicvbxixjsu3bgjk5frqz5mq2kmv44grwd6324viz4tehw3yejfhji
-- valory/contribution_abci:0.1.0:bafybeifqg5joa42gfnqrk2sjgmpbrhqhvriz54ublktjhiouartvsubfla
+- valory/contribution_abci:0.1.0:bafybeifaii7q5q6lyzk3emws7gxlhkapho6whcq3ghvagkeawii4mz6hj4
 - valory/dynamic_nft_abci:0.1.0:bafybeib4s7yno2yl2izfiyfuss2j7bczzzzsoyg64zsjiji4zzefgjhj5u
 - valory/registration_abci:0.1.0:bafybeihai2otcmnb2w7k64bnwf5qagfexg5gqow74xhj3wynikgdxre3ka
 - valory/reset_pause_abci:0.1.0:bafybeifs6zpg5nbvuapmxafzo6fdhoz5ebpiujetvk243apo3iwl2rn45i
@@ -149,6 +149,10 @@ models:
       round_timeout_seconds: 30.0
       service_id: contribution_service
       service_registry_address: null
+      setup:
+        all_participants: ${SKILL_CONTRIBUTION_ABCI_MODELS_PARAMS_ARGS_SETUP_ALL_PARTICIPANTS:list:'["0x976EA74026E726554dB657fA54763abd0C3a0aa9","0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65","0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc","0x14dC79964da2C08b23698B3D3cc7Ca32193d9955"]'}
+        safe_contract_address:
+        - '0x0000000000000000000000000000000000000000'
       share_tm_config_on_startup: ${bool:false}
       sleep_time: 1
       dynamic_contribution_contract_address: ${SKILL_CONTRIBUTION_ABCI_MODELS_PARAMS_ARGS_DYNAMIC_CONTRIBUTION_CONTRACT_ADDRESS:str:0x5FbDB2315678afecb367f032d93F642f64180aa3}
