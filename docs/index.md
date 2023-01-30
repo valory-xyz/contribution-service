@@ -1,4 +1,4 @@
-![CoordinationKit](images/autonolas-coordination-logo.png){ align=left width="150" }
+![CoordinationKit](images/coordinationkit.svg){ align=left }
 
 The CoordinationKit helps you build services to show off community contributions by letting users mint badges which evolve as they make contributions to the DAO. Such services work by monitoring user contributions, updating their badges accordingly and showing off contributions on NFT-enabled social media sites.
 
