@@ -29,7 +29,7 @@ extra_css:
  
 
 nav:
-  - ContributionKit: 'index.md' 
+  - CoordinationKit: 'index.md' 
 
   
 plugins:
