@@ -64,7 +64,7 @@ URL_SKIPS = [
 # Define here custom timeouts for some edge cases
 CUSTOM_TIMEOUTS = {
     "http://www.fipa.org/repository/ips.php3": 30,
-    "https://www.sharperlight.com/uncategorized/2022/04/06/accessing-the-google-sheets-api-via-sharperlight-query-builder/": 30
+    "https://www.sharperlight.com/uncategorized/2022/04/06/accessing-the-google-sheets-api-via-sharperlight-query-builder/": 30,
 }
 
 
