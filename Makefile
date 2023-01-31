@@ -103,3 +103,20 @@ new_env: clean
 .PHONY: fix-abci-app-specs
 fix-abci-app-specs:
 	export PYTHONPATH=${PYTHONPATH}:${PWD} && autonomy analyse fsm-specs --update --app-class DynamicNFTAbciApp --package packages/valory/skills/dynamic_nft_abci/ || (echo "Failed to check dynamic_nft_abci abci consistency" && exit 1)
+
+.PHONY: all-linters
+all-linters:
+	gitleaks detect --report-format json --report-path leak_report
+	tox -e check-copyright
+	tox -e bandit
+	tox -e safety
+	tox -e check-packages
+	tox -e check-abciapp-specs
+	tox -e check-hash
+	tox -e spell-check
+	tox -e black-check
+	tox -e isort-check
+	tox -e flake8
+	tox -e darglint
+	tox -e pylint
+	tox -e mypy
