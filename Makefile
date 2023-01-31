@@ -113,6 +113,7 @@ all-linters:
 	tox -e check-packages
 	tox -e check-abciapp-specs
 	tox -e check-hash
+	tox -e spell-check
 	tox -e black-check
 	tox -e isort-check
 	tox -e flake8
