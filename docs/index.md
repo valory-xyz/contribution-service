@@ -17,7 +17,7 @@ Once you have {{set_up_system}} to work with the Open Autonomy framework, you ca
 1. Fetch the Autonolas Contribute service.
 
 	```bash
-	autonomy fetch valory/contribution:0.1.0:bafybeifg5xlag32x7ftfrdt3urasvp4by3mrixnvexr45wfb5dvgtcnkgm --service
+	autonomy fetch valory/contribution:0.1.0:bafybeib2pcse32ckuddhpsxqz5kft3ffmxvwnr62rmpddvnshb4revfvu4 --service
 	```
 
 2. Build the Docker image of the service agents
