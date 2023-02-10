@@ -8,7 +8,7 @@ license: Apache-2.0
 fingerprint:
   README.md: bafybeiaeysyipptsieavfpyfkrfl3n37klu3ux7o2rtks2w4k2nnr2hshu
 fingerprint_ignore_patterns: []
-agent: valory/contribution:0.1.0:bafybeidnba4vefxieeoihsujdssisnbqnpvy5a2ul6dqg4ujxbthw4ytau
+agent: valory/contribution:0.1.0:bafybeidubmjdwexojew7kf72oeodcb3qlm7vba727vqpxrnyxyk74myfy4
 number_of_agents: 4
 ---
 public_id: valory/contribution_abci:0.1.0
@@ -17,19 +17,19 @@ models:
   params:
     args:
       broadcast_to_server: true
-      dynamic_contribution_contract_address: ${DYNAMIC_CONTRIBUTION_CONTRACT_ADDRESS:str:"0x5FbDB2315678afecb367f032d93F642f64180aa3"}
+      dynamic_contribution_contract_address: ${DYNAMIC_CONTRIBUTION_CONTRACT_ADDRESS:str:0x5FbDB2315678afecb367f032d93F642f64180aa3}
       earliest_block_to_monitor: ${EARLIEST_BLOCK_TO_MONITOR:int:8053690}
       history_end: null
       ipfs_domain_name: /dns/registry.autonolas.tech/tcp/443/https
-      ipfs_gateway_base_url: ${IPFS_GATEWAY_BASE_URL:str:"https://gateway.staging.autonolas.tech/ipfs/""}
+      ipfs_gateway_base_url: ${IPFS_GATEWAY_BASE_URL:str:https://gateway.staging.autonolas.tech/ipfs/}
       leaderboard_api_key: ${LEADERBOARD_API_KEY:str:null}
-      leaderboard_base_endpoint: ${LEADERBOARD_BASE_ENDPOINT:str:"https://sheets.googleapis.com/v4/spreadsheets"}
-      leaderboard_layers_range: ${LEADERBOARD_LAYERS_RANGE:str:"Layers!B1:Z3"}
-      leaderboard_points_range: ${LEADERBOARD_POINTS_RANGE:str:"Ranking!B2:C302"}
-      leaderboard_sheet_id: ${LEADERBOARD_SHEET_ID:str:"1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc"}
+      leaderboard_base_endpoint: ${LEADERBOARD_BASE_ENDPOINT:str:https://sheets.googleapis.com/v4/spreadsheets}
+      leaderboard_layers_range: ${LEADERBOARD_LAYERS_RANGE:str:Layers!B1:Z3}
+      leaderboard_points_range: ${LEADERBOARD_POINTS_RANGE:str:Ranking!B2:C302}
+      leaderboard_sheet_id: ${LEADERBOARD_SHEET_ID:str:1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc}
       observation_interval: ${OBSERVATION_INTERVAL:int:300}
       share_tm_config_on_startup: ${USE_ACN:bool:false}
-      token_uri_base: ${TOKEN_URI_BASE:str:"https://pfp.staging.autonolas.tech/"}
+      token_uri_base: ${TOKEN_URI_BASE:str:https://pfp.staging.autonolas.tech/}
       consensus:
         max_participants: 4
       setup:
