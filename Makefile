@@ -50,10 +50,11 @@ formatters:
 # flake8: wrapper around various code checks, https://flake8.pycqa.org/en/latest/user/error-codes.html
 # mypy: static type checker
 # pylint: code analysis for code smells and refactoring suggestions
+# vulture: finds dead code
 # darglint: docstring linter
 .PHONY: code-checks
 code-checks:
-	tox -p -e black-check -e isort-check -e flake8 -e mypy -e pylint -e darglint
+	tox -p -e black-check -e isort-check -e flake8 -e mypy -e pylint -e vulture-e darglint
 
 # safety: checks dependencies for known security vulnerabilities
 # bandit: security linter
@@ -76,7 +77,7 @@ common-checks-1:
 
 .PHONY: test
 test:
-	pytest -rfE packages/valory/skills/dynamic_nft_abci/tests --cov-report=html --cov=packages/valory/skills/dynamic_nft_abci --cov-report=xml --cov-report=term --cov-report=term-missing --cov-config=.coveragerc
+	pytest -rfE packages/valory/skills/dynamic_nft_abci/tests -rfE packages/valory/skills/contribution_abci/tests --cov=packages.valory.skills.dynamic_nft_abci --cov=packages.valory.skills.contribution_abci --cov-report=xml --cov-report=term --cov-report=term-missing --cov-config=.coveragerc
 	find . -name ".coverage*" -not -name ".coveragerc" -exec rm -fr "{}" \;
 
 v := $(shell pip -V | grep virtualenvs)

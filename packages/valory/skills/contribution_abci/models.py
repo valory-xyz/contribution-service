@@ -56,10 +56,6 @@ class SharedState(BaseSharedState):
 
     abci_app_cls = ContributionSkillAbciApp
 
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
-        """Initialize the state."""
-        super().__init__(*args, abci_app_cls=ContributionSkillAbciApp, **kwargs)
-
     def setup(self) -> None:
         """Set up."""
         super().setup()

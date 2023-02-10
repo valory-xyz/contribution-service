@@ -12,12 +12,12 @@ fingerprint:
   dialogues.py: bafybeif2ninzxluoxpb7tohpeopmexru5q3hdvc6n66fwhhn2uj7n75o4u
   fsm_specification.yaml: bafybeiezzp5wtt37m62zaorjmyseuumzltbggwkpovqau2qbqomei3yle4
   handlers.py: bafybeiesxmdeqer43njk6o4j4ff6d5qu4s7v6kxo5ugpmvsm65pi3isrpy
-  models.py: bafybeiblm6fvi27lzafqu4n4cfgbt447gvxm7m3ljx27dl4gxqwszosfei
+  models.py: bafybeicveaqwowmnuxpvbu7qivrqhpc6tewpipshqrgmmbuxbq4avmrfcy
   tests/__init__.py: bafybeicukkp7ajzvqtmpedzwo23azuorvy5qtftadsxbwmv5zhk2tktjc4
   tests/test_behaviours.py: bafybeiali637pe2hkgmb4js2xf3qootkebmo73o6yfcynydmursvngtoze
   tests/test_dialogues.py: bafybeic7hvuqahi4n3otym4ffe5d3pchv2jvlfeqff4xhsnpo376c5b3t4
   tests/test_handlers.py: bafybeidejb25zv26pi5efdiis3utxk3riligtbej6eidkekwx67waiyqgy
-  tests/test_models.py: bafybeihm4cut6rvxpojdjb2ff4ez2vomqyer72ottvpvgkvahyrmmu673m
+  tests/test_models.py: bafybeibwqbf2y7ubfnvbc7bzuwukerwlilksn4zrdnuaot56s7zz2utwmq
 fingerprint_ignore_patterns: []
 connections: []
 contracts: []

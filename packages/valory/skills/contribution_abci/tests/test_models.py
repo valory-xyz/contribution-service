@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 #
-#   Copyright 2022 Valory AG
+#   Copyright 2022-2023 Valory AG
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -18,9 +18,21 @@
 # ------------------------------------------------------------------------------
 
 """Test the models.py module of the contribution skill."""
-
+from unittest import mock
+from unittest.mock import MagicMock
+from packages.valory.skills.dynamic_nft_abci.rounds import Event
+from packages.valory.skills.contribution_abci.composition import (
+    ContributionSkillAbciApp,
+)
+import pytest
 from packages.valory.skills.contribution_abci.models import SharedState
 from packages.valory.skills.abstract_round_abci.test_tools.base import DummyContext
+
+
+@pytest.fixture
+def shared_state() -> SharedState:
+    """Initialize a test shared state."""
+    return SharedState(name="", skill_context=mock.MagicMock())
 
 
 class TestSharedState:  # pylint: disable=too-few-public-methods
@@ -31,3 +43,16 @@ class TestSharedState:  # pylint: disable=too-few-public-methods
     ) -> None:
         """Test initialization."""
         SharedState(name="", skill_context=DummyContext())
+
+    def test_setup(
+        self,
+        shared_state: SharedState,
+    ) -> None:
+        """Test setup."""
+        shared_state.context.params.setup_params = {"test": []}
+        shared_state.context.params.consensus_params = MagicMock()
+        shared_state.setup()
+        assert (
+            ContributionSkillAbciApp.event_to_timeout[Event.ROUND_TIMEOUT]
+            == shared_state.context.params.round_timeout_seconds
+        )
