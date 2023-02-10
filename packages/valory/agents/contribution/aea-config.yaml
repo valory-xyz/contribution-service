@@ -151,7 +151,7 @@ models:
       service_registry_address: null
       setup:
         all_participants: ${list:[]}
-        safe_contract_address: ${list:[]}
+        safe_contract_address: ${list:["0x0000000000000000000000000000000000000000"]}
       share_tm_config_on_startup: ${bool:false}
       sleep_time: 1
       dynamic_contribution_contract_address: ${str:0x5FbDB2315678afecb367f032d93F642f64180aa3}
