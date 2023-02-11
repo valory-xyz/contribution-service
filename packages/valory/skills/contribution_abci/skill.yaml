@@ -12,19 +12,19 @@ fingerprint:
   dialogues.py: bafybeif2ninzxluoxpb7tohpeopmexru5q3hdvc6n66fwhhn2uj7n75o4u
   fsm_specification.yaml: bafybeiezzp5wtt37m62zaorjmyseuumzltbggwkpovqau2qbqomei3yle4
   handlers.py: bafybeiesxmdeqer43njk6o4j4ff6d5qu4s7v6kxo5ugpmvsm65pi3isrpy
-  models.py: bafybeiblm6fvi27lzafqu4n4cfgbt447gvxm7m3ljx27dl4gxqwszosfei
+  models.py: bafybeicveaqwowmnuxpvbu7qivrqhpc6tewpipshqrgmmbuxbq4avmrfcy
   tests/__init__.py: bafybeicukkp7ajzvqtmpedzwo23azuorvy5qtftadsxbwmv5zhk2tktjc4
   tests/test_behaviours.py: bafybeiali637pe2hkgmb4js2xf3qootkebmo73o6yfcynydmursvngtoze
   tests/test_dialogues.py: bafybeic7hvuqahi4n3otym4ffe5d3pchv2jvlfeqff4xhsnpo376c5b3t4
   tests/test_handlers.py: bafybeidejb25zv26pi5efdiis3utxk3riligtbej6eidkekwx67waiyqgy
-  tests/test_models.py: bafybeihm4cut6rvxpojdjb2ff4ez2vomqyer72ottvpvgkvahyrmmu673m
+  tests/test_models.py: bafybeibwqbf2y7ubfnvbc7bzuwukerwlilksn4zrdnuaot56s7zz2utwmq
 fingerprint_ignore_patterns: []
 connections: []
 contracts: []
 protocols: []
 skills:
 - valory/abstract_round_abci:0.1.0:bafybeicvbxixjsu3bgjk5frqz5mq2kmv44grwd6324viz4tehw3yejfhji
-- valory/dynamic_nft_abci:0.1.0:bafybeib4s7yno2yl2izfiyfuss2j7bczzzzsoyg64zsjiji4zzefgjhj5u
+- valory/dynamic_nft_abci:0.1.0:bafybeibzq6pacfqhivpisykb3qsssaay634jqbtmfyotyksox5igiac2su
 - valory/registration_abci:0.1.0:bafybeihai2otcmnb2w7k64bnwf5qagfexg5gqow74xhj3wynikgdxre3ka
 - valory/reset_pause_abci:0.1.0:bafybeifs6zpg5nbvuapmxafzo6fdhoz5ebpiujetvk243apo3iwl2rn45i
 behaviours:
@@ -121,13 +121,8 @@ models:
       service_id: contribution_service
       service_registry_address: null
       setup:
-        all_participants:
-        - - '0x976EA74026E726554dB657fA54763abd0C3a0aa9'
-          - '0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65'
-          - '0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc'
-          - '0x14dC79964da2C08b23698B3D3cc7Ca32193d9955'
-        safe_contract_address:
-        - '0x0000000000000000000000000000000000000000'
+        all_participants: []
+        safe_contract_address: []
       share_tm_config_on_startup: false
       sleep_time: 1
       tendermint_check_sleep_delay: 3
