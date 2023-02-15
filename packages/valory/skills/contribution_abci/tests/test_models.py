@@ -28,6 +28,8 @@ import pytest
 from packages.valory.skills.contribution_abci.models import SharedState
 from packages.valory.skills.abstract_round_abci.test_tools.base import DummyContext
 
+MULTIPLIER = 2
+
 
 @pytest.fixture
 def shared_state() -> SharedState:
@@ -54,5 +56,5 @@ class TestSharedState:  # pylint: disable=too-few-public-methods
         shared_state.setup()
         assert (
             ContributionSkillAbciApp.event_to_timeout[Event.ROUND_TIMEOUT]
-            == shared_state.context.params.round_timeout_seconds
+            == shared_state.context.params.round_timeout_seconds * MULTIPLIER
         )

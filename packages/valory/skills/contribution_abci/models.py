@@ -49,6 +49,7 @@ Requests = BaseRequests
 BenchmarkTool = BaseBenchmarkTool
 
 MARGIN = 5
+MULTIPLIER = 2
 
 
 class SharedState(BaseSharedState):
@@ -59,9 +60,9 @@ class SharedState(BaseSharedState):
     def setup(self) -> None:
         """Set up."""
         super().setup()
-        ContributionSkillAbciApp.event_to_timeout[
-            DynamicNFTEvent.ROUND_TIMEOUT
-        ] = self.context.params.round_timeout_seconds
+        ContributionSkillAbciApp.event_to_timeout[DynamicNFTEvent.ROUND_TIMEOUT] = (
+            self.context.params.round_timeout_seconds * MULTIPLIER
+        )
         ContributionSkillAbciApp.event_to_timeout[
             ResetPauseEvent.ROUND_TIMEOUT
         ] = self.context.params.round_timeout_seconds
