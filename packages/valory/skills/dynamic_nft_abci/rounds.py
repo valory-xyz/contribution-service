@@ -86,6 +86,11 @@ class SynchronizedData(BaseSynchronizedData):
         """Get the last update time."""
         return cast(float, self.db.get("last_update_time", None))
 
+    @property
+    def last_parsed_block(self) -> int:
+        """Get the last parsed block."""
+        return cast(int, self.db.get("last_parsed_block", None))
+
 
 class NewTokensRound(CollectSameUntilThresholdRound):
     """NewTokensRound"""
@@ -105,6 +110,7 @@ class NewTokensRound(CollectSameUntilThresholdRound):
                 return self.synchronized_data, Event.CONTRACT_ERROR
 
             new_token_to_data = payload["new_token_to_data"]
+            last_parsed_block = payload["last_parsed_block"]
 
             # Add the new tokens to the token table
             token_to_data = {
@@ -114,7 +120,10 @@ class NewTokensRound(CollectSameUntilThresholdRound):
 
             synchronized_data = self.synchronized_data.update(
                 synchronized_data_class=SynchronizedData,
-                **{get_name(SynchronizedData.token_to_data): token_to_data}
+                **{
+                    get_name(SynchronizedData.token_to_data): token_to_data,
+                    get_name(SynchronizedData.last_parsed_block): last_parsed_block,
+                }
             )
             return synchronized_data, Event.DONE
         if not self.is_majority_possible(
@@ -316,4 +325,5 @@ class DynamicNFTAbciApp(AbciApp[Event]):
         "token_to_data",
         "image_code_to_hash",
         "last_update_time",
+        "last_parsed_block",
     ]

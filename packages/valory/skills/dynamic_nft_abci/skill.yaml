@@ -7,7 +7,7 @@ license: Apache-2.0
 aea_version: '>=1.0.0, <2.0.0'
 fingerprint:
   __init__.py: bafybeiav5443ke4ldxssxhmpcwxxq7ekax3piggfnywq72fvn4fezzgqxq
-  behaviours.py: bafybeibofkwzmgsuxm5qtu2niusbfqeynfeplmz72l755eeimixgbqmogi
+  behaviours.py: bafybeif2u4beb6cxihigty62gwizc2s43kuy33to7eqan37pghwbaxv3mu
   data/layers/activation/0.png: bafybeicy22hgzs7kwuw7wswht2q3gmv4daxyoga2mvr5f644lgzfconpn4
   data/layers/activation/1.png: bafybeibhfdzlez66uyeofhz3z4sq6an64i6b2cvadvzahb5iygqyq4gscu
   data/layers/classes/0.png: bafybeif4dtvtnqjss4dhmwenxzhbyao6reqoxx5imlzxgxeh4bajnz444u
@@ -23,9 +23,9 @@ fingerprint:
   io_/store.py: bafybeigipyflzjjstvtjufhugwp3q7jvjqljiqx2kpe2ftwcgk5lerbqbm
   models.py: bafybeih2v5cvoac2nd42sbe2vacv7tvr6tu3kvcorjrl7tgwq7rrpzxdvi
   payloads.py: bafybeifgfiuoajjtlf4kezc4b67khezq37hi3rvy7nnfi6fbr76ah63ri4
-  rounds.py: bafybeiddm4sgvg2rplhcbx5jy3ogsjdmr4cv76fvzaje6mdf3zz2ethehu
+  rounds.py: bafybeidmxkttwxhtyo62gsmpbcizeefjt4ac72hft6twwrnzlrkzb5cpom
   tests/__init__.py: bafybeia2xqlacp44lylwlkf7f7ci6m3yshppv3vusgcdjpj4bbcbnuhvla
-  tests/test_behaviours.py: bafybeigr6fukvxx54466laclruvs6zlcnzgfmr4plrniirzxgblcb7vfbq
+  tests/test_behaviours.py: bafybeiepvqnt7iadpml44wcokhmpqc5bie3g244ujuz4aqdnfhhehsdbqe
   tests/test_dialogues.py: bafybeibfzhpyz2kdokjkz76oxz4sc6nw26dw5pgx5fwvloyfyl2inixwdi
   tests/test_handlers.py: bafybeibhnqb7npg7l2mcv45wusl46d5aueowdgyfejbmrmbkorezsd2bm4
   tests/test_io/__init__.py: bafybeid3sssvbbyju4snrdssxyafleuo57sqyuepl25btxcbuj3p5oonsm
@@ -34,13 +34,13 @@ fingerprint:
   tests/test_io/test_store.py: bafybeieurjcg7zvbxhouxikjmui2p3scf3bmjl73y3ny2eamqtj37acsaa
   tests/test_models.py: bafybeidqf7caad3zke6xzefmfoufce6bfn5bqgbiy4racghm5w67yddrea
   tests/test_payloads.py: bafybeiaqyev77vvhzziprihibs5t7tfndfk6m44622xtbu5ojv7kqmzpiy
-  tests/test_rounds.py: bafybeif5lw4ih5hu4epjrbf5kwcnh5bwdry4duqsr2vslzilpbfkafijwi
+  tests/test_rounds.py: bafybeiau6e4c36gc65uh3nh4aupjuwf7fe7lngoebgaqe6w7d6qq4bfp7u
   tools.py: bafybeicmi3wfowhm3uqljny2x2yhbvu6htxuzkejzv2sdtoiauygfn36t4
 fingerprint_ignore_patterns: []
 connections:
 - fetchai/http_server:0.22.0:bafybeic7p2e2ey44k6yv3dzznepekggceqc6mxb55e4xovcjnr3qym5ncu
 contracts:
-- valory/dynamic_contribution:0.1.0:bafybeibefo7ajnjszxqs2rq26hpow37ggbyuwngxy2w4ewctkjkqfrx6n4
+- valory/dynamic_contribution:0.1.0:bafybeigjxii2vcjf6k4wxmqcxlibim6alk422qsvklqljmawrdv2pc66sa
 protocols:
 - valory/contract_api:1.0.0:bafybeif32nchkgn6yet7e5gt4auhf7lsahxnj4t36kxbw55p3gi7qpeuxq
 - valory/http:1.0.0:bafybeifru3qs6udfzprax7jxktbsuzn7immfvi3scgfspifq3zdxwkgvnm
