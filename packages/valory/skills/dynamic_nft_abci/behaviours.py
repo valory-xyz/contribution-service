@@ -832,7 +832,7 @@ class DBUpdateBehaviour(DynamicNFTBaseBehaviour):
         """
         last_update_time = cast(
             SharedState, self.context.state
-        ).round_sequence.abci_app.last_timestamp.timestamp()
+        ).round_sequence.last_round_transition_timestamp.timestamp()
 
         self.context.logger.info(
             f"Current tokens: {self.synchronized_data.token_to_data}\n"
@@ -847,7 +847,7 @@ class DBUpdateBehaviour(DynamicNFTBaseBehaviour):
             payload = DBUpdatePayload(
                 self.context.agent_address,
                 json.dumps(
-                    {"last_update_time": last_update_time},
+                    {"last_update_time": int(last_update_time)},
                     sort_keys=True,
                 ),
             )
