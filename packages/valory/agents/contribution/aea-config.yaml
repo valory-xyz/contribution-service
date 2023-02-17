@@ -12,7 +12,7 @@ fingerprint:
   tests/helpers/data/json_server/data.json: bafybeidxxrnko3lmzgcces5nfkkotinqa5mv343fuhezkb6tdbjv4cgsoy
   tests/helpers/docker.py: bafybeihjh65uysuk3pp2bn3c4l2ish6tp2ay64w5tsetsx53hqnthgntwa
   tests/helpers/fixtures.py: bafybeibbzank7chfncg6ifb4r3lvnttahixu2cq7cs6nnglbeolwlbrsvm
-  tests/test_contribution.py: bafybeifg7ybrxhtzwcppchbbstjtemporg4xsicvub4dzogqxoiaohymui
+  tests/test_contribution.py: bafybeihnbu6uzi6c4llb7bumabbb6eppw7g63jm6s7c2gsybs5o566iyvu
 fingerprint_ignore_patterns: []
 connections:
 - fetchai/http_server:0.22.0:bafybeic7p2e2ey44k6yv3dzznepekggceqc6mxb55e4xovcjnr3qym5ncu
@@ -29,8 +29,8 @@ protocols:
 skills:
 - valory/abstract_abci:0.1.0:bafybeidwizzka3qjotu35zzstoqunp3hjhkx6oojqnlwqsvd3qnjjpmusq
 - valory/abstract_round_abci:0.1.0:bafybeicvbxixjsu3bgjk5frqz5mq2kmv44grwd6324viz4tehw3yejfhji
-- valory/contribution_abci:0.1.0:bafybeigi4b7jkgb44wj7aew6wir6s5caxu7iogtgedkaj3nhcikr3trnom
-- valory/dynamic_nft_abci:0.1.0:bafybeifnl55un6p42ejzn7fcvmb6rryprrojgccbu6tkiw3yhzvacbyu7q
+- valory/contribution_abci:0.1.0:bafybeiduonroi5jowl65rybpmyv4p64ailywefi55yrqer7uvnvrhoijsu
+- valory/dynamic_nft_abci:0.1.0:bafybeiavwvthwfjdb6ghqnwn6yuu4coin3nlbnzdvqjeulv6wvjzfsnx3a
 - valory/registration_abci:0.1.0:bafybeihai2otcmnb2w7k64bnwf5qagfexg5gqow74xhj3wynikgdxre3ka
 - valory/reset_pause_abci:0.1.0:bafybeifs6zpg5nbvuapmxafzo6fdhoz5ebpiujetvk243apo3iwl2rn45i
 default_ledger: ethereum
@@ -135,7 +135,7 @@ models:
       ipfs_domain_name: ${str:/dns/registry.autonolas.tech/tcp/443/https}
       ipfs_gateway_base_url: ${str:https://gateway.staging.autonolas.tech/ipfs/}
       keeper_timeout: 30.0
-      leaderboard_api_key: ${str:null}
+      leaderboard_api_key: ${str:<leaderboard_api_key>}
       leaderboard_base_endpoint: ${str:https://sheets.googleapis.com/v4/spreadsheets}
       leaderboard_layers_range: ${str:Layers!B1:Z3}
       leaderboard_points_range: ${str:Ranking!B2:C302}

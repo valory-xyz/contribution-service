@@ -221,14 +221,6 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
         """
         leaderboard_endpoint = self.params.leaderboard_endpoint
 
-        # While running e2e tests, the mock api server does not work
-        # if parameters are sent in the url, so we remove them here.
-        if "mock_sheet_id" in leaderboard_endpoint:
-            parsed_endpoint = urlparse(leaderboard_endpoint)
-            leaderboard_endpoint = "{uri.scheme}://{uri.netloc}{uri.path}".format(
-                uri=parsed_endpoint
-            )
-
         self.context.logger.info(
             f"Sending leaderboard request to: {leaderboard_endpoint}"
         )

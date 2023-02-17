@@ -7,7 +7,7 @@ license: Apache-2.0
 aea_version: '>=1.0.0, <2.0.0'
 fingerprint:
   __init__.py: bafybeiav5443ke4ldxssxhmpcwxxq7ekax3piggfnywq72fvn4fezzgqxq
-  behaviours.py: bafybeibkzom6wgkyjpcu2gh6warersb7kdsqflirdpj4qhd6fdoreaz7rm
+  behaviours.py: bafybeicqia2i56uejl7etsuiodimpghmcvpah7jcpvo4sllsahiqh5el5a
   data/layers/activation/0.png: bafybeicy22hgzs7kwuw7wswht2q3gmv4daxyoga2mvr5f644lgzfconpn4
   data/layers/activation/1.png: bafybeibhfdzlez66uyeofhz3z4sq6an64i6b2cvadvzahb5iygqyq4gscu
   data/layers/classes/0.png: bafybeif4dtvtnqjss4dhmwenxzhbyao6reqoxx5imlzxgxeh4bajnz444u
@@ -21,11 +21,11 @@ fingerprint:
   io_/__init__.py: bafybeidxth2otiyp5gfk2l3zjvnfktgrtpwzsknihkef3v2lhwbkgum3ea
   io_/load.py: bafybeigckzpunh5vjjuwmijri52nhto4ptx6wl2ofjtffiwl4bwkv4uzm4
   io_/store.py: bafybeigipyflzjjstvtjufhugwp3q7jvjqljiqx2kpe2ftwcgk5lerbqbm
-  models.py: bafybeih2v5cvoac2nd42sbe2vacv7tvr6tu3kvcorjrl7tgwq7rrpzxdvi
+  models.py: bafybeih26k3xvpsfd6sd6x3h3hlkhtxr7uru74by5rffab4b6x6s4zsryy
   payloads.py: bafybeifgfiuoajjtlf4kezc4b67khezq37hi3rvy7nnfi6fbr76ah63ri4
   rounds.py: bafybeidmxkttwxhtyo62gsmpbcizeefjt4ac72hft6twwrnzlrkzb5cpom
   tests/__init__.py: bafybeia2xqlacp44lylwlkf7f7ci6m3yshppv3vusgcdjpj4bbcbnuhvla
-  tests/test_behaviours.py: bafybeih4aihp2q4sy4mxboq4yi53ykypqy7fzv4xwc7r4wpzdzcfgtjyhi
+  tests/test_behaviours.py: bafybeif7npgvd3lntdnyv3gofet7myaz5twlkk6gbxn3auhes3gurgxzcq
   tests/test_dialogues.py: bafybeibfzhpyz2kdokjkz76oxz4sc6nw26dw5pgx5fwvloyfyl2inixwdi
   tests/test_handlers.py: bafybeibhnqb7npg7l2mcv45wusl46d5aueowdgyfejbmrmbkorezsd2bm4
   tests/test_io/__init__.py: bafybeid3sssvbbyju4snrdssxyafleuo57sqyuepl25btxcbuj3p5oonsm
@@ -122,11 +122,12 @@ models:
       ipfs_domain_name: /dns/registry.autonolas.tech/tcp/443/https
       ipfs_gateway_base_url: https://gateway.staging.autonolas.tech/ipfs/
       keeper_timeout: 30.0
-      leaderboard_api_key: null
+      leaderboard_api_key: <leaderboard_api_key>
       leaderboard_base_endpoint: https://sheets.googleapis.com/v4/spreadsheets
       leaderboard_layers_range: Layers!B1:Z3
       leaderboard_points_range: Ranking!B2:C302
       leaderboard_sheet_id: 1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc
+      leaderboard_param_template: ranges=<leaderboard_layers_range>&ranges=<leaderboard_points_range>&key=<leaderboard_api_key>
       max_attempts: 10
       max_healthcheck: 120
       observation_interval: 10
