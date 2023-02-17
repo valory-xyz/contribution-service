@@ -61,7 +61,7 @@ Once you have {{set_up_system}} to work with the Open Autonomy framework, you ca
 	2. Create an `.env` file with the required environment variables.
 
 	```bash
-	ETHEREUM_LEDGER_RPC=https://goerli.infura.io/v3/d27c4537b4c34e82b70bf970574a5f2d
+	ETHEREUM_LEDGER_RPC=https://goerli.infura.io/v3/<infura_api_key>
 	DYNAMIC_CONTRIBUTION_CONTRACT_ADDRESS=0x7c3b976434fae9986050b26089649d9f63314bd8
 	EARLIEST_BLOCK_TO_MONITOR=8053690
 	IPFS_GATEWAY_BASE_URL=https://gateway.staging.autonolas.tech/ipfs/
