@@ -60,6 +60,7 @@ URL_SKIPS = [
     "https://sheets.googleapis.com/v4/spreadsheets",
     "https://gateway.staging.autonolas.tech/ipfs/",
     "https://www.sharperlight.com/uncategorized/2022/04/06/accessing-the-google-sheets-api-via-sharperlight-query-builder/",
+    "https://goerli.infura.io/v3/<infura_api_key>",
 ]
 
 # Define here custom timeouts for some edge cases
