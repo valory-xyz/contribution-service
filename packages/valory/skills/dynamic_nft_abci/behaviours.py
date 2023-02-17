@@ -27,7 +27,6 @@ from abc import ABC
 from logging import Logger
 from pathlib import Path
 from typing import Any, Dict, Generator, List, Optional, Set, Tuple, Type, cast
-from urllib.parse import urlparse
 
 import jsonschema
 from PIL import Image
