@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 #
-#   Copyright 2022 Valory AG
+#   Copyright 2022-2023 Valory AG
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -111,7 +111,14 @@ def get_payloads(
 
 def get_dummy_new_tokens_payload_serialized() -> str:
     """Dummy new tokens payload"""
-    return json.dumps(DUMMY_TOKEN_TO_DATA, sort_keys=True)
+
+    return json.dumps(
+        {
+            **DUMMY_TOKEN_TO_DATA,
+            "last_parsed_block": 100,
+        },
+        sort_keys=True,
+    )
 
 
 def get_dummy_new_tokens_payload_error_serialized() -> str:
