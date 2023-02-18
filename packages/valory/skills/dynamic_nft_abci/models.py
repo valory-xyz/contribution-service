@@ -58,11 +58,16 @@ class Params(BaseParams):
         self.leaderboard_layers_range = self._ensure(
             "leaderboard_layers_range", kwargs, str
         )
-        leaderboard_api_key = kwargs.pop("leaderboard_api_key", None)
-        self.leaderboard_endpoint = (
-            f"{leaderboard_base_endpoint}/{leaderboard_sheet_id}/values:batchGet?"
-            f"ranges={self.leaderboard_points_range}&ranges={self.leaderboard_layers_range}&key={leaderboard_api_key}"
+        leaderboard_api_key = self._ensure("leaderboard_api_key", kwargs, str)
+        leaderboard_params = self._ensure("leaderboard_param_template", kwargs, str)
+        leaderboard_params.replace(
+            "<leaderboard_layers_range>", self.leaderboard_layers_range
         )
+        leaderboard_params.replace(
+            "<leaderboard_points_range>", self.leaderboard_points_range
+        )
+        leaderboard_params.replace("<leaderboard_api_key>", leaderboard_api_key)
+        self.leaderboard_endpoint = f"{leaderboard_base_endpoint}/{leaderboard_sheet_id}/values:batchGet?{leaderboard_params}"
         self.whitelist_api_key = kwargs.pop("whitelist_api_key", None)
         self.whitelist_endpoint = self._ensure("whitelist_endpoint", kwargs, str)
         self.dynamic_contribution_contract_address = self._ensure(

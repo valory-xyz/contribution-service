@@ -27,7 +27,6 @@ from abc import ABC
 from logging import Logger
 from pathlib import Path
 from typing import Any, Dict, Generator, List, Optional, Set, Tuple, Type, cast
-from urllib.parse import urlparse
 
 import jsonschema
 from PIL import Image
@@ -220,14 +219,6 @@ class LeaderboardObservationBehaviour(DynamicNFTBaseBehaviour):
         :return: return the data retrieved from the Leaderboard API, in case something goes wrong we return "{}".
         """
         leaderboard_endpoint = self.params.leaderboard_endpoint
-
-        # While running e2e tests, the mock api server does not work
-        # if parameters are sent in the url, so we remove them here.
-        if "mock_sheet_id" in leaderboard_endpoint:
-            parsed_endpoint = urlparse(leaderboard_endpoint)
-            leaderboard_endpoint = "{uri.scheme}://{uri.netloc}{uri.path}".format(
-                uri=parsed_endpoint
-            )
 
         self.context.logger.info(
             f"Sending leaderboard request to: {leaderboard_endpoint}"

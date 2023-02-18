@@ -113,6 +113,10 @@ class BaseTestEnd2EndContributionNormalExecution(BaseTestEnd2EndExecution):
             "value": "mock_sheet_id",
         },
         {
+            "dotted_path": f"{__param_args_prefix}.leaderboard_param_template",
+            "value": "",
+        },
+        {
             "dotted_path": f"{__param_args_prefix}.ipfs_domain_name",
             "value": "/dns/localhost/tcp/5001/http",
         },

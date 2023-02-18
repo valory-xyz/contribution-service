@@ -215,12 +215,10 @@ DUMMY_BAD_API_RESPONSE_WRONG_HASH["valueRanges"][1]["values"][1] = [
 SHEET_ID = "1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc"
 GOOGLE_API_KEY = None
 GOOGLE_SHEETS_ENDPOINT = "https://sheets.googleapis.com/v4/spreadsheets"
-DEFAULT_CELL_RANGE_POINTS = "Ranking!B2:C302"
-DEFAULT_CELL_RANGE_LAYERS = "Layers!B1:Z3"
 
 DEFAULT_SHEET_API_URL = (
     f"{GOOGLE_SHEETS_ENDPOINT}/{SHEET_ID}/values:batchGet?"
-    f"ranges={DEFAULT_CELL_RANGE_POINTS}&ranges={DEFAULT_CELL_RANGE_LAYERS}&key={GOOGLE_API_KEY}"
+    "ranges=<leaderboard_layers_range>&ranges=<leaderboard_points_range>&key=<leaderboard_api_key>"
 )
 
 MOCK_SHEET_API_URL = "http://localhost:3000/mock_sheet_id"
