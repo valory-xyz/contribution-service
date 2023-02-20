@@ -654,7 +654,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
             # Check if some image has changed and re-download images
             if api_layer_hashes != local_layer_hashes:
                 self.context.logger.info(
-                    f"Layer '{layer_name}' is out of date. Local={local_layer_hashes}, API={api_layer_hashes} Re-downloading."
+                    f"Layer '{layer_name}' is out of date. Local={local_layer_hashes}, API={api_layer_hashes} Re-downloading."  # noqa: B028
                 )
                 # Remove local images
                 if os.path.isdir(layer_path):
@@ -778,7 +778,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
             # Check code length
             if len(image_code) != self.CODE_LEN:
                 self.logger.error(
-                    f"ImageManager: invalid code '{image_code}'. Length is {len(image_code)}, should be {self.CODE_LEN}."
+                    f"ImageManager: invalid code '{image_code}'. Length is {len(image_code)}, should be {self.CODE_LEN}."  # noqa: B028
                 )
                 return None
 
@@ -790,7 +790,7 @@ class ImageGenerationBehaviour(DynamicNFTBaseBehaviour):
             for layer_index, layer_code in enumerate(img_layer_codes):
                 if layer_code >= len(self.layers[layer_index]):
                     self.logger.error(
-                        f"ImageManager: invalid code '{image_code}'. Layer {layer_index} code must be lower than {len(self.layers[layer_index])}. Found {layer_code}."
+                        f"ImageManager: invalid code '{image_code}'. Layer {layer_index} code must be lower than {len(self.layers[layer_index])}. Found {layer_code}."  # noqa: B028
                     )
                     return None
 
