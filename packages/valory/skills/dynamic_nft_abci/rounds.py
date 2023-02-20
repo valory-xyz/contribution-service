@@ -22,7 +22,7 @@
 import json
 from abc import ABC
 from enum import Enum
-from typing import Dict, List, Optional, Set, Tuple, cast
+from typing import Dict, Optional, Set, Tuple, cast
 
 from packages.valory.skills.abstract_round_abci.base import (
     AbciApp,
