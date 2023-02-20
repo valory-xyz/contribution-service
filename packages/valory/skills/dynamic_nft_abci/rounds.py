@@ -96,7 +96,6 @@ class NewTokensRound(CollectSameUntilThresholdRound):
     """NewTokensRound"""
 
     payload_class = NewTokensPayload
-    payload_attribute: str = "content"
     synchronized_data_class = SynchronizedData
 
     ERROR_PAYLOAD = {"error": True}
@@ -137,7 +136,6 @@ class LeaderboardObservationRound(CollectSameUntilThresholdRound):
     """LeaderboardObservationRound"""
 
     payload_class = LeaderboardObservationPayload
-    payload_attribute = "content"
     synchronized_data_class = SynchronizedData
 
     ERROR_PAYLOAD = {}
@@ -165,7 +163,6 @@ class ImageCodeCalculationRound(CollectSameUntilThresholdRound):
     """ImageCodeCalculationRound"""
 
     payload_class = ImageCodeCalculationPayload
-    payload_attribute = "content"
     synchronized_data_class = SynchronizedData
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:
@@ -191,7 +188,6 @@ class ImageGenerationRound(CollectSameUntilThresholdRound):
     """ImageGenerationRound"""
 
     payload_class = ImageGenerationPayload
-    payload_attribute = "content"
     synchronized_data_class = SynchronizedData
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:
@@ -226,7 +222,6 @@ class DBUpdateRound(CollectSameUntilThresholdRound):
     """DBUpdateRound"""
 
     payload_class = DBUpdatePayload
-    payload_attribute = "content"
     synchronized_data_class = SynchronizedData
 
     def end_block(self) -> Optional[Tuple[BaseSynchronizedData, Event]]:
@@ -321,9 +316,9 @@ class DynamicNFTAbciApp(AbciApp[Event]):
             get_name(SynchronizedData.last_update_time),
         ]
     }
-    cross_period_persisted_keys: List[str] = [
+    cross_period_persisted_keys: Set[str] = {
         "token_to_data",
         "image_code_to_hash",
         "last_update_time",
         "last_parsed_block",
-    ]
+    }

@@ -78,8 +78,7 @@ models:
       basic_image_cid: bafybeiabtdl53v2a3irrgrg7eujzffjallpymli763wvhv6gceurfmcemm
       cleanup_history_depth: 1
       cleanup_history_depth_current: null
-      consensus:
-        max_participants: 1
+      consensus: {}
       drand_public_key: 868f005eb8e6e4ca0a47c8a77ceaa5309a47978a7c71bc5cce96366b5d7a569937c529eeda66c7293784a9402801af31
       dynamic_contribution_contract_address: '0x5FbDB2315678afecb367f032d93F642f64180aa3'
       earliest_block_to_monitor: 8053690
@@ -124,6 +123,7 @@ models:
       setup:
         all_participants: []
         safe_contract_address: []
+        consensus_threshold: null
       share_tm_config_on_startup: false
       sleep_time: 1
       tendermint_check_sleep_delay: 3
