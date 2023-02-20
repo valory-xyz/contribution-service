@@ -304,17 +304,17 @@ class DynamicNFTAbciApp(AbciApp[Event]):
     event_to_timeout: EventToTimeout = {
         Event.ROUND_TIMEOUT: 30.0,
     }
-    db_pre_conditions: Dict[AppState, List[str]] = {
-        NewTokensRound: [],
+    db_pre_conditions: Dict[AppState, Set[str]] = {
+        NewTokensRound: set(),
     }
-    db_post_conditions: Dict[AppState, List[str]] = {
-        FinishedDBUpdateRound: [
+    db_post_conditions: Dict[AppState, Set[str]] = {
+        FinishedDBUpdateRound: {
             get_name(SynchronizedData.token_to_data),
             get_name(SynchronizedData.image_code_to_hash),
             get_name(SynchronizedData.most_voted_api_data),
             get_name(SynchronizedData.most_voted_token_updates),
             get_name(SynchronizedData.last_update_time),
-        ]
+        }
     }
     cross_period_persisted_keys: Set[str] = {
         "token_to_data",
