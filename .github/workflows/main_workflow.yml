@@ -20,7 +20,7 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/setup-python@v3
         with:
           python-version: ${{ matrix.python-version }}
@@ -29,7 +29,6 @@ jobs:
           pip install pipenv
       - name: Pipenv install requirements
         run: |
-          pipenv --clear
           pipenv install --dev --skip-lock
       - name: Pipenv lock
         run: |
