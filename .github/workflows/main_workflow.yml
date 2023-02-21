@@ -29,8 +29,6 @@ jobs:
           pip install pipenv
       - name: Pipenv install requirements
         run: |
-          pipenv --clear
-          pipenv --python 3.10
           pipenv install --dev --skip-lock
       - name: Pipenv lock
         run: |
