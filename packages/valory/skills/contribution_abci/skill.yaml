@@ -23,10 +23,10 @@ connections: []
 contracts: []
 protocols: []
 skills:
-- valory/abstract_round_abci:0.1.0:bafybeicvbxixjsu3bgjk5frqz5mq2kmv44grwd6324viz4tehw3yejfhji
-- valory/dynamic_nft_abci:0.1.0:bafybeieaxzvxhrvxvjeyfchspk2wlw735gdknsxxzgrrai4ueg6dj6fejq
-- valory/registration_abci:0.1.0:bafybeihai2otcmnb2w7k64bnwf5qagfexg5gqow74xhj3wynikgdxre3ka
-- valory/reset_pause_abci:0.1.0:bafybeifs6zpg5nbvuapmxafzo6fdhoz5ebpiujetvk243apo3iwl2rn45i
+- valory/abstract_round_abci:0.1.0:bafybeiami2y2uwvtmjf76hl3jvfahujdir5docjby6erdyjl66ekoblesi
+- valory/dynamic_nft_abci:0.1.0:bafybeigvd3dvrpbhhcez5y5ttdy62bdbkelxxptqklkkvehxsgx3fj6p74
+- valory/registration_abci:0.1.0:bafybeieaggf6mc43tses5k7fg3pyxca43wsmfvnnzszzucohp5ebg3umwq
+- valory/reset_pause_abci:0.1.0:bafybeic6ayed23np6ngkawsf2you6nnfuvbq4smcepdvvcrw5wxn5jaevy
 behaviours:
   main:
     args: {}
@@ -78,8 +78,6 @@ models:
       basic_image_cid: bafybeiabtdl53v2a3irrgrg7eujzffjallpymli763wvhv6gceurfmcemm
       cleanup_history_depth: 1
       cleanup_history_depth_current: null
-      consensus:
-        max_participants: 1
       drand_public_key: 868f005eb8e6e4ca0a47c8a77ceaa5309a47978a7c71bc5cce96366b5d7a569937c529eeda66c7293784a9402801af31
       dynamic_contribution_contract_address: '0x5FbDB2315678afecb367f032d93F642f64180aa3'
       earliest_block_to_monitor: 8053690
@@ -124,6 +122,8 @@ models:
       setup:
         all_participants: []
         safe_contract_address: []
+        consensus_threshold:
+        - null
       share_tm_config_on_startup: false
       sleep_time: 1
       tendermint_check_sleep_delay: 3

@@ -218,7 +218,7 @@ GOOGLE_SHEETS_ENDPOINT = "https://sheets.googleapis.com/v4/spreadsheets"
 
 DEFAULT_SHEET_API_URL = (
     f"{GOOGLE_SHEETS_ENDPOINT}/{SHEET_ID}/values:batchGet?"
-    "ranges=<leaderboard_layers_range>&ranges=<leaderboard_points_range>&key=<leaderboard_api_key>"
+    "ranges=Layers!B1:Z3&ranges=Ranking!B2:C302&key=<leaderboard_api_key>"
 )
 
 MOCK_SHEET_API_URL = "http://localhost:3000/mock_sheet_id"
