@@ -24,7 +24,7 @@ contracts: []
 protocols: []
 skills:
 - valory/abstract_round_abci:0.1.0:bafybeiami2y2uwvtmjf76hl3jvfahujdir5docjby6erdyjl66ekoblesi
-- valory/dynamic_nft_abci:0.1.0:bafybeidjq54uvzstfvc74u3m3lrykzia3lvmmzff6qfzanezer2nt33hqi
+- valory/dynamic_nft_abci:0.1.0:bafybeigvd3dvrpbhhcez5y5ttdy62bdbkelxxptqklkkvehxsgx3fj6p74
 - valory/registration_abci:0.1.0:bafybeieaggf6mc43tses5k7fg3pyxca43wsmfvnnzszzucohp5ebg3umwq
 - valory/reset_pause_abci:0.1.0:bafybeic6ayed23np6ngkawsf2you6nnfuvbq4smcepdvvcrw5wxn5jaevy
 behaviours:
