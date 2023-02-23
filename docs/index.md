@@ -12,22 +12,32 @@ Every few minutes an Autonolas Contribute checks the leaderboard. If a user has 
 
 	This section is under active development - please report issues in the [Autonolas Discord](https://discord.com/invite/z2PT65jKqQ).
 
-Once you have {{set_up_system}} to work with the Open Autonomy framework, you can run a local demo of the Autonolas Contribute service as follows:
+In order to run a local demo of the Autonolas Contribute service:
 
-1. Fetch the Autonolas Contribute service.
+1. [Set up your system](https://docs.autonolas.network/open-autonomy/guides/set_up/) to work with the Open Autonomy framework. We recommend that you use these commands:
+
+    ```bash
+    mkdir your_workspace && cd your_workspace
+    touch Pipfile && pipenv --python 3.10 && pipenv shell
+
+    pipenv install open-autonomy[all]==0.9.0
+    autonomy init --remote --ipfs --reset --author=your_name
+    ```
+
+2. Fetch the Autonolas Contribute service.
 
 	```bash
 	autonomy fetch valory/contribution:0.1.0:bafybeidjxgukaux6mkxr5tvmhqe4caq3ad2an2o6xmh56slugkbhm6jrfm --service
 	```
 
-2. Build the Docker image of the service agents
+3. Build the Docker image of the service agents
 
 	```bash
 	cd contribution
 	autonomy build-image
 	```
 
-3. Prepare the `keys.json` file containing the wallet address and the private key for each of the agents.
+4. Prepare the `keys.json` file containing the wallet address and the private key for each of the agents.
 
     ??? example "Example of a `keys.json` file"
 
@@ -54,7 +64,7 @@ Once you have {{set_up_system}} to work with the Open Autonomy framework, you ca
         ]
         ```
 
-4. Prepare the environment and build the service deployment.
+5. Prepare the environment and build the service deployment.
 
 	1. Create a service token (you can follow [this guide](https://www.sharperlight.com/uncategorized/2022/04/06/accessing-the-google-sheets-api-via-sharperlight-query-builder/)).
 
@@ -86,7 +96,7 @@ Once you have {{set_up_system}} to work with the Open Autonomy framework, you ca
     autonomy deploy build keys.json --aev -ltm
     ```
 
-5. Run the service.
+6. Run the service.
 
 	```bash
 	cd abci_build
