@@ -6,9 +6,10 @@ This document outlines security procedures and general policies for the `contrib
 
 The following table shows which versions of `contribution-service` are currently being supported with security updates.
 
-| Version   | Supported          |
-| --------- | ------------------ |
-| `v0.1.0`  | ✔️                 |
+| Version     | Supported          |
+| ----------- | ------------------ |
+| `v0.3.0`    | :white_check_mark: |
+| `< v0.3.0`  | :x:                |
 
 ## Reporting a Vulnerability
 
