@@ -66,9 +66,11 @@ In order to run a local demo of the Autonolas Contribute service:
 
 5. Prepare the environment and build the service deployment.
 
-	1. Create a service token (you can follow [this guide](https://www.sharperlight.com/uncategorized/2022/04/06/accessing-the-google-sheets-api-via-sharperlight-query-builder/)).
+	1. Create an API key for Google Spreadsheets API (you can follow [this guide](https://www.sharperlight.com/uncategorized/2022/04/06/accessing-the-google-sheets-api-via-sharperlight-query-builder/)).
 
-	2. Create an `.env` file with the required environment variables.
+    2. Create an API key for [Infura](https://www.infura.io/) or your preferred provider.
+
+	3. Create an `.env` file with the required environment variables, modifying its values to your needs.
 
 	```bash
 	ETHEREUM_LEDGER_RPC=https://goerli.infura.io/v3/<infura_api_key>
@@ -80,7 +82,7 @@ In order to run a local demo of the Autonolas Contribute service:
 	LEADERBOARD_LAYERS_RANGE=Layers!B1:Z32
 	LEADERBOARD_POINTS_RANGE=Ranking!B2:C302
 	LEADERBOARD_SHEET_ID=1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc
-	OBSERVATION_INTERVAL=10 SERVICE_AUTH=<service_auth_here>
+	OBSERVATION_INTERVAL=10
     ALL_PARTICIPANTS='[["0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65","0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc","0x976EA74026E726554dB657fA54763abd0C3a0aa9","0x14dC79964da2C08b23698B3D3cc7Ca32193d9955"]]'
 	```
 
@@ -90,7 +92,7 @@ In order to run a local demo of the Autonolas Contribute service:
     export $(grep -v '^#' .env | xargs)
     ```
 
-	3. Build the service deployment.
+	4. Build the service deployment.
 
     ```bash
     autonomy deploy build keys.json --aev -ltm
@@ -104,6 +106,44 @@ In order to run a local demo of the Autonolas Contribute service:
 	```
 
 	You can cancel the local execution at any time by pressing ++ctrl+c++.
+
+7. Check that the service is running. Open a separate terminal and execute the command below. You should see the service transitioning along different states.
+
+	```bash
+	docker logs -f abci0 | grep -E 'Entered|round is done'
+	```
+
+8. You can try some examples on how to curl the service endpoints from inside one of the agent containers. For example:
+
+    ```bash
+    # Enter one of the agent containers
+    docker exec -it <container_id> /bin/bash
+
+    # Install curl and jq if they are not present
+    sudo apt install -y curl jq
+
+    # Get the metadata for the token with id=1
+    curl localhost:8000/1 | jq
+
+    # Output
+    {
+      "title": "Autonolas Contribute Badges",
+      "name": "Badge 1",
+      "description": "This NFT recognizes the contributions made by the holder to the Autonolas Community.",
+      "image": "ipfs://bafybeiabtdl53v2a3irrgrg7eujzffjallpymli763wvhv6gceurfmcemm",
+      "attributes": []
+    }
+
+    # Get the service health status
+    curl localhost:8000/healthcheck | jq
+
+    # Output
+    {
+      "seconds_since_last_reset": 15.812911033630371,
+      "healthy": true,
+      "seconds_until_next_update": -5.812911033630371
+    }
+    ```
 
 ## Build
 
