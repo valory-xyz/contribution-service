@@ -107,7 +107,7 @@ In order to run a local demo of the Autonolas Contribute service:
 
 	You can cancel the local execution at any time by pressing ++ctrl+c++.
 
-7. Check that the service is running: you should see the service transitioning along different states.
+7. Check that the service is running. Open a separate terminal and execute the command below. You should see the service transitioning along different states.
 
 	```bash
 	docker logs -f abci0 | grep -E 'Entered|round is done'
