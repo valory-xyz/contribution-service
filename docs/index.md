@@ -113,7 +113,7 @@ In order to run a local demo of the Autonolas Contribute service:
 	docker logs -f abci0 | grep -E 'Entered|round is done'
 	```
 
-8. Try some examples on how to curl the service endpoints from inside one of the agent containers:
+8. You can try some examples on how to curl the service endpoints from inside one of the agent containers. For example:
 
     ```bash
     # Enter one of the agent containers
