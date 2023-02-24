@@ -1,5 +1,15 @@
 # Release History - `Contribution Service`
 
+## 0.3.0 (2023-02-24)
+
+- Bump to `open-autonomy@v0.9.1`
+- Updates docs
+- Removes the mock check during execution
+- Uses the latest transition timestamp for the healthcheck
+- The service now remembers the latest parsed block to avoid retrieving all data during every period.
+- Splits big requests into smaller ones to avoid timeouts
+- Updates service configuration
+
 ## 0.2.0.post1 (2023-01-31)
 
 - Updates kits icons
