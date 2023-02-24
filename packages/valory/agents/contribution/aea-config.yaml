@@ -18,7 +18,7 @@ connections:
 - fetchai/http_server:0.22.0:bafybeihaax5od5zo5jk2l62hv4jwuwtxloh5mijozudpsjombqc4ncmi6i
 - valory/abci:0.1.0:bafybeiedhipcrpx7sg7qwitwox6iqrbbb4vfnvqqyok2vc6wq6inrcszey
 - valory/http_client:0.23.0:bafybeidykl4elwbcjkqn32wt5h4h7tlpeqovrcq3c5bcplt6nhpznhgczi
-- valory/ledger:0.19.0:bafybeiavzloea5rtoxfdqjuexkqzpgbq73n4sl6af2vwa4bv2wd22qigyi
+- valory/ledger:0.19.0:bafybeicxcypcg2lxmtktbmuhqcyluzmasfsdeljyk2pvaabzc3h2jmcsui
 - valory/p2p_libp2p_client:0.1.0:bafybeidwcobzb7ut3efegoedad7jfckvt2n6prcmd4g7xnkm6hp6aafrva
 contracts:
 - valory/dynamic_contribution:0.1.0:bafybeid5aclrrf4rmtb7wpnrx4orfcu6eyn3lpu6awk7gq34xsk4n4lgya
@@ -28,11 +28,11 @@ protocols:
 - valory/http:1.0.0:bafybeifyoio7nlh5zzyn5yz7krkou56l22to3cwg7gw5v5o3vxwklibhty
 skills:
 - valory/abstract_abci:0.1.0:bafybeihkrunmigvlcze7uxhafj2h3kvpf2kifggq7zqj42n2we4mcwuvou
-- valory/abstract_round_abci:0.1.0:bafybeiba5xiqq443vc2vd6o6ocfejcnnsoyvndkv4ojw2yjzjxuree6jim
-- valory/contribution_abci:0.1.0:bafybeihrb5urnjfzmuslm5hjsksghrxjaxkpn25vdqeuircpriyhqbqmda
-- valory/dynamic_nft_abci:0.1.0:bafybeid4nzhrbwch2gavumqk6sd4lf3h7tz6bifcrldsvz563f7mwpfgsq
-- valory/registration_abci:0.1.0:bafybeiapjxmv7xoke6y7tkexs72ush6lp5vr7mjhbnosdx4gcgw2xfjpy4
-- valory/reset_pause_abci:0.1.0:bafybeicv4f2eo5xoo2bkhsrjocc7ibux4hjrfbz7xlz5jnfwkeuhngpq6a
+- valory/abstract_round_abci:0.1.0:bafybeib2jw7hjccou42wis35orckwycb2dgjk7yw46anuqysf2h7su3fi4
+- valory/contribution_abci:0.1.0:bafybeife5hcjw5dsz4cku2pkfvwkth2uj4umwwt6hq6dh6h3jqc5q5dwhe
+- valory/dynamic_nft_abci:0.1.0:bafybeihxuxcwh6pf55mwh4qjsy63v3dmvhwdq3wkfimrolu3m44kjr5r5y
+- valory/registration_abci:0.1.0:bafybeidgoqi7fa2gb56hdfsf74bbunfii63zgeo4qhggb66ofver2n2gya
+- valory/reset_pause_abci:0.1.0:bafybeievxhu6u5r5wlpjfzcwuowlbanhfbi25saf25qit53jauv4kq6gne
 default_ledger: ethereum
 required_ledgers:
 - ethereum
