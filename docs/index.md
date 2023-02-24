@@ -107,6 +107,44 @@ In order to run a local demo of the Autonolas Contribute service:
 
 	You can cancel the local execution at any time by pressing ++ctrl+c++.
 
+7. Check that the service is running: you should see the service transitioning along different states.
+
+	```bash
+	docker logs -f abci0 | grep -E 'Entered|round is done'
+	```
+
+8. Try some examples on how to curl the service endpoints from inside one of the agent containers:
+
+    ```bash
+    # Enter one of the agent containers
+    docker exec -it <container_id> /bin/bash
+
+    # Install curl and jq if they are not present
+    sudo apt install -y curl jq
+
+    # Get the metadata for the token with id=1
+    curl localhost:8000/1 | jq
+
+    # Output
+    {
+      "title": "Autonolas Contribute Badges",
+      "name": "Badge 1",
+      "description": "This NFT recognizes the contributions made by the holder to the Autonolas Community.",
+      "image": "ipfs://bafybeiabtdl53v2a3irrgrg7eujzffjallpymli763wvhv6gceurfmcemm",
+      "attributes": []
+    }
+
+    # Get the service health status
+    curl localhost:8000/healthcheck | jq
+
+    # Output
+    {
+      "seconds_since_last_reset": 15.812911033630371,
+      "healthy": true,
+      "seconds_until_next_update": -5.812911033630371
+    }
+    ```
+
 ## Build
 
 1. Fork the [CoordinationKit repository](https://github.com/valory-xyz/contribution-service).
