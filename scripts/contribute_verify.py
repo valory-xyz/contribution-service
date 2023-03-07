@@ -225,11 +225,11 @@ def draw_table(config: Dict) -> None:  # pylint: disable=too-many-locals
     # Account for multiple tokens per address
     # Only the first token gets the improved image
     visited_addresses = []
-    for i in range(len(table)):
-        address = table[i]["address"]
+    for row in table:
+        address = row["address"]
         if address in visited_addresses:
-            table[i]["expected_image"] = POINT_TO_HASHES["0"]
-            table[i]["ok"] = table[i]["expected_image"] == table[i]["image"]
+            row["expected_image"] = POINT_TO_HASHES["0"]
+            row["ok"] = row["expected_image"] == row["image"]
         visited_addresses.append(address)
 
     # Print table
@@ -244,4 +244,4 @@ def draw_table(config: Dict) -> None:  # pylint: disable=too-many-locals
         )
 
 
-draw_table(CONFIG["prod"])
+draw_table(CONFIG["staging"])
