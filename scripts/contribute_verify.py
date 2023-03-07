@@ -47,6 +47,7 @@ CONFIG = {
         "leaderboard_points_range": "Ranking!B2:C302",
         "leaderboard_layers_range": "Layers!B1:Z3",
         "leaderboard_api_key": os.environ.get("LEADERBOARD_API_KEY"),
+        "service_endpoint": "https://pfp.autonolas.tech",
     },
     "staging": {
         "dynamic_contribution_contract_address": "0x7c3b976434fae9986050b26089649d9f63314bd8",
@@ -65,6 +66,7 @@ CONFIG = {
         "leaderboard_points_range": "Ranking!B2:C302",
         "leaderboard_layers_range": "Layers!B1:Z3",
         "leaderboard_api_key": os.environ.get("LEADERBOARD_API_KEY"),
+        "service_endpoint": "https://pfp.staging.autonolas.tech",
     },
 }
 
@@ -140,9 +142,9 @@ def get_address_to_points(config: Dict) -> Dict:
     raise ValueError("Could not retrieve the leaderboard")
 
 
-def get_token_image_hash(token_id: str) -> str:
+def get_token_image_hash(token_id: str, config: Dict) -> str:
     """Get the token's image hash"""
-    url = f"https://pfp.autonolas.tech/{token_id}"
+    url = f"{config['service_endpoint']}/{token_id}"
     response = requests.get(url)
     return response.json()["image"].split("/")[-1]
 
@@ -189,7 +191,7 @@ def draw_table(config: Dict) -> None:
     if not os.path.isfile(token_to_hash_file):
         print(f"Writing {token_to_hash_file}")
         token_to_hash = {
-            token_id: get_token_image_hash(token_id)
+            token_id: get_token_image_hash(token_id, config)
             for token_id in token_to_address.keys()
         }
         with open(token_to_hash_file, "w", encoding="utf-8") as outfile:
