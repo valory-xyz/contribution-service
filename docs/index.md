@@ -2,9 +2,9 @@
 The CoordinationKit helps you build services to show off community contributions by letting users mint badges which evolve as they make contributions to the DAO. Such services work by monitoring user contributions, updating their badges accordingly and showing off contributions on NFT-enabled social media sites.
 
 Autonolas Contribute, a service based on the CoordinationKit, streamlines the contribution experience for members of the Autonolas community.
-When someone mints a badge, they will start at the first tier. As they complete actions that contribute to the success of Autonolas, they will earn points and climb the leaderboard. When they earn enough points to reach a higher badge tier, their badge will automatically update to reflect the new rank. This is a great way to demonstrate contributions on NFT-enabled social media sites and earn recognition that reflects users' contribution within the Autonolas community.
+When someone mints a badge, they will start at the first tier. As they complete actions that contribute to the success of Autonolas, they will earn points and climb the leaderboard. When they earn enough points to reach a higher [badge tier](https://contribute.autonolas.network/docs#section-badge), their badge will automatically update to reflect the new rank. This is a great way to demonstrate contributions on NFT-enabled social media sites and earn recognition that reflects users' contribution within the Autonolas community.
 
-Every few minutes an Autonolas Contribute checks the leaderboard. If a user has earned enough points to put them in a new [badge tier](https://contribute.autonolas.network/docs#section-badge) the service will automatically update your badge NFT’s image. By completing certain actions, users climb the leaderboard and upgrade their badge.
+Every few minutes the Autonolas Contribute service checks the leaderboard. If a user has earned enough points to put them in a new [badge tier](https://contribute.autonolas.network/docs#section-badge), then the service will automatically update their badge NFT’s image. By completing certain actions, users climb the leaderboard and upgrade their badge.
 
 ## Demo
 
