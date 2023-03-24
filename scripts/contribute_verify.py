@@ -158,8 +158,13 @@ def get_image(points: str) -> str:
     raise ValueError(f"Could not get the image hash for {points} points")
 
 
-def draw_table(config: Dict) -> None:  # pylint: disable=too-many-locals
+def draw_table(  # pylint: disable=too-many-locals,too-many-statements
+    deployment: str,
+) -> None:
     """Prints the verification table"""
+
+    config = CONFIG[deployment]
+    print(f"Drawing {RED}{deployment.upper()}{NORMAL} table...")
 
     token_to_address_file = "token_to_address.json"  # nosec
     address_to_points_file = "address_to_points.json"  # nosec
@@ -240,8 +245,15 @@ def draw_table(config: Dict) -> None:  # pylint: disable=too-many-locals
     for row in table:
         color = NORMAL if row["ok"] else RED
         print(
-            f"{color}{row['token_id']:>2}    {row['address']:>40}    {row['points']:>6}    {row['expected_image'][-8:]:>8}    {row['image'][-8:]:>8}   {row['ok']}{NORMAL}"
+            f"{color}{row['token_id']:>3}    {row['address']:>40}    {row['points']:>6}    {row['expected_image'][-8:]:>8}    {row['image'][-8:]:>8}   {row['ok']}{NORMAL}"
         )
 
+    print("-" * 90)
+    for address, points in address_to_points.items():
+        if address not in token_to_address.values():
+            print(
+                f"{'N/A':>3}    {address:>40}    {points:>6}    {'N/A':>8}    {'N/A':>8}   N/A"
+            )
 
-draw_table(CONFIG["staging"])
+
+draw_table("prod")

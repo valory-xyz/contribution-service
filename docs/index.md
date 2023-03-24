@@ -20,14 +20,14 @@ In order to run a local demo of the Autonolas Contribute service:
     mkdir your_workspace && cd your_workspace
     touch Pipfile && pipenv --python 3.10 && pipenv shell
 
-    pipenv install open-autonomy[all]==0.9.1
+    pipenv install open-autonomy[all]==0.10.0.post1
     autonomy init --remote --ipfs --reset --author=your_name
     ```
 
 2. Fetch the Autonolas Contribute service.
 
 	```bash
-	autonomy fetch valory/contribution:0.1.0:bafybeifq5cn3kirrlk5epjh2neoc6llw7w6ixoats2r35nx4mspzuwbkpe --service
+	autonomy fetch valory/contribution:0.1.0:bafybeih3b5az26h7rm3ogb7cltrspj5i66zlllni3nqfpb6yz32esd4lhu --service
 	```
 
 3. Build the Docker image of the service agents
@@ -82,12 +82,12 @@ In order to run a local demo of the Autonolas Contribute service:
 		LEADERBOARD_LAYERS_RANGE=Layers!B1:Z32
 		LEADERBOARD_POINTS_RANGE=Ranking!B2:C302
 		LEADERBOARD_SHEET_ID=1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc
-		OBSERVATION_INTERVAL=10
-	    ALL_PARTICIPANTS='[["0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65","0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc","0x976EA74026E726554dB657fA54763abd0C3a0aa9","0x14dC79964da2C08b23698B3D3cc7Ca32193d9955"]]'
+		reset_pause_duration=10
+	    ALL_PARTICIPANTS='["0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65","0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc","0x976EA74026E726554dB657fA54763abd0C3a0aa9","0x14dC79964da2C08b23698B3D3cc7Ca32193d9955"]'
 		```
-	
+
 	    and export them:
-	
+
 	    ```bash
 	    export $(grep -v '^#' .env | xargs)
 	    ```
