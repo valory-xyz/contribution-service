@@ -158,7 +158,9 @@ def get_image(points: str) -> str:
     raise ValueError(f"Could not get the image hash for {points} points")
 
 
-def draw_table(deployment: str) -> None:  # pylint: disable=too-many-locals
+def draw_table(  # pylint: disable=too-many-locals,too-many-statements
+    deployment: str,
+) -> None:
     """Prints the verification table"""
 
     config = CONFIG[deployment]

@@ -22,7 +22,7 @@
 import json
 from abc import ABC
 from enum import Enum
-from typing import Dict, Optional, Set, Tuple, cast
+from typing import Dict, FrozenSet, Optional, Set, Tuple, cast
 
 from packages.valory.skills.abstract_round_abci.base import (
     AbciApp,
@@ -316,9 +316,11 @@ class DynamicNFTAbciApp(AbciApp[Event]):
             get_name(SynchronizedData.last_update_time),
         }
     }
-    cross_period_persisted_keys: Set[str] = {
-        "token_to_data",
-        "image_code_to_hash",
-        "last_update_time",
-        "last_parsed_block",
-    }
+    cross_period_persisted_keys: FrozenSet[str] = frozenset(
+        [
+            "token_to_data",
+            "image_code_to_hash",
+            "last_update_time",
+            "last_parsed_block",
+        ]
+    )

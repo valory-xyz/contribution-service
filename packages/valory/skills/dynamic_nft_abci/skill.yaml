@@ -17,13 +17,13 @@ fingerprint:
   data/layers/frames/3.png: bafybeiheikuwkkwaygtssfkumzhursxh6a76546spakmr6wwrw6v3heb2a
   dialogues.py: bafybeifepvv22c44se22l6dn6j7cfnwepqafmiuj5243u3bzbln3p2rgoe
   fsm_specification.yaml: bafybeieu56rqmiqh47xdchcxhrbmj2n5mgdiod76yriyuyc3pfeovtvwqi
-  handlers.py: bafybeiecekxpetzige2bcvrf3y44t2wnsm5ewi5ljryvvpblit65376geq
+  handlers.py: bafybeibchqcmgyrjh2mzmb37gp4aiqj6cmaalxt4uuq4izf2ngq465qstm
   io_/__init__.py: bafybeidxth2otiyp5gfk2l3zjvnfktgrtpwzsknihkef3v2lhwbkgum3ea
   io_/load.py: bafybeigckzpunh5vjjuwmijri52nhto4ptx6wl2ofjtffiwl4bwkv4uzm4
   io_/store.py: bafybeigipyflzjjstvtjufhugwp3q7jvjqljiqx2kpe2ftwcgk5lerbqbm
   models.py: bafybeigentpzvxlil3iaaa5wscqvf7bjzs7xtehr7ah5cc4dlvzjlga7r4
   payloads.py: bafybeifgfiuoajjtlf4kezc4b67khezq37hi3rvy7nnfi6fbr76ah63ri4
-  rounds.py: bafybeibc2hawixwunl3yaqmn5h4xllazn44ne4gyplhg5433hvt4h4zj3m
+  rounds.py: bafybeibcjqa2twkiy464kypbigofpqsuzrilp52j4dvylauksszfouz5ju
   tests/__init__.py: bafybeia2xqlacp44lylwlkf7f7ci6m3yshppv3vusgcdjpj4bbcbnuhvla
   tests/test_behaviours.py: bafybeiaa7xymyz2c7iqc5xqziq6xpnukf7mdtgd2cdys2yxlmrtbh3xqhm
   tests/test_dialogues.py: bafybeibfzhpyz2kdokjkz76oxz4sc6nw26dw5pgx5fwvloyfyl2inixwdi
@@ -40,12 +40,12 @@ fingerprint_ignore_patterns: []
 connections:
 - fetchai/http_server:0.22.0:bafybeihaax5od5zo5jk2l62hv4jwuwtxloh5mijozudpsjombqc4ncmi6i
 contracts:
-- valory/dynamic_contribution:0.1.0:bafybeid5aclrrf4rmtb7wpnrx4orfcu6eyn3lpu6awk7gq34xsk4n4lgya
+- valory/dynamic_contribution:0.1.0:bafybeicm7walyd343vuazxc7lkyxnfjryemigrw7qgk66hsb7qvve3ck6m
 protocols:
 - valory/contract_api:1.0.0:bafybeidv6wxpjyb2sdyibnmmum45et4zcla6tl63bnol6ztyoqvpl4spmy
 - valory/http:1.0.0:bafybeifyoio7nlh5zzyn5yz7krkou56l22to3cwg7gw5v5o3vxwklibhty
 skills:
-- valory/abstract_round_abci:0.1.0:bafybeib2jw7hjccou42wis35orckwycb2dgjk7yw46anuqysf2h7su3fi4
+- valory/abstract_round_abci:0.1.0:bafybeicn5utwviq46ubguok5rl5go4hb7oxluj7t6bja2ut4epjw2hevei
 behaviours:
   main:
     args: {}
@@ -128,7 +128,7 @@ models:
       leaderboard_param_template: ranges=<leaderboard_layers_range>&ranges=<leaderboard_points_range>&key=<leaderboard_api_key>
       max_attempts: 10
       max_healthcheck: 120
-      observation_interval: 10
+      reset_pause_duration: 10
       on_chain_service_id: null
       request_retry_delay: 1.0
       request_timeout: 10.0
@@ -140,9 +140,8 @@ models:
       service_registry_address: null
       setup:
         all_participants: []
-        safe_contract_address: []
-        consensus_threshold:
-        - null
+        safe_contract_address: '0x0000000000000000000000000000000000000000'
+        consensus_threshold: null
       share_tm_config_on_startup: false
       sleep_time: 1
       tendermint_check_sleep_delay: 3
@@ -152,6 +151,7 @@ models:
       tendermint_url: http://localhost:26657
       token_uri_base: https://pfp.staging.autonolas.tech/
       tx_timeout: 10.0
+      use_termination: false
       whitelist_api_key: null
       whitelist_endpoint: http://localhost
     class_name: Params

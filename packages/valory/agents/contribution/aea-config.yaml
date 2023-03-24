@@ -16,23 +16,23 @@ fingerprint:
 fingerprint_ignore_patterns: []
 connections:
 - fetchai/http_server:0.22.0:bafybeihaax5od5zo5jk2l62hv4jwuwtxloh5mijozudpsjombqc4ncmi6i
-- valory/abci:0.1.0:bafybeiedhipcrpx7sg7qwitwox6iqrbbb4vfnvqqyok2vc6wq6inrcszey
+- valory/abci:0.1.0:bafybeienpqzsym3rg7nnomd6mxgbt4didwd4wfj72oadde27trdmcgsu5y
 - valory/http_client:0.23.0:bafybeidykl4elwbcjkqn32wt5h4h7tlpeqovrcq3c5bcplt6nhpznhgczi
-- valory/ledger:0.19.0:bafybeicxcypcg2lxmtktbmuhqcyluzmasfsdeljyk2pvaabzc3h2jmcsui
+- valory/ledger:0.19.0:bafybeighon6i2qfl2xrg7t3lbdzlkyo4v2a7ayvwso7m5w7pf2hvjfs2ma
 - valory/p2p_libp2p_client:0.1.0:bafybeidwcobzb7ut3efegoedad7jfckvt2n6prcmd4g7xnkm6hp6aafrva
 contracts:
-- valory/dynamic_contribution:0.1.0:bafybeid5aclrrf4rmtb7wpnrx4orfcu6eyn3lpu6awk7gq34xsk4n4lgya
+- valory/dynamic_contribution:0.1.0:bafybeicm7walyd343vuazxc7lkyxnfjryemigrw7qgk66hsb7qvve3ck6m
 protocols:
 - open_aea/signing:1.0.0:bafybeibqlfmikg5hk4phzak6gqzhpkt6akckx7xppbp53mvwt6r73h7tk4
 - valory/contract_api:1.0.0:bafybeidv6wxpjyb2sdyibnmmum45et4zcla6tl63bnol6ztyoqvpl4spmy
 - valory/http:1.0.0:bafybeifyoio7nlh5zzyn5yz7krkou56l22to3cwg7gw5v5o3vxwklibhty
 skills:
-- valory/abstract_abci:0.1.0:bafybeihkrunmigvlcze7uxhafj2h3kvpf2kifggq7zqj42n2we4mcwuvou
-- valory/abstract_round_abci:0.1.0:bafybeib2jw7hjccou42wis35orckwycb2dgjk7yw46anuqysf2h7su3fi4
-- valory/contribution_abci:0.1.0:bafybeife5hcjw5dsz4cku2pkfvwkth2uj4umwwt6hq6dh6h3jqc5q5dwhe
-- valory/dynamic_nft_abci:0.1.0:bafybeihxuxcwh6pf55mwh4qjsy63v3dmvhwdq3wkfimrolu3m44kjr5r5y
-- valory/registration_abci:0.1.0:bafybeidgoqi7fa2gb56hdfsf74bbunfii63zgeo4qhggb66ofver2n2gya
-- valory/reset_pause_abci:0.1.0:bafybeievxhu6u5r5wlpjfzcwuowlbanhfbi25saf25qit53jauv4kq6gne
+- valory/abstract_abci:0.1.0:bafybeigg5ofide2gxwgjvljjgpyy6ombby7ph6pg7erj3h6itduwpn6pqu
+- valory/abstract_round_abci:0.1.0:bafybeicn5utwviq46ubguok5rl5go4hb7oxluj7t6bja2ut4epjw2hevei
+- valory/contribution_abci:0.1.0:bafybeidq466dejnraho4svwlzdxuwzbh36wergiydpuzvhgeazi3fuy7bu
+- valory/dynamic_nft_abci:0.1.0:bafybeicvazrmiuf5k6n34hsif2esnm5c7m3afjzysprsa7jqxtfpwwf5vy
+- valory/registration_abci:0.1.0:bafybeid7gh35wnotm27hwuuuv3oozu33izjfafy7vbyzejdy3scx4oc7cu
+- valory/reset_pause_abci:0.1.0:bafybeidtb4v44zbxx7uw2c5yrbmmvzuh4mkgvcqdfyf4eq2xuhvxnbfiru
 default_ledger: ethereum
 required_ledgers:
 - ethereum
@@ -66,7 +66,7 @@ dependencies:
   Pillow:
     version: ==9.2.0
   open-aea-ledger-ethereum:
-    version: ==1.29.0
+    version: ==1.31.0
 default_connection: null
 ---
 public_id: valory/abci:0.1.0
@@ -82,10 +82,10 @@ type: connection
 config:
   ledger_apis:
     ethereum:
-      address: ${CONNECTION_LEDGER_CONFIG_LEDGER_APIS_ETHEREUM_ADDRESS:str:http://localhost:8545}
-      chain_id: ${CONNECTION_LEDGER_CONFIG_LEDGER_APIS_ETHEREUM_CHAIN_ID:int:31337}
-      poa_chain: ${CONNECTION_LEDGER_CONFIG_LEDGER_APIS_ETHEREUM_POA_CHAIN:bool:false}
-      default_gas_price_strategy: ${CONNECTION_LEDGER_CONFIG_LEDGER_APIS_ETHEREUM_DEFAULT_GAS_PRICE_STRATEGY:str:eip1559}
+      address: ${str:http://localhost:8545}
+      chain_id: ${int:31337}
+      poa_chain: ${bool:false}
+      default_gas_price_strategy: ${str:eip1559}
 ---
 public_id: valory/p2p_libp2p_client:0.1.0
 type: connection
@@ -139,7 +139,7 @@ models:
       leaderboard_points_range: ${str:Ranking!B2:C302}
       leaderboard_sheet_id: ${str:1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc}
       max_healthcheck: 120
-      observation_interval: ${int:300}
+      reset_pause_duration: ${int:300}
       on_chain_service_id: null
       reset_tendermint_after: 2
       retry_attempts: 400
@@ -149,19 +149,20 @@ models:
       service_registry_address: null
       setup:
         all_participants: ${list:[]}
-        safe_contract_address: ${list:["0x0000000000000000000000000000000000000000"]}
-        consensus_threshold:
-        - null
+        safe_contract_address: ${str:0x0000000000000000000000000000000000000000}
+        consensus_threshold: ${int:null}
       share_tm_config_on_startup: ${bool:false}
       sleep_time: 1
       dynamic_contribution_contract_address: ${str:0x5FbDB2315678afecb367f032d93F642f64180aa3}
       tendermint_check_sleep_delay: 3
-      tendermint_com_url: ${TENDERMINT_COM_URL:str:http://localhost:8080}
+      tendermint_p2p_url: ${str:localhost:26656}
+      tendermint_com_url: ${str:http://localhost:8080}
       tendermint_max_retries: 5
-      tendermint_url: ${TENDERMINT_URL:str:http://localhost:26657}
+      tendermint_url: ${str:http://localhost:26657}
       token_uri_base: ${str:https://pfp.staging.autonolas.tech/}
       whitelist_api_key: null
       whitelist_endpoint: http://localhost
+      use_termination: ${bool:false}
 ---
 public_id: fetchai/http_server:0.22.0:bafybeicblltx7ha3ulthg7bzfccuqqyjmihhrvfeztlgrlcoxhr7kf6nbq
 type: connection
