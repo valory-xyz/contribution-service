@@ -29,7 +29,7 @@ protocols:
 skills:
 - valory/abstract_abci:0.1.0:bafybeigg5ofide2gxwgjvljjgpyy6ombby7ph6pg7erj3h6itduwpn6pqu
 - valory/abstract_round_abci:0.1.0:bafybeicn5utwviq46ubguok5rl5go4hb7oxluj7t6bja2ut4epjw2hevei
-- valory/contribution_abci:0.1.0:bafybeidq466dejnraho4svwlzdxuwzbh36wergiydpuzvhgeazi3fuy7bu
+- valory/contribution_abci:0.1.0:bafybeiboyujpkwlwqxvnljk5efbzgzpmumy4qatpfkimp2zzxp2u7ug5ye
 - valory/dynamic_nft_abci:0.1.0:bafybeicvazrmiuf5k6n34hsif2esnm5c7m3afjzysprsa7jqxtfpwwf5vy
 - valory/registration_abci:0.1.0:bafybeid7gh35wnotm27hwuuuv3oozu33izjfafy7vbyzejdy3scx4oc7cu
 - valory/reset_pause_abci:0.1.0:bafybeidtb4v44zbxx7uw2c5yrbmmvzuh4mkgvcqdfyf4eq2xuhvxnbfiru
@@ -49,7 +49,7 @@ logging_config:
     logfile:
       class: logging.FileHandler
       formatter: standard
-      filename: ${LOG_FILE:str:log.txt}
+      filename: ${str:log.txt}
       level: INFO
     console:
       class: logging.StreamHandler
@@ -73,9 +73,9 @@ public_id: valory/abci:0.1.0
 type: connection
 config:
   target_skill_id: valory/contribution_abci:0.1.0
-  host: ${ABCI_HOST:str:localhost}
-  port: ${ABCI_PORT:int:26658}
-  use_tendermint: ${ABCI_USE_TENDERMINT:bool:false}
+  host: ${str:localhost}
+  port: ${int:26658}
+  use_tendermint: ${bool:false}
 ---
 public_id: valory/ledger:0.19.0
 type: connection
@@ -106,8 +106,13 @@ is_abstract: true
 public_id: valory/contribution_abci:0.1.0
 type: skill
 models:
+  benchmark_tool:
+    args:
+      log_dir: /logs
   params:
     args:
+      broadcast_to_server: false
+      history_end: null
       basic_image_cid: ${str:bafybeiabtdl53v2a3irrgrg7eujzffjallpymli763wvhv6gceurfmcemm}
       cleanup_history_depth: 1
       cleanup_history_depth_current: null
@@ -138,7 +143,9 @@ models:
       leaderboard_layers_range: ${str:Layers!B1:Z3}
       leaderboard_points_range: ${str:Ranking!B2:C302}
       leaderboard_sheet_id: ${str:1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc}
+      leaderboard_param_template: ranges=<leaderboard_layers_range>&ranges=<leaderboard_points_range>&key=<leaderboard_api_key>
       max_healthcheck: 120
+      max_attempts: 10
       reset_pause_duration: ${int:300}
       on_chain_service_id: null
       reset_tendermint_after: 2
@@ -163,6 +170,9 @@ models:
       whitelist_api_key: null
       whitelist_endpoint: http://localhost
       use_termination: ${bool:false}
+      tx_timeout: 10.0
+      request_retry_delay: 1.0
+      request_timeout: 10.0
 ---
 public_id: fetchai/http_server:0.22.0:bafybeicblltx7ha3ulthg7bzfccuqqyjmihhrvfeztlgrlcoxhr7kf6nbq
 type: connection

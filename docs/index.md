@@ -20,14 +20,14 @@ In order to run a local demo of the Autonolas Contribute service:
     mkdir your_workspace && cd your_workspace
     touch Pipfile && pipenv --python 3.10 && pipenv shell
 
-    pipenv install open-autonomy[all]==0.9.1
+    pipenv install open-autonomy[all]==0.10.0.post1
     autonomy init --remote --ipfs --reset --author=your_name
     ```
 
 2. Fetch the Autonolas Contribute service.
 
 	```bash
-	autonomy fetch valory/contribution:0.1.0:bafybeia5yagqrzpss6lk4g24ynow3durwihb576wfzvtz2fkd2mfnvlfeq --service
+	autonomy fetch valory/contribution:0.1.0:bafybeih3b5az26h7rm3ogb7cltrspj5i66zlllni3nqfpb6yz32esd4lhu --service
 	```
 
 3. Build the Docker image of the service agents
