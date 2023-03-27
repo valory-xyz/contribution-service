@@ -1,5 +1,13 @@
 # Release History - `Contribution Service`
 
+## 0.4.0 (2023-03-27)
+
+- Bump to `open-autonomy@v0.10.0.post1`
+- Adds liccheck to the linters
+- Adds a script to verify that the reported scores are correct
+- Updates documentation
+- Add a release workflow
+
 ## 0.3.0 (2023-02-24)
 
 - Bump to `open-autonomy@v0.9.1`
