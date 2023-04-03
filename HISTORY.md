@@ -1,5 +1,10 @@
 # Release History - `Contribution Service`
 
+## 0.4.0.post1 (2023-04-03)
+
+- Bump to `open-autonomy@v0.10.0.post2`
+- Sets the `p2p_libp2p_client` as none abstract to enable `ACN`
+
 ## 0.4.0 (2023-03-27)
 
 - Bump to `open-autonomy@v0.10.0.post1`
