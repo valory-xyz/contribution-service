@@ -146,13 +146,13 @@ models:
       max_healthcheck: 120
       max_attempts: 10
       reset_pause_duration: ${int:300}
-      on_chain_service_id: null
+      on_chain_service_id: ${int:null}
       reset_tendermint_after: 2
       retry_attempts: 400
       retry_timeout: 3
       round_timeout_seconds: 30.0
       service_id: contribution_service
-      service_registry_address: null
+      service_registry_address: ${str:null}
       setup:
         all_participants: ${list:[]}
         safe_contract_address: ${str:0x0000000000000000000000000000000000000000}

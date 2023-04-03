@@ -27,7 +27,7 @@ In order to run a local demo of the Autonolas Contribute service:
 2. Fetch the Autonolas Contribute service.
 
 	```bash
-	autonomy fetch valory/contribution:0.1.0:bafybeigna5nwpgaegnk775agd4tf6u3upkh6ocalthm2sb7hch4tkyqeo4 --service
+	autonomy fetch valory/contribution:0.1.0:bafybeigec7ged7r6mkywu5ddg3lutkneiinahcfl3hi5iui6tfbt6emas4 --service
 	```
 
 3. Build the Docker image of the service agents
