@@ -8,7 +8,7 @@ license: Apache-2.0
 fingerprint:
   README.md: bafybeiaeysyipptsieavfpyfkrfl3n37klu3ux7o2rtks2w4k2nnr2hshu
 fingerprint_ignore_patterns: []
-agent: valory/contribution:0.1.0:bafybeiagorrzru2lugbn2n7rzb5ezrrln2iacosr3afkxbokg4dmbs2hqm
+agent: valory/contribution:0.1.0:bafybeic3ms5saaxsiairqzscfqg2z7podxdvteftostpmbpgl4udyfcqqm
 number_of_agents: 4
 deployment: {}
 ---
@@ -34,8 +34,8 @@ models:
       reset_pause_duration: ${RESET_PAUSE_DURATION:int:300}
       share_tm_config_on_startup: ${USE_ACN:bool:false}
       token_uri_base: ${TOKEN_URI_BASE:str:https://pfp.staging.autonolas.tech/}
-      service_registry_address: null
-      on_chain_service_id: null
+      service_registry_address: ${SERVICE_REGISTRY_ADDRESS:str:null}
+      on_chain_service_id: ${ON_CHAIN_SERVICE_ID:int:null}
       setup:
         all_participants: ${ALL_PARTICIPANTS:list:[]}
         safe_contract_address: '0x0000000000000000000000000000000000000000'
