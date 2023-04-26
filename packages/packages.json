@@ -1,8 +1,8 @@
 {
     "dev": {
-        "skill/valory/contribution_abci/0.1.0": "bafybeigwctmbv2pkh3fphd4myjpb2nyz5cxzjd44cuemgqr56e2qspglzq",
-        "agent/valory/contribution/0.1.0": "bafybeica3q5tg6xj3ifbfoe4wtoifufcrlu2q6j3mb3ta5osrhmsawmvpi",
-        "service/valory/contribution/0.1.0": "bafybeigec7ged7r6mkywu5ddg3lutkneiinahcfl3hi5iui6tfbt6emas4"
+        "skill/valory/contribution_abci/0.1.0": "bafybeie7ftdec2tlklv3n2spyq26ngviz3zw4vvz6l6kbs46t5yeddg3iu",
+        "agent/valory/contribution/0.1.0": "bafybeichszrnk6fa7rdlbb45sneloftqkbhkj6vj3kngtcwchayjy2gwym",
+        "service/valory/contribution/0.1.0": "bafybeih2ha75nvoze3nzgq6wxyf6p6twaykk7efq7mwlfoxrys5wzx6jli"
     },
     "third_party": {
         "protocol/open_aea/signing/1.0.0": "bafybeibqlfmikg5hk4phzak6gqzhpkt6akckx7xppbp53mvwt6r73h7tk4",
