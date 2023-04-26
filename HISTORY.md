@@ -1,5 +1,10 @@
 # Release History - `Contribution Service`
 
+## 0.5.0 (2023-04-26)
+
+- Bump to `open-autonomy@v0.10.2`
+- Import packages from IEKit repository
+
 ## 0.4.0.post1 (2023-04-03)
 
 - Bump to `open-autonomy@v0.10.0.post2`
