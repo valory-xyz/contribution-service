@@ -1,7 +1,5 @@
 {
     "dev": {
-        "contract/valory/dynamic_contribution/0.1.0": "bafybeicm7walyd343vuazxc7lkyxnfjryemigrw7qgk66hsb7qvve3ck6m",
-        "skill/valory/dynamic_nft_abci/0.1.0": "bafybeifo5gbu36ujrzap2b3iaejne2pewnjhxb4sdddumhjjagptkdnq4a",
         "skill/valory/contribution_abci/0.1.0": "bafybeigwctmbv2pkh3fphd4myjpb2nyz5cxzjd44cuemgqr56e2qspglzq",
         "agent/valory/contribution/0.1.0": "bafybeica3q5tg6xj3ifbfoe4wtoifufcrlu2q6j3mb3ta5osrhmsawmvpi",
         "service/valory/contribution/0.1.0": "bafybeigec7ged7r6mkywu5ddg3lutkneiinahcfl3hi5iui6tfbt6emas4"
@@ -27,7 +25,6 @@
         "connection/valory/p2p_libp2p_client/0.1.0": "bafybeidwcobzb7ut3efegoedad7jfckvt2n6prcmd4g7xnkm6hp6aafrva",
         "connection/fetchai/http_server/0.22.0": "bafybeihaax5od5zo5jk2l62hv4jwuwtxloh5mijozudpsjombqc4ncmi6i",
         "agent/valory/impact_evaluator/0.1.0": "bafybeidl6ywk6dgj5u6o3xvjs42ixqy4hphape2mshl5yblzkaw5bj34zy",
-        "contract/valory/dynamic_contribution/0.1.0": "bafybeidhhoaimoxagkjtfezas7egq5dwrq3vtkikrbws3vbimpftxzjw6m",
         "service/valory/impact_evaluator/0.1.0": "bafybeicnlkpzojhjcwwynsras3u7qyz4cq2afc4olzxqr7ikm3jyeqydey",
         "skill/valory/dynamic_nft_abci/0.1.0": "bafybeihdcsm42rmwrocfpakgo2tuok65vddu3fxzmul4nzupnmcgeutk7a",
         "skill/valory/twitter_scoring_abci/0.1.0": "bafybeifixzrn73k7ma2elfnlzpxaknoe24mvpiitgtjd26erkrgw4ejfdq",
@@ -35,6 +32,7 @@
         "skill/valory/ceramic_write_abci/0.1.0": "bafybeiew6gvkka6eaylhtkkqkobeaeogfiohwjot3hzuscbsb5qxkklk5i",
         "skill/valory/impact_evaluator_abci/0.1.0": "bafybeieev6eot5ohfmrhs4tv3ffja243w7wqkzjjeetyvsgroq6ztqhvyi",
         "skill/valory/generic_scoring_abci/0.1.0": "bafybeiatdyzeptcbyg7wiqxowrla3j54ywjyrzdm3mthmcqmxydejhz73m",
-        "skill/valory/path_switch_abci/0.1.0": "bafybeiafxl4unwcnf3sue5rmdssly6w63r5tvyqnf4ju2a6aotmqo3fuwu"
+        "skill/valory/path_switch_abci/0.1.0": "bafybeiafxl4unwcnf3sue5rmdssly6w63r5tvyqnf4ju2a6aotmqo3fuwu",
+        "contract/valory/dynamic_contribution/0.1.0": "bafybeidhhoaimoxagkjtfezas7egq5dwrq3vtkikrbws3vbimpftxzjw6m"
     }
 }
