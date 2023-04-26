@@ -11,10 +11,16 @@ name = "pypi"
 # we fix exact versions as it's sufficient to have at least one set of compatible dependencies for development
 aiohttp = "==3.7.4.post0"
 asn1crypto = "==1.5.1"
+Authlib = "==1.2.0"
 certifi = "==2021.10.8"
+cryptography = "==39.0.0"
+dag-cbor = "==0.2.2"
 grpcio = "==1.43.0"
 jsonschema = "==3.2.0"
+jsonpatch = "==1.32"
 hypothesis = "==6.21.6"
+multiformats = "==0.1.4.post3"
+pre-commit = "==3.0.1"
 py-ecc = "==5.2.0"
 py-eth-sig-utils = "==0.4.0"
 pytz = "==2022.2.1"
@@ -30,7 +36,6 @@ open-aea-ledger-cosmos = "==1.32.0"
 open-aea-cli-ipfs = "==1.32.0"
 open-aea-test-autonomy = "==0.10.2"
 open-autonomy = {version = "==0.10.2", extras = [ "all"]}
-Pillow = "==9.2.0"
 tomte = {version = "==0.2.4", extras = ["tox", "tests"]}
 
 [requires]

@@ -38,3 +38,7 @@ packages/valory/services/impact_evaluator
 .coverage*
 
 *.env
+
+impact_evaluator/
+
+run_iekit.sh

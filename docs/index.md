@@ -1,18 +1,24 @@
 ![CoordinationKit](images/coordinationkit.svg){ align=left }
 The CoordinationKit helps you build services to show off community contributions by letting users mint badges which evolve as they make contributions to the DAO. Such services work by monitoring user contributions, updating their badges accordingly and showing off contributions on NFT-enabled social media sites.
 
-Autonolas Contribute, a service based on the CoordinationKit, streamlines the contribution experience for members of the Autonolas community.
-When someone mints a badge, they will start at the first tier. As they complete actions that contribute to the success of Autonolas, they will earn points and climb the leaderboard. When they earn enough points to reach a higher [badge tier](https://contribute.autonolas.network/docs#section-badge), their badge will automatically update to reflect the new rank. This is a great way to demonstrate contributions on NFT-enabled social media sites and earn recognition that reflects users' contribution within the Autonolas community.
+This kit leverages [Ceramic streams](https://developers.ceramic.network/docs/advanced/standards/stream-programs/) to automate the tracking and rewarding of users' contributions on the ecosystem. We provide a demo agent service based on the IEKit which is designed to track contributions in the form of Twitter mentions of the Autonolas DAO ([@autonolas](https://twitter.com/autonolas)). Generic scores can be also read from a [Ceramic stream](https://developers.ceramic.network/docs/advanced/standards/stream-programs/). The demo service implements three main features:
 
-Every few minutes the Autonolas Contribute service checks the leaderboard. If a user has earned enough points to put them in a new [badge tier](https://contribute.autonolas.network/docs#section-badge), then the service will automatically update their badge NFT’s image. By completing certain actions, users climb the leaderboard and upgrade their badge.
+1. **Monitor for new users' registrations.** Reads registered users both from tweets that contain the `#autonolas` hashtag and also from a [Ceramic stream](https://developers.ceramic.network/docs/advanced/standards/stream-programs/) that contains user data like discord ids and wallet addresses.
+
+2. **Monitor for users' contributions.** The service periodically scans for new mentions of @autonolas on Twitter and updates to the scores stream, and increments and updates the score of the corresponding user.
+
+3. **Update the badge of users according to their score.** To access the badge image associated to a user's NFT, the metadata URI associated to it is redirected to an agent in the service. Upon reading the concrete NFT from the request, the service provides the IPFS address of the image, which is updated periodically in relation to the user's score.
+
+The demo service uses dedicated [Ceramic streams](https://developers.ceramic.network/docs/advanced/standards/stream-programs/) as a persistent solution to store users' scores and registration metadata.
+The service demonstrates the applicability of the IEKit to build a particular use case, but of course, the IEKit is modular by design and can be adapted to a range of custom impact evaluators.
 
 ## Demo
 
 !!! warning "Important"
 
-	This section is under active development - please report issues in the [Autonolas Discord](https://discord.com/invite/z2PT65jKqQ).
+    This section is under active development - please report issues in the [Autonolas Discord](https://discord.com/invite/z2PT65jKqQ).
 
-In order to run a local demo of the Autonolas Contribute service:
+In order to run a local demo service based on the IEKit:
 
 1. [Set up your system](https://docs.autonolas.network/open-autonomy/guides/set_up/) to work with the Open Autonomy framework. We recommend that you use these commands:
 
@@ -24,18 +30,18 @@ In order to run a local demo of the Autonolas Contribute service:
     autonomy init --remote --ipfs --reset --author=your_name
     ```
 
-2. Fetch the Autonolas Contribute service.
+2. Fetch the IEKit.
 
-	```bash
-	autonomy fetch valory/contribution:0.1.0:bafybeigec7ged7r6mkywu5ddg3lutkneiinahcfl3hi5iui6tfbt6emas4 --service
-	```
+    ```bash
+    autonomy fetch valory/impact_evaluator:0.1.0:bafybeicnlkpzojhjcwwynsras3u7qyz4cq2afc4olzxqr7ikm3jyeqydey --service
+    ```
 
 3. Build the Docker image of the service agents
 
-	```bash
-	cd contribution
-	autonomy build-image
-	```
+    ```bash
+    cd impact_evaluator
+    autonomy build-image
+    ```
 
 4. Prepare the `keys.json` file containing the wallet address and the private key for each of the agents.
 
@@ -66,52 +72,59 @@ In order to run a local demo of the Autonolas Contribute service:
 
 5. Prepare the environment and build the service deployment.
 
-	1. Create an API key for Google Spreadsheets API (you can follow [this guide](https://www.sharperlight.com/uncategorized/2022/04/06/accessing-the-google-sheets-api-via-sharperlight-query-builder/)).
+    1. Create a [Twitter API Bearer Token](https://developer.twitter.com/en/portal/dashboard).
 
-    2. Create an API key for [Infura](https://www.infura.io/) or your preferred provider.
+    2. Create a Ceramic Decentralized Identity (DID) using [Glaze](https://github.com/ceramicstudio/js-glaze).
 
-	3. Create an `.env` file with the required environment variables, modifying its values to your needs.
+    3. Using the DID created in the previous step, create two empty Ceramic streams. You can follow [this tutorial](https://developers.ceramic.network/reference/stream-programs/tile-document/). The service will optionally read generic scores from the first one and will write scores to the second one.
 
-		```bash
-		ETHEREUM_LEDGER_RPC=https://goerli.infura.io/v3/<infura_api_key>
-		DYNAMIC_CONTRIBUTION_CONTRACT_ADDRESS=0x7c3b976434fae9986050b26089649d9f63314bd8
-		EARLIEST_BLOCK_TO_MONITOR=8053690
-		IPFS_GATEWAY_BASE_URL=https://gateway.staging.autonolas.tech/ipfs/
-		LEADERBOARD_API_KEY=<google_api_key_here>
-		LEADERBOARD_BASE_ENDPOINT=https://sheets.googleapis.com/v4/spreadsheets
-		LEADERBOARD_LAYERS_RANGE=Layers!B1:Z32
-		LEADERBOARD_POINTS_RANGE=Ranking!B2:C302
-		LEADERBOARD_SHEET_ID=1m7jUYBoK4bFF0F2ZRnT60wUCAMWGMJ_ZfALsLfW5Dxc
-		RESET_PAUSE_DURATION=10
-	    ALL_PARTICIPANTS='["0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65","0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc","0x976EA74026E726554dB657fA54763abd0C3a0aa9","0x14dC79964da2C08b23698B3D3cc7Ca32193d9955"]'
-		```
+    4. Create an API key for [Infura](https://www.infura.io/) or your preferred provider.
 
-	    and export them:
+    5. Create an `.env` file with the required environment variables, modifying its values to your needs.
 
-	    ```bash
-	    export $(grep -v '^#' .env | xargs)
-	    ```
+        ```bash
+        ETHEREUM_LEDGER_RPC=https://goerli.infura.io/v3/<infura_api_key>
+        DYNAMIC_CONTRIBUTION_CONTRACT_ADDRESS=0x7C3B976434faE9986050B26089649D9f63314BD8
+        CERAMIC_DID_SEED=<ceramic_seed_did>
+        CERAMIC_DID_STR=<ceramic_did_string>
+        DEFAULT_READ_STREAM_ID=<main_database_stream>
+        DEFAULT_WRITE_STREAM_ID=<main_database_stream>
+        DEFAULT_READ_TARGET_PROPERTY=ceramic_db
+        DEFAULT_WRITE_TARGET_PROPERTY=ceramic_db
+        MANUAL_POINTS_STREAM_ID=<generic_scores_stream>
+        TWITTER_API_BEARER_TOKEN=<twitter_api_token>
+        TWITTER_MENTION_POINTS=300
+        RESET_PAUSE_DURATION=10
+        ALL_PARTICIPANTS='["0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65","0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc","0x976EA74026E726554dB657fA54763abd0C3a0aa9","0x14dC79964da2C08b23698B3D3cc7Ca32193d9955"]'
+        POINTS_TO_IMAGE_HASHES='{"0":"bafybeiabtdl53v2a3irrgrg7eujzffjallpymli763wvhv6gceurfmcemm","100":"bafybeid46w6yzbehir7ackcnsyuasdkun5aq7jnckt4sknvmiewpph776q","50000":"bafybeigbxlwzljbxnlwteupmt6c6k7k2m4bbhunvxxa53dc7niuedilnr4","100000":"bafybeiawxpq4mqckbau3mjwzd3ic2o7ywlhp6zqo7jnaft26zeqm3xsjjy","150000":"bafybeie6k53dupf7rf6622rzfxu3dmlv36hytqrmzs5yrilxwcrlhrml2m"}'
+        ```
 
-	4. Build the service deployment.
+        and export them:
 
-	    ```bash
-	    autonomy deploy build keys.json --aev -ltm
-	    ```
+        ```bash
+        export $(grep -v '^#' .env | xargs)
+        ```
+
+    6. Build the service deployment.
+
+        ```bash
+        autonomy deploy build keys.json -ltm
+        ```
 
 6. Run the service.
 
-	```bash
-	cd abci_build
-	autonomy deploy run
-	```
+    ```bash
+    cd abci_build
+    autonomy deploy run
+    ```
 
-	You can cancel the local execution at any time by pressing ++ctrl+c++.
+    You can cancel the local execution at any time by pressing ++ctrl+c++.
 
 7. Check that the service is running. Open a separate terminal and execute the command below. You should see the service transitioning along different states.
 
-	```bash
-	docker logs -f abci0 | grep -E 'Entered|round is done'
-	```
+    ```bash
+    docker logs -f abci0 | grep -E 'Entered|round is done'
+    ```
 
 8. You can try some examples on how to curl the service endpoints from inside one of the agent containers. For example:
 
@@ -147,7 +160,7 @@ In order to run a local demo of the Autonolas Contribute service:
 
 ## Build
 
-1. Fork the [CoordinationKit repository](https://github.com/valory-xyz/contribution-service).
+1. Fork the [IEKit repository](https://github.com/valory-xyz/iekit).
 2. Make the necessary adjustments to tailor the service to your needs. This could include:
     * Adjust configuration parameters (e.g., in the `service.yaml` file).
     * Expand the service finite-state machine with your custom states.
