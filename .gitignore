@@ -14,6 +14,7 @@ keys.json
 leak_report
 packages/valory/connections
 packages/valory/contracts/service_registry
+packages/valory/contracts/dynamic_contribution
 packages/valory/protocols
 packages/valory/skills/abstract_abci
 packages/valory/skills/abstract_round_abci
@@ -21,10 +22,23 @@ packages/valory/skills/registration_abci
 packages/valory/skills/reset_pause_abci
 packages/valory/skills/safe_deployment_abci
 packages/valory/skills/transaction_settlement_abci
+packages/valory/skills/ceramic_read_abci
+packages/valory/skills/ceramic_write_abci
+packages/valory/skills/generic_scoring_abci
+packages/valory/skills/impact_evaluator_abci
+packages/valory/skills/path_switch_abci
+packages/valory/skills/twitter_scoring_abci
+packages/valory/skills/dynamic_nft_abci
 packages/open_aea
 packages/fetchai
+packages/valory/agents/impact_evaluator
+packages/valory/services/impact_evaluator
 *.pyc
 .vscode/
 .coverage*
 
 *.env
+
+impact_evaluator/
+
+run_iekit.sh
