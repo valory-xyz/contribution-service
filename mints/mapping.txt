@@ -1,0 +1,2 @@
+token_id-"service_id"
+6-"service/valory/contribute:0.1.0"
