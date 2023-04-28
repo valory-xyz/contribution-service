@@ -42,3 +42,5 @@ packages/valory/services/impact_evaluator
 impact_evaluator/
 
 run_iekit.sh
+
+run_contribute.sh
