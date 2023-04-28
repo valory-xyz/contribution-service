@@ -6,9 +6,9 @@ description: A service that tracks community members' contributions, scores them
 aea_version: '>=1.0.0, <2.0.0'
 license: Apache-2.0
 fingerprint:
-  README.md: bafybeign56hilwuoa6bgos3uqabss4gew4vadkik7vhj3ucpqw6nxtqtpe
+  README.md: bafybeihmwh3lzuhmmzozuifqzkfhi2vo2u7gc4lzacvhit47ldm24vfeki
 fingerprint_ignore_patterns: []
-agent: valory/impact_evaluator:0.1.0:bafybeidl6ywk6dgj5u6o3xvjs42ixqy4hphape2mshl5yblzkaw5bj34zy
+agent: valory/impact_evaluator:0.1.0:bafybeiadxqzvi3xf46mx2vnwufjztaxpult5k6p6xtyi6u3gbpt4a5tifa
 number_of_agents: 4
 deployment:
   agent:

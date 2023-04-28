@@ -1,6 +1,6 @@
 {
     "dev": {
-        "service/valory/contribute/0.1.0": "bafybeibyeqlsyorpasvaynr7pypdniflnww7mx7barwediyzm5hmlfccdq"
+        "service/valory/contribute/0.1.0": "bafybeidyrb5orecfjkqe3tgmyo6gnww3s72lrcycriiw5udn64lgzzdtju"
     },
     "third_party": {
         "protocol/open_aea/signing/1.0.0": "bafybeibqlfmikg5hk4phzak6gqzhpkt6akckx7xppbp53mvwt6r73h7tk4",
@@ -30,6 +30,11 @@
         "skill/valory/ceramic_write_abci/0.1.0": "bafybeienxgaiaehbq5e4ehjufv44z3p632rmku67yh5s5t4aah2d4lm4yu",
         "skill/valory/impact_evaluator_abci/0.1.0": "bafybeiglp7l5y32atfcmx562grvmjq3q7sczh3bau6r7ok7rbaskolaj3y",
         "skill/valory/generic_scoring_abci/0.1.0": "bafybeibnao2hl2774kkwcvyj2636o6fako46swqnpwr2jmr3s45r4txxqu",
-        "skill/valory/path_switch_abci/0.1.0": "bafybeigo42z4ufwdatwzkrhmxx6koaqpn4gijrb6jfhcljehbngyssr3xy"
+        "skill/valory/path_switch_abci/0.1.0": "bafybeigo42z4ufwdatwzkrhmxx6koaqpn4gijrb6jfhcljehbngyssr3xy",
+        "contract/valory/multisend/0.1.0": "bafybeigjywkl7hydjsrkogob3xebj2ifhqwmfhhxoeyrndzhhxi5u6amey",
+        "skill/valory/transaction_settlement_abci/0.1.0": "bafybeifsz2ll7gmy6vmx34t6q5bdv6zzwp5zrehr6di6v3thcpc3sztkta",
+        "skill/valory/termination_abci/0.1.0": "bafybeifkl4ab6dnvtsaefe56dbzshmp5mozn7exwcaj2a3wjeq7u3hpezm",
+        "contract/valory/gnosis_safe_proxy_factory/0.1.0": "bafybeierle6peb4a5cw3tncgondwhgesomzg7tedkb5cuos2zm462asbdi",
+        "contract/valory/gnosis_safe/0.1.0": "bafybeifvqalsuyetul3ypuolxvxzi5ffxoqdbqpfl3jadqjachsw7qfs74"
     }
 }
