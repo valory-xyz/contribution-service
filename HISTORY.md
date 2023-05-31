@@ -1,5 +1,10 @@
 # Release History - `Contribution Service`
 
+## 0.5.1 (2023-05-31)
+
+- Bumps frameworks to `open-autonony-0.10.5.post1` and `open-aea-1.34`
+- Bumps to the latest impact evaluator service
+
 ## 0.5.0 (2023-04-26)
 
 - Bump to `open-autonomy@v0.10.2`
