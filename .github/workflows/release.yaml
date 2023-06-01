@@ -88,6 +88,7 @@ jobs:
         run: |
           source env.sh
           docker tag $AUTHOR/oar-impact_evaluator:$VERSION $AUTHOR/oar-$SERVICE:$VERSION
+          docker tag $AUTHOR/oar-impact_evaluator:$DEFAULT_IMAGE_TAG $AUTHOR/oar-$SERVICE:$DEFAULT_IMAGE_TAG
           echo "Pushing $DOCKER_USER/$SERVICE:$VERSION"
           echo "Pushing $DOCKER_USER/$SERVICE:$DEFAULT_IMAGE_TAG"
           docker push $DOCKER_USER/oar-$SERVICE:$VERSION
