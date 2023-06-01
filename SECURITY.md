@@ -8,8 +8,8 @@ The following table shows which versions of `contribution-service` are currently
 
 | Version     | Supported          |
 | ----------- | ------------------ |
-| `v0.5.0`    | :white_check_mark: |
-| `< v0.5.0`  | :x:                |
+| `v0.5.1`    | :white_check_mark: |
+| `< v0.5.1`  | :x:                |
 
 ## Reporting a Vulnerability
 
