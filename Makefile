@@ -42,25 +42,24 @@ clean-test:
 # black: format files according to the pep standards
 .PHONY: formatters
 formatters:
-	tox -e isort
-	tox -e black
+	tomte format-code
 
 # black-check: check code style
 # isort-check: check for import order
 # flake8: wrapper around various code checks, https://flake8.pycqa.org/en/latest/user/error-codes.html
 # mypy: static type checker
 # pylint: code analysis for code smells and refactoring suggestions
-# vulture: finds dead code
 # darglint: docstring linter
 .PHONY: code-checks
 code-checks:
-	tox -p -e black-check -e isort-check -e flake8 -e mypy -e pylint -e vulture -e darglint
+	tomte check-code
 
 # safety: checks dependencies for known security vulnerabilities
 # bandit: security linter
 .PHONY: security
 security:
-	tox -p -e safety -e bandit
+	tomte check-security
+	gitleaks detect --report-format json --report-path leak_report
 
 # generate latest abci docstrings
 # generate latest hashes for updated packages
@@ -69,13 +68,15 @@ security:
 generators:
 	find . -empty -type d -delete  # remove empty directories to avoid wrong hashes
 	tox -e abci-docstrings
-	tox -e fix-copyright
+	tomte format-copyright --author valory --exclude-part agents --exclude-part connections --exclude-part contracts --exclude-part protocols --exclude-part skills
 	tox -e fix-doc-hashes
 	autonomy packages lock
 
 .PHONY: common-checks-1
 common-checks-1:
-	tox -p -e check-copyright -e check-hash -e check-packages
+	tomte check-copyright --author valory --exclude-part agents --exclude-part connections --exclude-part contracts --exclude-part protocols --exclude-part skills
+	tomte check-doc-links --url-skips "https://goerli.infura.io/v3/<infura_api_key>"
+	tox -p -e check-hash -e check-packages -e check-doc-hashes
 
 .PHONY: test
 test:
@@ -108,18 +109,4 @@ fix-abci-app-specs:
 	export PYTHONPATH=${PYTHONPATH}:${PWD} && autonomy analyse fsm-specs --update --app-class DynamicNFTAbciApp --package packages/valory/skills/dynamic_nft_abci/ || (echo "Failed to check dynamic_nft_abci abci consistency" && exit 1)
 
 .PHONY: all-linters
-all-linters:
-	gitleaks detect --report-format json --report-path leak_report
-	tox -e check-copyright
-	tox -e bandit
-	tox -e safety
-	tox -e check-packages
-	tox -e check-abciapp-specs
-	tox -e check-hash
-	tox -e spell-check
-	tox -e black-check
-	tox -e isort-check
-	tox -e flake8
-	tox -e darglint
-	tox -e pylint
-	tox -e mypy
+all-linters: code-checks security common-checks-1
