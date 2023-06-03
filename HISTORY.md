@@ -1,5 +1,9 @@
 # Release History - `Contribution Service`
 
+## (TBD)
+
+- Bumps to `tomte@v0.2.12` and cleans up the repo #116
+
 ## 0.5.1 (2023-06-01)
 
 - Bumps frameworks to `open-autonony-0.10.5.post1` and `open-aea-1.34`
