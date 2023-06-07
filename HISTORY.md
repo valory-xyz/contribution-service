@@ -1,7 +1,8 @@
 # Release History - `Contribution Service`
 
-## (TBD)
+## 0.5.2 (2023-06-07)
 
+- Bumps to `open-autonony-0.10.5.post2` #117
 - Bumps to `tomte@v0.2.12` and cleans up the repo #116
 
 ## 0.5.1 (2023-06-01)

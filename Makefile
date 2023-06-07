@@ -69,8 +69,8 @@ generators:
 	find . -empty -type d -delete  # remove empty directories to avoid wrong hashes
 	tox -e abci-docstrings
 	tomte format-copyright --author valory --exclude-part agents --exclude-part connections --exclude-part contracts --exclude-part protocols --exclude-part skills
-	tox -e fix-doc-hashes
 	autonomy packages lock
+	tox -e fix-doc-hashes
 
 .PHONY: common-checks-1
 common-checks-1:
