@@ -1,5 +1,9 @@
 # Release History - `Contribution Service`
 
+## 0.5.3 (2023-06-19)
+
+- Bumps to `open-autonony-0.10.6` #118
+
 ## 0.5.2 (2023-06-07)
 
 - Bumps to `open-autonony-0.10.5.post2` #117
