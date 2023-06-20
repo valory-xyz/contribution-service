@@ -12,6 +12,8 @@ This kit leverages [Ceramic streams](https://developers.ceramic.network/docs/adv
 The demo service uses dedicated [Ceramic streams](https://developers.ceramic.network/docs/advanced/standards/stream-programs/) as a persistent solution to store users' scores and registration metadata.
 The service demonstrates the applicability of the IEKit to build a particular use case, but of course, the IEKit is modular by design and can be adapted to a range of custom impact evaluators.
 
+Check the demo service leaderboard on the [Autonolas Contribute web app](https://contribute.olas.network/).
+
 ## Demo
 
 !!! warning "Important"
