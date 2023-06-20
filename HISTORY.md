@@ -1,8 +1,9 @@
 # Release History - `Contribution Service`
 
-## 0.5.3 (2023-06-19)
+## 0.5.3 (2023-06-20)
 
 - Bumps to `open-autonony-0.10.6` #118
+- Bumps to the latest impact evaluator service
 
 ## 0.5.2 (2023-06-07)
 
