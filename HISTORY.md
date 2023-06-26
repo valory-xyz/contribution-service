@@ -3,7 +3,7 @@
 ## 0.5.4 (2023-06-26)
 
 - Bumps frameworks to `open-autonony-0.10.7` and `open-aea-1.35` # 121
-- Fix olas links #120
+- Fixes olas links #120
 
 ## 0.5.3 (2023-06-20)
 
