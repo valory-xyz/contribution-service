@@ -2,6 +2,7 @@
 
 ## 0.5.4 (2023-06-26)
 
+- Updates IEKiT hashes #122
 - Bumps frameworks to `open-autonony-0.10.7` and `open-aea-1.35` # 121
 - Fixes olas links #120
 
