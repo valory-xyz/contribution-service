@@ -35,6 +35,9 @@ open-aea-ledger-cosmos = "==1.37.0"
 open-aea-cli-ipfs = "==1.37.0"
 open-aea-test-autonomy = "==0.10.10.post1"
 open-autonomy = {version = "==0.10.10.post1", extras = [ "all"]}
+openai = "==0.27.2"
+tweepy = "==4.14.0"
+twitter_text_parser = "==3.0.0"
 tomte = {version = "==0.2.12", extras = ["cli", "tests"]}
 
 [requires]
