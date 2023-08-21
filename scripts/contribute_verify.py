@@ -93,7 +93,9 @@ def get_token_to_address(config: Dict) -> Dict:
         abi = json.load(abi_file)["abi"]
 
     factory_contract = web3.eth.contract(
-        address=Web3.toChecksumAddress(config["dynamic_contribution_contract_address"]),
+        address=Web3.to_checksum_address(
+            config["dynamic_contribution_contract_address"]
+        ),
         abi=abi,
     )
 
@@ -113,7 +115,7 @@ def get_token_to_address(config: Dict) -> Dict:
     for i in range(len(ranges) - 1):
         from_block = ranges[i]
         to_block = ranges[i + 1]
-        entries += factory_contract.events.Transfer.createFilter(
+        entries += factory_contract.events.Transfer.create_filter(  # type: ignore
             fromBlock=from_block,  # exclusive
             toBlock=to_block,  # inclusive
             argument_filters={"from": NULL_ADDRESS},
