@@ -32,8 +32,8 @@ open-aea = "==1.38.0"
 open-aea-ledger-ethereum = "==1.38.0"
 open-aea-ledger-cosmos = "==1.38.0"
 open-aea-cli-ipfs = "==1.38.0"
-open-aea-test-autonomy = "==0.11.0"
-open-autonomy = {version = "==0.11.0", extras = [ "all"]}
+open-aea-test-autonomy = "==0.11.1"
+open-autonomy = {version = "==0.11.1", extras = [ "all"]}
 openai = "==0.27.2"
 tweepy = "==4.14.0"
 twitter_text_parser = "==3.0.0"
