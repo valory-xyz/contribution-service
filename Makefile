@@ -75,7 +75,7 @@ generators:
 .PHONY: common-checks-1
 common-checks-1:
 	tomte check-copyright --author valory --exclude-part agents --exclude-part connections --exclude-part contracts --exclude-part protocols --exclude-part skills
-	tomte check-doc-links --url-skips "https://goerli.infura.io/v3/<infura_api_key>"
+	tomte check-doc-links --url-skips "https://goerli.infura.io/v3/<infura_api_key>" --url-skips "https://twitter.com/autonolas" --url-skips "https://developer.twitter.com/en/portal/dashboard"
 	tox -p -e check-hash -e check-packages -e check-doc-hashes
 
 .PHONY: test
